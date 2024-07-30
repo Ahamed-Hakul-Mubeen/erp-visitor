@@ -776,7 +776,7 @@ class BillController extends Controller
                 // Purchase Tax
                 if($totalTaxPrice != 0)
                 {
-                    $chart_accounts = ChartOfAccount::where('code', 2145)->where('created_by', \Auth::user()->creatorId())->first();
+                    $chart_accounts = ChartOfAccount::where('code', 2150)->where('created_by', \Auth::user()->creatorId())->first();
                     $data = [
                         'account_id' => $chart_accounts->id,
                         'transaction_type' => 'Debit',

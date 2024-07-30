@@ -515,12 +515,25 @@ class InvoiceController extends Controller
                     }
 
                     $itemAmount = ($invoice_product->price * $invoice_product->quantity) - ($invoice_product->discount) + $totalTaxPrice;
+                    $product_price = ($invoice_product->price * $invoice_product->quantity) - ($invoice_product->discount);
 
                     // Sales Income
                     $data = [
                         'account_id' => $product->sale_chartaccount_id,
                         'transaction_type' => 'Credit',
-                        'transaction_amount' => $itemAmount,
+                        'transaction_amount' => $product_price,
+                        'reference' => 'Invoice',
+                        'reference_id' => $invoice->id,
+                        'reference_sub_id' => $product->id,
+                        'date' => $invoice->issue_date,
+                    ];
+                    Utility::addTransactionLines($data, "new");
+
+                    $chart_accounts = ChartOfAccount::where('code', 2150)->where('created_by', \Auth::user()->creatorId())->first();
+                    $data = [
+                        'account_id' => $chart_accounts->id,
+                        'transaction_type' => 'Credit',
+                        'transaction_amount' => $totalTaxPrice,
                         'reference' => 'Invoice',
                         'reference_id' => $invoice->id,
                         'reference_sub_id' => $product->id,

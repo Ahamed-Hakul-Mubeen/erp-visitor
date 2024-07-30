@@ -905,11 +905,11 @@
                                             <a class="dash-link"
                                                 href="{{ route('bill.index') }}">{{ __('Bill') }}</a>
                                         </li>
-                                        <li
+                                        {{-- <li
                                             class="dash-item {{ Request::route()->getName() == 'expense.index' || Request::route()->getName() == 'expense.create' || Request::route()->getName() == 'expense.edit' || Request::route()->getName() == 'expense.show' ? ' active' : '' }}">
                                             <a class="dash-link"
                                                 href="{{ route('expense.index') }}">{{ __('Expense') }}</a>
-                                        </li>
+                                        </li> --}}
                                         <li
                                             class="dash-item {{ Request::route()->getName() == 'payment.index' || Request::route()->getName() == 'payment.create' || Request::route()->getName() == 'payment.edit' ? ' active' : '' }}">
                                             <a class="dash-link"
