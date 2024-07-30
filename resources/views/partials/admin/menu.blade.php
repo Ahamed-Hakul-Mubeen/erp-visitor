@@ -1605,10 +1605,10 @@
                             fill="#162C4E"></path>
                     </svg>
                 </div>
-                <div>
+                {{-- <div>
                     <b class="d-block f-w-700">{{ __('You need help?') }}</b>
                     <span>{{ __('Check out our repository') }} </span>
-                </div>
+                </div> --}}
             </div>
         </div>
     </div>
