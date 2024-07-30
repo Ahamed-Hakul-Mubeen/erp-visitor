@@ -178,7 +178,7 @@ class RevenueController extends Controller
 
             $data = [
                 'account_id' => $account_type_name->id,
-                'transaction_type' => 'Credit',
+                'transaction_type' => 'Debit',
                 'transaction_amount' => $revenue->amount,
                 'reference' => 'Revenue',
                 'reference_id' => $revenue->id,
@@ -189,7 +189,7 @@ class RevenueController extends Controller
 
             $data = [
                 'account_id' => $category->chart_account_id,
-                'transaction_type' => 'Debit',
+                'transaction_type' => 'Credit',
                 'transaction_amount' => $revenue->amount,
                 'reference' => 'Revenue',
                 'reference_id' => $revenue->id,

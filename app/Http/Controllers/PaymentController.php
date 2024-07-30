@@ -138,6 +138,7 @@ class PaymentController extends Controller
             $payment->created_by = \Auth::user()->creatorId();
             $payment->save();
 
+
             $chartAccountId = ChartOfAccount::find($request->account_id);
 //            dd($chartAccountId);
 
@@ -151,7 +152,7 @@ class PaymentController extends Controller
                 'reference_sub_id' => 0,
                 'date' => $payment->date,
             ];
-            Utility::addTransactionLines($data);
+            // Utility::addTransactionLines($data);
 
             $account = new BillAccount();
             $account->chart_account_id = $chartAccountId;
@@ -170,6 +171,37 @@ class PaymentController extends Controller
             $payment->account = $request->account_id;
 
             Transaction::addTransaction($payment);
+
+            $accountId = BankAccount::find($request->account_id);
+            if($accountId->holder_name == "cash") {
+                $account_type_name = ChartOfAccount::where('code', 1058)->where('created_by', \Auth::user()->creatorId())->first();
+            } else {
+                $account_type_name = ChartOfAccount::where('code', 1059)->where('created_by', \Auth::user()->creatorId())->first();
+            }
+
+            $data = [
+                'account_id' => $account_type_name->id,
+                'transaction_type' => 'Credit',
+                'transaction_amount' => $request->amount,
+                'reference' => 'Revenue',
+                'reference_id' => $payment->id,
+                'reference_sub_id' => 0,
+                'date' => $request->date,
+            ];
+
+            Utility::addTransactionLines($data, "new");
+
+            $data = [
+                'account_id' => $category->chart_account_id,
+                'transaction_type' => 'Debit',
+                'transaction_amount' => $request->amount,
+                'reference' => 'Revenue',
+                'reference_id' => $payment->id,
+                'reference_sub_id' => 0,
+                'date' => $request->date,
+            ];
+            Utility::addTransactionLines($data, "new");
+
 
             $vender = Vender::where('id', $request->vender_id)->first();
             $payment = new BillPayment();
