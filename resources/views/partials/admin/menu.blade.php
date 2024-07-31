@@ -84,7 +84,7 @@
                                                     href="{{ route('dashboard') }}">{{ __(' Overview') }}</a>
                                             </li>
                                         @endcan
-                                        @if (Gate::check('income report') ||
+                                        {{-- @if (Gate::check('income report') ||
                                                 Gate::check('expense report') ||
                                                 Gate::check('income vs expense report') ||
                                                 Gate::check('tax report') ||
@@ -189,7 +189,7 @@
                                                     @endcan
                                                 </ul>
                                             </li>
-                                        @endif
+                                        @endif --}}
                                     </ul>
                                 </li>
                             @endif
@@ -1582,8 +1582,8 @@
         @endif
 
 
-        <div class="navbar-footer border-top ">
-            <div class="d-flex align-items-center py-3 px-3 border-bottom">
+        {{-- <div class="navbar-footer border-top ">
+            <div class="px-3 py-3 d-flex align-items-center border-bottom">
                 <div class="me-2">
                     <svg xmlns="http://www.w3.org/2000/svg" width="29" height="30" viewBox="0 0 29 30"
                         fill="none">
@@ -1605,12 +1605,12 @@
                             fill="#162C4E"></path>
                     </svg>
                 </div>
-                {{-- <div>
+                <div>
                     <b class="d-block f-w-700">{{ __('You need help?') }}</b>
                     <span>{{ __('Check out our repository') }} </span>
-                </div> --}}
+                </div>
             </div>
-        </div>
+        </div> --}}
     </div>
 </div>
 </nav>

@@ -791,19 +791,19 @@ class BillController extends Controller
 
             }
 
-            $bill_accounts = BillAccount::where('ref_id', $bill->id)->get();
-            foreach ($bill_accounts as $bill_product) {
-                $data = [
-                    'account_id' => $bill_product->chart_account_id,
-                    'transaction_type' => 'Debit',
-                    'transaction_amount' => $bill_product->price,
-                    'reference' => 'Bill Account',
-                    'reference_id' => $bill_product->ref_id,
-                    'reference_sub_id' => $bill_product->id,
-                    'date' => $bill->bill_date,
-                ];
-                Utility::addTransactionLines($data);
-            }
+            // $bill_accounts = BillAccount::where('ref_id', $bill->id)->get();
+            // foreach ($bill_accounts as $bill_product) {
+            //     $data = [
+            //         'account_id' => $bill_product->chart_account_id,
+            //         'transaction_type' => 'Debit',
+            //         'transaction_amount' => $bill_product->price,
+            //         'reference' => 'Bill',
+            //         'reference_id' => $bill_product->ref_id,
+            //         'reference_sub_id' => $bill_product->id,
+            //         'date' => $bill->bill_date,
+            //     ];
+            //     Utility::addTransactionLines($data);
+            // }
 
 //            dd($vendorArr);
             $resp = Utility::sendEmailTemplate('vender_bill_sent', [$vender->id => $vender->email], $vendorArr);
@@ -1011,21 +1011,21 @@ class BillController extends Controller
 
             Utility::bankAccountBalance($request->account_id, $request->amount, 'debit');
 
-            $billPayments = BillPayment::where('bill_id', $bill->id)->get();
-            foreach ($billPayments as $billPayment) {
-                $accountId = BankAccount::find($billPayment->account_id);
+            // $billPayments = BillPayment::where('bill_id', $bill->id)->get();
+            // foreach ($billPayments as $billPayment) {
+            //     $accountId = BankAccount::find($billPayment->account_id);
 
-                $data = [
-                    'account_id' => $accountId->chart_account_id,
-                    'transaction_type' => 'Debit',
-                    'transaction_amount' => $billPayment->amount,
-                    'reference' => 'Bill',
-                    'reference_id' => $bill->id,
-                    'reference_sub_id' => 0,
-                    'date' => $billPayment->date,
-                ];
-                Utility::addTransactionLines($data);
-            }
+            //     $data = [
+            //         'account_id' => $accountId->chart_account_id,
+            //         'transaction_type' => 'Debit',
+            //         'transaction_amount' => $billPayment->amount,
+            //         'reference' => 'Bill',
+            //         'reference_id' => $bill->id,
+            //         'reference_sub_id' => 0,
+            //         'date' => $billPayment->date,
+            //     ];
+            //     // Utility::addTransactionLines($data);
+            // }
 
             // Send Email
             $setings = Utility::settings();

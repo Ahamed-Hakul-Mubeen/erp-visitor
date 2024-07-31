@@ -5276,17 +5276,13 @@ class Utility extends Model
 
     public static function addTransactionLines($data, $new = null)
     {
-        if($new == null) {
-            $existingTransaction = TransactionLines::where('reference_id', $data['reference_id'])
-                ->where('reference_sub_id', $data['reference_sub_id'])
-                ->where('reference', $data['reference'])
-                ->first();
-            if ($existingTransaction) {
-                $transactionLines = $existingTransaction;
-            }else{
-                $transactionLines = new TransactionLines();
-            }
-        } else {
+        $existingTransaction = TransactionLines::where('reference_id', $data['reference_id'])
+            ->where('reference_sub_id', $data['reference_sub_id'])
+            ->where('reference', $data['reference'])
+            ->first();
+        if ($existingTransaction && $new == null) {
+            $transactionLines = $existingTransaction;
+        }else{
             $transactionLines = new TransactionLines();
         }
 
