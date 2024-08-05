@@ -97,6 +97,18 @@ class BankAccountController extends Controller
 
             $data = [
                 'account_id' => $account->chart_account_id,
+                'transaction_type' => 'Debit',
+                'transaction_amount' => $account->opening_balance,
+                'reference' => 'Bank Account',
+                'reference_id' => $account->id,
+                'reference_sub_id' => 0,
+                'date' => date('Y-m-d'),
+            ];
+            Utility::addTransactionLines($data, "new");
+
+            $opening_balance = ChartOfAccount::where('code', 3020)->where('created_by', \Auth::user()->creatorId())->first();
+            $data = [
+                'account_id' => $opening_balance->id,
                 'transaction_type' => 'Credit',
                 'transaction_amount' => $account->opening_balance,
                 'reference' => 'Bank Account',
@@ -104,7 +116,7 @@ class BankAccountController extends Controller
                 'reference_sub_id' => 0,
                 'date' => date('Y-m-d'),
             ];
-            Utility::addTransactionLines($data);
+            Utility::addTransactionLines($data, "new");
 
             return redirect()->route('bank-account.index')->with('success', __('Account successfully created.'));
         }
@@ -188,8 +200,22 @@ class BankAccountController extends Controller
             $bankAccount->save();
             CustomField::saveData($bankAccount, $request->customField);
 
+            TransactionLines::where('reference', "Bank Account")->where("reference_id", $bankAccount->id)->where('created_by', \Auth::user()->creatorId())->delete();
+
             $data = [
                 'account_id' => $bankAccount->chart_account_id,
+                'transaction_type' => 'Debit',
+                'transaction_amount' => $bankAccount->opening_balance,
+                'reference' => 'Bank Account',
+                'reference_id' => $bankAccount->id,
+                'reference_sub_id' => 0,
+                'date' => date('Y-m-d'),
+            ];
+            Utility::addTransactionLines($data, "new");
+
+            $opening_balance = ChartOfAccount::where('code', 3020)->where('created_by', \Auth::user()->creatorId())->first();
+            $data = [
+                'account_id' => $opening_balance->id,
                 'transaction_type' => 'Credit',
                 'transaction_amount' => $bankAccount->opening_balance,
                 'reference' => 'Bank Account',
@@ -197,7 +223,7 @@ class BankAccountController extends Controller
                 'reference_sub_id' => 0,
                 'date' => date('Y-m-d'),
             ];
-            Utility::addTransactionLines($data);
+            Utility::addTransactionLines($data, "new");
 
             return redirect()->route('bank-account.index')->with('success', __('Account successfully updated.'));
         }
