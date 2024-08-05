@@ -307,17 +307,74 @@ class InvoiceController extends Controller
                     }
 
                     $itemAmount = ($invoice_product->price * $invoice_product->quantity) - ($invoice_product->discount) + $totalTaxPrice;
+                    $product_price = ($invoice_product->price * $invoice_product->quantity) - ($invoice_product->discount);
 
+                    // Sales Income
                     $data = [
                         'account_id' => $product->sale_chartaccount_id,
                         'transaction_type' => 'Credit',
+                        'transaction_amount' => $product_price,
+                        'reference' => 'Invoice',
+                        'reference_id' => $invoice->id,
+                        'reference_sub_id' => $product->id,
+                        'date' => $invoice->issue_date,
+                    ];
+                    Utility::addTransactionLines($data, "new");
+
+                    $chart_accounts = ChartOfAccount::where('code', 2150)->where('created_by', \Auth::user()->creatorId())->first();
+                    $data = [
+                        'account_id' => $chart_accounts->id,
+                        'transaction_type' => 'Credit',
+                        'transaction_amount' => $totalTaxPrice,
+                        'reference' => 'Invoice',
+                        'reference_id' => $invoice->id,
+                        'reference_sub_id' => $product->id,
+                        'date' => $invoice->issue_date,
+                    ];
+                    Utility::addTransactionLines($data, "new");
+
+                    // Account Recivable
+                    $account_recivable = ChartOfAccount::where('code', 1200)->where('created_by', \Auth::user()->creatorId())->first();
+                    $data2 = [
+                        'account_id' => $account_recivable->id,
+                        'transaction_type' => 'Debit',
                         'transaction_amount' => $itemAmount,
                         'reference' => 'Invoice',
                         'reference_id' => $invoice->id,
                         'reference_sub_id' => $product->id,
                         'date' => $invoice->issue_date,
                     ];
-                    Utility::addTransactionLines($data);
+                    Utility::addTransactionLines($data2, "new");
+
+
+                    $purchase_price = $product->purchase_price * $invoice_product->quantity;
+
+                    // Cost of Sales on service
+                    $cof_sale = ChartOfAccount::where('code', 5005)->where('created_by', \Auth::user()->creatorId())->first();
+                    $data = [
+                        'account_id' => $cof_sale->id,
+                        'transaction_type' => 'Debit',
+                        'transaction_amount' => $purchase_price,
+                        'reference' => 'Invoice',
+                        'reference_id' => $invoice->id,
+                        'reference_sub_id' => $product->id,
+                        'date' => $invoice->issue_date,
+                    ];
+                    Utility::addTransactionLines($data, "new");
+
+                    // Inventory
+                    $inventory = ChartOfAccount::where('code', 1510)->where('created_by', \Auth::user()->creatorId())->first();
+                    $data = [
+                        'account_id' => $inventory->id,
+                        'transaction_type' => 'Credit',
+                        'transaction_amount' => $purchase_price,
+                        'reference' => 'Invoice',
+                        'reference_id' => $invoice->id,
+                        'reference_sub_id' => $product->id,
+                        'date' => $invoice->issue_date,
+                    ];
+                    Utility::addTransactionLines($data, "new");
+
                 }
 
                 return redirect()->route('invoice.index')->with('success', __('Invoice successfully updated.'));
@@ -734,36 +791,14 @@ class InvoiceController extends Controller
 
             Utility::bankAccountBalance($request->account_id, $request->amount, 'credit');
 
-            $invoicePayments = InvoicePayment::where('invoice_id', $invoice->id)->get();
-            foreach ($invoicePayments as $invoicePayment) {
-
-                $accountId = BankAccount::find($invoicePayment->account_id);
-                $data = [
-                    'account_id' => $accountId->chart_account_id,
-                    'transaction_type' => 'Debit',
-                    'transaction_amount' => $invoicePayment->amount,
-                    'reference' => 'Invoice Payment',
-                    'reference_id' => $invoice->id,
-                    'reference_sub_id' => $invoicePayment->id,
-                    'date' => $invoicePayment->date,
-                ];
-                // Utility::addTransactionLines($data);
-            }
-
-
-            if($request->account_type_name == "cash") {
-                $account_type_name = ChartOfAccount::where('code', 1058)->where('created_by', \Auth::user()->creatorId())->first();
-            } else {
-                $account_type_name = ChartOfAccount::where('code', 1059)->where('created_by', \Auth::user()->creatorId())->first();
-            }
-
+            $accountId = BankAccount::find($request->account_id);
             $data = [
-                'account_id' => $account_type_name->id,
+                'account_id' => $accountId->chart_account_id,
                 'transaction_type' => 'Debit',
                 'transaction_amount' => $request->amount,
-                'reference' => 'Invoice',
+                'reference' => 'Invoice Payment',
                 'reference_id' => $invoice_id,
-                'reference_sub_id' => 1,
+                'reference_sub_id' => $invoicePayment->id,
                 'date' => $request->date,
             ];
             Utility::addTransactionLines($data, "new");
@@ -775,9 +810,9 @@ class InvoiceController extends Controller
                 'account_id' => $account_recivable->id,
                 'transaction_type' => 'Credit',
                 'transaction_amount' => $request->amount,
-                'reference' => 'Invoice',
+                'reference' => 'Invoice Payment',
                 'reference_id' => $invoice_id,
-                'reference_sub_id' => 2,
+                'reference_sub_id' => $invoicePayment->id,
                 'date' => $request->date,
             ];
             Utility::addTransactionLines($data, "new");
