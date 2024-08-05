@@ -225,7 +225,6 @@ class BillController extends Controller
 
             if(!empty($request->chart_account_id))
             {
-
                 $billaccount= ProductServiceCategory::find($request->category_id);
                 $chart_account = ChartOfAccount::find($billaccount->chart_account_id);
                 $billAccount                    = new BillAccount();
@@ -460,7 +459,6 @@ class BillController extends Controller
                 );
                 if ($validator->fails()) {
                     $messages = $validator->getMessageBag();
-
                     return redirect()->route('bill.index')->with('error', $messages->first());
                 }
                 $bill->vender_id      = $request->vender_id;
@@ -491,7 +489,6 @@ class BillController extends Controller
 
                     }
                     else{
-
                         Utility::total_quantity('minus',$billProduct->quantity,$billProduct->product_id);
                     }
 
@@ -504,7 +501,6 @@ class BillController extends Controller
                         $billProduct->description = $products[$i]['description'];
                         $billProduct->save();
                     }
-
 
                     $billTotal=0;
                     if(!empty($products[$i]['chart_account_id'])){
@@ -540,7 +536,6 @@ class BillController extends Controller
                     }
 
                     $total_amount += ($billProduct->quantity * $billProduct->price)+$billTotal ;
-
                 }
 
                 if(!empty($request->chart_account_id))
@@ -557,7 +552,7 @@ class BillController extends Controller
                 }
 
                 TransactionLines::where('reference_id',$bill->id)->where('reference','Bill')->delete();
-                TransactionLines::where('reference_id',$bill->id)->where('reference','Bill Account')->delete();
+                // TransactionLines::where('reference_id',$bill->id)->where('reference','Bill Payment')->delete();
 
                 $bill_products = BillProduct::where('bill_id', $bill->id)->get();
                 foreach ($bill_products as $bill_product) {
@@ -565,38 +560,55 @@ class BillController extends Controller
                     $totalTaxPrice = 0;
                     if($bill_product->tax != null){
 
-                    $taxes = \App\Models\Utility::tax($bill_product->tax);
-                    foreach ($taxes as $tax) {
-                        $taxPrice = \App\Models\Utility::taxRate($tax->rate, $bill_product->price, $bill_product->quantity, $bill_product->discount);
-                        $totalTaxPrice += $taxPrice;
+                        $taxes = \App\Models\Utility::tax($bill_product->tax);
+                        foreach ($taxes as $tax) {
+                            $taxPrice = \App\Models\Utility::taxRate($tax->rate, $bill_product->price, $bill_product->quantity, $bill_product->discount);
+                            $totalTaxPrice += $taxPrice;
+                        }
                     }
-                }
                     $itemAmount = ($bill_product->price * $bill_product->quantity) - ($bill_product->discount) + $totalTaxPrice;
+                    $product_price = ($bill_product->price * $bill_product->quantity) - ($bill_product->discount);
 
                     $data = [
                         'account_id' => $product->expense_chartaccount_id,
-                        'transaction_type' => 'Debit',
+                        'transaction_type' => 'Credit',
                         'transaction_amount' => $itemAmount,
                         'reference' => 'Bill',
                         'reference_id' => $bill->id,
                         'reference_sub_id' => $product->id,
                         'date' => $bill->bill_date,
                     ];
-                    Utility::addTransactionLines($data);
-                }
+                    Utility::addTransactionLines($data, "new");
 
-                $bill_accounts = BillAccount::where('ref_id', $bill->id)->get();
-                foreach ($bill_accounts as $bill_product) {
+                    // Product Amount Store in Inventory
+
+                    $chart_accounts = ChartOfAccount::where('code', 1510)->where('created_by', \Auth::user()->creatorId())->first();
                     $data = [
-                        'account_id' => $bill_product->chart_account_id,
+                        'account_id' => $chart_accounts->id,
                         'transaction_type' => 'Debit',
-                        'transaction_amount' => $bill_product->price,
-                        'reference' => 'Bill Account',
-                        'reference_id' => $bill_product->ref_id,
-                        'reference_sub_id' => $bill_product->id,
+                        'transaction_amount' => $product_price,
+                        'reference' => 'Bill',
+                        'reference_id' => $bill->id,
+                        'reference_sub_id' => $product->id,
                         'date' => $bill->bill_date,
                     ];
-                    Utility::addTransactionLines($data);
+                    Utility::addTransactionLines($data, "new");
+
+                    // Purchase Tax
+                    if($totalTaxPrice != 0)
+                    {
+                        $chart_accounts = ChartOfAccount::where('code', 2150)->where('created_by', \Auth::user()->creatorId())->first();
+                        $data = [
+                            'account_id' => $chart_accounts->id,
+                            'transaction_type' => 'Debit',
+                            'transaction_amount' => $totalTaxPrice,
+                            'reference' => 'Bill',
+                            'reference_id' => $bill->id,
+                            'reference_sub_id' => $product->id,
+                            'date' => $bill->bill_date,
+                        ];
+                        Utility::addTransactionLines($data, "new");
+                    }
                 }
 
                 return redirect()->route('bill.index')->with('success', __('Bill successfully updated.'));
@@ -881,11 +893,10 @@ class BillController extends Controller
         {
             $validator = \Validator::make(
                 $request->all(), [
-                                   'date' => 'required',
-                                   'amount' => 'required',
-                                   'account_id' => 'required',
-
-                               ]
+                    'date' => 'required',
+                    'amount' => 'required',
+                    'account_id' => 'required',
+                ]
             );
             if($validator->fails())
             {
@@ -962,39 +973,30 @@ class BillController extends Controller
 
             /* Account payable less  */
 
-            if($request->account_type_name == "cash") {
-                $account_type_name = ChartOfAccount::where('code', 1058)->where('created_by', \Auth::user()->creatorId())->first();
-            } else {
-                $account_type_name = ChartOfAccount::where('code', 1059)->where('created_by', \Auth::user()->creatorId())->first();
-            }
-
-            // transaction_lines
-
-            $data1 = [
-                'account_id' => $account_type_name->id,
+            $accountId = BankAccount::find($request->account_id);
+            $data= [
+                'account_id' => $accountId->chart_account_id,
                 'transaction_type' => 'Credit',
                 'transaction_amount' => $request->amount,
-                'reference' => 'Bill',
+                'reference' => 'Bill Payment',
                 'reference_id' => $bill_id,
-                'reference_sub_id' => 1,
+                'reference_sub_id' => $billPayment->id,
                 'date' => $request->date,
             ];
-            Log::info($data1);
-            Utility::addTransactionLines($data1, "new");
+            Utility::addTransactionLines($data, "new");
 
             $account_payable = ChartOfAccount::where('code', 2100)->where('created_by', \Auth::user()->creatorId())->first();
-            $data2 = [
+            $data = [
                 'account_id' => $account_payable->id,
                 'transaction_type' => 'Debit',
                 'transaction_amount' => $request->amount,
-                'reference' => 'Bill',
+                'reference' => 'Bill Payment',
                 'reference_id' => $bill_id,
-                'reference_sub_id' => 2,
+                'reference_sub_id' => $billPayment->id,
                 'date' => $request->date,
             ];
-            // dd($data);
-            Log::info($data2);
-            Utility::addTransactionLines($data2, "new");
+
+            Utility::addTransactionLines($data, "new");
 
             $vender = Vender::where('id', $bill->vender_id)->first();
 
@@ -1008,30 +1010,12 @@ class BillController extends Controller
 //            Utility::userBalance('vendor', $bill->vender_id, $request->amount, 'debit');
             Utility::updateUserBalance('vendor', $bill->vender_id, $request->amount, 'credit');
 
-
             Utility::bankAccountBalance($request->account_id, $request->amount, 'debit');
-
-            // $billPayments = BillPayment::where('bill_id', $bill->id)->get();
-            // foreach ($billPayments as $billPayment) {
-            //     $accountId = BankAccount::find($billPayment->account_id);
-
-            //     $data = [
-            //         'account_id' => $accountId->chart_account_id,
-            //         'transaction_type' => 'Debit',
-            //         'transaction_amount' => $billPayment->amount,
-            //         'reference' => 'Bill',
-            //         'reference_id' => $bill->id,
-            //         'reference_sub_id' => 0,
-            //         'date' => $billPayment->date,
-            //     ];
-            //     // Utility::addTransactionLines($data);
-            // }
 
             // Send Email
             $setings = Utility::settings();
             if($setings['new_bill_payment'] == 1)
             {
-
                 $vender = Vender::where('id', $bill->vender_id)->first();
                 $billPaymentArr = [
                     'vender_name'   => $vender->name,
@@ -1042,9 +1026,7 @@ class BillController extends Controller
                     'payment_date'  =>$payment->date,
                     'payment_method'=>$payment->method,
                     'company_name'=>$payment->method,
-
                 ];
-
 
                 $resp = Utility::sendEmailTemplate('new_bill_payment', [$vender->id => $vender->email], $billPaymentArr);
 
@@ -1185,8 +1167,8 @@ class BillController extends Controller
     {
         $validator = \Validator::make(
             $request->all(), [
-                               'email' => 'required|email',
-                           ]
+                'email' => 'required|email',
+            ]
         );
         if($validator->fails())
         {

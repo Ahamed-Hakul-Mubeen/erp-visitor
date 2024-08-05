@@ -3646,6 +3646,7 @@ class User extends Authenticatable implements MustVerifyEmail
     //default bank account for new company
     public function userDefaultBankAccount($user_id)
     {
+        $account_type_name = ChartOfAccount::where('code', 1058)->where('created_by', $user_id)->first();
         BankAccount::create(
             [
                 'holder_name' => 'cash',
@@ -3655,6 +3656,7 @@ class User extends Authenticatable implements MustVerifyEmail
                 'contact_number' => '-',
                 'bank_address' => '-',
                 'created_by' => $user_id,
+                'chart_account_id' => $account_type_name->id,
             ]
         );
 

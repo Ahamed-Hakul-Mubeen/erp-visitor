@@ -14,7 +14,6 @@
             <div class="form-group col-md-6">
                 {{ Form::label('account_id', __('Account'),['class'=>'form-label']) }}
                 {{ Form::select('account_id',$accounts,null, array('class' => 'form-control ', 'id' => 'account_id','required'=>'required')) }}
-                <input type="hidden" id="account_type_name" name="account_type_name">
             </div>
             <div class="form-group col-md-6">
                 {{ Form::label('reference', __('Reference'),['class'=>'form-label']) }}
@@ -46,13 +45,4 @@
 
     </div>
 {{ Form::close() }}
-
-<script>
-    $(document).ready(function(){
-        $("#account_type_name").val($("#account_id option:selected").text());
-        $("#account_id").change(function(){
-            $("#account_type_name").val($("#account_id option:selected").text());
-        });
-    });
-</script>
 
