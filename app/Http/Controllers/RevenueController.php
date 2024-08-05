@@ -170,14 +170,8 @@ class RevenueController extends Controller
             Utility::bankAccountBalance($request->account_id, $revenue->amount, 'credit');
 
             $accountId = BankAccount::find($revenue->account_id);
-            if($accountId->holder_name == "cash") {
-                $account_type_name = ChartOfAccount::where('code', 1058)->where('created_by', \Auth::user()->creatorId())->first();
-            } else {
-                $account_type_name = ChartOfAccount::where('code', 1059)->where('created_by', \Auth::user()->creatorId())->first();
-            }
-
             $data = [
-                'account_id' => $account_type_name->id,
+                'account_id' => $accountId->chart_account_id,
                 'transaction_type' => 'Debit',
                 'transaction_amount' => $revenue->amount,
                 'reference' => 'Revenue',
@@ -353,9 +347,22 @@ class RevenueController extends Controller
             $revenue->account    = $request->account_id;
             Transaction::editTransaction($revenue);
 
+            TransactionLines::where("reference", "Revenue")->where("reference_id", $revenue->id)->where('created_by', \Auth::user()->creatorId())->delete();
+
             $accountId = BankAccount::find($revenue->account_id);
             $data = [
                 'account_id' => $accountId->chart_account_id,
+                'transaction_type' => 'Debit',
+                'transaction_amount' => $revenue->amount,
+                'reference' => 'Revenue',
+                'reference_id' => $revenue->id,
+                'reference_sub_id' => 0,
+                'date' => $revenue->date,
+            ];
+            Utility::addTransactionLines($data, "new");
+
+            $data = [
+                'account_id' => $category->chart_account_id,
                 'transaction_type' => 'Credit',
                 'transaction_amount' => $revenue->amount,
                 'reference' => 'Revenue',
@@ -363,8 +370,7 @@ class RevenueController extends Controller
                 'reference_sub_id' => 0,
                 'date' => $revenue->date,
             ];
-            Utility::addTransactionLines($data);
-
+            Utility::addTransactionLines($data, "new");
 
 
             return redirect()->route('revenue.index')->with('success', __('Revenue Updated Successfully'). ((isset($result) && $result!=1) ? '<br> <span class="text-danger">' . $result . '</span>' : ''));
