@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\BankAccount;
 use App\Models\BankTransfer;
+use App\Models\TransactionLines;
 use App\Models\Utility;
 use Illuminate\Http\Request;
 
@@ -70,11 +71,11 @@ class BankTransferController extends Controller
         {
             $validator = \Validator::make(
                 $request->all(), [
-                                   'from_account' => 'required|numeric',
-                                   'to_account' => 'required|numeric',
-                                   'amount' => 'required|numeric',
-                                   'date' => 'required',
-                               ]
+                        'from_account' => 'required|numeric',
+                        'to_account' => 'required|numeric',
+                        'amount' => 'required|numeric',
+                        'date' => 'required',
+                    ]
             );
             if($validator->fails())
             {
@@ -97,6 +98,34 @@ class BankTransferController extends Controller
             Utility::bankAccountBalance($request->from_account, $request->amount, 'debit');
 
             Utility::bankAccountBalance($request->to_account, $request->amount, 'credit');
+
+            $from_account_coa = BankAccount::where("id", $request->from_account)->where('created_by', \Auth::user()->creatorId())->first();
+            $to_account_coa = BankAccount::where("id", $request->to_account)->where('created_by', \Auth::user()->creatorId())->first();
+
+            if($from_account_coa->holder_name == "cash" || $from_account_coa->holder_name == "Cash" || $to_account_coa->holder_name == "cash" || $to_account_coa->holder_name == "Cash")
+            {
+                $data = [
+                    'account_id' => $from_account_coa->chart_account_id,
+                    'transaction_type' => 'Credit',
+                    'transaction_amount' => $request->amount,
+                    'reference' => 'Bank Transaction',
+                    'reference_id' => $transfer->id,
+                    'reference_sub_id' => 0,
+                    'date' => $request->date,
+                ];
+                Utility::addTransactionLines($data, "new");
+
+                $data = [
+                    'account_id' => $to_account_coa->chart_account_id,
+                    'transaction_type' => 'Debit',
+                    'transaction_amount' => $request->amount,
+                    'reference' => 'Bank Transaction',
+                    'reference_id' => $transfer->id,
+                    'reference_sub_id' => 0,
+                    'date' => $request->date,
+                ];
+                Utility::addTransactionLines($data, "new");
+            }
 
             return redirect()->route('bank-transfer.index')->with('success', __('Amount successfully transfer.'));
         }
@@ -133,11 +162,11 @@ class BankTransferController extends Controller
             $transfer = BankTransfer::find($id);
             $validator = \Validator::make(
                 $request->all(), [
-                                   'from_account' => 'required|numeric',
-                                   'to_account' => 'required|numeric',
-                                   'amount' => 'required|numeric',
-                                   'date' => 'required',
-                               ]
+                            'from_account' => 'required|numeric',
+                            'to_account' => 'required|numeric',
+                            'amount' => 'required|numeric',
+                            'date' => 'required',
+                        ]
             );
             if($validator->fails())
             {
@@ -158,9 +187,38 @@ class BankTransferController extends Controller
             $transfer->description    = $request->description;
             $transfer->save();
 
+            TransactionLines::where("reference", "Bank Transaction")->where("reference_id", $transfer->id)->where('created_by', \Auth::user()->creatorId())->delete();
+
+            $from_account_coa = BankAccount::where("id", $request->from_account)->where('created_by', \Auth::user()->creatorId())->first();
+            $to_account_coa = BankAccount::where("id", $request->to_account)->where('created_by', \Auth::user()->creatorId())->first();
 
             Utility::bankAccountBalance($request->from_account, $request->amount, 'debit');
             Utility::bankAccountBalance($request->to_account, $request->amount, 'credit');
+
+            if($from_account_coa->holder_name == "cash" || $from_account_coa->holder_name == "Cash" || $to_account_coa->holder_name == "cash" || $to_account_coa->holder_name == "Cash")
+            {
+                $data = [
+                    'account_id' => $from_account_coa->chart_account_id,
+                    'transaction_type' => 'Credit',
+                    'transaction_amount' => $request->amount,
+                    'reference' => 'Bank Transaction',
+                    'reference_id' => $transfer->id,
+                    'reference_sub_id' => 0,
+                    'date' => $request->date,
+                ];
+                Utility::addTransactionLines($data, "new");
+
+                $data = [
+                    'account_id' => $to_account_coa->chart_account_id,
+                    'transaction_type' => 'Debit',
+                    'transaction_amount' => $request->amount,
+                    'reference' => 'Bank Transaction',
+                    'reference_id' => $transfer->id,
+                    'reference_sub_id' => 0,
+                    'date' => $request->date,
+                ];
+                Utility::addTransactionLines($data, "new");
+            }
 
             return redirect()->route('bank-transfer.index')->with('success', __('Amount successfully transfer updated.'));
         }
@@ -178,6 +236,7 @@ class BankTransferController extends Controller
         {
             if($BankTransfer->created_by == \Auth::user()->creatorId())
             {
+                TransactionLines::where("reference", "Bank Transaction")->where("reference_id", $BankTransfer->id)->where('created_by', \Auth::user()->creatorId())->delete();
                 $BankTransfer->delete();
 
                 Utility::bankAccountBalance($BankTransfer->from_account, $BankTransfer->amount, 'credit');
