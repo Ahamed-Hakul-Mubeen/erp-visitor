@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\PayslipExport;
 use App\Models\Allowance;
+use App\Models\BankAccount;
 use App\Models\ChartOfAccount;
 use App\Models\Commission;
 use App\Models\Employee;
@@ -12,6 +13,7 @@ use App\Models\OtherPayment;
 use App\Models\Overtime;
 use App\Models\PaySlip;
 use App\Models\SaturationDeduction;
+use App\Models\TransactionLines;
 use App\Models\Utility;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -173,6 +175,11 @@ class PaySlipController extends Controller
     public function destroy($id)
     {
         $payslip = PaySlip::find($id);
+        TransactionLines::where("reference", "Payslip")->where("reference_id", $id)->where('created_by', \Auth::user()->creatorId())->delete();
+
+        $employee = Employee::find($payslip->employee_id);
+        Utility::bankAccountBalance($employee->account, $payslip->net_payble, 'credit');
+
         $payslip->delete();
 
         return true;
@@ -272,7 +279,8 @@ class PaySlipController extends Controller
         $account = Employee::find($id);
         Utility::bankAccountBalance($account->account, $employeePayslip->net_payble, 'debit');
 
-        $bank_co_acc = ChartOfAccount::where('code', 1059)->where('created_by', \Auth::user()->creatorId())->first();
+        $bank_acc = BankAccount::find($account->account);
+        $bank_co_acc = ChartOfAccount::where('code', $bank_acc->chart_account_id)->where('created_by', \Auth::user()->creatorId())->first();
         $data = [
             'account_id' => $bank_co_acc->id,
             'transaction_type' => 'Credit',
@@ -324,6 +332,34 @@ class PaySlipController extends Controller
 
         foreach($unpaidEmployees as $employee)
         {
+            $account = Employee::find($employee->employee_id);
+            Utility::bankAccountBalance($account->account, $employee->net_payble, 'debit');
+
+            $bank_acc = BankAccount::find($account->account);
+            $bank_co_acc = ChartOfAccount::where('code', $bank_acc->chart_account_id)->where('created_by', \Auth::user()->creatorId())->first();
+            $data = [
+                'account_id' => $bank_co_acc->id,
+                'transaction_type' => 'Credit',
+                'transaction_amount' => $employee->net_payble,
+                'reference' => 'Payslip',
+                'reference_id' => $employee->id,
+                'reference_sub_id' => 0,
+                'date' => date("Y-m-d"),
+            ];
+            Utility::addTransactionLines($data, "new");
+
+            $Salaries_co_acc = ChartOfAccount::where('code', 5410)->where('created_by', \Auth::user()->creatorId())->first();
+            $data = [
+                'account_id' => $Salaries_co_acc->id,
+                'transaction_type' => 'Debit',
+                'transaction_amount' => $employee->net_payble,
+                'reference' => 'Payslip',
+                'reference_id' => $employee->id,
+                'reference_sub_id' => 0,
+                'date' => date("Y-m-d"),
+            ];
+            Utility::addTransactionLines($data, "new");
+
             $employee->status = 1;
             $employee->save();
         }
