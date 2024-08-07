@@ -283,21 +283,25 @@ class JobController extends Controller
                                'phone' => 'required',
 //                               'profile' => 'mimes:jpeg,png,jpg,gif,svg|max:20480',
 //                               'resume' => 'mimes:jpeg,png,jpg,gif,svg,pdf,doc,zip|max:20480',
-                           ]
-        );
+]
+);
 
-        if($validator->fails())
-        {
-            $messages = $validator->getMessageBag();
+if($validator->fails())
+{
+    $messages = $validator->getMessageBag();
+    
+    return redirect()->back()->with('error', $messages->first());
+}
 
-            return redirect()->back()->with('error', $messages->first());
-        }
+$existingJobApplication = JobApplication::where('email', $request->email)->first();
+if ($existingJobApplication) {
+    return redirect()->back()->with('error', __('Email already exists'));
+}
+$job = Job::where('code', $code)->first();
 
-        $job = Job::where('code', $code)->first();
-
-        if(!empty($request->profile))
-        {
-
+if(!empty($request->profile))
+{
+    
             //storage limit
             $image_size = $request->file('profile')->getSize();
             $result = Utility::updateStorageLimit(\Auth::user()->creatorId(), $image_size);
@@ -359,8 +363,8 @@ class JobController extends Controller
 
 
         }
-
-
+       
+        
         $stage=JobStage::where('created_by',$job->created_by)->first();
         $jobApplication                  = new JobApplication();
         $jobApplication->job             = $job->id;
@@ -382,7 +386,8 @@ class JobController extends Controller
 
 
         return redirect()->back()->with('success', __('Job application successfully send'). ((isset($result) && $result!=1) ? '<br> <span class="text-danger">' . $result . '</span>' : ''));
-
+       
+        
     }
 
 

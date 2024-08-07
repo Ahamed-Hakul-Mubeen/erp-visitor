@@ -30,18 +30,15 @@ class JobAutoExpiryDateCron extends Command
     {
         
         $todayEnd = Carbon::now()->endOfDay();
-        $jobs = Job::select('id', 'end_date')->get();
+        $jobs = Job::select('id', 'end_date')->where('status','active')->get();
     
         foreach ($jobs as $job) {
          $endDate = Carbon::parse($job->end_date);
-            if ($endDate->isSameDay(Carbon::now())) {
-                $job->status = 'active';
-                Log::info("Job {$job->id} is active.");
-            } elseif ($endDate->isBefore($todayEnd)) {
+            if ($endDate->isBefore($todayEnd)) {
                  $job->status = 'in_active';
                 Log::info("Job {$job->id} is inactive.");
+                $job->save();
             }
-            $job->save();
         }
     
         return 0;
