@@ -2532,6 +2532,24 @@ class UsersTableSeeder extends Seeder
                 'updated_at' => date('Y-m-d H:i:s'),
             ],
             [
+                'name' => 'create attachment',
+                'guard_name' => 'web',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ],
+            [
+                'name' => 'delete attachment',
+                'guard_name' => 'web',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ],
+            [
+                'name' => 'download attachment',
+                'guard_name' => 'web',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ],
+            [
                 'name' => 'view grant chart',
                 'guard_name' => 'web',
                 'created_at' => date('Y-m-d H:i:s'),
@@ -3666,6 +3684,9 @@ class UsersTableSeeder extends Seeder
             ['name' => 'edit milestone'],
             ['name' => 'delete milestone'],
             ['name' => 'view milestone'],
+            ['name' => 'create attachment'],
+            ['name' => 'delete attachment'],
+            ['name' => 'download attachment'],
             ['name' => 'view grant chart'],
             ['name' => 'manage project stage'],
             ['name' => 'create project stage'],
@@ -3958,7 +3979,7 @@ class UsersTableSeeder extends Seeder
             ['name' => 'manage company policy'],
             ['name' => 'manage event'],
             ['name' => 'manage meeting'],
-            ['name' => 'manage award'],            
+            ['name' => 'manage award'],
             ['name' => 'manage promotion'],
             ['name' => 'manage complaint'],
             ['name' => 'manage warning'],
@@ -4006,7 +4027,7 @@ class UsersTableSeeder extends Seeder
                 'created_by' => $company->id,
             ]
         );
-        
+
         $clientPermission = [
             ['name' => 'manage client dashboard'],
             ['name' => 'manage bug report'],

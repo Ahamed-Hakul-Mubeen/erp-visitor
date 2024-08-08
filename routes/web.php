@@ -601,7 +601,7 @@ Route::group(['middleware' => ['verified']], function () {
             Route::get('reports-quarterly-cashflow', [ReportController::class, 'quarterlyCashflow'])->name('report.quarterly.cashflow')->middleware(['auth', 'XSS']);
             Route::post('export/trial-balance', [ReportController::class, 'trialBalanceExport'])->name('trial.balance.export');
             Route::post('export/balance-sheet', [ReportController::class, 'balanceSheetExport'])->name('balance.sheet.export');
-            Route::post('export/profit-loss', [ReportController::class, 'profitLossExport'])->name('profit.loss.export');            
+            Route::post('export/profit-loss', [ReportController::class, 'profitLossExport'])->name('profit.loss.export');
             Route::get('report/sales', [ReportController::class, 'salesReport'])->name('report.sales');
             Route::post('export/sales', [ReportController::class, 'salesReportExport'])->name('sales.export');
             Route::get('report/receivables', [ReportController::class, 'ReceivablesReport'])->name('report.receivables');
@@ -1016,6 +1016,9 @@ Route::group(['middleware' => ['verified']], function () {
 
     Route::get('projects/{id}/milestone', [ProjectController::class, 'milestone'])->name('project.milestone')->middleware(['auth', 'XSS']);
 
+
+
+
     //Route::delete(
     //    '/projects/{id}/users/{uid}', [
     //                                    'as' => 'projects.users.destroy',
@@ -1034,6 +1037,12 @@ Route::group(['middleware' => ['verified']], function () {
     Route::get('projects/milestone/{id}/show', [ProjectController::class, 'milestoneShow'])->name('project.milestone.show')->middleware(['auth', 'XSS']);
 
     // End Milestone
+
+    // Attachment Module
+
+    Route::get('projects/{id}/attachment', [ProjectController::class, 'attachment'])->name('project.attachment')->middleware(['auth', 'XSS']);
+    Route::post('projects/{id}/attachment', [ProjectController::class, 'attachmentStore'])->name('project.attachment.store')->middleware(['auth', 'XSS']);
+    Route::delete('projects/attachment/{id}', [ProjectController::class, 'attachmentDestroy'])->name('project.attachment.destroy')->middleware(['auth', 'XSS']);
 
     // Project Module
 
@@ -1518,7 +1527,7 @@ Route::group(['middleware' => ['verified']], function () {
         Route::post('pos/getproduct', [PosController::class, 'getproduct'])->name('pos.getproduct')->middleware(['auth', 'XSS']);
         Route::any('pos-receipt', [PosController::class, 'receipt'])->name('pos.receipt')->middleware(['auth', 'XSS']);
         Route::post('/cartdiscount', [PosController::class, 'cartdiscount'])->name('cartdiscount')->middleware(['auth', 'XSS']);
-        
+
     //for pos print
     Route::get('printview/pos', [PosController::class, 'printView'])->name('pos.printview')->middleware(['auth', 'XSS', 'revalidate']);
 

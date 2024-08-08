@@ -154,8 +154,10 @@ class Project extends Model
     public function projectAttachments()
     {
         $usr = Auth::user();
-        $tasks = $this->tasks->pluck('id');
-        return TaskFile::whereIn('task_id', $tasks)->get();
+        // $tasks = $this->tasks->pluck('id');
+        // return TaskFile::whereIn('task_id', $tasks)->get();
+        $project_id = $this->id;
+        return TaskFile::where('project_id', $project_id)->get();
     }
 
     public function activities()
@@ -189,7 +191,7 @@ class Project extends Model
                         $timesheetArray[$k]['project_id']   = $project->id;
                         $timesheetArray[$k]['project_name'] = $project->project_name;
                         foreach($timesheet as $task_id => $tasktimesheet)
-                        {   
+                        {
                             $task = ProjectTask::find($task_id);
                             if($task)
                             {

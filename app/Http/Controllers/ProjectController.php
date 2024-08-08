@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class ProjectController extends Controller
 {
@@ -350,7 +351,7 @@ class ProjectController extends Controller
                 ];
 
                 $last_task      = TaskStage::orderBy('order', 'DESC')->where('created_by',\Auth::user()->creatorId())->first();
-            
+
                 // end chart
 
                 return view('projects.view',compact('project','project_data' , 'last_task'));
@@ -723,7 +724,7 @@ class ProjectController extends Controller
                 }
                 $projects   = $projects->get();
                 $last_task      = TaskStage::orderBy('order', 'DESC')->where('created_by',\Auth::user()->creatorId())->first();
-                
+
                 $returnHTML = view('projects.' . $request->view, compact('projects', 'user_projects', 'last_task'))->render();
 
                 return response()->json(
@@ -736,6 +737,80 @@ class ProjectController extends Controller
         }
         else
         {
+            return redirect()->back()->with('error', __('Permission Denied.'));
+        }
+    }
+
+    public function attachment($project_id)
+    {
+        if(\Auth::user()->can('create attachment'))
+        {
+            $project = Project::find($project_id);
+
+            return view('projects.attachment', compact('project'));
+        }
+        else
+        {
+            return redirect()->back()->with('error', __('Permission Denied.'));
+        }
+    }
+
+    public function attachmentStore(Request $request, $project_id)
+    {
+        if (\Auth::user()->can('create attachment')) {
+            $project = Project::find($project_id);
+            $validator = Validator::make(
+                $request->all(), [
+                    'name' => 'required',
+                    'file' => 'required|file|mimes:jpg,jpeg,png,pdf,doc,docx,xls,xlsx|max:51200',
+                ]
+            );
+
+            if ($validator->fails()) {
+                return redirect()->back()->with('error', Utility::errorFormat($validator->getMessageBag()));
+            }
+
+            $file = $request->file('file');
+            $fileName = time() . '.' . $file->getClientOriginalExtension();
+            $filePath = $file->storeAs('project/uploads', $fileName, 'public');
+            $FilePath_1 = str_replace('project/uploads/', '', $filePath);
+
+            $attachment = new TaskFile();
+            $attachment->project_id = $project->id;
+            $attachment->name = $request->name;
+            $attachment->file = $FilePath_1;
+            $attachment->extension = $file->getClientOriginalExtension();
+            $attachment->file_size = $file->getSize();
+            $attachment->task_id = null;
+            $attachment->user_type = \Auth::user()->type;
+            $attachment->created_by = \Auth::user()->id;
+            $attachment->save();
+
+            return redirect()->back()->with('success', __('Attachment successfully created.'));
+        } else {
+            return redirect()->back()->with('error', __('Permission Denied.'));
+        }
+    }
+
+
+    public function attachmentDestroy($id)
+    {
+        if (\Auth::user()->can('delete attachment')) {
+            $attachment = TaskFile::find($id);
+
+            if ($attachment) {
+                $filePath = 'project/uploads/' . $attachment->file;
+                if (Storage::disk('public')->exists($filePath)) {
+                    Storage::disk('public')->delete($filePath);
+                }
+
+                $attachment->delete();
+
+                return redirect()->back()->with('success', __('Attachment successfully deleted.'));
+            } else {
+                return redirect()->back()->with('error', __('Attachment not found.'));
+            }
+        } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
     }
@@ -868,7 +943,7 @@ class ProjectController extends Controller
             $priority     = Bug::$priority;
             $status       = BugStatus::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('title', 'id');
             $project_user = ProjectUser::where('project_id', $project_id)->get();
-            
+
             $users        = [];
             foreach($project_user as $key=>$user)
             {
