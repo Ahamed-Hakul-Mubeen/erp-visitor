@@ -258,11 +258,10 @@ class JobController extends Controller
         $companySettings['footer_text']     = \DB::table('settings')->where('created_by', $job->created_by)->where('name', 'footer_text')->first();
         $companySettings['company_favicon'] = \DB::table('settings')->where('created_by', $job->created_by)->where('name', 'company_favicon')->first();
         $companySettings['company_logo']    = \DB::table('settings')->where('created_by', $job->created_by)->where('name', 'company_logo')->first();
-
-        $questions = CustomQuestion::where('created_by', $job->created_by)->get();
-
+       
+        $customQuestionIds = explode(',', $job->custom_question);
+        $questions = CustomQuestion::whereIn('id', $customQuestionIds)->where('created_by', $job->created_by)->get();
         $languages = Utility::languages();
-
         $currantLang = \Session::get('lang');
         if(empty($currantLang))
         {

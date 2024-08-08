@@ -32,4 +32,10 @@ class JobApplication extends Model
     {
         return $this->hasOne('App\Models\Job', 'id', 'job');
     }
+
+    public function stage()
+    {
+        return $this->belongsTo('App\Models\JobStage', 'stage', 'id');
+    }
+
 }

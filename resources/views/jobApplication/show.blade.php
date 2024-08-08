@@ -179,6 +179,8 @@
                                     <label class="form check-label" for="stage_{{$stage->id}}">{{$stage->title}}</label>
                                 </div>
                             @endforeach
+                           
+                       
                         </div>
                     </div>
                 </div>
@@ -191,7 +193,9 @@
                         <div class="col-auto">
                             <h6 class="text-muted">{{__('Basic Information')}}</h6>
                         </div>
-
+                       
+                       
+                        @if($stagejob->title != 'Applied' && $stagejob->title !='Phone Screen')
                         <div class="col text-end">
                             <div class="col-12 text-end">
                                 <a href="#" data-url="{{route('job.on.board.create', $jobApplication->id)}}" data-title="{{__('Add to Job OnBoard')}}" data-ajax-popup="true" class="btn-sm btn btn-primary">
@@ -199,8 +203,10 @@
                             </div>
 
                         </div>
+                        @endif
                     </div>
                 </div>
+              
                 <div class="card-body">
                     <dl class="row">
                         <dt class="col-sm-3"><span class="h6 text-sm mb-0">{{__('Phone')}}</span></dt>

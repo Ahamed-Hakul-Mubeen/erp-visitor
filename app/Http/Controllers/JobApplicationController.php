@@ -219,17 +219,19 @@ class JobApplicationController extends Controller
 
     public function show($ids)
     {
-
+       
         if(\Auth::user()->can('show job application'))
         {
             $id             = Crypt::decrypt($ids);
-            $jobApplication = JobApplication::find($id);
-
+            $jobApplication = JobApplication::with('stage')->find($id);
+            $stagejob = JobStage::find($jobApplication->stage);
             $notes = JobApplicationNote::where('application_id', $id)->get();
-
+            
             $stages = JobStage::where('created_by', \Auth::user()->creatorId())->get();
+            
+            
 
-            return view('jobApplication.show', compact('jobApplication', 'notes', 'stages'));
+            return view('jobApplication.show', compact('jobApplication', 'notes', 'stages','stagejob'));
         }
         else
         {
@@ -586,7 +588,7 @@ class JobApplicationController extends Controller
                     'name' => $request['name'],
                     'email' => $request['email'],
                     'password' => Hash::make($request['password']),
-                    'type' => 'employee',
+                    'type' => 'Employee',
                     'lang' => 'en',
                     'created_by' => \Auth::user()->creatorId(),
                 ]
