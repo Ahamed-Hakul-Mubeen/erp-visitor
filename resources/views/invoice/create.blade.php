@@ -104,6 +104,63 @@
             $('#customer_detail').addClass('d-none');
         })
 
+        $(document).on('change', '.tax-select', function () {
+            var el = $(this).parent().parent().parent().parent().parent();
+            // console.log(el);
+            var totalItemTaxRate = $(this).find('option:selected').attr('data-taxrate');
+            var taxid = $(this).find('option:selected').attr('value');
+
+            $(el.find('.itemTaxRate')).val(parseFloat(totalItemTaxRate).toFixed(2));
+
+            var tax = [];
+            tax.push(taxid);
+            $(el.find('.tax')).val(tax);
+
+            var quantity = $(el.find('.quantity')).val();
+            var price = $(el.find('.price')).val();
+            var discount = $(el.find('.discount')).val();
+
+            if(discount.length <= 0)
+            {
+                discount = 0 ;
+            }
+
+            var totalItemPrice = (quantity * price) - discount;
+            var amount = (totalItemPrice);
+
+            var totalItemTaxRate = $(el.find('.itemTaxRate')).val();
+            var itemTaxPrice = parseFloat((totalItemTaxRate / 100) * (totalItemPrice));
+            $(el.find('.itemTaxPrice')).val(itemTaxPrice.toFixed(2));
+
+            $(el.find('.amount')).html(parseFloat(itemTaxPrice)+parseFloat(amount));
+
+            var totalItemTaxPrice = 0;
+            var itemTaxPriceInput = $('.itemTaxPrice');
+            for (var j = 0; j < itemTaxPriceInput.length; j++) {
+                totalItemTaxPrice += parseFloat(itemTaxPriceInput[j].value);
+            }
+
+            var totalItemPrice = 0;
+            var inputs_quantity = $(".quantity");
+
+            var priceInput = $('.price');
+            for (var j = 0; j < priceInput.length; j++) {
+                totalItemPrice += (parseFloat(priceInput[j].value) * parseFloat(inputs_quantity[j].value));
+            }
+
+            var inputs = $(".amount");
+
+            var subTotal = 0;
+            for (var i = 0; i < inputs.length; i++) {
+                subTotal = parseFloat(subTotal) + parseFloat($(inputs[i]).html());
+            }
+
+            $('.subTotal').html(totalItemPrice.toFixed(2));
+            $('.totalTax').html(totalItemTaxPrice.toFixed(2));
+
+            $('.totalAmount').html((parseFloat(subTotal)).toFixed(2));
+
+        });
         $(document).on('change', '.item', function () {
 
             var iteams_id = $(this).val();
@@ -136,11 +193,14 @@
                     if (item.taxes == 0) {
                         taxes += '-';
                     } else {
+                        taxes += `<select class='form-control select2 tax-select'><option value='0'>--</option>`;
                         for (var i = 0; i < item.taxes.length; i++) {
-                            taxes += '<span class="badge bg-primary mt-1 mr-2">' + item.taxes[i].name + ' ' + '(' + item.taxes[i].rate + '%)' + '</span>';
-                            tax.push(item.taxes[i].id);
-                            totalItemTaxRate += parseFloat(item.taxes[i].rate);
+                            taxes += `<option data-taxrate='${item.taxes[i].rate}' value='${item.taxes[i].id}'>${item.taxes[i].name} (${item.taxes[i].rate}%)</option>`;
+                            // taxes += '<span class="mt-1 mr-2 badge bg-primary">' + item.taxes[i].name + ' ' + '(' + item.taxes[i].rate + '%)' + '</span>';
+                            // tax.push(item.taxes[i].id);
+                            // totalItemTaxRate += parseFloat(item.taxes[i].rate);
                         }
+                        taxes += '</select>';
                     }
                     var itemTaxPrice = parseFloat((totalItemTaxRate / 100)) * parseFloat((item.product.sale_price * 1));
                     $(el.parent().parent().find('.itemTaxPrice')).val(itemTaxPrice.toFixed(2));
@@ -430,7 +490,7 @@
                                     </div>
                                 </div>
 {{--                                <div class="col-md-6">--}}
-{{--                                    <div class="form-check custom-checkbox mt-4">--}}
+{{--                                    <div class="mt-4 form-check custom-checkbox">--}}
 {{--                                        <input class="form-check-input" type="checkbox" name="discount_apply" id="discount_apply">--}}
 {{--                                        <label class="form-check-label " for="discount_apply">{{__('Discount Apply')}}</label>--}}
 {{--                                    </div>--}}
@@ -455,9 +515,9 @@
             </div>
         </div>
         <div class="col-12">
-            <h5 class=" d-inline-block mb-4">{{__('Product & Services')}}</h5>
+            <h5 class="mb-4 d-inline-block">{{__('Product & Services')}}</h5>
             <div class="card repeater">
-                <div class="item-section py-2">
+                <div class="py-2 item-section">
                     <div class="row justify-content-between align-items-center">
                         <div class="col-md-12 d-flex align-items-center justify-content-between justify-content-md-end">
                             <div class="all-button-box me-2">
@@ -468,9 +528,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="card-body table-border-style mt-2">
+                <div class="mt-2 card-body table-border-style">
                     <div class="table-responsive">
-                        <table class="table datatable mb-0 table-custom-style" data-repeater-list="items" id="sortable-table">
+                        <table class="table mb-0 datatable table-custom-style" data-repeater-list="items" id="sortable-table">
                             <thead>
                             <tr>
                                 <th>{{__('Items')}}</th>
@@ -486,13 +546,13 @@
                             <tbody class="ui-sortable" data-repeater-item>
                             <tr>
 
-                                <td width="25%" class="form-group pt-0">
+                                <td width="25%" class="pt-0 form-group">
                                     {{ Form::select('item', $product_services,'', array('class' => 'form-control select2 item','data-url'=>route('invoice.product'),'required'=>'required')) }}
                                 </td>
                                 <td>
                                     <div class="form-group price-input input-group search-form">
                                         {{ Form::text('quantity','', array('class' => 'form-control quantity','required'=>'required','placeholder'=>__('Qty'),'required'=>'required')) }}
-                                        <span class="unit input-group-text bg-transparent"></span>
+                                        <span class="bg-transparent unit input-group-text"></span>
                                     </div>
                                 </td>
 
@@ -500,22 +560,22 @@
                                 <td>
                                     <div class="form-group price-input input-group search-form">
                                         {{ Form::text('price','', array('class' => 'form-control price','required'=>'required','placeholder'=>__('Price'),'required'=>'required')) }}
-                                        <span class="input-group-text bg-transparent">{{\Auth::user()->currencySymbol()}}</span>
+                                        <span class="bg-transparent input-group-text">{{\Auth::user()->currencySymbol()}}</span>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="form-group price-input input-group search-form">
                                         {{ Form::text('discount','', array('class' => 'form-control discount','required'=>'required','placeholder'=>__('Discount'))) }}
-                                        <span class="input-group-text bg-transparent">{{\Auth::user()->currencySymbol()}}</span>
+                                        <span class="bg-transparent input-group-text">{{\Auth::user()->currencySymbol()}}</span>
                                     </div>
                                 </td>
 
 
 
-                                <td>
+                                <td width="10%">
                                     <div class="form-group">
                                         <div class="input-group colorpickerinput">
-                                            <div class="taxes"></div>
+                                            <div class="taxes" style="width: 100%"></div>
                                             {{ Form::hidden('tax','', array('class' => 'form-control tax text-dark')) }}
                                             {{ Form::hidden('itemTaxPrice','', array('class' => 'form-control itemTaxPrice')) }}
                                             {{ Form::hidden('itemTaxRate','', array('class' => 'form-control itemTaxRate')) }}
@@ -525,7 +585,7 @@
 
                                 <td class="text-end amount">0.00</td>
                                 <td>
-                                    <a href="#" class="ti ti-trash text-white repeater-action-btn bg-danger ms-2 bs-pass-para" data-repeater-delete></a>
+                                    <a href="#" class="text-white ti ti-trash repeater-action-btn bg-danger ms-2 bs-pass-para" data-repeater-delete></a>
                                 </td>
                             </tr>
                             <tr>

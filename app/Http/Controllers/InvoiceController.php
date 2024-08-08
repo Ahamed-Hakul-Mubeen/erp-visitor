@@ -102,7 +102,7 @@ class InvoiceController extends Controller
 
     public function store(Request $request)
     {
-//        dd($request->all());
+    //    dd($request->all());
         if (\Auth::user()->can('create invoice')) {
             $validator = \Validator::make(
                 $request->all(), [
@@ -220,7 +220,7 @@ class InvoiceController extends Controller
 
     public function update(Request $request, Invoice $invoice)
     {
-
+        // dd($request->all());
         if (\Auth::user()->can('edit invoice')) {
             if ($invoice->created_by == \Auth::user()->creatorId()) {
                 $validator = \Validator::make(
