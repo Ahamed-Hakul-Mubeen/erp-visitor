@@ -137,64 +137,64 @@
 
 
     <div id="printableArea">
-        {{-- <div class="row mt-2">
+        {{-- <div class="mt-2 row">
             <div class="col">
                 <input type="hidden"
                     value="{{ __('Ledger') . ' ' . 'Report of' . ' ' . $filter['startDateRange'] . ' to ' . $filter['endDateRange'] }}"
                     id="filename">
-                <div class="card p-4 mb-4">
+                <div class="p-4 mb-4 card">
                     <h6 class="mb-0">{{ __('Report') }} :</h6>
-                    <h7 class="text-sm mb-0">{{ __('Ledger Summary') }}</h7>
+                    <h7 class="mb-0 text-sm">{{ __('Ledger Summary') }}</h7>
                 </div>
             </div>
 
             <div class="col">
-                <div class="card p-4 mb-4">
+                <div class="p-4 mb-4 card">
                     <h6 class="mb-0">{{ __('Duration') }} :</h6>
-                    <h7 class="text-sm mb-0">{{ $filter['startDateRange'] . ' to ' . $filter['endDateRange'] }}</h7>
+                    <h7 class="mb-0 text-sm">{{ $filter['startDateRange'] . ' to ' . $filter['endDateRange'] }}</h7>
                 </div>
             </div>
         </div> --}}
         {{-- @if (!empty($account))
-            <div class="row mt-2">
+            <div class="mt-2 row">
                 <div class="col">
-                    <div class="card p-4 mb-4">
+                    <div class="p-4 mb-4 card">
                         <h6 class="mb-0">{{ __('Account Name') }} :</h6>
-                        <h7 class="text-sm mb-0">{{ $account->name }}</h7>
+                        <h7 class="mb-0 text-sm">{{ $account->name }}</h7>
                     </div>
                 </div>
 
                 <div class="col">
-                    <div class="card p-4 mb-4">
+                    <div class="p-4 mb-4 card">
                         <h6 class="mb-0">{{ __('Account Code') }} :</h6>
-                        <h7 class="text-sm mb-0">{{ $account->code }}</h7>
+                        <h7 class="mb-0 text-sm">{{ $account->code }}</h7>
                     </div>
                 </div>
                 <div class="col">
-                    <div class="card p-4 mb-4">
+                    <div class="p-4 mb-4 card">
                         <h6 class="mb-0">{{ __('Total Debit') }} :</h6>
-                        <h7 class="text-sm mb-0">{{ \Auth::user()->priceFormat($filter['debit']) }}</h7>
+                        <h7 class="mb-0 text-sm">{{ \Auth::user()->priceFormat($filter['debit']) }}</h7>
                     </div>
                 </div>
                 <div class="col">
-                    <div class="card p-4 mb-4">
+                    <div class="p-4 mb-4 card">
                         <h6 class="mb-0">{{ __('Total Credit') }} :</h6>
-                        <h7 class="text-sm mb-0">{{ \Auth::user()->priceFormat($filter['credit']) }}</h7>
+                        <h7 class="mb-0 text-sm">{{ \Auth::user()->priceFormat($filter['credit']) }}</h7>
                     </div>
                 </div>
 
                 <div class="col">
-                    <div class="card p-4 mb-4">
+                    <div class="p-4 mb-4 card">
                         <h6 class="mb-0">{{ __('Balance') }} :</h6>
-                        <h7 class="text-sm mb-0">
+                        <h7 class="mb-0 text-sm">
                             {{ $filter['balance'] > 0 ? __('Cr') . '. ' . \Auth::user()->priceFormat(abs($filter['balance'])) : __('Dr') . '. ' . \Auth::user()->priceFormat(abs($filter['balance'])) }}
                         </h7>
                     </div>
                 </div>
             </div>
         @endif --}}
-        <div class="row mb-4">
-            <div class="col-12 mb-4">
+        <div class="mb-4 row">
+            <div class="mb-4 col-12">
                 <div class="card">
                     <div class="card-body table-border-style">
                         <div class="table-responsive">
@@ -354,6 +354,61 @@
                                                     <td>{{ '-' }}
                                                     </td>
                                                     <td>{{ AUth::user()->journalNumberFormat($account->reference_id) }}
+                                                    </td>
+                                                    <td>{{ $account->date }}</td>
+                                                    <td>{{ \Auth::user()->priceFormat($account->debit) }}</td>
+                                                    @php
+                                                        $total = $account->credit - $account->debit;
+                                                        $balance += $total;
+                                                    @endphp
+                                                    <td>{{ \Auth::user()->priceFormat($account->credit) }}</td>
+                                                    <td>{{ \Auth::user()->priceFormat($balance) }}</td>
+                                                </tr>
+                                            @endif
+                                            
+                                            @if ($account->reference == 'Bank Account')
+
+                                                <tr>
+                                                    <td>{{ $account->account_name }}</td>
+                                                    <td>{{ '-' }}
+                                                    </td>
+                                                    <td>Opening Balance
+                                                    </td>
+                                                    <td>{{ $account->date }}</td>
+                                                    <td>{{ \Auth::user()->priceFormat($account->debit) }}</td>
+                                                    @php
+                                                        $total = $account->credit - $account->debit;
+                                                        $balance += $total;
+                                                    @endphp
+                                                    <td>{{ \Auth::user()->priceFormat($account->credit) }}</td>
+                                                    <td>{{ \Auth::user()->priceFormat($balance) }}</td>
+                                                </tr>
+                                            @endif
+                                            @if ($account->reference == 'Bank Transaction')
+
+                                                <tr>
+                                                    <td>{{ $account->account_name }}</td>
+                                                    <td>{{ '-' }}
+                                                    </td>
+                                                    <td>Bank Transaction
+                                                    </td>
+                                                    <td>{{ $account->date }}</td>
+                                                    <td>{{ \Auth::user()->priceFormat($account->debit) }}</td>
+                                                    @php
+                                                        $total = $account->credit - $account->debit;
+                                                        $balance += $total;
+                                                    @endphp
+                                                    <td>{{ \Auth::user()->priceFormat($account->credit) }}</td>
+                                                    <td>{{ \Auth::user()->priceFormat($balance) }}</td>
+                                                </tr>
+                                            @endif
+                                            @if ($account->reference == 'Payslip')
+
+                                                <tr>
+                                                    <td>{{ $account->account_name }}</td>
+                                                    <td>{{ '-' }}
+                                                    </td>
+                                                    <td>Payslip
                                                     </td>
                                                     <td>{{ $account->date }}</td>
                                                     <td>{{ \Auth::user()->priceFormat($account->debit) }}</td>

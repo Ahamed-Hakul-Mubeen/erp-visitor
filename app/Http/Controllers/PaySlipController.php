@@ -280,9 +280,8 @@ class PaySlipController extends Controller
         Utility::bankAccountBalance($account->account, $employeePayslip->net_payble, 'debit');
 
         $bank_acc = BankAccount::find($account->account);
-        $bank_co_acc = ChartOfAccount::where('code', $bank_acc->chart_account_id)->where('created_by', \Auth::user()->creatorId())->first();
         $data = [
-            'account_id' => $bank_co_acc->id,
+            'account_id' => $bank_acc->chart_account_id,
             'transaction_type' => 'Credit',
             'transaction_amount' => $employeePayslip->net_payble,
             'reference' => 'Payslip',
@@ -336,9 +335,8 @@ class PaySlipController extends Controller
             Utility::bankAccountBalance($account->account, $employee->net_payble, 'debit');
 
             $bank_acc = BankAccount::find($account->account);
-            $bank_co_acc = ChartOfAccount::where('code', $bank_acc->chart_account_id)->where('created_by', \Auth::user()->creatorId())->first();
             $data = [
-                'account_id' => $bank_co_acc->id,
+                'account_id' => $bank_acc->chart_account_id,
                 'transaction_type' => 'Credit',
                 'transaction_amount' => $employee->net_payble,
                 'reference' => 'Payslip',

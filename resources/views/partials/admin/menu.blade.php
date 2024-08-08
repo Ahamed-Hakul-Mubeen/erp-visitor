@@ -84,7 +84,7 @@
                                                     href="{{ route('dashboard') }}">{{ __(' Overview') }}</a>
                                             </li>
                                         @endcan
-                                        {{-- @if (Gate::check('income report') ||
+                                        @if (Gate::check('income report') ||
                                                 Gate::check('expense report') ||
                                                 Gate::check('income vs expense report') ||
                                                 Gate::check('tax report') ||
@@ -189,7 +189,7 @@
                                                     @endcan
                                                 </ul>
                                             </li>
-                                        @endif --}}
+                                        @endif
                                     </ul>
                                 </li>
                             @endif
