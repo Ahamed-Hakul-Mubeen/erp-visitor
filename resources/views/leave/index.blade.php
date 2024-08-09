@@ -63,26 +63,32 @@
                                         @endif
                                     </td>
                                     <td>
-                                        @if(\Auth::user()->type == 'Employee')
+                                      
+                                        
+                                        @if(\Auth::user()->type == 'Employee' || \Auth::user()->type == 'company'  )
                                             @if($leave->status == "Pending")
                                                 @can('edit leave')
-                                                <div class="action-btn bg-primary ms-2">
-                                                    <a href="#" data-url="{{ URL::to('leave/'.$leave->id.'/edit') }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Edit Leave')}}" class="mx-3 btn btn-sm  align-items-center" data-bs-toggle="tooltip" title="{{__('Edit')}}" data-original-title="{{__('Edit')}}"><i class="ti ti-pencil text-white"></i></a>
-                                                </div>
+                                                    <div class="action-btn bg-primary ms-2">
+                                                        <a href="#" data-url="{{ URL::to('leave/'.$leave->id.'/edit') }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Edit Leave')}}" class="mx-3 btn btn-sm align-items-center" data-bs-toggle="tooltip" title="{{__('Edit')}}" data-original-title="{{__('Edit')}}">
+                                                            <i class="ti ti-pencil text-white"></i>
+                                                        </a>
+                                                    </div>
                                                 @endcan
                                             @endif
                                         @else
-                                        <div class="action-btn bg-warning ms-2">
-                                            <a href="#" data-url="{{ URL::to('leave/'.$leave->id.'/action') }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Leave Action')}}" class="mx-3 btn btn-sm  align-items-center" data-bs-toggle="tooltip" title="{{__('Leave Action')}}" data-original-title="{{__('Leave Action')}}">
-                                                <i class="ti ti-caret-right text-white"></i> </a>
-                                        </div>
                                             @can('edit leave')
-                                            <div class="action-btn bg-primary ms-2">
-                                                <a href="#" data-url="{{ URL::to('leave/'.$leave->id.'/edit') }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Edit Leave')}}" class="mx-3 btn btn-sm  align-items-center" data-bs-toggle="tooltip" title="{{__('Edit')}}" data-original-title="{{__('Edit')}}">
-                                                <i class="ti ti-pencil text-white"></i></a>
-                                            </div>
+                                                <div class="action-btn bg-primary ms-2">
+                                                    <a href="#" data-url="{{ URL::to('leave/'.$leave->id.'/edit') }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Edit Leave')}}" class="mx-3 btn btn-sm align-items-center" data-bs-toggle="tooltip" title="{{__('Edit')}}" data-original-title="{{__('Edit')}}">
+                                                        <i class="ti ti-pencil text-white"></i>
+                                                    </a>
+                                                </div>
                                             @endcan
                                         @endif
+                                        <div class="action-btn bg-warning ms-2">
+                                            <a href="#" data-url="{{ URL::to('leave/'.$leave->id.'/action') }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Leave Action')}}" class="mx-3 btn btn-sm align-items-center" data-bs-toggle="tooltip" title="{{__('Leave Action')}}" data-original-title="{{__('Leave Action')}}">
+                                                <i class="ti ti-caret-right text-white"></i>
+                                            </a>
+                                        </div>
                                         @can('delete leave')
                                         <div class="action-btn bg-danger ms-2">
                                             {!! Form::open(['method' => 'DELETE', 'route' => ['leave.destroy', $leave->id],'id'=>'delete-form-'.$leave->id]) !!}
