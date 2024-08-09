@@ -193,7 +193,7 @@
                     if (item.taxes == 0) {
                         taxes += '-';
                     } else {
-                        taxes += `<select class='form-control select2 tax-select'><option value='0'>--</option>`;
+                        taxes += `<select class='form-control select2 tax-select' required><option value=''>--</option>`;
                         for (var i = 0; i < item.taxes.length; i++) {
                             taxes += `<option data-taxrate='${item.taxes[i].rate}' value='${item.taxes[i].id}'>${item.taxes[i].name} (${item.taxes[i].rate}%)</option>`;
                             // taxes += '<span class="mt-1 mr-2 badge bg-primary">' + item.taxes[i].name + ' ' + '(' + item.taxes[i].rate + '%)' + '</span>';

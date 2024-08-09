@@ -98,7 +98,63 @@
             $('#customer_detail').addClass('d-none');
         })
 
+        $(document).on('change', '.tax-select', function () {
+            var el = $(this).parent().parent().parent().parent().parent();
+            // console.log(el);
+            var totalItemTaxRate = $(this).find('option:selected').attr('data-taxrate');
+            var taxid = $(this).find('option:selected').attr('value');
 
+            $(el.find('.itemTaxRate')).val(parseFloat(totalItemTaxRate).toFixed(2));
+
+            var tax = [];
+            tax.push(taxid);
+            $(el.find('.tax')).val(tax);
+
+            var quantity = $(el.find('.quantity')).val();
+            var price = $(el.find('.price')).val();
+            var discount = $(el.find('.discount')).val();
+
+            if(discount.length <= 0)
+            {
+                discount = 0 ;
+            }
+
+            var totalItemPrice = (quantity * price) - discount;
+            var amount = (totalItemPrice);
+
+            var totalItemTaxRate = $(el.find('.itemTaxRate')).val();
+            var itemTaxPrice = parseFloat((totalItemTaxRate / 100) * (totalItemPrice));
+            $(el.find('.itemTaxPrice')).val(itemTaxPrice.toFixed(2));
+
+            $(el.find('.amount')).html(parseFloat(itemTaxPrice)+parseFloat(amount));
+
+            var totalItemTaxPrice = 0;
+            var itemTaxPriceInput = $('.itemTaxPrice');
+            for (var j = 0; j < itemTaxPriceInput.length; j++) {
+                totalItemTaxPrice += parseFloat(itemTaxPriceInput[j].value);
+            }
+
+            var totalItemPrice = 0;
+            var inputs_quantity = $(".quantity");
+
+            var priceInput = $('.price');
+            for (var j = 0; j < priceInput.length; j++) {
+                totalItemPrice += (parseFloat(priceInput[j].value) * parseFloat(inputs_quantity[j].value));
+            }
+
+            var inputs = $(".amount");
+
+            var subTotal = 0;
+            for (var i = 0; i < inputs.length; i++) {
+                subTotal = parseFloat(subTotal) + parseFloat($(inputs[i]).html());
+            }
+
+            $('.subTotal').html(totalItemPrice.toFixed(2));
+            $('.totalTax').html(totalItemTaxPrice.toFixed(2));
+
+            $('.totalAmount').html((parseFloat(subTotal)).toFixed(2));
+
+        });
         $(document).on('change', '.item', function () {
 
 
@@ -130,11 +186,14 @@
                     if (item.taxes == 0) {
                         taxes += '-';
                     } else {
+                        taxes += `<select class='form-control select2 tax-select' required><option value='0'>--</option>`;
                         for (var i = 0; i < item.taxes.length; i++) {
-                            taxes += '<span class="badge  badge bg-primary mt-1 mr-2">' + item.taxes[i].name + ' ' + '(' + item.taxes[i].rate + '%)' + '</span>';
-                            tax.push(item.taxes[i].id);
-                            totalItemTaxRate += parseFloat(item.taxes[i].rate);
+                            taxes += `<option data-taxrate='${item.taxes[i].rate}' value='${item.taxes[i].id}'>${item.taxes[i].name} (${item.taxes[i].rate}%)</option>`;
+                            // taxes += '<span class="mt-1 mr-2 badge bg-primary">' + item.taxes[i].name + ' ' + '(' + item.taxes[i].rate + '%)' + '</span>';
+                            // tax.push(item.taxes[i].id);
+                            // totalItemTaxRate += parseFloat(item.taxes[i].rate);
                         }
+                        taxes += '</select>';
                     }
 
                     var itemTaxPrice = parseFloat((totalItemTaxRate / 100) * (item.product.sale_price * 1));

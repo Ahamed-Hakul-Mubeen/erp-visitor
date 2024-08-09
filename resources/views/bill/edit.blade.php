@@ -112,6 +112,63 @@
 
             changeItem($(this));
         });
+        $(document).on('change', '.tax-select', function () {
+            var el = $(this).parent().parent().parent().parent().parent();
+            // console.log(el);
+            var totalItemTaxRate = $(this).find('option:selected').attr('data-taxrate');
+            var taxid = $(this).find('option:selected').attr('value');
+
+            $(el.find('.itemTaxRate')).val(parseFloat(totalItemTaxRate).toFixed(2));
+
+            var tax = [];
+            tax.push(taxid);
+            $(el.find('.tax')).val(tax);
+
+            var quantity = $(el.find('.quantity')).val();
+            var price = $(el.find('.price')).val();
+            var discount = $(el.find('.discount')).val();
+
+            if(discount.length <= 0)
+            {
+                discount = 0 ;
+            }
+
+            var totalItemPrice = (quantity * price) - discount;
+            var amount = (totalItemPrice);
+
+            var totalItemTaxRate = $(el.find('.itemTaxRate')).val();
+            var itemTaxPrice = parseFloat((totalItemTaxRate / 100) * (totalItemPrice));
+            $(el.find('.itemTaxPrice')).val(itemTaxPrice.toFixed(2));
+
+            $(el.find('.amount')).html(parseFloat(itemTaxPrice)+parseFloat(amount));
+
+            var totalItemTaxPrice = 0;
+            var itemTaxPriceInput = $('.itemTaxPrice');
+            for (var j = 0; j < itemTaxPriceInput.length; j++) {
+                totalItemTaxPrice += parseFloat(itemTaxPriceInput[j].value);
+            }
+
+            var totalItemPrice = 0;
+            var inputs_quantity = $(".quantity");
+
+            var priceInput = $('.price');
+            for (var j = 0; j < priceInput.length; j++) {
+                totalItemPrice += (parseFloat(priceInput[j].value) * parseFloat(inputs_quantity[j].value));
+            }
+
+            var inputs = $(".amount");
+
+            var subTotal = 0;
+            for (var i = 0; i < inputs.length; i++) {
+                subTotal = parseFloat(subTotal) + parseFloat($(inputs[i]).html());
+            }
+
+            $('.subTotal').html(totalItemPrice.toFixed(2));
+            $('.totalTax').html(totalItemTaxPrice.toFixed(2));
+
+            $('.totalAmount').html((parseFloat(subTotal)).toFixed(2));
+
+        });
 
         var bill_id = '{{$bill->id}}';
 
@@ -156,6 +213,8 @@
                                 $(el.parent().parent().parent().find('.discount')).val(billItems.discount);
                                 $(el.parent().parent().parent().parent().find('.pro_description')).val(billItems.description);
 
+                                $(el.parent().parent().parent().find('.taxes')).val(billItems.tax);
+
                             } else {
                                 $(el.parent().parent().parent().find('.quantity')).val(1);
                                 $(el.parent().parent().parent().find('.price')).val(item.product.purchase_price);
@@ -168,13 +227,20 @@
                             var tax = [];
 
                             var totalItemTaxRate = 0;
+                            taxes += `<select class='form-control select2 tax-select' required><option value=''>--</option>`;
+                            var selected_tax = $(el.parent().parent().parent().find('.taxes')).val();
                             for (var i = 0; i < item.taxes.length; i++) {
 
-                                taxes += '<span class="badge bg-primary p-2 px-3 rounded mt-1 mr-1">' + item.taxes[i].name + ' ' + '(' + item.taxes[i].rate + '%)' + '</span>';
-                                tax.push(item.taxes[i].id);
-                                totalItemTaxRate += parseFloat(item.taxes[i].rate);
-
+                                if(selected_tax==item.taxes[i].id) {
+                                    taxes += `<option data-taxrate='${item.taxes[i].rate}' selected value='${item.taxes[i].id}'>${item.taxes[i].name} (${item.taxes[i].rate}%)</option>`;
+                                    totalItemTaxRate += parseFloat(item.taxes[i].rate);
+                                    tax.push(item.taxes[i].id);
+                                } else {
+                                    taxes += `<option data-taxrate='${item.taxes[i].rate}' value='${item.taxes[i].id}'>${item.taxes[i].name} (${item.taxes[i].rate}%)</option>`;
+                                }
+                                // taxes += '<span class="badge bg-primary p-2 px-3 rounded mt-1 mr-1">' + item.taxes[i].name + ' ' + '(' + item.taxes[i].rate + '%)' + '</span>';
                             }
+                            taxes += '</select>';
 
                             var discount=$(el.parent().parent().parent().find('.discount')).val();
 
