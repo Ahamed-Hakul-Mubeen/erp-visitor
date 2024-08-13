@@ -194,7 +194,11 @@
                                                                     {{ $record['account_code'] }}
                                                                 </p>
                                                                 <p class="mb-2 text-primary float-end text-end">
-                                                                    {{ \Auth::user()->priceFormat($record['netAmount']) }}
+                                                                    @if ($type == 'Assets')
+                                                                        {{ \Auth::user()->priceFormat(-$record['netAmount']) }}
+                                                                    @else
+                                                                        {{ \Auth::user()->priceFormat($record['netAmount']) }}
+                                                                    @endif
                                                                 </p>
                                                             </div>
                                                         @endif
@@ -212,7 +216,11 @@
                                                                 <p class="mb-2 text-center">{{ $record['account_code'] }}
                                                                 </p>
                                                                 <p class="mb-2 text-primary float-end text-end">
-                                                                    {{ \Auth::user()->priceFormat($record['netAmount']) }}
+                                                                    @if ($type == 'Assets')
+                                                                        {{ \Auth::user()->priceFormat(-$record['netAmount']) }}
+                                                                    @else
+                                                                        {{ \Auth::user()->priceFormat(-$record['netAmount']) }}
+                                                                    @endif
                                                                 </p>
                                                             </div>
                                                         @endif
@@ -241,7 +249,11 @@
                                                                     {{ $record['account_code'] }}
                                                                 </p>
                                                                 <p class="mb-2 text-dark fw-bold float-end text-end">
-                                                                    {{ \Auth::user()->priceFormat($record['netAmount']) }}
+                                                                    @if ($type == 'Assets')
+                                                                        {{ \Auth::user()->priceFormat(-$record['netAmount']) }}
+                                                                    @else
+                                                                        {{ \Auth::user()->priceFormat($record['netAmount']) }}
+                                                                    @endif
                                                                 </p>
                                                             </div>
                                                         @endif
@@ -258,7 +270,11 @@
                                                                 <p class="mb-2 text-center">{{ $record['account_code'] }}
                                                                 </p>
                                                                 <p class="mb-2 text-primary float-end text-end">
-                                                                    {{ \Auth::user()->priceFormat($record['netAmount']) }}
+                                                                    @if ($type == 'Assets')
+                                                                        {{ \Auth::user()->priceFormat(-$record['netAmount']) }}
+                                                                    @else
+                                                                        {{ \Auth::user()->priceFormat($record['netAmount']) }}
+                                                                    @endif
                                                                 </p>
                                                             </div>
                                                         @endif
@@ -272,7 +288,11 @@
                                                     {{ $record['account_name'] ? $record['account_name'] : '' }}
                                                 </p>
                                                 <p class="mb-2 fw-bold text-end">
-                                                    {{ $record['netAmount'] ? \Auth::user()->priceFormat($record['netAmount']) : \Auth::user()->priceFormat(0) }}
+                                                    @if ($type == 'Assets')
+                                                        {{ $record['netAmount'] ? \Auth::user()->priceFormat(-$record['netAmount']) : \Auth::user()->priceFormat(0) }}
+                                                    @else
+                                                        {{ $record['netAmount'] ? \Auth::user()->priceFormat($record['netAmount']) : \Auth::user()->priceFormat(0) }}
+                                                    @endif
                                                 </p>
                                             </div>
                                         </div>
@@ -284,7 +304,11 @@
                                     <div
                                         class="px-2 py-2 aacount-title d-flex align-items-center justify-content-between border-top border-bottom pe-0">
                                         <h6 class="mb-0 fw-bold">{{ 'Total for ' . $type }}</h6>
-                                        <h6 class="mb-0 fw-bold text-end">{{ \Auth::user()->priceFormat($total) }}</h6>
+                                        @if ($type == 'Assets')
+                                            <h6 class="mb-0 fw-bold text-end">{{ \Auth::user()->priceFormat(-$total) }}</h6>
+                                        @else
+                                            <h6 class="mb-0 fw-bold text-end">{{ \Auth::user()->priceFormat($total) }}</h6>
+                                        @endif
                                     </div>
                                     @php
                                         if ($type != 'Assets') {
@@ -306,7 +330,11 @@
                                 <div
                                     class="px-0 py-2 aacount-title d-flex align-items-center justify-content-between border-bottom">
                                     <h6 class="mb-0 fw-bold">{{ 'Total for Liabilities & Equity' }}</h6>
-                                    <h6 class="mb-0 fw-bold text-end">{{ \Auth::user()->priceFormat($totalAmount) }}</h6>
+                                    @if ($type == 'Assets')
+                                        <h6 class="mb-0 fw-bold text-end">{{ \Auth::user()->priceFormat(-$totalAmount) }}</h6>
+                                    @else
+                                        <h6 class="mb-0 fw-bold text-end">{{ \Auth::user()->priceFormat($totalAmount) }}</h6>
+                                    @endif
                                 </div>
                             @endif
                             @php

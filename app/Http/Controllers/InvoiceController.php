@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\InvoiceExport;
+use App\Models\Advance;
 use App\Models\BankAccount;
 use App\Models\CreditNote;
 use App\Models\Customer;
@@ -699,12 +700,9 @@ class InvoiceController extends Controller
     {
         if (\Auth::user()->can('create payment invoice')) {
             $invoice = Invoice::where('id', $invoice_id)->first();
-
-            $customers = Customer::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
-            $categories = ProductServiceCategory::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+            $advance = Advance::select("advance_id", "id", "balance", "date")->where("customer_id", $invoice->customer_id)->where("status", 0)->where('created_by', \Auth::user()->creatorId())->get();
             $accounts = BankAccount::select('*', \DB::raw("CONCAT(bank_name,' ',holder_name) AS name"))->where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
-
-            return view('invoice.payment', compact('customers', 'categories', 'accounts', 'invoice'));
+            return view('invoice.payment', compact('accounts', 'invoice', 'advance'));
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
@@ -787,22 +785,23 @@ class InvoiceController extends Controller
             $payment->invoice = 'invoice ' . \Auth::user()->invoiceNumberFormat($invoice->invoice_id);
             $payment->dueAmount = \Auth::user()->priceFormat($invoice->getDue());
 
-            Utility::updateUserBalance('customer', $invoice->customer_id, $request->amount, 'debit');
+            if(!($request->advance_id))
+            {
+                Utility::updateUserBalance('customer', $invoice->customer_id, $request->amount, 'debit');
+                Utility::bankAccountBalance($request->account_id, $request->amount, 'credit');
 
-            Utility::bankAccountBalance($request->account_id, $request->amount, 'credit');
-
-            $accountId = BankAccount::find($request->account_id);
-            $data = [
-                'account_id' => $accountId->chart_account_id,
-                'transaction_type' => 'Debit',
-                'transaction_amount' => $request->amount,
-                'reference' => 'Invoice Payment',
-                'reference_id' => $invoice_id,
-                'reference_sub_id' => $invoicePayment->id,
-                'date' => $request->date,
-            ];
-            Utility::addTransactionLines($data, "new");
-
+                $accountId = BankAccount::find($request->account_id);
+                $data = [
+                    'account_id' => $accountId->chart_account_id,
+                    'transaction_type' => 'Debit',
+                    'transaction_amount' => $request->amount,
+                    'reference' => 'Invoice Payment',
+                    'reference_id' => $invoice_id,
+                    'reference_sub_id' => $invoicePayment->id,
+                    'date' => $request->date,
+                ];
+                Utility::addTransactionLines($data, "new");
+            }
             // account_recivable
 
             $account_recivable = ChartOfAccount::where('code', 1200)->where('created_by', \Auth::user()->creatorId())->first();
@@ -816,6 +815,29 @@ class InvoiceController extends Controller
                 'date' => $request->date,
             ];
             Utility::addTransactionLines($data, "new");
+
+            if($request->advance_id)
+            {
+                $unearned_revenue = ChartOfAccount::where('code', 2040)->where('created_by', \Auth::user()->creatorId())->first();
+                $data = [
+                    'account_id' => $unearned_revenue->id,
+                    'transaction_type' => 'Debit',
+                    'transaction_amount' => $request->amount,
+                    'reference' => 'Invoice Payment',
+                    'reference_id' => $invoice_id,
+                    'reference_sub_id' => $invoicePayment->id,
+                    'date' => $request->date,
+                ];
+                Utility::addTransactionLines($data, "new");
+
+                $advance = Advance::find($request->advance_id);
+                $advance->balance = $advance->balance - $request->amount;
+                if($advance->balance == 0)
+                {
+                    $advance->status = 1;
+                }
+                $advance->save();
+            }
 
 
             // Send Email

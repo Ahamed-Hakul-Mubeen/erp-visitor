@@ -89,6 +89,7 @@ class Utility extends Model
             "company_country" => "",
             "company_telephone" => "",
             "invoice_prefix" => "#INVO",
+            "advance_prefix" => "#ADVA",
             "journal_prefix" => "#JUR",
             "invoice_color" => "ffffff",
             "proposal_prefix" => "#PROP",
@@ -1738,6 +1739,12 @@ class Utility extends Model
         [
             'code' => '2100',
             'name' => 'Account Payable',
+            'type' => 'Liabilities',
+            'sub_type' => 'Current Liabilities',
+        ],
+        [
+            'code' => '2040',
+            'name' => 'Unearned Revenue',
             'type' => 'Liabilities',
             'sub_type' => 'Current Liabilities',
         ],

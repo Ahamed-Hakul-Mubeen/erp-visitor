@@ -631,6 +631,7 @@ Route::group(['middleware' => ['verified']], function () {
             Route::resource('proposal', ProposalController::class);
             Route::get('proposal/create/{cid}', [ProposalController::class, 'create'])->name('proposal.create');
 
+            Route::resource('advance', AdvanceController::class);
         }
     );
 

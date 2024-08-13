@@ -866,6 +866,13 @@
                                                     href="{{ route('proposal.index') }}">{{ __('Estimate') }}</a>
                                             </li>
                                         @endif
+                                        @if (Gate::check('manage proposal'))
+                                            <li
+                                                class="dash-item {{ Request::segment(1) == 'advance' ? 'active' : '' }}">
+                                                <a class="dash-link"
+                                                    href="{{ route('advance.index') }}">{{ __('Advance') }}</a>
+                                            </li>
+                                        @endif
                                         <li
                                             class="dash-item {{ Request::route()->getName() == 'invoice.index' || Request::route()->getName() == 'invoice.create' || Request::route()->getName() == 'invoice.edit' || Request::route()->getName() == 'invoice.show' ? ' active' : '' }}">
                                             <a class="dash-link"

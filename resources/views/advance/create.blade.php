@@ -1,4 +1,4 @@
-{{ Form::open(array('url' => 'revenue','enctype' => 'multipart/form-data')) }}
+{{ Form::open(array('url' => 'advance','enctype' => 'multipart/form-data')) }}
 <div class="modal-body">
     <div class="row">
         <div class="form-group col-md-6">
@@ -20,10 +20,6 @@
         <div class="form-group col-md-12">
             {{ Form::label('description', __('Description'),['class'=>'form-label']) }}
             {{ Form::textarea('description', '', array('class' => 'form-control','rows'=>3 , 'placeholder'=>__('Enter Description'))) }}
-        </div>
-        <div class="form-group col-md-6">
-            {{ Form::label('category_id', __('Category'),['class'=>'form-label']) }}
-            {{ Form::select('category_id', $categories,null, array('class' => 'form-control select','required'=>'required')) }}
         </div>
         <div class="form-group col-md-6">
             {{ Form::label('reference', __('Reference'),['class'=>'form-label']) }}

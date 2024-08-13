@@ -165,6 +165,11 @@ class User extends Authenticatable implements MustVerifyEmail
 
         return $settings["invoice_prefix"] . sprintf("%05d", $number);
     }
+    public function advanceNumberFormat($number)
+    {
+        $settings = Utility::settings();
+        return $settings["advance_prefix"] . sprintf("%05d", $number);
+    }
 
     public function proposalNumberFormat($number)
     {
