@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Hash;
 use Lab404\Impersonate\Impersonate;
 use Spatie\Permission\Models\Role;
 
+
 class UserController extends Controller
 {
 
@@ -132,6 +133,40 @@ class UserController extends Controller
                 ExperienceCertificate::defaultExpCertificatRegister($user->id);
                 JoiningLetter::defaultJoiningLetterRegister($user->id);
                 NOC::defaultNocCertificateRegister($user->id);
+                
+                
+                $role             = new Role();
+                $role->name       = 'Emoloyee';
+                $role->created_by = $user->id;
+                $role->save();
+               
+                // Assign permissions to the role
+                $employeePermission = [
+                    ['name' => 'show hrm dashboard'],
+                    ['name' => 'manage user'],
+                    ['name' => 'manage employee'],
+                    ['name' => 'view employee'],
+                    ['name' => 'manage employee profile'],
+                    ['name' => 'show employee profile'],
+                    ['name' => 'manage pay slip'],
+                    ['name' => 'manage company policy'],
+                    ['name' => 'manage event'],
+                    ['name' => 'manage meeting'],
+                    ['name' => 'manage award'],
+                    ['name' => 'manage promotion'],
+                    ['name' => 'manage complaint'],
+                    ['name' => 'manage warning'],
+                    ['name' => 'manage termination'],
+                    ['name' => 'manage job'],
+                    ['name' => 'show job'],
+                    ['name' => 'manage holiday'],
+                    ['name' => 'manage announcement'],
+                    ['name' => 'manage leave'],
+                ];
+                
+              
+                $role->givePermissionTo($employeePermission);
+
             } else {
                 $validator = \Validator::make(
                     $request->all(), [
