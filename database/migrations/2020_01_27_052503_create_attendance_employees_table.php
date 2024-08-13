@@ -24,6 +24,7 @@ class CreateAttendanceEmployeesTable extends Migration
             $table->time('early_leaving');
             $table->time('overtime');
             $table->time('total_rest');
+            $table->time('total_break_duration')->nullable();
             $table->integer('created_by');
             $table->timestamps();
         });

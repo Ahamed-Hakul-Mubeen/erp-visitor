@@ -16,6 +16,7 @@ class AttendanceEmployee extends Model
         'early_leaving',
         'overtime',
         'total_rest',
+        'total_break_duration',
         'created_by',
     ];
 
