@@ -96,60 +96,79 @@
     <li class="breadcrumb-item">{{__('HRM')}}</li>
 @endsection
 @php
+    // date_default_timezone_set("Asia/Calcutta");
     $setting = \App\Models\Utility::settings();
 
-    $break_time = $setting['break_time'];
+    if(\Auth::user()->type != 'client' && \Auth::user()->type != 'company')
+    {
+        $employeeAttendance_clock_in = "00:00:00";
+        $employeeAttendance_total_break_duration = "00:00:00";
 
-    // Find total hour in Office
-    $start_date = new DateTime($officeTime['startTime']);
-    $since_start = $start_date->diff(new DateTime($officeTime['endTime']));
-    $since_start_h = ($since_start->h < 10)?"0".$since_start->h:$since_start->h;
-    $since_start_i = ($since_start->i < 10)?"0".$since_start->i:$since_start->i;
+        $employeeAttendance_clock_in = isset($employeeAttendance->clock_in)?$employeeAttendance->clock_in:"00:00:00";
+        $employeeAttendance_total_break_duration = isset($employeeAttendance->total_break_duration)?$employeeAttendance->total_break_duration:"00:00:00";
 
-    // Find total worked hour
-    $clock_in = new DateTime($employeeAttendance->clock_in);
-    $worked_hour = $clock_in->diff(new DateTime(date("H:i:s")));
-    $worked_h = ($worked_hour->h < 10)?"0".$worked_hour->h:$worked_hour->h;
-    $worked_i = ($worked_hour->i < 10)?"0".$worked_hour->i:$worked_hour->i;
-    $total_worked_hour = $worked_h.":".$worked_i;
+        $break_time = $setting['break_time'];
 
-    dd($total_worked_hour);
+        // Find total hour in Office
+        $start_date = new DateTime($officeTime['startTime']);
+        $since_start = $start_date->diff(new DateTime($officeTime['endTime']));
+        $since_start_h = ($since_start->h < 10)?"0".$since_start->h:$since_start->h;
+        $since_start_i = ($since_start->i < 10)?"0".$since_start->i:$since_start->i;
 
-    // Find Real work hour
-    $break_arr = explode(":", $employeeAttendance->total_break_duration);
-    $real_worked_h = $worked_h - $break_arr[0];
-    $real_worked_i = $worked_i - $break_arr[1]; 
+        // Find total worked hour
+        if($employeeAttendance_clock_in != "00:00:00")
+        {
+            $clock_in = new DateTime($employeeAttendance_clock_in);
+            $worked_hour = $clock_in->diff(new DateTime(date("H:i:s")));
+            $worked_h = ($worked_hour->h < 10)?"0".$worked_hour->h:$worked_hour->h;
+            $worked_i = ($worked_hour->i < 10)?"0".$worked_hour->i:$worked_hour->i;
+            $total_worked_hour = $worked_h.":".$worked_i;
+        }
+        else {
+            $total_worked_hour = "00:00:00";
+            $worked_h = "00";
+            $worked_i = "00";
+        }
 
-    dd($break_arr[0]);
-       
-    $real_worked_h = ($real_worked_h < 10)?"0".$real_worked_h:$real_worked_h;
-    $real_worked_i = ($real_worked_i < 10)?"0".$real_worked_i:$real_worked_i;
-    $real_worked_hour = $real_worked_h.":".$real_worked_i;
+        // Find Real work hour
+        $break_arr = explode(":", $employeeAttendance_total_break_duration);
+        $real_worked_h = $worked_h - $break_arr[0];
+        $real_worked_i = $worked_i - $break_arr[1];
 
-    dd($real_worked_hour);
+        $real_worked_h = ($real_worked_h < 10)?"0".$real_worked_h:$real_worked_h;
+        $real_worked_i = ($real_worked_i < 10)?"0".$real_worked_i:$real_worked_i;
+        $real_worked_hour = $real_worked_h.":".$real_worked_i;
 
-    // Find Balance
+        // Find Balance
+        
+        $total_schedule_min = 60 * ($since_start_h) + $since_start_i;
+        $total_schedule_work_min = $total_schedule_min - $break_time;
+
+        $total_schedule_work_hour = ($total_schedule_work_min / 60);
+        $schedule_work_hour_arr = explode(":", $total_schedule_work_hour);
+
+        $schedule_work_h = $schedule_work_hour_arr[0];
+        $schedule_work_i = isset($schedule_work_hour_arr[1])?$schedule_work_hour_arr[1]:0;    
+        $schedule_work_h = ($schedule_work_h < 10)?"0".$schedule_work_h:$schedule_work_h;
+        $schedule_work_i = ($schedule_work_i < 10)?"0".$schedule_work_i:$schedule_work_i;
+
+        $balane_work_hour = date("H:i", strtotime($schedule_work_h.":".$schedule_work_i.":00 -".$real_worked_h." hour, -".$real_worked_h." minutes"));
+    }
     
-    $total_schedule_min = 60 * ($since_start_h) + $since_start_i;
-    $total_schedule_work_min = $total_schedule_min - $break_time;
-
-    $total_schedule_work_hour = ($total_schedule_work_min / 60);
-    $schedule_work_hour_arr = explode(":", $total_schedule_work_hour);
-
-    $schedule_work_h = $schedule_work_hour_arr[0];
-    $schedule_work_i = isset($schedule_work_hour_arr[1])?$schedule_work_hour_arr[1]:0;    
-    $schedule_work_h = ($schedule_work_h < 10)?"0".$schedule_work_h:$schedule_work_h;
-    $schedule_work_i = ($schedule_work_i < 10)?"0".$schedule_work_i:$schedule_work_i;
-
-    $balane_work_hour = date("H:i", strtotime($schedule_work_h.":".$schedule_work_i.":00 -".$real_worked_h." hour, -".$real_worked_h." minutes"));
-
 @endphp
 @section('content')
+    <style>
+        .my-text-bold
+        {
+            font-weight:800;
+            font-size:18px;
+        }
+    </style>
     @if(\Auth::user()->type != 'client' && \Auth::user()->type != 'company')
         <div class="row">
             <div class="col-sm-12">
                 <div class="row">
-                    <div class="col-xxl-6">
+                    <div class="col-xxl-12">
                         <div class="card">
                             {{-- <div class="card-header">
                                 <h4>{{__('Mark Attandance')}}</h4>
@@ -157,78 +176,66 @@
                             <div class="card-body dash-card-body">
                                 <h4>Hi {{ \Auth::user()->name }}!</h4>
                                 <p class="text-muted pb-0-5">{{__('My Office Time: '.$officeTime['startTime'].' to '.$officeTime['endTime'])}}</p>
-                            
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="info-container">
-                                                <div class="info-item">
-                                                    <p class="label"><strong>Worked:</strong></p>
-                                                    <p class="time"> {{ $real_worked_hour }}</p>
-                                                </div>
-                                                <div class="info-item">
-                                                    <p class="label"><strong>Break:</strong></p>
-                                                    <p class="time">
-                                                        {{ date("H:i", strtotime($employeeAttendance->total_break_duration)) }}
-                                                    </p>
-                                                </div>
-                                                <div class="info-item">
-                                                    <p class="label"><strong>Balance:</strong></p>
-                                                    <p class="time">{{ $balane_work_hour }}</p>
-                                                </div>
-                                                <div class="info-item">
-                                                    <p class="label"><strong>Overtime</strong></p>
-                                                    <p class="time"> {{ isset($employeeAttendance->total_break_duration) && !empty($employeeAttendance->overtime) ? $employeeAttendance->overtime : '00:00:00' }}</p>
-                                                </div>
-                                                
+                                <div class="row">
+                                    <div class="col-sm-7">
+                                        <div class="row">
+                                            <div class="text-center col-sm-3 col-lg-3 col-6">
+                                                <p class="my-text-bold">Worked</p>
+                                                <p class="time"> {{ $real_worked_hour }}</p>
                                             </div>
+                                            <div class="text-center col-sm-3 col-lg-3 col-6">
+                                                <p class="my-text-bold">Break</p>
+                                                <p class="time">
+                                                    {{ date("H:i", strtotime($employeeAttendance_total_break_duration)) }}
+                                                </p>
+                                            </div>
+                                            <div class="text-center col-sm-3 col-lg-3 col-6">
+                                                <p class="my-text-bold">Balance</p>
+                                                <p class="time">{{ $balane_work_hour }}</p>
+                                            </div>
+                                            <div class="text-center col-sm-3 col-lg-3 col-6">
+                                                <p class="my-text-bold">Overtime</p>
+                                                <p class="time"> {{ isset($employeeAttendance->total_break_duration) && !empty($employeeAttendance->overtime) ? $employeeAttendance->overtime : '00:00:00' }}</p>
+                                            </div>
+                                        </div>
+
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="button-container">
-                                            {{ Form::open(array('url' => 'attendanceemployee/attendance', 'method' => 'post')) }}
+                                    <div class="col-sm-5">
+                                        <div class="d-flex justify-content-end">
+
+                                            {{Form::open(array('url'=>'attendanceemployee/attendance','method'=>'post'))}}
                                             @if(empty($employeeAttendance) || $employeeAttendance->clock_out != '00:00:00')
-                                                <button type="submit" value="0" name="in" id="clock_in" class="btn btn-success">
-                                                    {{ __('CLOCK IN') }}
+                                                <button type="submit" value="0" name="in" id="clock_in" class="mt-2 btn btn-success ">{{__('CLOCK IN')}}</button>
+                                            @else
+                                                {{-- <button type="submit" value="0" name="in" id="clock_in" class="btn btn-success disabled" disabled>{{__('CLOCK IN')}}</button> --}}
+                                            @endif
+                                            {{Form::close()}}
+
+                                            @if(!empty($employeeAttendance) && $employeeAttendance->clock_out == '00:00:00')
+                                                {{Form::model($employeeAttendance,array('route'=>array('attendanceemployee.update',$employeeAttendance->id),'method' => 'PUT')) }}
+                                                <button type="submit" value="1" name="out" id="clock_out" class="mt-2 btn btn-danger">{{__('CLOCK OUT')}}</button>
+                                            @else
+                                                {{-- <button type="submit" value="1" name="out" id="clock_out" class="btn btn-danger disabled" disabled>{{__('CLOCK OUT')}}</button> --}}
+                                            @endif
+                                            {{Form::close()}}
+
+                                            <!-- Take a Break Button -->
+                                    
+                                            @if(!empty($employeeAttendance) && $employeeAttendance->clock_out == '00:00:00')
+                                                <button id="take_break" class="mt-2 btn btn-warning" style="margin-left: 10px;">
+                                                    {{ __('TAKE A BREAK') }}
                                                 </button>
                                             @else
-                                                <button type="submit" value="0" name="in" id="clock_in" class="btn btn-success disabled" disabled>
-                                                    {{ __('CLOCK IN') }}
-                                                </button>
+                                                {{-- <button id="take_break" class="btn btn-warning disabled d-none" disabled>
+                                                    {{ __('TAKE A BREAK') }}
+                                                </button> --}}
                                             @endif
-                                            {{ Form::close() }}
-                                    
-                        
-                                    <!-- Take a Break Button -->
-                                    
-                                        @if(!empty($employeeAttendance) && $employeeAttendance->clock_out == '00:00:00')
-                                            <button id="take_break" class="btn btn-warning">
-                                                {{ __('TAKE A BREAK') }}
-                                            </button>
-                                        @else
-                                            <button id="take_break" class="btn btn-warning disabled d-none" disabled>
-                                                {{ __('TAKE A BREAK') }}
-                                            </button>
-                                        @endif
-                                   
-                        
-                                    
-                                        @if(!empty($employeeAttendance) && $employeeAttendance->clock_out == '00:00:00')
-                                            {{ Form::model($employeeAttendance, array('route' => array('attendanceemployee.update', $employeeAttendance->id), 'method' => 'PUT')) }}
-                                            <button type="submit" value="1" name="out" id="clock_out" class="btn btn-danger">
-                                                {{ __('CLOCK OUT') }}
-                                            </button>
-                                        @else
-                                            <button type="submit" value="1" name="out" id="clock_out" class="btn btn-danger disabled" disabled>
-                                                {{ __('CLOCK OUT') }}
-                                            </button>
-                                        @endif
-                                        {{ Form::close() }}
+
+                                        </div>
                                     </div>
-                                       
-                               
                                 </div>
-                               
+
                             </div>
-                           
                         </div>
                         <div class="card">
                             <div class="card-header">
@@ -252,14 +259,14 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xxl-6">
+                    <div class="col-xxl-12">
                         <div class="card list_card">
                             <div class="card-header">
                                 <h4>{{__('Announcement List')}}</h4>
                             </div>
                             <div class="card-body dash-card-body">
                                 <div class="table-responsive">
-                                    <table class="table table-striped mb-0">
+                                    <table class="table mb-0 table-striped">
                                         <thead>
                                         <tr>
                                             <th>{{__('Title')}}</th>
@@ -388,36 +395,36 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5>{{__('Staff')}}</h5>
-                                    <div class="row  mt-4">
+                                    <div class="mt-4 row">
                                         <div class="col-md-6 col-sm-6">
-                                            <div class="d-flex align-items-start mb-3">
+                                            <div class="mb-3 d-flex align-items-start">
                                                 <div class="theme-avtar bg-primary">
                                                     <i class="ti ti-users"></i>
                                                 </div>
                                                 <div class="ms-2">
-                                                    <p class="text-muted text-sm mb-0">{{__('Total Staff')}}</p>
+                                                    <p class="mb-0 text-sm text-muted">{{__('Total Staff')}}</p>
                                                     <h4 class="mb-0 text-success">{{ $countUser +   $countClient}}</h4>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-6 col-sm-6 my-3 my-sm-0">
-                                            <div class="d-flex align-items-start mb-3">
+                                        <div class="my-3 col-md-6 col-sm-6 my-sm-0">
+                                            <div class="mb-3 d-flex align-items-start">
                                                 <div class="theme-avtar bg-info">
                                                     <i class="ti ti-user"></i>
                                                 </div>
                                                 <div class="ms-2">
-                                                    <p class="text-muted text-sm mb-0">{{__('Total Employee')}}</p>
+                                                    <p class="mb-0 text-sm text-muted">{{__('Total Employee')}}</p>
                                                     <h4 class="mb-0 text-info">{{$countUser}}</h4>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6 col-sm-6">
-                                            <div class="d-flex align-items-start mb-3">
+                                            <div class="mb-3 d-flex align-items-start">
                                                 <div class="theme-avtar bg-danger">
                                                     <i class="ti ti-user"></i>
                                                 </div>
                                                 <div class="ms-2">
-                                                    <p class="text-muted text-sm mb-0">{{__('Total Client')}}</p>
+                                                    <p class="mb-0 text-sm text-muted">{{__('Total Client')}}</p>
                                                     <h4 class="mb-0 text-danger">{{$countClient}}</h4>
 
                                                 </div>
@@ -431,37 +438,37 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5>{{__('Job')}}</h5>
-                                    <div class="row  mt-4">
+                                    <div class="mt-4 row">
                                         <div class="col-md-6 col-sm-6">
-                                            <div class="d-flex align-items-start mb-3">
+                                            <div class="mb-3 d-flex align-items-start">
                                                 <div class="theme-avtar bg-primary">
                                                     <i class="ti ti-award"></i>
                                                 </div>
                                                 <div class="ms-2">
-                                                    <p class="text-muted text-sm mb-0">{{__('Total Jobs')}}</p>
+                                                    <p class="mb-0 text-sm text-muted">{{__('Total Jobs')}}</p>
                                                     <h4 class="mb-0 text-success">{{$activeJob + $inActiveJOb}}</h4>
 
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-6 col-sm-6 my-3 my-sm-0">
-                                            <div class="d-flex align-items-start mb-3">
+                                        <div class="my-3 col-md-6 col-sm-6 my-sm-0">
+                                            <div class="mb-3 d-flex align-items-start">
                                                 <div class="theme-avtar bg-info">
                                                     <i class="ti ti-check"></i>
                                                 </div>
                                                 <div class="ms-2">
-                                                    <p class="text-muted text-sm mb-0">{{__('Active Jobs')}}</p>
+                                                    <p class="mb-0 text-sm text-muted">{{__('Active Jobs')}}</p>
                                                     <h4 class="mb-0 text-info">{{$activeJob}}</h4>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6 col-sm-6">
-                                            <div class="d-flex align-items-start mb-3">
+                                            <div class="mb-3 d-flex align-items-start">
                                                 <div class="theme-avtar bg-danger">
                                                     <i class="ti ti-x"></i>
                                                 </div>
                                                 <div class="ms-2">
-                                                    <p class="text-muted text-sm mb-0">{{__('Inactive Jobs')}}</p>
+                                                    <p class="mb-0 text-sm text-muted">{{__('Inactive Jobs')}}</p>
                                                     <h4 class="mb-0 text-danger">{{$inActiveJOb}}</h4>
 
                                                 </div>
@@ -476,50 +483,50 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5>{{__('Training')}}</h5>
-                                    <div class="row  mt-4">
+                                    <div class="mt-4 row">
                                         <div class="col-md-6 col-sm-6">
-                                            <div class="d-flex align-items-start mb-3">
+                                            <div class="mb-3 d-flex align-items-start">
                                                 <div class="theme-avtar bg-primary">
                                                     <i class="ti ti-users"></i>
                                                 </div>
                                                 <div class="ms-2">
-                                                    <p class="text-muted text-sm mb-0">{{__('Total Training')}}</p>
+                                                    <p class="mb-0 text-sm text-muted">{{__('Total Training')}}</p>
                                                     <h4 class="mb-0 text-success">{{ $onGoingTraining +   $doneTraining}}</h4>
 
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-6 col-sm-6 my-3 my-sm-0">
-                                            <div class="d-flex align-items-start mb-3">
+                                        <div class="my-3 col-md-6 col-sm-6 my-sm-0">
+                                            <div class="mb-3 d-flex align-items-start">
                                                 <div class="theme-avtar bg-info">
                                                     <i class="ti ti-user"></i>
                                                 </div>
                                                 <div class="ms-2">
-                                                    <p class="text-muted text-sm mb-0">{{__('Trainer')}}</p>
+                                                    <p class="mb-0 text-sm text-muted">{{__('Trainer')}}</p>
                                                     <h4 class="mb-0 text-info">{{$countTrainer}}</h4>
 
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6 col-sm-6">
-                                            <div class="d-flex align-items-start mb-3">
+                                            <div class="mb-3 d-flex align-items-start">
                                                 <div class="theme-avtar bg-danger">
                                                     <i class="ti ti-user-check"></i>
                                                 </div>
                                                 <div class="ms-2">
-                                                    <p class="text-muted text-sm mb-0">{{__('Active Training')}}</p>
+                                                    <p class="mb-0 text-sm text-muted">{{__('Active Training')}}</p>
                                                     <h4 class="mb-0 text-danger">{{$onGoingTraining}}</h4>
 
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6 col-sm-6">
-                                            <div class="d-flex align-items-start mb-3">
+                                            <div class="mb-3 d-flex align-items-start">
                                                 <div class="theme-avtar bg-secondary">
                                                     <i class="ti ti-user-minus"></i>
                                                 </div>
                                                 <div class="ms-2">
-                                                    <p class="text-muted text-sm mb-0">{{__('Done Training')}}</p>
+                                                    <p class="mb-0 text-sm text-muted">{{__('Done Training')}}</p>
                                                     <h4 class="mb-0 text-secondary">{{$doneTraining}}</h4>
                                                 </div>
                                             </div>
@@ -608,321 +615,6 @@
 
         </div>
     @endif
-     <!-- Break Modal -->
-<div class="modal fade" id="breakModal" tabindex="-1" role="dialog" aria-labelledby="breakModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="breakModalLabel">{{ __('Select Break Type') }}</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="breakForm">
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="breakType" id="break1" value="morning">
-                        <label class="form-check-label" for="morningBreak">{{ __('Morning Break') }}</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="breakType" id="break2" value="lunch">
-                        <label class="form-check-label" for="lunchBreak">{{ __('Lunch Break') }}</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="breakType" id="break3" value="evening">
-                        <label class="form-check-label" for="eveningBreak">{{ __('Evening Break') }}</label>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="startBreak" class="btn btn-primary">{{ __('Start') }}</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Close') }}</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Break Timer Modal -->
-<div class="modal fade" id="breakTimerModal" tabindex="-1" role="dialog" aria-labelledby="breakTimerModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="breakTimerModalLabel">{{ __('Break Timer') }}</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div id="breakTimer">00:00:00</div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="endBreak" class="btn btn-danger">{{ __('End') }}</button>
-            </div>
-        </div>
-    </div>
-</div>
 @endsection
-@push('script-page')
-<script>
-$(document).ready(function() {
-    let timerInterval;
-    let startTime;
-    
-
-    // Function to start the break timer
-    function startBreakTimer() {
-        timerInterval = setInterval(function() {
-            const now = new Date();
-            const elapsed = (now - startTime) / 1000; // in seconds
-            const hours = Math.floor(elapsed / 3600);
-            const minutes = Math.floor((elapsed % 3600) / 60);
-            const seconds = Math.floor(elapsed % 60);
-            document.getElementById('breakTimer').innerText = 
-                ('0' + hours).slice(-2) + ':' + 
-                ('0' + minutes).slice(-2) + ':' + 
-                ('0' + seconds).slice(-2);
-        }, 1000);
-    }
-
-    
-    function initializeTimer() {
-        const storedStartTime = localStorage.getItem('breakStartTime');
-        if (storedStartTime) {
-            startTime = new Date(storedStartTime);
-            startBreakTimer();
-            $('#take_break').text('On Break'); 
-           
-        }
-    }
-
-    $('#breakModal').on('show.bs.modal', function () {
-        $('#startBreak').prop('disabled', true);
-    });
-
-   
-    $('input[name="breakType"]').change(function() {
-        $('#startBreak').prop('disabled', false);
-    });
-
-   
-    $('#take_break').click(function() {
-        if (localStorage.getItem('breakStartTime')) {
-            $('#breakTimerModal').modal('show');
-        } else {
-            $('#breakModal').modal('show');
-        }
-    });
-
-    $('#startBreak').click(function() {
-        if (!$('input[name="breakType"]:checked').length) {
-            alert('Please select a break type.');
-            return;
-        }
-        
-        const breakType = $('input[name="breakType"]:checked').val();
-        startTime = new Date();
-        localStorage.setItem('breakStartTime', startTime.toISOString()); 
-        $('#breakModal').modal('hide');
-        $('#breakTimerModal').modal('show');
-        startBreakTimer();
-        
-        $('#take_break').text('On Break'); 
-        const formattedStartTime = startTime.toTimeString().split(' ')[0]; 
-        $.post('{{ route("breaks.store") }}', 
-        { 
-          employee_id: {{ auth()->user()->id }}, 
-          break_start_time: formattedStartTime, 
-          break_type: breakType,
-          _token: '{{ csrf_token() }}' 
-        });
-    });
-
-    $('#endBreak').click(function() {
-        const endTime = new Date();
-        clearInterval(timerInterval);
-        $('#breakTimerModal').modal('hide');
-        $('#take_break').text('Take a Break'); 
-        
-        const formattedEndTime = endTime.toTimeString().split(' ')[0]; 
-
-        // Send break end time to the server
-        $.post('{{ route("breaks.end") }}', 
-        { 
-          employee_id: {{ auth()->user()->id }}, 
-          break_end_time: formattedEndTime, 
-          _token: '{{ csrf_token() }}' 
-        });
-
-        // Clear local storage
-        localStorage.removeItem('breakStartTime');
-    });
-
-    $('#clock_out').click(function(event) {
-        const breakStartTime = localStorage.getItem('breakStartTime');
-        if (breakStartTime) {
-            event.preventDefault();
-            alert('Please end your break before clocking out.');
-            return false;
-        }
-        
-       
-    });
-    $('#breakModal').on('hidden.bs.modal', function () {
-        $('#breakForm')[0].reset(); // Reset form fields
-        $('#startBreak').prop('disabled', true); // Disable the start button
-    });
-     
- 
-    initializeTimer();
-});
-</script>
-@endpush
-<style>
-    
-    .modal-header {
-    background-color: #f8f9fa;
-    border-bottom: none;
-}
-
-.modal-title {
-    font-weight: bold;
-}
-
-.modal-body {
-    padding: 20px;
-}
-
-.modal-footer {
-    border-top: none;
-    padding: 15px;
-}
-
-.form-check {
-    padding: 10px;
-    margin-bottom: 15px;
-    background-color: #f1f1f1;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-.form-check-input {
-    margin-right: 15px;
-    margin-top: 5px;
-    cursor: pointer;
-}
-
-.form-check-label {
-    display: flex;
-    align-items: center;
-    font-size: 16px;
-    font-weight: 500;
-}
-
-.form-check-label i {
-    font-size: 24px;
-    margin-right: 15px;
-}
-
-.form-check-label p {
-    margin: 0;
-    font-size: 12px;
-    color: #6c757d;
-}
-
-#startBreak:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-}
-
-#breakTimer {
-    font-size: 48px;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-
-.btn-primary {
-    background-color: #007bff;
-    border-color: #007bff;
-}
-
-.btn-danger {
-    background-color: #dc3545;
-    border-color: #dc3545;
-}
-
-/* Responsive Design */
-@media (max-width: 576px) {
-    .modal-dialog {
-        margin: 1.75rem auto;
-    }
-
-    .form-check-label {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .form-check-label i {
-        margin-bottom: 5px;
-    }
-}
-.dash-card-body {
-padding: 20px;
-}
-
-.row {
-
-justify-content: space-between;
-align-items: center;
-}
-
-.button-container {
-    display: flex;
-    width: 100%;
-}
-
-.btn {
-    width: 150px; /* Fixed width for all buttons */
-    height: 50px; /* Fixed height for all buttons */
-    padding: 10px;
-    font-size: 16px;
-    margin: 0 5px;
-    text-align: center;
-    line-height: 30px; /* Adjust line height to vertically center the text */
-    display: inline-block;
-}
-
-.info-container {
-display: flex;
-justify-content: center;
-align-items: flex-start;
-gap: 10px;
-}
-
-.info-container p {
-margin: 0;
-font-size: 14px;
-color: #555;
-}
-.info-container {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-}
-
-.info-item {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    margin-bottom: 10px;
-}
-
-.label {
-    font-size: 14px;
-    color: #555;
-}
-
-.time {
-    font-size: 14px;
-    font-weight: bold;
-    color: #333;
-}
-</style>
 
 
