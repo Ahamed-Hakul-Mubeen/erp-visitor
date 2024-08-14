@@ -290,7 +290,14 @@
             font-weight: 800;
             font-size: 18px;
         }
+        
+        #breakTimer {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
     </style>
+    
     @if (\Auth::user()->type != 'client' && \Auth::user()->type != 'company')
         <div class="row">
             <div class="col-sm-12">
@@ -755,4 +762,172 @@
 
         </div>
     @endif
+
+    
+     <!-- Break Modal -->
+<div class="modal fade" id="breakModal" tabindex="-1" role="dialog" aria-labelledby="breakModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="breakModalLabel">{{ __('Select Break Type') }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="breakForm">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="breakType" id="break1" value="morning">
+                        <label class="form-check-label" for="morningBreak">{{ __('Morning Break') }}</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="breakType" id="break2" value="lunch">
+                        <label class="form-check-label" for="lunchBreak">{{ __('Lunch Break') }}</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="breakType" id="break3" value="evening">
+                        <label class="form-check-label" for="eveningBreak">{{ __('Evening Break') }}</label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="startBreak" class="btn btn-primary">{{ __('Start') }}</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Close') }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Break Timer Modal -->
+<div class="modal fade" id="breakTimerModal" tabindex="-1" role="dialog" aria-labelledby="breakTimerModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="breakTimerModalLabel">{{ __('Break Timer') }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="breakTimer">00:00:00</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="endBreak" class="btn btn-danger">{{ __('End') }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
+@push('script-page')
+<script>
+$(document).ready(function() {
+    let timerInterval;
+    let startTime;
+    
+
+    // Function to start the break timer
+    function startBreakTimer() {
+        timerInterval = setInterval(function() {
+            const now = new Date();
+            const elapsed = (now - startTime) / 1000; // in seconds
+            const hours = Math.floor(elapsed / 3600);
+            const minutes = Math.floor((elapsed % 3600) / 60);
+            const seconds = Math.floor(elapsed % 60);
+            document.getElementById('breakTimer').innerText = 
+                ('0' + hours).slice(-2) + ':' + 
+                ('0' + minutes).slice(-2) + ':' + 
+                ('0' + seconds).slice(-2);
+        }, 1000);
+    }
+
+    
+    function initializeTimer() {
+        const storedStartTime = localStorage.getItem('breakStartTime');
+        if (storedStartTime) {
+            startTime = new Date(storedStartTime);
+            startBreakTimer();
+            $('#take_break').text('ON BREAK'); 
+           
+        }
+    }
+
+    $('#breakModal').on('show.bs.modal', function () {
+        $('#startBreak').prop('disabled', true);
+    });
+
+   
+    $('input[name="breakType"]').change(function() {
+        $('#startBreak').prop('disabled', false);
+    });
+
+   
+    $('#take_break').click(function() {
+        if (localStorage.getItem('breakStartTime')) {
+            $('#breakTimerModal').modal('show');
+        } else {
+            $('#breakModal').modal('show');
+        }
+    });
+
+    $('#startBreak').click(function() {
+        if (!$('input[name="breakType"]:checked').length) {
+            alert('Please select a break type.');
+            return;
+        }
+        
+        const breakType = $('input[name="breakType"]:checked').val();
+        startTime = new Date();
+        localStorage.setItem('breakStartTime', startTime.toISOString()); 
+        $('#breakModal').modal('hide');
+        $('#breakTimerModal').modal('show');
+        startBreakTimer();
+        
+        $('#take_break').text('ON BREAK'); 
+        const formattedStartTime = startTime.toTimeString().split(' ')[0]; 
+        $.post('{{ route("breaks.store") }}', 
+        { 
+          employee_id: {{ auth()->user()->id }}, 
+          break_start_time: formattedStartTime, 
+          break_type: breakType,
+          _token: '{{ csrf_token() }}' 
+        });
+    });
+
+    $('#endBreak').click(function() {
+        const endTime = new Date();
+        clearInterval(timerInterval);
+        $('#breakTimerModal').modal('hide');
+        $('#take_break').text('TAKE A BREAK'); 
+        
+        const formattedEndTime = endTime.toTimeString().split(' ')[0]; 
+
+        // Send break end time to the server
+        $.post('{{ route("breaks.end") }}', 
+        { 
+          employee_id: {{ auth()->user()->id }}, 
+          break_end_time: formattedEndTime, 
+          _token: '{{ csrf_token() }}' 
+        });
+
+        // Clear local storage
+        localStorage.removeItem('breakStartTime');
+    });
+
+    $('#clock_out').click(function(event) {
+        const breakStartTime = localStorage.getItem('breakStartTime');
+        if (breakStartTime) {
+            event.preventDefault();
+            alert('Please end your break before clocking out.');
+            return false;
+        }
+        
+       
+    });
+    $('#breakModal').on('hidden.bs.modal', function () {
+        $('#breakForm')[0].reset(); // Reset form fields
+        $('#startBreak').prop('disabled', true); // Disable the start button
+    });
+     
+ 
+    initializeTimer();
+});
+</script>
+@endpush
