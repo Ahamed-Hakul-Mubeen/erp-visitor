@@ -107,6 +107,12 @@
                                         <a href="#" data-size="md"  data-bs-toggle="tooltip" title="{{__('Import')}}" data-url="{{ route('attendance.file.import') }}" data-ajax-popup="true" data-title="{{__('Import employee CSV file')}}" class="btn btn-sm btn-primary">
                                             <i class="ti ti-file-import"></i>
                                         </a>
+                                        <a href="{{route('attendance.export', request()->query())}}" data-bs-toggle="tooltip" title="{{__('Export')}}" class="btn btn-sm btn-primary">
+                                            <i class="ti ti-file-export"></i>
+                                        </a>
+                                        <a href="{{ route('attendance.print', request()->query()) }}" target="_blank" class="btn btn-sm btn-primary">
+                                            <i class="ti ti-download"></i>
+                                        </a>
                                     </div>
 
                                 </div>
@@ -138,6 +144,7 @@
                                 <th>{{__('Late')}}</th>
                                 <th>{{__('Early Leaving')}}</th>
                                 <th>{{__('Overtime')}}</th>
+                                <th>{{__('Break Time')}}</th>
                                 @if(Gate::check('edit attendance') || Gate::check('delete attendance'))
                                     <th>{{__('Action')}}</th>
                                 @endif
@@ -157,6 +164,7 @@
                                     <td>{{ $attendance->late }}</td>
                                     <td>{{ $attendance->early_leaving }}</td>
                                     <td>{{ $attendance->overtime }}</td>
+                                    <td>{{ $attendance->total_break_duration }}</td>
                                     @if(Gate::check('edit attendance') || Gate::check('delete attendance'))
                                         <td>
                                             @can('edit attendance')

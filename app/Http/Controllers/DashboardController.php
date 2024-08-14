@@ -278,6 +278,7 @@ class DashboardController extends Controller
             if (\Auth::user()->can('show hrm dashboard')) {
 
                 $user = Auth::user();
+                
 
                 if ($user->type != 'client' && $user->type != 'company') {
                     $emp = Employee::where('user_id', '=', $user->id)->first();
@@ -311,8 +312,10 @@ class DashboardController extends Controller
                     $time = date("H:i:s");
                     $employeeAttendance = AttendanceEmployee::orderBy('id', 'desc')->where('employee_id', '=', !empty(\Auth::user()->employee)?\Auth::user()->employee->id : 0)->where('date', '=', $date)->first();
 
+
                     $officeTime['startTime'] = Utility::getValByName('company_start_time');
                     $officeTime['endTime'] = Utility::getValByName('company_end_time');
+                    $officeTime['breakTime'] = Utility::getValByName('break_time');
 
                     return view('dashboard.dashboard', compact('arrEvents', 'announcements', 'employees', 'meetings', 'employeeAttendance', 'officeTime'));
                 } else if ($user->type == 'super admin') {
@@ -377,7 +380,7 @@ class DashboardController extends Controller
                     $inActiveJOb = Job::where('status', 'in_active')->where('created_by', '=', \Auth::user()->creatorId())->count();
 
                     $meetings = Meeting::where('created_by', '=', \Auth::user()->creatorId())->limit(5)->get();
-
+                   
                     return view('dashboard.dashboard', compact('arrEvents', 'onGoingTraining', 'activeJob', 'inActiveJOb', 'doneTraining', 'announcements', 'employees', 'meetings', 'countTrainer', 'countClient', 'countUser', 'notClockIns'));
                 }
             } else {

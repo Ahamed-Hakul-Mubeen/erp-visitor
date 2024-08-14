@@ -21,6 +21,7 @@ use App\Http\Controllers\BankTransferPaymentController;
 use App\Http\Controllers\BenefitPaymentController;
 use App\Http\Controllers\BillController;
 use App\Http\Controllers\BranchController;
+use App\Http\Controllers\BreakController;
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\BugStatusController;
 use App\Http\Controllers\CashfreeController;
@@ -961,7 +962,10 @@ Route::group(['middleware' => ['verified']], function () {
     Route::get('attendanceemployee/bulkattendance', [AttendanceEmployeeController::class, 'bulkAttendance'])->name('attendanceemployee.bulkattendance')->middleware(['auth', 'XSS']);
     Route::post('attendanceemployee/bulkattendance', [AttendanceEmployeeController::class, 'bulkAttendanceData'])->name('attendanceemployee.bulkattendance')->middleware(['auth', 'XSS']);
     Route::post('attendanceemployee/attendance', [AttendanceEmployeeController::class, 'attendance'])->name('attendanceemployee.attendance')->middleware(['auth', 'XSS']);
-
+    Route::post('/break-store', [BreakController::class, 'storeBreak'])->name('breaks.store');
+    Route::post('/break-end', [BreakController::class, 'endBreak'])->name('breaks.end');
+    
+   
     Route::resource('attendanceemployee', AttendanceEmployeeController::class)->middleware(['auth', 'XSS']);
     Route::resource('leavetype', LeaveTypeController::class)->middleware(['auth', 'XSS']);
     Route::get('report/leave', [ReportController::class, 'leave'])->name('report.leave')->middleware(['auth', 'XSS']);
@@ -1442,7 +1446,9 @@ Route::group(['middleware' => ['verified']], function () {
 
     Route::get('import/attendance/file', [AttendanceEmployeeController::class, 'importFile'])->name('attendance.file.import');
     Route::post('import/attendance', [AttendanceEmployeeController::class, 'import'])->name('attendance.import');
-
+    Route::get('export/attendance', [AttendanceEmployeeController::class, 'export'])->name('attendance.export');
+    Route::get('/attendance/print', [AttendanceEmployeeController::class, 'print'])->name('attendance.print');
+    
     Route::get('export/transaction', [TransactionController::class, 'export'])->name('transaction.export');
     Route::get('export/accountstatement', [ReportController::class, 'export'])->name('accountstatement.export');
     Route::get('export/productstock', [ReportController::class, 'stock_export'])->name('productstock.export');

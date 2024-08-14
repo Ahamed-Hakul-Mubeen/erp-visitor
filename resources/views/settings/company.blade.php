@@ -1023,7 +1023,7 @@
                                         </span>
                                     @enderror
                                 </div>
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-6">
                                     {{ Form::label('company_start_time', __('Company Start Time *'), ['class' => 'form-label']) }}
                                     {{ Form::time('company_start_time', null, ['class' => 'form-control']) }}
                                     @error('company_start_time')
@@ -1032,10 +1032,19 @@
                                         </span>
                                     @enderror
                                 </div>
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-6">
                                     {{ Form::label('company_end_time', __('Company End Time *'), ['class' => 'form-label']) }}
                                     {{ Form::time('company_end_time', null, ['class' => 'form-control']) }}
                                     @error('company_end_time')
+                                        <span class="invalid-company_end_time" role="alert">
+                                            <strong class="text-danger">{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                                <div class="form-group col-md-6">
+                                    {{ Form::label('break_time', __('Total Break Time (Mins) *'), ['class' => 'form-label']) }}
+                                    {{ Form::text('break_time', null, ['class' => 'form-control']) }}
+                                    @error('break_time')
                                         <span class="invalid-company_end_time" role="alert">
                                             <strong class="text-danger">{{ $message }}</strong>
                                         </span>

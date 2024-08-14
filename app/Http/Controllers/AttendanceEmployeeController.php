@@ -12,12 +12,15 @@ use App\Models\User;
 use App\Models\Utility;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\AttendanceExport;
+
 
 class AttendanceEmployeeController extends Controller
 {
     public function index(Request $request)
     {
-
+        
         if (\Auth::user()->can('manage attendance')) {
 
             $branch = Branch::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
@@ -110,6 +113,7 @@ class AttendanceEmployeeController extends Controller
                 $attendanceEmployee = $attendanceEmployee->get();
 
             }
+            
 
             return view('attendance.index', compact('attendanceEmployee', 'branch', 'department'));
         } else {
@@ -322,7 +326,7 @@ class AttendanceEmployeeController extends Controller
             //                dd($attendanceEmployee);
             AttendanceEmployee::where('id', $id)->update($attendanceEmployee);
             //                $attendanceEmployee->save();
-
+             
             return redirect()->route('hrm.dashboard')->with('success', __('Employee successfully clock Out.'));
         } else {
             $date = date("Y-m-d");
@@ -389,7 +393,7 @@ class AttendanceEmployeeController extends Controller
     }
 
     public function attendance(Request $request)
-    {
+    {   
         $settings = Utility::settings();
 
         if ($settings['ip_restrict'] == 'on') {
@@ -399,6 +403,8 @@ class AttendanceEmployeeController extends Controller
                 return redirect()->back()->with('error', __('This ip is not allowed to clock in & clock out.'));
             }
         }
+
+       
         $employeeId = !empty(\Auth::user()->employee)?\Auth::user()->employee->id : 0;
 
         $todayAttendance = AttendanceEmployee::where('employee_id', '=', $employeeId)->where('date', date('Y-m-d'))->orderBy('id', 'desc')->first();
@@ -733,5 +739,66 @@ class AttendanceEmployeeController extends Controller
             }
         }
     }
+
+    public function export(Request $request)
+{
+    // Get filtered attendance data
+    $attendanceEmployee = $this->filterAttendance($request);
+    
+    // Pass the filtered data to the export class
+    return Excel::download(new AttendanceExport($attendanceEmployee), 'Attendance_' . date('Y-m-d_H-i-s') . '.xlsx');
+}
+
+    private function filterAttendance($request)
+    {
+        if (\Auth::user()->type != 'employee') {
+            $employee = Employee::select('id')->where('created_by', \Auth::user()->creatorId());
+
+            if (!empty($request->branch)) {
+                $employee->where('branch_id', $request->branch);
+            }
+
+            if (!empty($request->department)) {
+                $employee->where('department_id', $request->department);
+            }
+
+            $employee = $employee->get()->pluck('id');
+            $attendanceEmployee = AttendanceEmployee::whereIn('employee_id', $employee);
+
+        } else {
+            $emp = !empty(\Auth::user()->employee) ? \Auth::user()->employee->id : 0;
+            $attendanceEmployee = AttendanceEmployee::where('employee_id', $emp);
+        }
+
+        if ($request->type == 'monthly' && !empty($request->month)) {
+            $month = date('m', strtotime($request->month));
+            $year = date('Y', strtotime($request->month));
+            $start_date = date($year . '-' . $month . '-01');
+            $end_date = date($year . '-' . $month . '-t');
+
+            $attendanceEmployee->whereBetween('date', [$start_date, $end_date]);
+
+        } elseif ($request->type == 'daily' && !empty($request->date)) {
+            $attendanceEmployee->where('date', $request->date);
+
+        } else {
+            $month = date('m');
+            $year = date('Y');
+            $start_date = date($year . '-' . $month . '-01');
+            $end_date = date($year . '-' . $month . '-t');
+
+            $attendanceEmployee->whereBetween('date', [$start_date, $end_date]);
+        }
+
+        return $attendanceEmployee->get();
+    }
+
+    public function print(Request $request)
+{
+    $attendanceEmployee = $this->filterAttendance($request);
+
+    return view('attendance.print', compact('attendanceEmployee'));
+}
+
 
 }
