@@ -56,7 +56,7 @@ class ProjectController extends Controller
     {
         if(\Auth::user()->can('create project'))
         {
-          $users   = User::where('created_by', '=', \Auth::user()->creatorId())->where('type', '!=', 'client')->get()->pluck('name', 'id');
+          $users   = User::where('created_by', '=', \Auth::user()->creatorId())->where('type', '!=', 'client')->where('type', '!=', 'project member')->get()->pluck('name', 'id');
           $clients = User::where('created_by', '=', \Auth::user()->creatorId())->where('type', '=', 'client')->get()->pluck('name', 'id');
           $clients->prepend('Select Client', '');
           $users->prepend('Select User', '');
@@ -76,7 +76,6 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-
 
         if(\Auth::user()->can('create project'))
         {
@@ -482,7 +481,7 @@ class ProjectController extends Controller
 
         $user_project = $project->users->pluck('id')->toArray();
 
-        $user_contact = User::where('created_by', \Auth::user()->creatorId())->where('type','!=','client')->whereNOTIn('id', $user_project)->pluck('id')->toArray();
+        $user_contact = User::where('created_by', \Auth::user()->creatorId())->where('type','!=','client')->where('type','!=','project member')->whereNOTIn('id', $user_project)->pluck('id')->toArray();
         $arrUser      = array_unique($user_contact);
         $users        = User::whereIn('id', $arrUser)->get();
 

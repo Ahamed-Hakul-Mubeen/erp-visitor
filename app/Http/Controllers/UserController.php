@@ -14,6 +14,7 @@ use App\Models\Plan;
 use App\Models\User;
 use App\Models\UserToDo;
 use App\Models\Utility;
+use App\Models\ProjectUser;
 use Auth;
 use File;
 use Illuminate\Http\Request;
@@ -45,10 +46,9 @@ class UserController extends Controller
 
     public function create()
     {
-
         $customFields = CustomField::where('created_by', '=', \Auth::user()->creatorId())->where('module', '=', 'user')->get();
         $user = \Auth::user();
-        $roles = Role::where('created_by', '=', $user->creatorId())->where('name', '!=', 'client')->get()->pluck('name', 'id');
+        $roles = Role::where('created_by', '=', $user->creatorId())->where('name', '!=', 'client')->where('name', '!=', 'project member')->get()->pluck('name', 'id');
         if (\Auth::user()->can('create user')) {
             return view('user.create', compact('roles', 'customFields'));
         } else {
@@ -56,6 +56,18 @@ class UserController extends Controller
         }
     }
 
+    public function projectMemberCreate($project_id)
+    {
+        // $customFields = CustomField::where('created_by', '=', \Auth::user()->creatorId())->where('module', '=', 'user')->get();
+        $user = \Auth::user();
+        $roles = Role::where('created_by', '=', $user->id)->where('name','project member')->get()->pluck('name', 'id');
+        // $project = Project::find($project_id);
+        if (\Auth::user()->can('create user')) {
+            return view('user.projectMemberCreate', compact('project_id','roles'));
+        } else {
+            return redirect()->back();
+        }
+    }
     public function store(Request $request)
     {
         if (\Auth::user()->can('create user')) {
@@ -109,6 +121,12 @@ class UserController extends Controller
                 $user['is_enable_login'] = $enableLogin;
 
                 $user->save();
+
+                $projectMemberRole =new Role();
+                $projectMemberRole->name ="project member";
+                $projectMemberRole->created_by =$user->id;
+                $projectMemberRole->save();
+
                 $role_r = Role::findByName('company');
                 $user->assignRole($role_r);
                 //                $user->userDefaultData();
@@ -133,13 +151,13 @@ class UserController extends Controller
                 ExperienceCertificate::defaultExpCertificatRegister($user->id);
                 JoiningLetter::defaultJoiningLetterRegister($user->id);
                 NOC::defaultNocCertificateRegister($user->id);
-                
-                
+
+
                 $role             = new Role();
                 $role->name       = 'Emoloyee';
                 $role->created_by = $user->id;
                 $role->save();
-               
+
                 // Assign permissions to the role
                 $employeePermission = [
                     ['name' => 'show hrm dashboard'],
@@ -163,8 +181,8 @@ class UserController extends Controller
                     ['name' => 'manage announcement'],
                     ['name' => 'manage leave'],
                 ];
-                
-              
+
+
                 $role->givePermissionTo($employeePermission);
 
             } else {
@@ -250,6 +268,65 @@ class UserController extends Controller
             return redirect()->back();
         }
 
+    }
+    public function projectMemberStore(Request $request){
+        if (\Auth::user()->can('create user')) {
+            $default_language = DB::table('settings')->select('value')->where('name', 'default_language')->where('created_by', '=', \Auth::user()->creatorId())->first();
+            $validator = \Validator::make(
+                $request->all(), [
+                    'name' => 'required|max:120',
+                    'email' => 'required|email',
+                    'role' => 'required',
+                ]
+            );
+            if ($validator->fails()) {
+                $messages = $validator->getMessageBag();
+                return redirect()->back()->with('error', $messages->first());
+            }
+            $existsUser = User::where('email', $request->email)->first();
+            if($existsUser) {
+                $existsMember = ProjectUser::where('project_id',$request->project_id)->where('user_id',$existsUser->id)->first();
+                if($existsMember){
+                    return redirect()->back()->with('error', 'Member already exists in this project.');
+                }else{
+
+                    $project_user = new ProjectUser();
+                    $project_user->project_id = $request->project_id;
+                    $project_user->user_id = $existsUser->id;
+                    $project_user->save();
+                }
+
+            }
+            else{
+                $enableLogin = 0;
+                $user = User::find(\Auth::user()->created_by);
+                $role_r = Role::findById($request->role);
+                $request['password'] = null;
+                $request['type'] = $role_r->name;
+                $request['lang'] = !empty($default_language) ? $default_language->value : 'en';
+                $request['created_by'] = \Auth::user()->id;
+                $request['email_verified_at'] = date('Y-m-d H:i:s');
+                $request['is_enable_login'] = $enableLogin;
+                $user = User::create($request->all());
+
+                $user->assignRole($role_r);
+                if ($request['type'] != 'client') {
+                    \App\Models\Utility::employeeDetails($user->id, \Auth::user()->creatorId());
+                }
+
+                $project_user = new ProjectUser();
+                $project_user->project_id = $request->project_id;
+                $project_user->user_id = $user->id;
+                $project_user->save();
+            }
+
+
+
+            return redirect()->back()->with('success', __('Member successfully Added.') . ((!empty($resp) && $resp['is_success'] == false && !empty($resp['error'])) ? '<br> <span class="text-danger">' . $resp['error'] . '</span>' : ''));
+        }
+        else {
+            return redirect()->back();
+        }
     }
     public function show()
     {
