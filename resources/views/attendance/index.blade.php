@@ -51,8 +51,8 @@
                 <div class="card">
                     <div class="card-body">
                         {{ Form::open(array('route' => array('attendanceemployee.index'),'method'=>'get','id'=>'attendanceemployee_filter')) }}
-                        <div class="row align-items-center justify-content-end">
-                            <div class="col-xl-10">
+                        <div class="row align-items-center">
+                            <div class="col-xl-9 mt-2">
                                 <div class="row">
                                     <div class="col-3">
                                         <label class="form-label">{{__('Type')}}</label> <br>
@@ -95,7 +95,7 @@
                                     @endif
                                 </div>
                             </div>
-                            <div class="col-auto mt-4">
+                            <div class="col-auto">
                                 <div class="row">
                                     <div class="col-auto">
                                         <a href="#" class="btn btn-sm btn-primary" onclick="document.getElementById('attendanceemployee_filter').submit(); return false;" data-bs-toggle="tooltip" title="{{__('Apply')}}" data-original-title="{{__('apply')}}">

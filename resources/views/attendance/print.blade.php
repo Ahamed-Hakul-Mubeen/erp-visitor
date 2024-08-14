@@ -1,35 +1,111 @@
+@php
+    use App\Models\Utility;
+    $setting = \App\Models\Utility::settings();
+    $logo = \App\Models\Utility::get_file('uploads/logo/');
+
+    $company_logo = $setting['company_logo_dark'] ?? '';
+    $company_logos = $setting['company_logo_light'] ?? '';
+    $company_small_logo = $setting['company_small_logo'] ?? '';
+
+@endphp
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Attendance Print</title>
-    <link rel="stylesheet" href="{{ asset('css/print.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Report</title>
     <style>
-        /* Add custom styles for printing here */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header img {
+            width: 100px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin: 0;
+            color: #444;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 20px;
         }
 
         table, th, td {
-            border: 1px solid black;
+            border: 1px solid #ddd;
             padding: 10px;
-            text-align: left;
+            text-align: center;
         }
 
         th {
-            background-color: #f2f2f2;
+            background-color: #f7f7f7;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
         }
 
         @media print {
             .no-print {
                 display: none;
             }
+
+            body {
+                margin: 0;
+                padding: 0;
+            }
+        }
+
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #888;
+            font-size: 12px;
+        }
+
+        button {
+            margin: 10px;
+            padding: 8px 12px;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
 
-<h1>Attendance Report</h1>
+<div class="header">
+    <img src="{{ $logo . '/' . (isset($company_logo) && !empty($company_logo) ? $company_logo : 'logo-light.png') }}"
+    alt="{{ config('app.name', 'TZI-SaaS') }}" class="logo logo-lg">
+    <h1>Attendance Report</h1>
+</div>
 
 <table>
     <thead>
@@ -62,7 +138,7 @@
     </tbody>
 </table>
 
-<div class="no-print">
+<div class="no-print footer">
     <button onclick="window.print()">Print</button>
     <button onclick="window.close()">Close</button>
 </div>

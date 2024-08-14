@@ -796,8 +796,13 @@ class AttendanceEmployeeController extends Controller
     public function print(Request $request)
 {
     $attendanceEmployee = $this->filterAttendance($request);
+    $settings = Utility::getSettingById(\Auth::user()->creatorId());
+    if (!$settings) {
+        $settings = Utility::getSetting();
+    }
+    $companyLogo = $settings['company_logo'] ?? 'default-logo.png';
 
-    return view('attendance.print', compact('attendanceEmployee'));
+    return view('attendance.print', compact('attendanceEmployee','companyLogo'));
 }
 
 
