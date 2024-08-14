@@ -469,6 +469,10 @@
                         <h5>{{ __('Members') }}</h5>
                         @can('edit project')
                             <div class="float-end">
+                                <a href="#" data-size="lg" data-url="{{ route('users.project.member.create',$project->id) }}" data-ajax-popup="true"
+                                    data-bs-toggle="tooltip" data-bs-original-title="{{ __('Add New Member') }}" data-title="{{__('Add New Member') }}" class="btn btn-sm btn-secondary">
+                                    <i class="ti ti-plus"></i>
+                                </a>
                                 <a href="#" data-size="lg"
                                     data-url="{{ route('invite.project.member.view', $project->id) }}" data-ajax-popup="true"
                                     data-bs-toggle="tooltip" title="" class="btn btn-sm btn-primary"

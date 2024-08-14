@@ -299,6 +299,9 @@ Route::group(['middleware' => ['verified']], function () {
 
     Route::resource('users', UserController::class)->middleware(['auth', 'XSS', 'revalidate']);
 
+    Route::get('/project-member-create/{id}', [UserController::class, 'projectMemberCreate'])->name('users.project.member.create')->middleware(['auth', 'XSS']);
+    Route::post('/project-member-store', [UserController::class, 'projectMemberStore'])->middleware(['auth', 'XSS']);
+
     Route::post('change-password', [UserController::class, 'updatePassword'])->name('update.password');
 
     Route::any('user-reset-password/{id}', [UserController::class, 'userPassword'])->name('users.reset');
