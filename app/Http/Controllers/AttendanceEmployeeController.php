@@ -134,7 +134,7 @@ class AttendanceEmployeeController extends Controller
     }
 
     public function store(Request $request)
-    {
+    {  
         if (\Auth::user()->can('create attendance')) {
             $validator = \Validator::make(
                 $request->all(), [
@@ -451,6 +451,7 @@ class AttendanceEmployeeController extends Controller
             $employeeAttendance->early_leaving = '00:00:00';
             $employeeAttendance->overtime = '00:00:00';
             $employeeAttendance->total_rest = '00:00:00';
+            $employeeAttendance->work_from_home = $request->work_from_home;
             $employeeAttendance->created_by = \Auth::user()->id;
 
             $employeeAttendance->save();

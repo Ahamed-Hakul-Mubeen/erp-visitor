@@ -317,7 +317,7 @@ class DashboardController extends Controller
                     $officeTime['endTime'] = Utility::getValByName('company_end_time');
                     $officeTime['breakTime'] = Utility::getValByName('break_time');
 
-                    return view('dashboard.dashboard', compact('arrEvents', 'announcements', 'employees', 'meetings', 'employeeAttendance', 'officeTime'));
+                    return view('dashboard.dashboard', compact('arrEvents', 'announcements', 'employees', 'meetings', 'employeeAttendance', 'officeTime','emp'));
                 } else if ($user->type == 'super admin') {
                     $user = \Auth::user();
                     $user['total_user'] = $user->countCompany();

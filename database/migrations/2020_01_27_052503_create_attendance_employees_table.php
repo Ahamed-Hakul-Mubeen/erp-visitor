@@ -25,6 +25,7 @@ class CreateAttendanceEmployeesTable extends Migration
             $table->time('overtime');
             $table->time('total_rest');
             $table->time('total_break_duration')->nullable();
+            $table->boolean('work_from_home')->default(0);
             $table->integer('created_by');
             $table->timestamps();
         });

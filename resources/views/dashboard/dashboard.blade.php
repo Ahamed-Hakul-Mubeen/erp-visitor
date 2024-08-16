@@ -94,7 +94,7 @@
         }
     </script>
 
-    <script>
+    {{-- <script>
         $(document).ready(function() {
             let timerInterval;
             let startTime;
@@ -204,7 +204,7 @@
 
             initializeTimer();
         });
-    </script>
+    </script> --}}
 @endpush
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a></li>
@@ -296,6 +296,38 @@
             font-weight: bold;
             margin-bottom: 10px;
         }
+         .form-check {
+            padding: 15px;
+            margin-bottom: 0px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+        
+                }
+
+        .form-check-input {
+            margin-right: 10px;
+            margin-top: 0; 
+            cursor: pointer;
+        }
+
+        .form-check-label {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .form-check-label i {
+            font-size: 24px;
+            margin-right: 15px;
+        }
+
+        .form-check-label p {
+            margin: 0;
+            font-size: 12px;
+            color: #6c757d;
+        }
+       
     </style>
     
     @if (\Auth::user()->type != 'client' && \Auth::user()->type != 'company')
@@ -340,14 +372,21 @@
                                     <div class="col-sm-5">
                                         <div class="d-flex justify-content-end">
 
-                                            {{ Form::open(['url' => 'attendanceemployee/attendance', 'method' => 'post']) }}
+                                            {{-- {{ Form::open(['url' => 'attendanceemployee/attendance', 'method' => 'post']) }}
                                             @if (empty($employeeAttendance) || $employeeAttendance->clock_out != '00:00:00')
                                                 <button type="submit" value="0" name="in" id="clock_in"
                                                     class="mt-2 btn btn-success ">{{ __('CLOCK IN') }}</button>
-                                            @else
+                                            @else --}}
                                                 {{-- <button type="submit" value="0" name="in" id="clock_in" class="btn btn-success disabled" disabled>{{__('CLOCK IN')}}</button> --}}
-                                            @endif
-                                            {{ Form::close() }}
+                                            {{-- @endif
+                                            {{ Form::close() }} --}}
+
+                                            @if (empty($employeeAttendance) || $employeeAttendance->clock_out != '00:00:00')
+                                            <!-- Clock In Button that triggers the modal -->
+                                            <button type="button" class="mt-2 btn btn-success" id="clock_in" data-bs-toggle="modal" data-bs-target="#clockInModal">
+                                                {{ __('CLOCK IN') }}
+                                            </button>
+                                             @endif
 
                                             @if (!empty($employeeAttendance) && $employeeAttendance->clock_out == '00:00:00')
                                                 {{ Form::model($employeeAttendance, ['route' => ['attendanceemployee.update', $employeeAttendance->id], 'method' => 'PUT']) }}
@@ -777,15 +816,15 @@
                 <form id="breakForm">
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="breakType" id="break1" value="morning">
-                        <label class="form-check-label" for="morningBreak">{{ __('Morning Break') }}</label>
+                        <label class="form-check-label" for="break1">{{ __('Morning Break') }}</label>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="breakType" id="break2" value="lunch">
-                        <label class="form-check-label" for="lunchBreak">{{ __('Lunch Break') }}</label>
+                        <label class="form-check-label" for="break2">{{ __('Lunch Break') }}</label>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="breakType" id="break3" value="evening">
-                        <label class="form-check-label" for="eveningBreak">{{ __('Evening Break') }}</label>
+                        <label class="form-check-label" for="break3">{{ __('Evening Break') }}</label>
                     </div>
                 </form>
             </div>
@@ -810,6 +849,28 @@
             </div>
             <div class="modal-footer">
                 <button type="button" id="endBreak" class="btn btn-danger">{{ __('End') }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="clockInModal" tabindex="-1" aria-labelledby="clockInModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title my-text-bold" id="clockInModalLabel">{{ __('Clock In') }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Toggle Button for Work from Home -->
+                <div class="form-check1 form-switch">
+                    <input class="form-check-input m-1" type="checkbox" id="workFromHomeToggle">
+                    <label class="form-check-label my-text-bold" for="workFromHomeToggle">{{ __('Work from Home') }}</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Close') }}</button>
+                <button type="button" class="btn btn-success" id="clockInSubmit">{{ __('Clock In') }}</button>
             </div>
         </div>
     </div>
@@ -929,5 +990,35 @@ $(document).ready(function() {
  
     initializeTimer();
 });
+$(function() {
+    var employeeId = '{{ $emp->id ?? "" }}'; // Pass the employee ID to JavaScript
+
+        $('#clockInSubmit').click(function() {
+            $('<form>', {
+                method: 'POST',
+                action: '{{ url("attendanceemployee/attendance") }}'
+            }).append($('<input>', {
+                type: 'hidden',
+                name: '_token',
+                value: '{{ csrf_token() }}'
+            })).append($('<input>', {
+                type: 'hidden',
+                name: 'employee_id',
+                value: employeeId
+            })).append($('<input>', {
+                type: 'hidden',
+                name: 'date',
+                value: '{{ date("Y-m-d") }}'
+            })).append($('<input>', {
+                type: 'hidden',
+                name: 'clock_in',
+                value: '{{ date("H:i:s") }}'
+            })).append($('<input>', {
+                type: 'hidden',
+                name: 'work_from_home',
+                value: $('#workFromHomeToggle').is(':checked') ? 1 : 0
+            })).appendTo('body').submit();
+        });
+    });
 </script>
 @endpush

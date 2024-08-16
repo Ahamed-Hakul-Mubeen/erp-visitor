@@ -145,13 +145,14 @@
                                 <th>{{__('Early Leaving')}}</th>
                                 <th>{{__('Overtime')}}</th>
                                 <th>{{__('Break Time')}}</th>
+                                <th>{{__('Work From Home')}}</th>
                                 @if(Gate::check('edit attendance') || Gate::check('delete attendance'))
                                     <th>{{__('Action')}}</th>
                                 @endif
                             </tr>
                             </thead>
                             <tbody>
-
+                                       
                             @foreach ($attendanceEmployee as $attendance)
                                 <tr>
                                     @if(\Auth::user()->type!='Employee')
@@ -159,12 +160,22 @@
                                     @endif
                                     <td>{{ \Auth::user()->dateFormat($attendance->date) }}</td>
                                     <td>{{ $attendance->status }}</td>
-                                    <td>{{ ($attendance->clock_in !='00:00:00') ?\Auth::user()->timeFormat( $attendance->clock_in):'00:00' }} </td>
+                                    <td>
+                                        
+                                        {{ ($attendance->clock_in !='00:00:00') ?\Auth::user()->timeFormat( $attendance->clock_in):'00:00' }} 
+                                        @if($attendance->work_from_home == 1)
+                                        <div>
+                                            <span class="badge mt-1 d-inline-block" style="background-color: grey; color: white; border-radius: 12px; padding: 5px 10px;">{{ __('Home') }}</span>
+                                        </div>
+                                        @endif
+                                        
+                                    </td>
                                     <td>{{ ($attendance->clock_out !='00:00:00') ?\Auth::user()->timeFormat( $attendance->clock_out):'00:00' }}</td>
                                     <td>{{ $attendance->late }}</td>
                                     <td>{{ $attendance->early_leaving }}</td>
                                     <td>{{ $attendance->overtime }}</td>
                                     <td>{{ $attendance->total_break_duration }}</td>
+                                    <td>{{ $attendance->work_from_home == 1 ? 'Yes' : 'No' }}</td>
                                     @if(Gate::check('edit attendance') || Gate::check('delete attendance'))
                                         <td>
                                             @can('edit attendance')

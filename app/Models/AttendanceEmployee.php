@@ -17,6 +17,7 @@ class AttendanceEmployee extends Model
         'overtime',
         'total_rest',
         'total_break_duration',
+        'work_from_home',
         'created_by',
     ];
 
