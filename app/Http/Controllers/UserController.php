@@ -154,7 +154,7 @@ class UserController extends Controller
 
 
                 $role             = new Role();
-                $role->name       = 'Emoloyee';
+                $role->name       = 'Employee';
                 $role->created_by = $user->id;
                 $role->save();
 

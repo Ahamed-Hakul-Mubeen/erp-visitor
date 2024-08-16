@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
+use Spatie\Permission\Models\Role;
 
 //use Faker\Provider\File;
 
@@ -112,13 +113,18 @@ class EmployeeController extends Controller
                         'email' => $request['email'],
                         // 'gender'=>$request['gender'],
                         'password' => Hash::make($request['password']),
-                        'type' => 'employee',
+                        'type' => 'Employee',
                         'lang' => 'en',
                         'created_by' => \Auth::user()->creatorId(),
                     ]
                 );
                 $user->save();
-                $user->assignRole('Employee');
+                $employee_role = Role::where("name", "Employee")->where("created_by", \Auth::user()->creatorId())->first();
+                if($employee_role){
+                    $user->assignRole($employee_role->id);
+                }else{
+                    $user->assignRole('Employee');
+                }
             }
             else
             {
