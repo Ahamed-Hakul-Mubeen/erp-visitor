@@ -141,7 +141,10 @@
         $hours = ($t2 - $t1);
         $real_worked_hour = date("H:i:s",($hours));
 
-        // $break_arr = explode(':', );
+        $real_worked_arr = explode(':', $real_worked_hour);
+        $real_worked_h = $real_worked_arr[0];
+        $real_worked_i = $real_worked_arr[1];
+
         // $real_worked_h = $worked_h - $break_arr[0];
         // $real_worked_i = $worked_i - $break_arr[1];
         // $real_worked_h = $real_worked_h < 10 ? '0' . $real_worked_h : $real_worked_h;
@@ -167,7 +170,7 @@
                 $schedule_work_h .
                     ':' .
                     $schedule_work_i .
-                    ':00 -' .
+                    ':00 - ' .
                     $real_worked_h .
                     ' hour, -' .
                     $real_worked_h .
