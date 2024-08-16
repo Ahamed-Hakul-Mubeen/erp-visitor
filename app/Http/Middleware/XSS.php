@@ -28,7 +28,7 @@ class XSS
             $settings = Utility::settingsById(\Auth::user()->creatorId());
             if (!empty($settings['timezone'])) {
                 Config::set('app.timezone', $settings['timezone']);
-                date_default_timezone_set(Config::get('app.timezone', 'UTC'));
+                // date_default_timezone_set(Config::get('app.timezone', 'UTC'));
             }
             
             \App::setLocale(\Auth::user()->lang);

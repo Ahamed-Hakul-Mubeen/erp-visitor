@@ -153,7 +153,7 @@ class AuthenticatedSessionController extends Controller
         $setting = Utility::settingsById($user->creatorId());
 
         $timezone = $setting['timezone'] ? $setting['timezone'] : 'UTC';
-        date_default_timezone_set($timezone);
+        // date_default_timezone_set($timezone);
 
         // Update Last Login Time
         $user->update(

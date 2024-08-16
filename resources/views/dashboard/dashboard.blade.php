@@ -99,7 +99,7 @@
     <li class="breadcrumb-item">{{ __('HRM') }}</li>
 @endsection
 @php
-    // date_default_timezone_set("Asia/Calcutta");
+    // dd(date_default_timezone_get());
     $setting = \App\Models\Utility::settings();
 
     if (\Auth::user()->type != 'client' && \Auth::user()->type != 'company') {
@@ -120,7 +120,6 @@
         $since_start = $start_date->diff(new DateTime($officeTime['endTime']));
         $since_start_h = $since_start->h < 10 ? '0' . $since_start->h : $since_start->h;
         $since_start_i = $since_start->i < 10 ? '0' . $since_start->i : $since_start->i;
-
         // Find total worked hour
         if ($employeeAttendance_clock_in != '00:00:00') {
             $clock_in = new DateTime($employeeAttendance_clock_in);
@@ -135,22 +134,13 @@
         }
 
         // Find Real work hour
-        
-        $t1 = strtotime($employeeAttendance_total_break_duration);
-        $t2 = strtotime($total_worked_hour);
-        $hours = ($t2 - $t1);
-        $real_worked_hour = date("H:i:s",($hours));
+        $break_duration_arr = explode(":", $employeeAttendance_total_break_duration);
+        $real_worked_hour = date('H:i', strtotime($total_worked_hour.' - ' . $break_duration_arr[0] . ' hour, -' . $break_duration_arr[1] . ' minutes'));
 
         $real_worked_arr = explode(':', $real_worked_hour);
         $real_worked_h = $real_worked_arr[0];
         $real_worked_i = $real_worked_arr[1];
-
-        // $real_worked_h = $worked_h - $break_arr[0];
-        // $real_worked_i = $worked_i - $break_arr[1];
-        // $real_worked_h = $real_worked_h < 10 ? '0' . $real_worked_h : $real_worked_h;
-        // $real_worked_i = $real_worked_i < 10 ? '0' . $real_worked_i : $real_worked_i;
-        // $real_worked_hour = $real_worked_h . ':' . $real_worked_i;
-
+        
         // Find Balance
 
         $total_schedule_min = 60 * $since_start_h + $since_start_i;
@@ -164,19 +154,41 @@
         $schedule_work_h = $schedule_work_h < 10 ? '0' . $schedule_work_h : $schedule_work_h;
         $schedule_work_i = $schedule_work_i < 10 ? '0' . $schedule_work_i : $schedule_work_i;
 
-        $balane_work_hour = date(
-            'H:i',
-            strtotime(
-                $schedule_work_h .
-                    ':' .
-                    $schedule_work_i .
-                    ':00 - ' .
-                    $real_worked_h .
-                    ' hour, -' .
-                    $real_worked_h .
-                    ' minutes',
-            ),
-        );
+        if($schedule_work_h.":".$schedule_work_i > $real_worked_h.":".$real_worked_i)
+        {
+                $balane_work_hour = date(
+                    'H:i',
+                    strtotime(
+                        $schedule_work_h .
+                            ':' .
+                            $schedule_work_i .
+                            ':00 - ' .
+                            $real_worked_h .
+                            ' hour, -' .
+                            $real_worked_i .
+                            ' minutes',
+                    ),
+                );
+                $over_time = "00:00";
+        }
+        else {
+            $balane_work_hour = "00:00";
+            $over_time = date(
+                    'H:i',
+                    strtotime(
+                        $real_worked_h .
+                            ':' .
+                            $real_worked_i .
+                            ':00 - ' .
+                            $schedule_work_h .
+                            ' hour, -' .
+                            $schedule_work_i .
+                            ' minutes',
+                    ),
+                );
+        }
+
+
     }
 
 @endphp
@@ -259,7 +271,7 @@
                                             <div class="text-center col-sm-3 col-lg-3 col-6">
                                                 <p class="my-text-bold">Overtime</p>
                                                 <p class="time">
-                                                    {{ isset($employeeAttendance->total_break_duration) && !empty($employeeAttendance->overtime) ? $employeeAttendance->overtime : '00:00:00' }}
+                                                    {{ $over_time }}
                                                 </p>
                                             </div>
                                         </div>
