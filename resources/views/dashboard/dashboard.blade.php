@@ -93,118 +93,6 @@
             });
         }
     </script>
-
-    {{-- <script>
-        $(document).ready(function() {
-            let timerInterval;
-            let startTime;
-
-
-            // Function to start the break timer
-            function startBreakTimer() {
-                timerInterval = setInterval(function() {
-                    const now = new Date();
-                    const elapsed = (now - startTime) / 1000; // in seconds
-                    const hours = Math.floor(elapsed / 3600);
-                    const minutes = Math.floor((elapsed % 3600) / 60);
-                    const seconds = Math.floor(elapsed % 60);
-                    document.getElementById('breakTimer').innerText =
-                        ('0' + hours).slice(-2) + ':' +
-                        ('0' + minutes).slice(-2) + ':' +
-                        ('0' + seconds).slice(-2);
-                }, 1000);
-            }
-
-
-            function initializeTimer() {
-                const storedStartTime = localStorage.getItem('breakStartTime');
-                if (storedStartTime) {
-                    startTime = new Date(storedStartTime);
-                    startBreakTimer();
-                    $('#take_break').text('On Break');
-
-                }
-            }
-
-            $('#breakModal').on('show.bs.modal', function() {
-                $('#startBreak').prop('disabled', true);
-            });
-
-
-            $('input[name="breakType"]').change(function() {
-                $('#startBreak').prop('disabled', false);
-            });
-
-
-            $('#take_break').click(function() {
-                if (localStorage.getItem('breakStartTime')) {
-                    $('#breakTimerModal').modal('show');
-                } else {
-                    $('#breakModal').modal('show');
-                }
-            });
-
-            $('#startBreak').click(function() {
-                if (!$('input[name="breakType"]:checked').length) {
-                    alert('Please select a break type.');
-                    return;
-                }
-
-                const breakType = $('input[name="breakType"]:checked').val();
-                startTime = new Date();
-                localStorage.setItem('breakStartTime', startTime.toISOString());
-                $('#breakModal').modal('hide');
-                $('#breakTimerModal').modal('show');
-                startBreakTimer();
-
-                $('#take_break').text('On Break');
-                const formattedStartTime = startTime.toTimeString().split(' ')[0];
-                $.post('{{ route('breaks.store') }}', {
-                    employee_id: {{ auth()->user()->id }},
-                    break_start_time: formattedStartTime,
-                    break_type: breakType,
-                    _token: '{{ csrf_token() }}'
-                });
-            });
-
-            $('#endBreak').click(function() {
-                const endTime = new Date();
-                clearInterval(timerInterval);
-                $('#breakTimerModal').modal('hide');
-                $('#take_break').text('Take a Break');
-
-                const formattedEndTime = endTime.toTimeString().split(' ')[0];
-
-                // Send break end time to the server
-                $.post('{{ route('breaks.end') }}', {
-                    employee_id: {{ auth()->user()->id }},
-                    break_end_time: formattedEndTime,
-                    _token: '{{ csrf_token() }}'
-                });
-
-                // Clear local storage
-                localStorage.removeItem('breakStartTime');
-            });
-
-            $('#clock_out').click(function(event) {
-                const breakStartTime = localStorage.getItem('breakStartTime');
-                if (breakStartTime) {
-                    event.preventDefault();
-                    alert('Please end your break before clocking out.');
-                    return false;
-                }
-
-
-            });
-            $('#breakModal').on('hidden.bs.modal', function() {
-                $('#breakForm')[0].reset(); // Reset form fields
-                $('#startBreak').prop('disabled', true); // Disable the start button
-            });
-
-
-            initializeTimer();
-        });
-    </script> --}}
 @endpush
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a></li>
@@ -247,13 +135,18 @@
         }
 
         // Find Real work hour
-        $break_arr = explode(':', $employeeAttendance_total_break_duration);
-        $real_worked_h = $worked_h - $break_arr[0];
-        $real_worked_i = $worked_i - $break_arr[1];
+        
+        $t1 = strtotime($employeeAttendance_total_break_duration);
+        $t2 = strtotime($total_worked_hour);
+        $hours = ($t2 - $t1);
+        $real_worked_hour = date("H:i:s",($hours));
 
-        $real_worked_h = $real_worked_h < 10 ? '0' . $real_worked_h : $real_worked_h;
-        $real_worked_i = $real_worked_i < 10 ? '0' . $real_worked_i : $real_worked_i;
-        $real_worked_hour = $real_worked_h . ':' . $real_worked_i;
+        // $break_arr = explode(':', );
+        // $real_worked_h = $worked_h - $break_arr[0];
+        // $real_worked_i = $worked_i - $break_arr[1];
+        // $real_worked_h = $real_worked_h < 10 ? '0' . $real_worked_h : $real_worked_h;
+        // $real_worked_i = $real_worked_i < 10 ? '0' . $real_worked_i : $real_worked_i;
+        // $real_worked_hour = $real_worked_h . ':' . $real_worked_i;
 
         // Find Balance
 
@@ -864,7 +757,7 @@
             <div class="modal-body">
                 <!-- Toggle Button for Work from Home -->
                 <div class="form-check1 form-switch">
-                    <input class="form-check-input m-1" type="checkbox" id="workFromHomeToggle">
+                    <input class="m-1 form-check-input" type="checkbox" id="workFromHomeToggle">
                     <label class="form-check-label my-text-bold" for="workFromHomeToggle">{{ __('Work from Home') }}</label>
                 </div>
             </div>
