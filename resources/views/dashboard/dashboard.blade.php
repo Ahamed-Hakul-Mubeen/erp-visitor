@@ -133,6 +133,8 @@
             $worked_i = '00';
         }
 
+        // dd($since_start_h, $since_start_i);
+
         // Find Real work hour
         $break_duration_arr = explode(":", $employeeAttendance_total_break_duration);
         $real_worked_hour = date('H:i', strtotime($total_worked_hour.' - ' . $break_duration_arr[0] . ' hour, -' . $break_duration_arr[1] . ' minutes'));
@@ -140,18 +142,28 @@
         $real_worked_arr = explode(':', $real_worked_hour);
         $real_worked_h = $real_worked_arr[0];
         $real_worked_i = $real_worked_arr[1];
-        
+
         // Find Balance
 
         $total_schedule_min = 60 * $since_start_h + $since_start_i;
+        // dd($total_schedule_min);
         $total_schedule_work_min = $total_schedule_min - $break_time;
 
         $total_schedule_work_hour = $total_schedule_work_min / 60;
-        $schedule_work_hour_arr = explode(':', $total_schedule_work_hour);
+        $schedule_work_hour_arr = explode('.', $total_schedule_work_hour);
+
+        // dd($schedule_work_hour_arr);
 
         $schedule_work_h = $schedule_work_hour_arr[0];
-        $schedule_work_i = isset($schedule_work_hour_arr[1]) ? $schedule_work_hour_arr[1] : 0;
+        $schedule_work_i = isset($schedule_work_hour_arr[1]) ? ($schedule_work_hour_arr[1] * 60) : 0;
         $schedule_work_h = $schedule_work_h < 10 ? '0' . $schedule_work_h : $schedule_work_h;
+
+        if($schedule_work_i>60)
+        {
+            $schedule_work_i = substr($schedule_work_i, 0, 2) . '.' . substr($schedule_work_i, -4, 2);
+            $schedule_work_i = round($schedule_work_i);
+        }
+
         $schedule_work_i = $schedule_work_i < 10 ? '0' . $schedule_work_i : $schedule_work_i;
 
         if($schedule_work_h.":".$schedule_work_i > $real_worked_h.":".$real_worked_i)
@@ -169,6 +181,7 @@
                             ' minutes',
                     ),
                 );
+                // dd($balane_work_hour);
                 $over_time = "00:00";
         }
         else {
@@ -198,7 +211,7 @@
             font-weight: 800;
             font-size: 18px;
         }
-        
+
         #breakTimer {
             font-size: 48px;
             font-weight: bold;
@@ -210,12 +223,12 @@
             border-radius: 8px;
             display: flex;
             align-items: center;
-        
+
                 }
 
         .form-check-input {
             margin-right: 10px;
-            margin-top: 0; 
+            margin-top: 0;
             cursor: pointer;
         }
 
@@ -235,9 +248,9 @@
             font-size: 12px;
             color: #6c757d;
         }
-       
+
     </style>
-    
+
     @if (\Auth::user()->type != 'client' && \Auth::user()->type != 'company')
         <div class="row">
             <div class="col-sm-12">
@@ -250,7 +263,7 @@
                             <div class="card-body dash-card-body">
                                 <h4>Hi {{ \Auth::user()->name }}!</h4>
                                 <p class="text-muted pb-0-5">
-                                    {{ __('My Office Time: ' . $officeTime['startTime'] . ' to ' . $officeTime['endTime']) }}</p>
+                                    {{ __('My Office Time: ' . date("h:i A", strtotime($officeTime['startTime'])) . ' to ' . date("h:i A", strtotime($officeTime['endTime']))) }}</p>
                                 <div class="row">
                                     <div class="col-sm-7">
                                         <div class="row">
@@ -710,7 +723,7 @@
         </div>
     @endif
 
-    
+
      <!-- Break Modal -->
 <div class="modal fade" id="breakModal" tabindex="-1" role="dialog" aria-labelledby="breakModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -790,7 +803,7 @@
 $(document).ready(function() {
     let timerInterval;
     let startTime;
-    
+
 
     // Function to start the break timer
     function startBreakTimer() {
@@ -800,21 +813,21 @@ $(document).ready(function() {
             const hours = Math.floor(elapsed / 3600);
             const minutes = Math.floor((elapsed % 3600) / 60);
             const seconds = Math.floor(elapsed % 60);
-            document.getElementById('breakTimer').innerText = 
-                ('0' + hours).slice(-2) + ':' + 
-                ('0' + minutes).slice(-2) + ':' + 
+            document.getElementById('breakTimer').innerText =
+                ('0' + hours).slice(-2) + ':' +
+                ('0' + minutes).slice(-2) + ':' +
                 ('0' + seconds).slice(-2);
         }, 1000);
     }
 
-    
+
     function initializeTimer() {
         const storedStartTime = localStorage.getItem('breakStartTime');
         if (storedStartTime) {
             startTime = new Date(storedStartTime);
             startBreakTimer();
-            $('#take_break').text('ON BREAK'); 
-           
+            $('#take_break').text('ON BREAK');
+
         }
     }
 
@@ -822,12 +835,12 @@ $(document).ready(function() {
         $('#startBreak').prop('disabled', true);
     });
 
-   
+
     $('input[name="breakType"]').change(function() {
         $('#startBreak').prop('disabled', false);
     });
 
-   
+
     $('#take_break').click(function() {
         if (localStorage.getItem('breakStartTime')) {
             $('#breakTimerModal').modal('show');
@@ -841,22 +854,22 @@ $(document).ready(function() {
             alert('Please select a break type.');
             return;
         }
-        
+
         const breakType = $('input[name="breakType"]:checked').val();
         startTime = new Date();
-        localStorage.setItem('breakStartTime', startTime.toISOString()); 
+        localStorage.setItem('breakStartTime', startTime.toISOString());
         $('#breakModal').modal('hide');
         $('#breakTimerModal').modal('show');
         startBreakTimer();
-        
-        $('#take_break').text('ON BREAK'); 
-        const formattedStartTime = startTime.toTimeString().split(' ')[0]; 
-        $.post('{{ route("breaks.store") }}', 
-        { 
-          employee_id: {{ auth()->user()->id }}, 
-          break_start_time: formattedStartTime, 
+
+        $('#take_break').text('ON BREAK');
+        const formattedStartTime = startTime.toTimeString().split(' ')[0];
+        $.post('{{ route("breaks.store") }}',
+        {
+          employee_id: {{ auth()->user()->id }},
+          break_start_time: formattedStartTime,
           break_type: breakType,
-          _token: '{{ csrf_token() }}' 
+          _token: '{{ csrf_token() }}'
         });
     });
 
@@ -864,16 +877,16 @@ $(document).ready(function() {
         const endTime = new Date();
         clearInterval(timerInterval);
         $('#breakTimerModal').modal('hide');
-        $('#take_break').text('TAKE A BREAK'); 
-        
-        const formattedEndTime = endTime.toTimeString().split(' ')[0]; 
+        $('#take_break').text('TAKE A BREAK');
+
+        const formattedEndTime = endTime.toTimeString().split(' ')[0];
 
         // Send break end time to the server
-        $.post('{{ route("breaks.end") }}', 
-        { 
-          employee_id: {{ auth()->user()->id }}, 
-          break_end_time: formattedEndTime, 
-          _token: '{{ csrf_token() }}' 
+        $.post('{{ route("breaks.end") }}',
+        {
+          employee_id: {{ auth()->user()->id }},
+          break_end_time: formattedEndTime,
+          _token: '{{ csrf_token() }}'
         });
 
         // Clear local storage
@@ -887,15 +900,15 @@ $(document).ready(function() {
             alert('Please end your break before clocking out.');
             return false;
         }
-        
-       
+
+
     });
     $('#breakModal').on('hidden.bs.modal', function () {
         $('#breakForm')[0].reset(); // Reset form fields
         $('#startBreak').prop('disabled', true); // Disable the start button
     });
-     
- 
+
+
     initializeTimer();
 });
 $(function() {
