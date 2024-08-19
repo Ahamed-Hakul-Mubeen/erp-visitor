@@ -178,6 +178,8 @@ Route::get('/vender/bill/{id}/', [BillController::class, 'invoiceLink'])->name('
 Route::get('/vendor/purchase/{id}/', [PurchaseController::class, 'purchaseLink'])->name('purchase.link.copy');
 Route::get('/customer/proposal/{id}/', [ProposalController::class, 'invoiceLink'])->name('proposal.link.copy');
 Route::get('proposal/pdf/{id}', [ProposalController::class, 'proposal'])->name('proposal.pdf')->middleware(['XSS', 'revalidate']);
+Route::get('projects/milestone-share/{id}', [ProjectController::class, 'milestoneShare'])->name('project.milestone.share');
+Route::get('projects/milestone/view/{id}', [ProjectController::class, 'milestoneView'])->name('project.milestone.view');
 
 //================================= Invoice Payment Gateways  ====================================//
 
@@ -967,8 +969,8 @@ Route::group(['middleware' => ['verified']], function () {
     Route::post('attendanceemployee/attendance', [AttendanceEmployeeController::class, 'attendance'])->name('attendanceemployee.attendance')->middleware(['auth', 'XSS']);
     Route::post('/break-store', [BreakController::class, 'storeBreak'])->name('breaks.store');
     Route::post('/break-end', [BreakController::class, 'endBreak'])->name('breaks.end');
-    
-   
+
+
     Route::resource('attendanceemployee', AttendanceEmployeeController::class)->middleware(['auth', 'XSS']);
     Route::resource('leavetype', LeaveTypeController::class)->middleware(['auth', 'XSS']);
     Route::get('report/leave', [ReportController::class, 'leave'])->name('report.leave')->middleware(['auth', 'XSS']);
@@ -1451,7 +1453,7 @@ Route::group(['middleware' => ['verified']], function () {
     Route::post('import/attendance', [AttendanceEmployeeController::class, 'import'])->name('attendance.import');
     Route::get('export/attendance', [AttendanceEmployeeController::class, 'export'])->name('attendance.export');
     Route::get('/attendance/print', [AttendanceEmployeeController::class, 'print'])->name('attendance.print');
-    
+
     Route::get('export/transaction', [TransactionController::class, 'export'])->name('transaction.export');
     Route::get('export/accountstatement', [ReportController::class, 'export'])->name('accountstatement.export');
     Route::get('export/productstock', [ReportController::class, 'stock_export'])->name('productstock.export');
