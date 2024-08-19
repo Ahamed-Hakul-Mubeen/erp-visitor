@@ -569,7 +569,33 @@ class ProjectController extends Controller
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
     }
+    public function milestoneShare($encrypted_id)
+    {
+        try {
+            $project_id = Crypt::decryptString($encrypted_id);
 
+            $project = Project::with('milestones')->find($project_id);
+            if (!$project) {
+                return redirect()->back()->with('error', __('Project not found.'));
+            }
+
+            return view('projects.milestone_list', compact('project'));
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', __('Invalid ID.'));
+        }
+    }
+    public function milestoneView($encrypted_id)
+    {
+        try {
+            $id = Crypt::decryptString($encrypted_id);
+            $milestone = Milestone::find($id);
+            $project = Project::find($milestone->project_id);
+            return view('projects.milestone_view', compact('milestone','project'));
+        }
+        catch (\Exception $e) {
+            return redirect()->back()->with('error', __('Invalid ID.'));
+        }
+    }
     public function milestoneStore(Request $request, $project_id)
     {
         if(\Auth::user()->can('create milestone'))

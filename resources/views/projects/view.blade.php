@@ -160,6 +160,11 @@
             // document.execCommand('copy');
             show_toastr('success', 'Url copied to clipboard', 'success');
         }
+        function copyUrlToClipboard(element) {
+            var copyText = element.href;
+            navigator.clipboard.writeText(copyText);
+            show_toastr('success', 'Url copied to clipboard', 'success');
+        }
     </script>
 @endpush
 @section('breadcrumb')
@@ -494,15 +499,25 @@
                 <div class="card-header">
                     <div class="d-flex align-items-center justify-content-between">
                         <h5>{{ __('Milestones') }} ({{ count($project->milestones) }})</h5>
+                        <div class="float-end">
                         @can('create milestone')
-                            <div class="float-end">
                                 <a href="#" data-size="md" data-url="{{ route('project.milestone', $project->id) }}"
                                     data-ajax-popup="true" data-bs-toggle="tooltip" title=""
                                     class="btn btn-sm btn-primary" data-bs-original-title="{{ __('Create Milestone') }}">
                                     <i class="ti ti-plus"></i>
                                 </a>
-                            </div>
                         @endcan
+                        @can('share milestone')
+                        <a href="{{ route('project.milestone.share', Crypt::encryptString($project->id)) }}"
+                            target="_blank"
+                            data-bs-toggle="tooltip"
+                            onclick="copyUrlToClipboard(this)"
+                            title=""
+                            class="btn btn-sm btn-primary" data-bs-original-title="{{ __('Share Milestone') }}">
+                            <i class="ti ti-share"></i>
+                         </a>
+                        @endcan
+                        </div>
                     </div>
                 </div>
                 <div class="card-body">
