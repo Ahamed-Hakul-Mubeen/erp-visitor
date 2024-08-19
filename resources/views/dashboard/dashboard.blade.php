@@ -104,6 +104,7 @@
 
     if (\Auth::user()->type != 'client' && \Auth::user()->type != 'company') {
         $employeeAttendance_clock_in = '00:00:00';
+        $employeeAttendance_clock_out = '00:00:00';
         $employeeAttendance_total_break_duration = '00:00:00';
 
         $employeeAttendance_clock_in = isset($employeeAttendance->clock_in)
@@ -181,15 +182,15 @@
                             ' minutes',
                     ),
                 );
-                if($employeeAttendance->clock_out == "00:00:00") {
+                if($employeeAttendance_clock_out == "00:00:00") {
                     $over_time = "00:00";
                 } else {
-                    $over_time = $employeeAttendance->clock_out;
+                    $over_time = $employeeAttendance_clock_out;
                 }
         }
         else {
             $balane_work_hour = "00:00";
-            if($employeeAttendance->clock_out == "00:00:00") {
+            if($employeeAttendance_clock_out == "00:00:00") {
                 $over_time = date(
                         'H:i',
                         strtotime(
@@ -204,7 +205,7 @@
                         ),
                     );
             } else {
-                $over_time = $employeeAttendance->clock_out;
+                $over_time = $employeeAttendance_clock_out;
             }
         }
     }
