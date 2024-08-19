@@ -181,27 +181,32 @@
                             ' minutes',
                     ),
                 );
-                // dd($balane_work_hour);
-                $over_time = "00:00";
+                if($employeeAttendance->clock_out == "00:00:00") {
+                    $over_time = "00:00";
+                } else {
+                    $over_time = $employeeAttendance->clock_out;
+                }
         }
         else {
             $balane_work_hour = "00:00";
-            $over_time = date(
-                    'H:i',
-                    strtotime(
-                        $real_worked_h .
-                            ':' .
-                            $real_worked_i .
-                            ':00 - ' .
-                            $schedule_work_h .
-                            ' hour, -' .
-                            $schedule_work_i .
-                            ' minutes',
-                    ),
-                );
+            if($employeeAttendance->clock_out == "00:00:00") {
+                $over_time = date(
+                        'H:i',
+                        strtotime(
+                            $real_worked_h .
+                                ':' .
+                                $real_worked_i .
+                                ':00 - ' .
+                                $schedule_work_h .
+                                ' hour, -' .
+                                $schedule_work_i .
+                                ' minutes',
+                        ),
+                    );
+            } else {
+                $over_time = $employeeAttendance->clock_out;
+            }
         }
-
-
     }
 
 @endphp
@@ -249,6 +254,17 @@
             color: #6c757d;
         }
 
+        .my-text-success
+        {
+            color: #039e1a;
+            font-weight: 700;
+        }
+        .my-text-danger
+        {
+            color: #bc0101;
+            font-weight: 700;
+        }
+
     </style>
 
     @if (\Auth::user()->type != 'client' && \Auth::user()->type != 'company')
@@ -262,8 +278,52 @@
                             </div> --}}
                             <div class="card-body dash-card-body">
                                 <h4>Hi {{ \Auth::user()->name }}!</h4>
-                                <p class="text-muted pb-0-5">
-                                    {{ __('My Office Time: ' . date("h:i A", strtotime($officeTime['startTime'])) . ' to ' . date("h:i A", strtotime($officeTime['endTime']))) }}</p>
+                                    {{-- {{ __('My Office Time: ' . date("h:i A", strtotime($officeTime['startTime'])) . ' to ' . date("h:i A", strtotime($officeTime['endTime']))) }} --}}
+                                    <?php
+                                        if(isset($employeeAttendance->clock_in))
+                                        {
+                                            if($officeTime['startTime'].":00" >= $employeeAttendance->clock_in)
+                                            {
+                                                echo '<p class="my-text-success pb-0-5">You clocked in at  '.date("h:i A", strtotime($employeeAttendance->clock_in));
+                                                if(isset($employeeAttendance->late))
+                                                {
+                                                    echo " and you are ";
+                                                    $late_arr = explode(":", $employeeAttendance->late);
+                                                    if(isset($late_arr[0]) && $late_arr[0] > 0)
+                                                    {
+                                                        echo $late_arr[0]." hour ";
+                                                    }
+                                                    if(isset($late_arr[1]) && $late_arr[1] > 0)
+                                                    {
+                                                        echo $late_arr[1]." minutes ";
+                                                    }
+                                                    echo "early today !";
+                                                }
+                                                echo "</p>";
+                                            }
+                                            else
+                                            {
+                                                echo '<p class="my-text-danger pb-0-5">You clocked in at  '.date("h:i A", strtotime($employeeAttendance->clock_in));
+                                                if(isset($employeeAttendance->late))
+                                                {
+                                                    echo " and you are ";
+                                                    $late_arr = explode(":", $employeeAttendance->late);
+                                                    if(isset($late_arr[0]) && $late_arr[0] > 0)
+                                                    {
+                                                        echo $late_arr[0]." hour ";
+                                                    }
+                                                    if(isset($late_arr[1]) && $late_arr[1] > 0)
+                                                    {
+                                                        echo $late_arr[1]." minutes ";
+                                                    }
+                                                    echo "late today !";
+                                                }
+                                                echo "</p>";
+                                            }
+                                        }
+
+                                    ?>
+                                    
                                 <div class="row">
                                     <div class="col-sm-7">
                                         <div class="row">
