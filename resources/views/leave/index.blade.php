@@ -27,9 +27,9 @@
                     <table class="table datatable">
                             <thead>
                             <tr>
-                                @if(\Auth::user()->type!='Employee')
+                                {{-- @if(\Auth::user()->type!='Employee') --}}
                                     <th>{{__('Employee')}}</th>
-                                @endif
+                                {{-- @endif --}}
                                 <th>{{__('Leave Type')}}</th>
                                 <th>{{__('Applied On')}}</th>
                                 <th>{{__('Start Date')}}</th>
@@ -45,9 +45,9 @@
                             <tbody>
                             @foreach ($leaves as $leave)
                                 <tr>
-                                    @if(\Auth::user()->type!='Employee')
+                                    {{-- @if(\Auth::user()->type!='Employee') --}}
                                         <td>{{ !empty($leave->employees) ? $leave->employees->name : '-'}}</td>
-                                    @endif
+                                    {{-- @endif --}}
                                     <td>{{ !empty($leave->leaveType) ? $leave->leaveType->title : '-'}}</td>
                                     <td>{{ \Auth::user()->dateFormat($leave->applied_on )}}</td>
                                     <td>{{ \Auth::user()->dateFormat($leave->start_date ) }}</td>
@@ -55,11 +55,11 @@
                                         <td>{{ $leave->total_leave_days }}</td>
                                     <td>{{ $leave->leave_reason }}</td>
                                     <td>
-                                        @if($leave->status=="Pending")<div class="status_badge badge bg-warning p-2 px-3 rounded">{{ $leave->status }}</div>
+                                        @if($leave->status=="Pending")<div class="p-2 px-3 rounded status_badge badge bg-warning">{{ $leave->status }}</div>
                                         @elseif($leave->status=="Approved")
-                                            <div class="status_badge badge bg-success p-2 px-3 rounded">{{ $leave->status }}</div>
+                                            <div class="p-2 px-3 rounded status_badge badge bg-success">{{ $leave->status }}</div>
                                         @else($leave->status=="Reject")
-                                            <div class="status_badge badge bg-danger p-2 px-3 rounded">{{ $leave->status }}</div>
+                                            <div class="p-2 px-3 rounded status_badge badge bg-danger">{{ $leave->status }}</div>
                                         @endif
                                     </td>
                                     <td>
@@ -70,7 +70,7 @@
                                                 @can('edit leave')
                                                     <div class="action-btn bg-primary ms-2">
                                                         <a href="#" data-url="{{ URL::to('leave/'.$leave->id.'/edit') }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Edit Leave')}}" class="mx-3 btn btn-sm align-items-center" data-bs-toggle="tooltip" title="{{__('Edit')}}" data-original-title="{{__('Edit')}}">
-                                                            <i class="ti ti-pencil text-white"></i>
+                                                            <i class="text-white ti ti-pencil"></i>
                                                         </a>
                                                     </div>
                                                 @endcan
@@ -79,21 +79,21 @@
                                             @can('edit leave')
                                                 <div class="action-btn bg-primary ms-2">
                                                     <a href="#" data-url="{{ URL::to('leave/'.$leave->id.'/edit') }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Edit Leave')}}" class="mx-3 btn btn-sm align-items-center" data-bs-toggle="tooltip" title="{{__('Edit')}}" data-original-title="{{__('Edit')}}">
-                                                        <i class="ti ti-pencil text-white"></i>
+                                                        <i class="text-white ti ti-pencil"></i>
                                                     </a>
                                                 </div>
                                             @endcan
                                         @endif
                                         <div class="action-btn bg-warning ms-2">
                                             <a href="#" data-url="{{ URL::to('leave/'.$leave->id.'/action') }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Leave Action')}}" class="mx-3 btn btn-sm align-items-center" data-bs-toggle="tooltip" title="{{__('Leave Action')}}" data-original-title="{{__('Leave Action')}}">
-                                                <i class="ti ti-caret-right text-white"></i>
+                                                <i class="text-white ti ti-caret-right"></i>
                                             </a>
                                         </div>
                                         @can('delete leave')
                                         <div class="action-btn bg-danger ms-2">
                                             {!! Form::open(['method' => 'DELETE', 'route' => ['leave.destroy', $leave->id],'id'=>'delete-form-'.$leave->id]) !!}
-                                            <a href="#" class="mx-3 btn btn-sm  align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{__('Delete')}}" data-original-title="{{__('Delete')}}" data-confirm="{{__('Are You Sure?').'|'.__('This action can not be undone. Do you want to continue?')}}" data-confirm-yes="document.getElementById('delete-form-{{$leave->id}}').submit();">
-                                            <i class="ti ti-trash text-white"></i></a>
+                                            <a href="#" class="mx-3 btn btn-sm align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{__('Delete')}}" data-original-title="{{__('Delete')}}" data-confirm="{{__('Are You Sure?').'|'.__('This action can not be undone. Do you want to continue?')}}" data-confirm-yes="document.getElementById('delete-form-{{$leave->id}}').submit();">
+                                            <i class="text-white ti ti-trash"></i></a>
                                             {!! Form::close() !!}
                                         </div>
                                         @endif

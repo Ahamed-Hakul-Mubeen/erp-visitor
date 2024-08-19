@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Employee;
 use App\Models\Leave;
 use App\Models\LeaveType;
+use App\Models\ProjectUser;
 use App\Models\Utility;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,7 +22,21 @@ class LeaveController extends Controller
             {
                 $user     = \Auth::user();
                 $employee = Employee::where('user_id', '=', $user->id)->first();
-                $leaves   = Leave::where('employee_id', '=', $employee->id)->with(['leaveType','employees'])->get();
+                $project_id = ProjectUser::where('user_id', $user->id)->pluck('project_id')->toArray();
+                
+                $user_id_arr = ProjectUser::whereIn('project_id', $project_id)->pluck('user_id')->toArray();
+                $user_id_arr = array_unique($user_id_arr);
+                $employee_id_arr = [];
+                foreach($user_id_arr as $ua)
+                {
+                    $project_employee = Employee::where('user_id', '=', $ua)->first();
+                    if($project_employee)
+                    {
+                        $employee_id_arr[] = $project_employee->id;
+                    }
+                }
+
+                $leaves   = Leave::whereIn('employee_id', $employee_id_arr)->with(['leaveType','employees'])->get();
             }
             else
             {
