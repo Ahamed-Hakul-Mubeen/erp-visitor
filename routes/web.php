@@ -366,7 +366,7 @@ Route::group(['middleware' => ['verified']], function () {
             Route::post('company-payment-setting', [SystemController::class, 'saveCompanyPaymentSettings'])->name('company.payment.settings');
 
             Route::get('test-mail', [SystemController::class, 'testMail'])->name('test.mail');
-            Route::post('test-mail', [SystemController::class, 'testMail'])->name('test.mail');
+            Route::post('test-mail', [SystemController::class, 'testMail'])->name('test.mail2');
             Route::post('test-mail/send', [SystemController::class, 'testSendMail'])->name('test.send.mail');
 
             Route::post('stripe-settings', [SystemController::class, 'savePaymentSettings'])->name('payment.settings');
