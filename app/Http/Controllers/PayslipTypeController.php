@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\PayslipType;
 use Illuminate\Http\Request;
+use App\Models\Utility;
+use Illuminate\Support\Facades\Auth;
+use File;
 
 class PayslipTypeController extends Controller
 {
@@ -34,33 +37,58 @@ class PayslipTypeController extends Controller
     }
 
     public function store(Request $request)
-    {
-
+    {  
         if(\Auth::user()->can('create payslip type'))
         {
-
             $validator = \Validator::make(
                 $request->all(), [
-                                   'name' => 'required|max:20',
-                               ]
-            );
-            if($validator->fails())
-            {
-                $messages = $validator->getMessageBag();
+                    'name' => 'required|max:20',
+                    ]
+                );
+                if($validator->fails())
+                {
+                    $messages = $validator->getMessageBag();
+                    return redirect()->back()->with('error', $messages->first());
+                }
+               
 
-                return redirect()->back()->with('error', $messages->first());
+    $paysliptype = new PayslipType();
+    $paysliptype->name = $request->name;
+    $paysliptype->created_by = \Auth::user()->creatorId();
+
+    if($request->hasFile('digital_signature'))
+    {
+        $image_size = $request->file('digital_signature')->getSize();
+        $result = Utility::updateStorageLimit(\Auth::user()->creatorId(), $image_size);
+        
+        if($result == 1)
+        {
+            $filenameWithExt = $request->file('digital_signature')->getClientOriginalName();
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            $extension = $request->file('digital_signature')->getClientOriginalExtension();
+            $fileNameToStore = $filename . '_' . time() . '.' . $extension;
+            $dir = 'uploads/payslip/digital_signatures/';
+            
+            // Delete old file if exists
+            if (\File::exists(public_path($dir . $fileNameToStore))) {
+                \File::delete(public_path($dir . $fileNameToStore));
             }
-            $paysliptype             = new PayslipType();
-            $paysliptype->name       = $request->name;
-            $paysliptype->created_by = \Auth::user()->creatorId();
+            
+            // Upload file
+            $path = Utility::upload_file($request, 'digital_signature', $fileNameToStore, $dir, []);
+            $paysliptype->digital_signature = $fileNameToStore;
+        }
+    }
+          
             $paysliptype->save();
 
-            return redirect()->route('paysliptype.index')->with('success', __('PayslipType  successfully created.'));
+            return redirect()->route('paysliptype.index')->with('success', __('PayslipType successfully created.'));
         }
         else
         {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
+
     }
 
     public function show(PayslipType $paysliptype)

@@ -12,6 +12,7 @@ use App\Models\Loan;
 use App\Models\OtherPayment;
 use App\Models\Overtime;
 use App\Models\PaySlip;
+use App\Models\PayslipType;
 use App\Models\SaturationDeduction;
 use App\Models\TransactionLines;
 use App\Models\Utility;
@@ -380,17 +381,26 @@ class PaySlipController extends Controller
     }
 
     public function pdf($id, $month)
-    {
-        $payslip  = PaySlip::where('employee_id', $id)->where('salary_month', $month)->where('created_by', \Auth::user()->creatorId())->first();
-        $employee = Employee::find($payslip->employee_id);
+{
+    // Retrieve the payslip record based on employee ID, month, and creator ID
+    $payslip = PaySlip::where('employee_id', $id)
+        ->where('salary_month', $month)
+        ->where('created_by', \Auth::user()->creatorId())
+        ->first();
 
-       // dd($employee);
+    // Retrieve the employee based on the payslip's employee ID
+    $employee = Employee::find($payslip->employee_id);
 
-        $payslipDetail = Utility::employeePayslipDetail($id,$month);
+    $payslipType = PayslipType::where('id', $employee->salary_type)->first();
 
+    // Get the digital signature
+    $digitalSignature = $payslipType ? $payslipType->digital_signature : null;
 
-        return view('payslip.pdf', compact('payslip', 'employee', 'payslipDetail'));
-    }
+    $payslipDetail = Utility::employeePayslipDetail($id, $month);
+
+    // Pass the digital signature to the view
+    return view('payslip.pdf', compact('payslip', 'employee', 'payslipDetail', 'digitalSignature'));
+}
 
     public function send($id, $month)
     {
