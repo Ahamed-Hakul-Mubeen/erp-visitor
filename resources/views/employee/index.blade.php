@@ -36,7 +36,7 @@
                                 <th>{{__('Employee ID')}}</th>
                                 <th>{{__('Name')}}</th>
                                 <th>{{__('Email')}}</th>
-                                <th>{{__('Branch') }}</th>
+                                <th>{{__('Company') }}</th>
                                 <th>{{__('Department') }}</th>
                                 <th>{{__('Designation') }}</th>
                                 <th>{{__('Date Of Joining') }}</th>

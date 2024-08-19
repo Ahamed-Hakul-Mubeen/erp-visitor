@@ -11,7 +11,7 @@
 
 @section('action-btn')
     @if(!empty($employee))
-        <div class="float-end mt-3 m-2">
+        <div class="m-2 mt-3 float-end">
             @can('edit employee')
 
                 <a href="{{route('employee.edit',\Illuminate\Support\Facades\Crypt::encrypt($employee->id))}}" data-bs-toggle="tooltip" title="{{__('Edit')}}"class="btn btn-sm btn-primary">
@@ -23,7 +23,7 @@
 
         <div class="text-end">
             <div class="d-flex justify-content-end drp-languages">
-                <ul class="list-unstyled mb-0 m-2">
+                <ul class="m-2 mb-0 list-unstyled">
                     <li class="dropdown dash-h-item status-drp">
                         <a class="dash-head-link dropdown-toggle arrow-none me-0" data-bs-toggle="dropdown" href="#"
                            role="button" aria-haspopup="false" aria-expanded="false">
@@ -37,7 +37,7 @@
                         </div>
                     </li>
                 </ul>
-                <ul class="list-unstyled mb-0 m-2">
+                <ul class="m-2 mb-0 list-unstyled">
                     <li class="dropdown dash-h-item status-drp">
                         <a class="dash-head-link dropdown-toggle arrow-none me-0" data-bs-toggle="dropdown" href="#"
                            role="button" aria-haspopup="false" aria-expanded="false">
@@ -51,7 +51,7 @@
                         </div>
                     </li>
                 </ul>
-                <ul class="list-unstyled mb-0 m-2">
+                <ul class="m-2 mb-0 list-unstyled">
                     <li class="dropdown dash-h-item status-drp">
                         <a class="dash-head-link dropdown-toggle arrow-none me-0" data-bs-toggle="dropdown" href="#"
                            role="button" aria-haspopup="false" aria-expanded="false">
@@ -83,49 +83,49 @@
                                 <hr>
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <div class="info text-sm">
+                                        <div class="text-sm info">
                                             <strong class="font-bold">{{__('EmployeeId')}} : </strong>
                                             <span>{{$employeesId}}</span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="info text-sm font-style">
+                                        <div class="text-sm info font-style">
                                             <strong class="font-bold">{{__('Name')}} :</strong>
                                             <span>{{!empty($employee)?$employee->name:''}}</span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="info text-sm font-style">
+                                        <div class="text-sm info font-style">
                                             <strong class="font-bold">{{__('Email')}} :</strong>
                                             <span>{{!empty($employee)?$employee->email:''}}</span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="info text-sm">
+                                        <div class="text-sm info">
                                             <strong class="font-bold">{{__('Date of Birth')}} :</strong>
                                             <span>{{\Auth::user()->dateFormat(!empty($employee)?$employee->dob:'')}}</span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="info text-sm">
+                                        <div class="text-sm info">
                                             <strong class="font-bold">{{__('Phone')}} :</strong>
                                             <span>{{!empty($employee)?$employee->phone:''}}</span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="info text-sm">
+                                        <div class="text-sm info">
                                             <strong class="font-bold">{{__('Address')}} :</strong>
                                             <span>{{!empty($employee)?$employee->address:''}}</span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="info text-sm">
+                                        <div class="text-sm info">
                                             <strong class="font-bold">{{__('Salary Type')}} :</strong>
                                             <span>{{!empty($employee->salaryType)?$employee->salaryType->name:''}}</span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="info text-sm">
+                                        <div class="text-sm info">
                                             <strong class="font-bold">{{__('Basic Salary')}} :</strong>
                                             <span>{{!empty($employee)?$employee->salary:''}}</span>
                                         </div>
@@ -142,27 +142,27 @@
                                 <hr>
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <div class="info text-sm">
-                                            <strong class="font-bold">{{__('Branch')}} : </strong>
+                                        <div class="text-sm info">
+                                            <strong class="font-bold">{{__('Company')}} : </strong>
                                             <span>{{!empty($employee->branch)?$employee->branch->name:''}}</span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="info text-sm font-style">
+                                        <div class="text-sm info font-style">
                                             <strong class="font-bold">{{__('Department')}} :</strong>
                                             <span>{{!empty($employee->department)?$employee->department->name:''}}</span>
                                         </div>
                                     </div>
 
                                     <div class="col-md-6">
-                                        <div class="info text-sm">
+                                        <div class="text-sm info">
                                             <strong class="font-bold">{{__('Designation')}} :</strong>
                                             <span>{{!empty($employee->designation)?$employee->designation->name:''}}</span>
                                         </div>
                                     </div>
 
                                     <div class="col-md-6">
-                                        <div class="info text-sm">
+                                        <div class="text-sm info">
                                             <strong class="font-bold">{{__('Date Of Joining')}} :</strong>
                                             <span>{{\Auth::user()->dateFormat(!empty($employee)?$employee->company_doj:'')}}</span>
                                         </div>
@@ -188,7 +188,7 @@
                                     @if(!$documents->isEmpty())
                                         @foreach($documents as $key=>$document)
                                             <div class="col-md-6">
-                                                <div class="info text-sm">
+                                                <div class="text-sm info">
                                                     <strong class="font-bold">{{$document->name }} : </strong>
                                                     <span><a href="{{ (!empty($employeedoc[$document->id])?asset(Storage::url('uploads/document')).'/'.$employeedoc[$document->id]:'') }}" target="_blank">{{ (!empty($employeedoc[$document->id])?$employeedoc[$document->id]:'') }}</a></span>
                                                 </div>
@@ -212,38 +212,38 @@
                                 <hr>
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <div class="info text-sm">
+                                        <div class="text-sm info">
                                             <strong class="font-bold">{{__('Account Holder Name')}} : </strong>
                                             <span>{{!empty($employee)?$employee->account_holder_name:''}}</span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="info text-sm font-style">
+                                        <div class="text-sm info font-style">
                                             <strong class="font-bold">{{__('Account Number')}} :</strong>
                                             <span>{{!empty($employee)?$employee->account_number:''}}</span>
                                         </div>
                                     </div>
 
                                     <div class="col-md-6">
-                                        <div class="info text-sm">
+                                        <div class="text-sm info">
                                             <strong class="font-bold">{{__('Bank Name')}} :</strong>
                                             <span>{{!empty($employee)?$employee->bank_name:''}}</span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="info text-sm">
+                                        <div class="text-sm info">
                                             <strong class="font-bold">{{__('Bank Identifier Code')}} :</strong>
                                             <span>{{!empty($employee)?$employee->bank_identifier_code:''}}</span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="info text-sm">
-                                            <strong class="font-bold">{{__('Branch Location')}} :</strong>
+                                        <div class="text-sm info">
+                                            <strong class="font-bold">{{__('Company Location')}} :</strong>
                                             <span>{{!empty($employee)?$employee->branch_location:''}}</span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="info text-sm">
+                                        <div class="text-sm info">
                                             <strong class="font-bold">{{__('Tax Payer Id')}} :</strong>
                                             <span>{{!empty($employee)?$employee->tax_payer_id:''}}</span>
                                         </div>

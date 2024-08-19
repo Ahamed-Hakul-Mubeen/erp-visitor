@@ -27,22 +27,22 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="form-group col-md-6">
-                                    {!! Form::label('name', __('Name'), ['class' => 'form-label']) !!}<span class="text-danger pl-1">*</span>
+                                    {!! Form::label('name', __('Name'), ['class' => 'form-label']) !!}<span class="pl-1 text-danger">*</span>
                                     {!! Form::text('name', old('name'), ['class' => 'form-control', 'required' => 'required' ,'placeholder'=>'Enter employee name']) !!}
                                 </div>
                                 <div class="form-group col-md-6">
-                                    {!! Form::label('phone', __('Phone'), ['class' => 'form-label']) !!}<span class="text-danger pl-1">*</span>
+                                    {!! Form::label('phone', __('Phone'), ['class' => 'form-label']) !!}<span class="pl-1 text-danger">*</span>
                                     {!! Form::text('phone', old('phone'), ['class' => 'form-control' , 'required' => 'required' ,'placeholder'=>'Enter employee phone'  ]) !!}
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        {!! Form::label('dob', __('Date of Birth'), ['class' => 'form-label']) !!}<span class="text-danger pl-1">*</span>
+                                        {!! Form::label('dob', __('Date of Birth'), ['class' => 'form-label']) !!}<span class="pl-1 text-danger">*</span>
                                         {{ Form::date('dob', null, ['class' => 'form-control ', 'required' => 'required', 'autocomplete' => 'off','placeholder'=>'Select Date of Birth']) }}
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        {!! Form::label('gender', __('Gender'), ['class' => 'form-label' , 'required' => 'required' ]) !!}<span class="text-danger pl-1">*</span>
+                                        {!! Form::label('gender', __('Gender'), ['class' => 'form-label' , 'required' => 'required' ]) !!}<span class="pl-1 text-danger">*</span>
                                         <div class="d-flex radio-check">
                                             <div class="custom-control custom-radio custom-control-inline">
                                                 <input type="radio" id="g_male" value="Male" name="gender"
@@ -59,16 +59,16 @@
                                     </div>
                                 </div>
                                 <div class="form-group col-md-6">
-                                    {!! Form::label('email', __('Email'), ['class' => 'form-label']) !!}<span class="text-danger pl-1">*</span>
+                                    {!! Form::label('email', __('Email'), ['class' => 'form-label']) !!}<span class="pl-1 text-danger">*</span>
                                     {!! Form::email('email', old('email'), ['class' => 'form-control', 'required' => 'required' ,'placeholder'=>'Enter employee email']) !!}
                                 </div>
                                 <div class="form-group col-md-6">
-                                    {!! Form::label('password', __('Password'), ['class' => 'form-label']) !!}<span class="text-danger pl-1">*</span>
+                                    {!! Form::label('password', __('Password'), ['class' => 'form-label']) !!}<span class="pl-1 text-danger">*</span>
                                     {!! Form::password('password',['class' => 'form-control', 'required' => 'required' ,'placeholder'=>'Enter employee new password']) !!}
                                 </div>
                             </div>
                             <div class="form-group">
-                                {!! Form::label('address', __('Address'), ['class' => 'form-label']) !!}<span class="text-danger pl-1">*</span>
+                                {!! Form::label('address', __('Address'), ['class' => 'form-label']) !!}<span class="pl-1 text-danger">*</span>
                                 {!! Form::textarea('address', old('address'), ['class' => 'form-control', 'rows' => 2 ,'placeholder'=>'Enter employee address' , 'required' => 'required']) !!}
                             </div>
                         </div>
@@ -88,9 +88,9 @@
                                 </div>
 
                                 <div class="form-group col-md-6">
-                                    {{ Form::label('branch_id', __('Select Branch*'), ['class' => 'form-label']) }}
+                                    {{ Form::label('branch_id', __('Select Company*'), ['class' => 'form-label']) }}
                                     <div class="form-icon-user">
-                                        {{ Form::select('branch_id', $branches, null, ['class' => 'form-control select2', 'placeholder' => 'Select Branch']) }}
+                                        {{ Form::select('branch_id', $branches, null, ['class' => 'form-control select2', 'placeholder' => 'Select Company']) }}
                                     </div>
                                 </div>
 
@@ -106,7 +106,7 @@
 
                                     <div class="form-icon-user">
                                         {{--  <div class="designation_div">
-                                            <select class="form-control  designation_id" name="designation_id"
+                                            <select class="form-control designation_id" name="designation_id"
                                                 id="choices-multiple" placeholder="Select Designation">
                                             </select>
                                         </div>  --}}
@@ -114,7 +114,7 @@
 
                                     </div>
                                 </div>
-                                <div class="form-group  ">
+                                <div class="form-group ">
                                     {!! Form::label('company_doj', __('Company Date Of Joining'), ['class' => '  form-label']) !!}
                                     {{ Form::date('company_doj', null, ['class' => 'form-control ', 'required' => 'required', 'autocomplete' => 'off' ,'placeholder'=>'Select company date of joining']) }}
                                 </div>
@@ -146,7 +146,7 @@
                                                 value="{{ $document->id }}">
                                             <div class="choose-files">
                                                 <label for="document[{{ $document->id }}]">
-                                                    <div class=" bg-primary document "> <i
+                                                    <div class=" bg-primary document"> <i
                                                             class="ti ti-upload "></i>{{ __('Choose file here') }}
                                                     </div>
                                                     <input type="file"
@@ -194,7 +194,7 @@
                                     {!! Form::text('bank_identifier_code', old('bank_identifier_code'), ['class' => 'form-control' ,'placeholder'=>'Enter bank identifier code']) !!}
                                 </div>
                                 <div class="form-group col-md-6">
-                                    {!! Form::label('branch_location', __('Branch Location'), ['class' => 'form-label']) !!}
+                                    {!! Form::label('branch_location', __('Company Location'), ['class' => 'form-label']) !!}
                                     {!! Form::text('branch_location', old('branch_location'), ['class' => 'form-control' ,'placeholder'=>'Enter branch location']) !!}
                                 </div>
                                 <div class="form-group col-md-6">
@@ -210,7 +210,7 @@
         </div>
 
         <div class="float-end">
-            <button type="submit" class="btn  btn-primary">{{ 'Create' }}</button>
+            <button type="submit" class="btn btn-primary">{{ 'Create' }}</button>
         </div>
         </form>
     </div>
@@ -248,7 +248,7 @@
                 success: function(data) {
 
                     $('.designation_id').empty();
-                    var emp_selct = ` <select class="form-control  designation_id" name="designation_id" id="choices-multiple"
+                    var emp_selct = ` <select class="form-control designation_id" name="designation_id" id="choices-multiple"
                                             placeholder="Select Designation" >
                                             </select>`;
                     $('.designation_div').html(emp_selct);

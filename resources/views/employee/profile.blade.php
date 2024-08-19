@@ -9,7 +9,7 @@
             {{ Form::open(array('route' => array('employee.profile'),'method'=>'get','id'=>'employee_profile_filter')) }}
             <div class="all-select-box">
                 <div class="btn-box">
-                    {{ Form::label('branch', __('Branch'),['class'=>'text-type']) }}
+                    {{ Form::label('branch', __('Company'),['class'=>'text-type']) }}
                     {{ Form::select('branch',$brances,isset($_GET['branch'])?$_GET['branch']:'', array('class' => 'select-box select2')) }}
                 </div>
             </div>

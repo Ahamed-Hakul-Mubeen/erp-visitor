@@ -24,22 +24,22 @@
 
                     <div class="row">
                         <div class="form-group col-md-6">
-                            {!! Form::label('name', __('Name'),['class'=>'form-label']) !!}<span class="text-danger pl-1">*</span>
+                            {!! Form::label('name', __('Name'),['class'=>'form-label']) !!}<span class="pl-1 text-danger">*</span>
                             {!! Form::text('name', null, ['class' => 'form-control','required' => 'required']) !!}
                         </div>
                         <div class="form-group col-md-6">
-                            {!! Form::label('phone', __('Phone'),['class'=>'form-label']) !!}<span class="text-danger pl-1">*</span>
+                            {!! Form::label('phone', __('Phone'),['class'=>'form-label']) !!}<span class="pl-1 text-danger">*</span>
                             {!! Form::number('phone',null, ['class' => 'form-control']) !!}
                         </div>
                         <div class="form-group col-md-6">
 
-                            {!! Form::label('dob', __('Date of Birth'),['class'=>'form-label']) !!}<span class="text-danger pl-1">*</span>
+                            {!! Form::label('dob', __('Date of Birth'),['class'=>'form-label']) !!}<span class="pl-1 text-danger">*</span>
                             {!! Form::date('dob', null, ['class' => 'form-control']) !!}
 
                         </div>
                         <div class="form-group col-md-6">
-                            {!! Form::label('gender', __('Gender'),['class'=>'form-label']) !!}<span class="text-danger pl-1">*</span>
-                            <div class="d-flex radio-check mt-2">
+                            {!! Form::label('gender', __('Gender'),['class'=>'form-label']) !!}<span class="pl-1 text-danger">*</span>
+                            <div class="mt-2 d-flex radio-check">
                                 <div class="form-check form-check-inline form-group">
                                     <input type="radio" id="g_male" value="Male" name="gender" class="form-check-input" {{($employee->gender == 'Male')?'checked':''}}>
                                     <label class="form-check-label" for="g_male">{{__('Male')}}</label>
@@ -53,7 +53,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        {!! Form::label('address', __('Address'),['class'=>'form-label']) !!}<span class="text-danger pl-1">*</span>
+                        {!! Form::label('address', __('Address'),['class'=>'form-label']) !!}<span class="pl-1 text-danger">*</span>
                         {!! Form::textarea('address',null, ['class' => 'form-control','rows'=>2]) !!}
                     </div>
                     @if(\Auth::user()->type=='employee')
@@ -75,13 +75,13 @@
                             </div>
 
                             <div class="form-group col-md-6">
-                                {{ Form::label('branch_id', __('Branch'),['class'=>'form-label']) }}
+                                {{ Form::label('branch_id', __('Company'),['class'=>'form-label']) }}
                                 {{ Form::select('branch_id', $branches,null, array('class' => 'form-control select','required'=>'required','id' => 'branch_id')) }}
                             </div>
                             <div class="form-group col-md-6">
                                 {{ Form::label('department_id', __('Department'),['class'=>'form-label']) }}
                                 {{ Form::select('department_id', $departments,null, array('class' => 'form-control select','required'=>'required','id' => 'department_id')) }}
-                                {{-- <select class=" select form-control " id="department_id" name="department_id"  >
+                                {{-- <select class=" select form-control" id="department_id" name="department_id"  >
                                     @foreach($departmentData as $key=>$val )
                                         <option value="{{$key}}" {{$key==$employee->department_id?'selected':''}}>{{$val}}</option>
                                     @endforeach
@@ -110,7 +110,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="info">
-                                        <strong>{{__('Branch')}}</strong>
+                                        <strong>{{__('Company')}}</strong>
                                         <span>{{!empty($employee->branch)?$employee->branch->name:''}}</span>
                                     </div>
                                 </div>
@@ -210,7 +210,7 @@
                                 {!! Form::text('bank_identifier_code',null, ['class' => 'form-control']) !!}
                             </div>
                             <div class="form-group col-md-6">
-                                {!! Form::label('branch_location', __('Branch Location'),['class'=>'form-label']) !!}
+                                {!! Form::label('branch_location', __('Company Location'),['class'=>'form-label']) !!}
                                 {!! Form::text('branch_location',null, ['class' => 'form-control']) !!}
                             </div>
                             <div class="form-group col-md-6">
@@ -278,7 +278,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="info">
-                                        <strong>{{__('Branch Location')}}</strong>
+                                        <strong>{{__('Company Location')}}</strong>
                                         <span>{{$employee->branch_location}}</span>
                                     </div>
                                 </div>
