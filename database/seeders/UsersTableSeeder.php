@@ -3996,6 +3996,7 @@ class UsersTableSeeder extends Seeder
             ['name' => 'manage holiday'],
             ['name' => 'manage announcement'],
             ['name' => 'manage leave'],
+            ['name' => 'manage attendance'],
         ];
 
         $employeeRole->givePermissionTo($employeePermission);

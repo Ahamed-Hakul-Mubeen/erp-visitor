@@ -240,6 +240,11 @@
                     <p class="mt-2">{{__('Employee Signature')}}</p>
                 </div>
                 <p class="mt-2 "> {{__('Paid By')}}</p>
+                @if(!empty($digitalSignature))
+                    <img src="{{('storage/uploads/payslip/digital_signatures/' . $digitalSignature) }}" alt="Digital Signature" width="200px">
+                @else
+                    <p>{{ __('No signature available') }}</p>
+                @endif
             </div>
         </div>
     </div>

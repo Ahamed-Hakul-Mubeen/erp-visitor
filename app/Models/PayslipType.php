@@ -8,6 +8,7 @@ class PayslipType extends Model
 {
     protected $fillable = [
         'name',
+        'digital_signature',
         'created_by',
     ];
 }
