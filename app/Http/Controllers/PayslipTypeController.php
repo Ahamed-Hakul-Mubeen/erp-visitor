@@ -43,6 +43,7 @@ class PayslipTypeController extends Controller
             $validator = \Validator::make(
                 $request->all(), [
                     'name' => 'required|max:20',
+                    'digital_signature' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
                     ]
                 );
                 if($validator->fails())
@@ -117,7 +118,8 @@ class PayslipTypeController extends Controller
     }
 
     public function update(Request $request, PayslipType $paysliptype)
-    {
+    {   
+       
         if(\Auth::user()->can('edit payslip type'))
         {
             if($paysliptype->created_by == \Auth::user()->creatorId())
@@ -125,6 +127,8 @@ class PayslipTypeController extends Controller
                 $validator = \Validator::make(
                     $request->all(), [
                                        'name' => 'required|max:20',
+                                       'digital_signature' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
+                                       
                                    ]
                 );
 
@@ -136,6 +140,31 @@ class PayslipTypeController extends Controller
                 }
 
                 $paysliptype->name = $request->name;
+                
+                if ($request->hasFile('digital_signature'))
+                {
+                    $image_size = $request->file('digital_signature')->getSize();
+                    $result = Utility::updateStorageLimit(\Auth::user()->creatorId(), $image_size);
+                    
+                    if($result == 1)
+                    {
+                        $filenameWithExt = $request->file('digital_signature')->getClientOriginalName();
+                        $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+                        $extension = $request->file('digital_signature')->getClientOriginalExtension();
+                        $fileNameToStore = $filename . '_' . time() . '.' . $extension;
+                        $dir = 'uploads/payslip/digital_signatures/';
+                        
+                        // Delete old file if exists
+                        if (\File::exists(public_path($dir . $paysliptype->digital_signature))) {
+                            \File::delete(public_path($dir . $paysliptype->digital_signature));
+                        }
+                        
+                        // Upload new file
+                        $path = Utility::upload_file($request, 'digital_signature', $fileNameToStore, $dir, []);
+                        $paysliptype->digital_signature = $fileNameToStore;
+                    }
+                }
+                
                 $paysliptype->save();
 
                 return redirect()->route('paysliptype.index')->with('success', __('PayslipType successfully updated.'));

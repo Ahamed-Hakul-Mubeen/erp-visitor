@@ -13,14 +13,14 @@
                 </span>
                 @enderror
             </div>
+            <div class="form-group">
+                {{Form::label('digital_signature',__('Digital Signature'),['class'=>'col-form-label'])}}
+                <input type="file" class="form-control" name="digital_signature" id="digital_signature" data-filename="signature_create">
+                <img id="blah" src="" class="mt-3" width="25%"/>
+                <p class="signature_create"></p>
+            </div>
         </div>
-        <div class="form-group col-md-12 ">
-            {{Form::label('digital_signature',__('Digital Signature'),['class'=>'col-form-label'])}}
-            <input type="file" class="form-control" name="digital_signature" id="digital_signature" data-filename="signature_create">
-            <img id="blah" src="" class="mt-3" width="25%"/>
-            <p class="signature_create"></p>
-        </div>
-
+            
     </div>
     </div>
     <div class="modal-footer">

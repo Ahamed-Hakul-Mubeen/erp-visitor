@@ -1,13 +1,35 @@
-    {{Form::model($paysliptype,array('route' => array('paysliptype.update', $paysliptype->id), 'method' => 'PUT')) }}
+    {{Form::model($paysliptype,array('route' => array('paysliptype.update', $paysliptype->id), 'method' => 'PUT', 'enctype' => 'multipart/form-data')) }}
     <div class="modal-body">
 
     <div class="row">
         <div class="col-md-12">
             <div class="form-group">
                 {{Form::label('name',__('Name'),['class'=>'form-label'])}}
-                {{Form::text('name',null,array('class'=>'form-control','placeholder'=>__('Enter Department Name')))}}
+                {{Form::text('name',null,array('class'=>'form-control','placeholder'=>__('Enter pay slip type')))}}
                 @error('name')
                 <span class="invalid-name" role="alert">
+                    <strong class="text-danger">{{ $message }}</strong>
+                </span>
+                @enderror
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="form-group">
+                {{ Form::label('digital_signature', __('Digital Signature'), ['class' => 'form-label']) }}
+                
+                <!-- Display the current digital signature -->
+                @if(!empty($paysliptype->digital_signature))
+                    <div>
+                        <p>{{ __('Current Signature:') }}</p>
+                        <img src="{{('storage/uploads/payslip/digital_signatures/' . $paysliptype->digital_signature) }}" alt="Digital Signature" width="200px">
+                        <p>{{ $paysliptype->digital_signature }}</p>
+                    </div>
+                @endif
+                
+                {{ Form::file('digital_signature', ['class' => 'form-control']) }}
+                @error('digital_signature')
+                <span class="invalid-digital-signature" role="alert">
                     <strong class="text-danger">{{ $message }}</strong>
                 </span>
                 @enderror
