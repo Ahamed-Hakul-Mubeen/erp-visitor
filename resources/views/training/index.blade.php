@@ -28,7 +28,7 @@
                         <table class="table datatable">
                             <thead>
                             <tr>
-                                <th>{{__('Branch')}}</th>
+                                <th>{{__('Company')}}</th>
                                 <th>{{__('Training Type')}}</th>
                                 <th>{{__('Status')}}</th>
                                 <th>{{__('Employee')}}</th>

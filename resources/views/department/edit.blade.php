@@ -4,8 +4,8 @@
     <div class="row ">
         <div class="col-12">
             <div class="form-group">
-                {{Form::label('branch_id',__('Branch'))}}
-                {{Form::select('branch_id',$branch,null,array('class'=>'form-control select','placeholder'=>__('select Branch')))}}
+                {{Form::label('branch_id',__('Company'))}}
+                {{Form::select('branch_id',$branch,null,array('class'=>'form-control select','placeholder'=>__('select Company')))}}
             </div>
         </div>
         <div class="col-12">

@@ -30,7 +30,7 @@ class CompanyPolicyController extends Controller
         if(\Auth::user()->can('create company policy'))
         {
             $branch = Branch::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
-            $branch->prepend('Select Branch','');
+            $branch->prepend('Select Company','');
 
             return view('companyPolicy.create', compact('branch'));
         }
@@ -156,7 +156,7 @@ class CompanyPolicyController extends Controller
         if(\Auth::user()->can('edit company policy'))
         {
             $branch = Branch::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
-            $branch->prepend('Select Branch','');
+            $branch->prepend('Select Company','');
 
             return view('companyPolicy.edit', compact('branch', 'companyPolicy'));
         }

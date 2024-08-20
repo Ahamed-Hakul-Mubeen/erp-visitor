@@ -31,7 +31,7 @@
                                 <td class="">{{$job->title}}</td>
                             </tr>
                             <tr>
-                                <td>{{__('Branch')}}</td>
+                                <td>{{__('Company')}}</td>
                                 <td class="">{{ !empty($job->branches)?$job->branches->name:__('All') }}</td>
                             </tr>
                             <tr>

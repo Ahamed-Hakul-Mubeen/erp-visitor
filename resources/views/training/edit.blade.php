@@ -16,7 +16,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="form-group">
-                {{Form::label('branch',__('Branch'),['class'=>'form-label'])}}
+                {{Form::label('branch',__('Company'),['class'=>'form-label'])}}
                 {{Form::select('branch',$branches,null,array('class'=>'form-control select','required'=>'required'))}}
             </div>
         </div>

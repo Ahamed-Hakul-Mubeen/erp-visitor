@@ -3,8 +3,8 @@
     <div class="row ">
         <div class="col-12">
             <div class="form-group">
-                {{Form::label('branch_id',__('Branch'),['class'=>'form-label'])}}
-                {{Form::select('branch_id',$branch,null,array('class'=>'form-control select','placeholder'=>__('Select Branch')))}}
+                {{Form::label('branch_id',__('Company'),['class'=>'form-label'])}}
+                {{Form::select('branch_id',$branch,null,array('class'=>'form-control select','placeholder'=>__('Select Company')))}}
             </div>
         </div>
         <div class="col-12">

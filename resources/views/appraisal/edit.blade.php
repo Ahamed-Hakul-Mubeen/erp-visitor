@@ -3,7 +3,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="form-group">
-                {{ Form::label('branch', __('Branch*'), ['class' => 'col-form-label']) }}
+                {{ Form::label('branch', __('Company*'), ['class' => 'col-form-label']) }}
                 <select name="branch" id="branch" required class="form-control ">
                     @foreach ($brances as $value)
                         <option  value="{{ $value->id   }}" @if ($appraisal->branch == $value->id) selected @endif>{{ $value->name }}</option>

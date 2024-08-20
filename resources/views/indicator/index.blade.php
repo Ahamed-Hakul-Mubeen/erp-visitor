@@ -71,7 +71,7 @@
                     <table class="table datatable">
                             <thead>
                             <tr>
-                                <th>{{__('Branch')}}</th>
+                                <th>{{__('Company')}}</th>
                                 <th>{{__('Department')}}</th>
                                 <th>{{__('Designation')}}</th>
                                 <th>{{__('Overall Rating')}}</th>

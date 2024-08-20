@@ -4,10 +4,10 @@
     <div class="row">
         <div class="col-md-12">
             <div class="form-group">
-                {{ Form::label('branch', __('Branch*'), ['class' => 'form-label']) }}
+                {{ Form::label('branch', __('Company*'), ['class' => 'form-label']) }}
 
                 <select name="branch" id="branch" required class="form-control ">
-                    <option selected disabled value="0">{{__('Select Branch')}}</option>
+                    <option selected disabled value="0">{{__('Select Company')}}</option>
 
                     @foreach ($brances as $value)
                         <option value="{{ $value->id }}">{{ $value->name }}</option>

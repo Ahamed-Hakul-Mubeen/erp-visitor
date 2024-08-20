@@ -19,7 +19,7 @@
             {{ Form::select('employee_id', $employees,null, array('class' => 'form-control select','required'=>'required')) }}
         </div>
         <div class="form-group col-lg-6 col-md-6">
-            {{Form::label('branch_id',__('Branch'),['class'=>'form-label'])}}
+            {{Form::label('branch_id',__('Company'),['class'=>'form-label'])}}
             {{Form::select('branch_id',$branches,null,array('class'=>'form-control select'))}}
         </div>
         <div class="form-group col-lg-6 col-md-6">

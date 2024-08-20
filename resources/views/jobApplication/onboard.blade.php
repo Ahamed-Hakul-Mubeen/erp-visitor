@@ -30,7 +30,7 @@
                             <tr>
                                 <th>{{__('Name')}}</th>
                                 <th>{{__('Job')}}</th>
-                                <th>{{__('Branch')}}</th>
+                                <th>{{__('Company')}}</th>
                                 <th>{{__('Applied at')}}</th>
                                 <th>{{__('Joining at')}}</th>
                                 <th>{{__('Status')}}</th>

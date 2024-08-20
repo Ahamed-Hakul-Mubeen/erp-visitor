@@ -52,7 +52,7 @@
                             {!! Form::text('title', null, ['class' => 'form-control','required' => 'required']) !!}
                         </div>
                         <div class="form-group col-md-6">
-                            {!! Form::label('branch', __('Branch'),['class'=>'form-label']) !!}
+                            {!! Form::label('branch', __('Company'),['class'=>'form-label']) !!}
                             {{ Form::select('branch', $branches,null, array('class' => 'form-control select','required'=>'required')) }}
                         </div>
                         <div class="form-group col-md-6">

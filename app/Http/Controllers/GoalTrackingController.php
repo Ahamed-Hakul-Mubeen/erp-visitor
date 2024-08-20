@@ -41,7 +41,7 @@ class GoalTrackingController extends Controller
         {
 
             $brances = Branch::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
-            $brances->prepend('Select Branch', '');
+            $brances->prepend('Select Company', '');
             $goalTypes = GoalType::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             $goalTypes->prepend('Select Goal Type', '');
             $status = GoalTracking::$status;
@@ -109,7 +109,7 @@ class GoalTrackingController extends Controller
         {
             $goalTracking = GoalTracking::find($id);
             $brances      = Branch::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
-            $brances->prepend('Select Branch', '');
+            $brances->prepend('Select Company', '');
             $goalTypes = GoalType::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             $goalTypes->prepend('Select Goal Type', '');
             $status = GoalTracking::$status;

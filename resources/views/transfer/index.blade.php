@@ -31,7 +31,7 @@
                                 @role('company')
                                 <th>{{__('Employee Name')}}</th>
                                 @endrole
-                                <th>{{__('Branch')}}</th>
+                                <th>{{__('Company')}}</th>
                                 <th>{{__('Department')}}</th>
                                 <th>{{__('Transfer Date')}}</th>
                                 <th>{{__('Description')}}</th>

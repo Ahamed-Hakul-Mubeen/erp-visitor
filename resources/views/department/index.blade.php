@@ -33,7 +33,7 @@
                     <table class="table datatable">
                             <thead>
                             <tr>
-                                <th>{{__('Branch')}}</th>
+                                <th>{{__('Company')}}</th>
                                 <th>{{__('Department')}}</th>
                                 <th width="200px">{{__('Action')}}</th>
                             </tr>

@@ -77,7 +77,7 @@
                                     </div>
                                     <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12">
                                         <div class="btn-box">
-                                            {{ Form::label('branch', __('Branch'),['class'=>'form-label']) }}
+                                            {{ Form::label('branch', __('Company'),['class'=>'form-label']) }}
                                             {{ Form::select('branch', $branch,isset($_GET['branch'])?$_GET['branch']:'', array('class' => 'form-control select','required')) }}
                                         </div>
                                     </div>
@@ -119,7 +119,7 @@
                             <tr>
                                 <th width="10%">{{ __('Employee Id') }}</th>
                                 <th>{{ __('Employee') }}</th>
-                                <th>{{ __('Branch') }}</th>
+                                <th>{{ __('Company') }}</th>
                                 <th>{{ __('Department') }}</th>
                                 <th>
                                     <div class="form-group my-auto">

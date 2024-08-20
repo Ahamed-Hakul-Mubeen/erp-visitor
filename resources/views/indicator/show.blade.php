@@ -2,7 +2,7 @@
     <div class="row py-4">
         <div class="col-md-12 ">
             <div class="info text-sm">
-                <strong>{{__('Branch')}} : </strong>
+                <strong>{{__('Company')}} : </strong>
                 <span>{{ !empty($indicator->branches)?$indicator->branches->name:''}}</span>
             </div>
         </div>

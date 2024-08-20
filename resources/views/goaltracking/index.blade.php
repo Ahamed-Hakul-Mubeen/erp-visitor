@@ -46,7 +46,7 @@
                             <tr>
                                 <th>{{__('Goal Type')}}</th>
                                 <th>{{__('Subject')}}</th>
-                                <th>{{__('Branch')}}</th>
+                                <th>{{__('Company')}}</th>
                                 <th>{{__('Target Achievement')}}</th>
                                 <th>{{__('Start Date')}}</th>
                                 <th>{{__('End Date')}}</th>
