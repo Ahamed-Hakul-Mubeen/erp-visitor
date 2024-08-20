@@ -77,10 +77,9 @@ class PaySlipController extends Controller
     {
         $validator = \Validator::make(
             $request->all(), [
-                               'month' => 'required',
-                               'year' => 'required',
-
-                           ]
+                'month' => 'required',
+                'year' => 'required',
+            ]
         );
 
         if($validator->fails())
@@ -93,82 +92,44 @@ class PaySlipController extends Controller
         $month = $request->month;
         $year  = $request->year;
 
+        if($month > date("m") && $year >= date("Y"))
+        {
+            return redirect()->back()->with('error', "Cannot Create Payslip for Upcommeing  Months");
+        }
 
         $formate_month_year = $year . '-' . $month;
-        $validatePaysilp    = PaySlip::where('salary_month', '=', $formate_month_year)->where('created_by', \Auth::user()->creatorId())->pluck('employee_id');
-        $payslip_employee   = Employee::where('created_by', \Auth::user()->creatorId())->where('company_doj', '<=', date($year . '-' . $month . '-t'))->count();
 
-        if($payslip_employee > count($validatePaysilp))
+        $existingPaysilp    = PaySlip::where('salary_month', '=', $formate_month_year)->where('created_by', \Auth::user()->creatorId())->pluck('employee_id')->toArray();
+        $employee_list   = Employee::where('created_by', \Auth::user()->creatorId())->where('company_doj', '<=', date($year . '-' . $month . '-t'))->whereNotIn('id', $existingPaysilp)->where('salary', '>', 0)->get();
+
+        foreach($employee_list as $employee)
         {
-            $employees = Employee::where('created_by', \Auth::user()->creatorId())->where('company_doj', '<=', date($year . '-' . $month . '-t'))->whereNotIn('employee_id', $validatePaysilp)->get();
-
-            $employeesSalary = Employee::where('created_by', \Auth::user()->creatorId())->where('salary', '<=', 0)->first();
-
-            if(!empty($employeesSalary))
-            {
-                return redirect()->route('payslip.index')->with('error', __('Please set employee salary.'));
-            }
-
-            foreach($employees as $employee)
-            {
-
-                $payslipEmployee                       = new PaySlip();
-                $payslipEmployee->employee_id          = $employee->id;
-                $payslipEmployee->net_payble           = $employee->get_net_salary();
-                $payslipEmployee->salary_month         = $formate_month_year;
-                $payslipEmployee->status               = 0;
-                $payslipEmployee->basic_salary         = !empty($employee->salary) ? $employee->salary : 0;
-                $payslipEmployee->allowance            = Employee::allowance($employee->id);
-                $payslipEmployee->commission           = Employee::commission($employee->id);
-                $payslipEmployee->loan                 = Employee::loan($employee->id);
-                $payslipEmployee->saturation_deduction = Employee::saturation_deduction($employee->id);
-                $payslipEmployee->other_payment        = Employee::other_payment($employee->id);
-                $payslipEmployee->overtime             = Employee::overtime($employee->id);
-                $payslipEmployee->created_by           = \Auth::user()->creatorId();
-                $payslipEmployee->save();
-
-                //For Notification
-                $setting  = Utility::settings(\Auth::user()->creatorId());
-                $payslipNotificationArr = [
-                    'year' =>  $formate_month_year,
-                ];
-                //Slack Notification
-                if(isset($setting['payslip_notification']) && $setting['payslip_notification'] ==1)
-                {
-                    Utility::send_slack_msg('new_monthly_payslip', $payslipNotificationArr);
-                }
-
-                //Telegram Notification
-                if(isset($setting['telegram_payslip_notification']) && $setting['telegram_payslip_notification'] ==1)
-                {
-                    Utility::send_telegram_msg('new_monthly_payslip', $payslipNotificationArr);
-                }
-
-                //webhook
-                $module ='New Monthly Payslip';
-                $webhook=  Utility::webhookSetting($module);
-                if($webhook)
-                {
-                    $parameter = json_encode($payslipEmployee);
-                    $status = Utility::WebhookCall($webhook['url'],$parameter,$webhook['method']);
-
-                    if($status == true)
-                    {
-                        return redirect()->back()->with('success', __('Payslip successfully created.'));
-                    }
-                    else
-                    {
-                        return redirect()->back()->with('error', __('Webhook call failed.'));
-                    }
-                }
-
-            }
-
-            return redirect()->route('payslip.index')->with('success', __('Payslip successfully created.'));
+            $payslipEmployee                       = new PaySlip();
+            $payslipEmployee->employee_id          = $employee->id;
+            $payslipEmployee->net_payble           = $employee->get_net_salary();
+            $payslipEmployee->salary_month         = $formate_month_year;
+            $payslipEmployee->status               = 0;
+            $payslipEmployee->basic_salary         = !empty($employee->salary) ? $employee->salary : 0;
+            $payslipEmployee->allowance            = Employee::allowance($employee->id);
+            $payslipEmployee->commission           = Employee::commission($employee->id);
+            $payslipEmployee->loan                 = Employee::loan($employee->id);
+            $payslipEmployee->saturation_deduction = Employee::saturation_deduction($employee->id);
+            $payslipEmployee->other_payment        = Employee::other_payment($employee->id);
+            $payslipEmployee->overtime             = Employee::overtime($employee->id);
+            $payslipEmployee->created_by           = \Auth::user()->creatorId();
+            $payslipEmployee->save();
+        }
+        if(count($employee_list) == 0 && count($existingPaysilp) == 0)
+        {
+            return redirect()->route('payslip.index')->with('error', __('Please set employee salary.'));
+        }
+        else if(count($employee_list) == 0)
+        {
+            return redirect()->route('payslip.index')->with('error', __('Payslip Already created.'));
         }
         else
         {
-            return redirect()->route('payslip.index')->with('error', __('Payslip Already created.'));
+            return redirect()->route('payslip.index')->with('success', __('Payslip successfully created.'));
         }
 
     }
