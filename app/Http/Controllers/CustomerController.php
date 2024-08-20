@@ -61,7 +61,8 @@ class CustomerController extends Controller
 
 
     public function store(Request $request)
-    {
+    {   
+       
         if(\Auth::user()->can('create customer'))
         {
 
@@ -141,7 +142,11 @@ class CustomerController extends Controller
             }
 
 
+            if ($request->has('redirect_to_invoice') && $request->redirect_to_invoice == 1) {
+            return redirect()->route('invoice.create', ['cid' => 0])->with('success', __('Customer successfully created.'));
+        } else {
             return redirect()->route('customer.index')->with('success', __('Customer successfully created.'));
+        }
         }
         else
         {

@@ -1,4 +1,7 @@
 {{Form::open(array('url'=>'customer','method'=>'post'))}}
+@if(request()->has('redirect_to_invoice') && request()->redirect_to_invoice == 1)
+        <input type="hidden" name="redirect_to_invoice" value="1">
+    @endif
 <div class="modal-body">
 
     <h6 class="sub-title">{{__('Basic Info')}}</h6>

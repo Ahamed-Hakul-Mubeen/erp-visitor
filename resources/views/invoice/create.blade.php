@@ -438,7 +438,12 @@
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                             <div class="form-group" id="customer-box">
-                                {{ Form::label('customer_id', __('Customer'),['class'=>'form-label']) }}
+                                <div class="d-flex justify-content-between">
+                                    {{ Form::label('customer_id', __('Customer'),['class'=>'form-label']) }}
+                                    <a href="#" data-size="lg" data-url="{{ route('customer.create',['redirect_to_invoice' => 1]) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create')}}" data-title="{{__('Create Customer')}}">
+                                        <i class="ti ti-plus"></i>{{__('Add Customer')}}
+                                    </a>
+                                </div>
                                 {{ Form::select('customer_id', $customers,$customerId, array('class' => 'form-control select','id'=>'customer','data-url'=>route('invoice.customer'),'required'=>'required')) }}
 
                             </div>
