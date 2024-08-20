@@ -14,13 +14,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\AttendanceExport;
-
+use Carbon\Carbon;
 
 class AttendanceEmployeeController extends Controller
 {
     public function index(Request $request)
     {
-        
+
         if (\Auth::user()->can('manage attendance')) {
 
             $branch = Branch::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
@@ -113,7 +113,7 @@ class AttendanceEmployeeController extends Controller
                 $attendanceEmployee = $attendanceEmployee->get();
 
             }
-            
+
 
             return view('attendance.index', compact('attendanceEmployee', 'branch', 'department'));
         } else {
@@ -134,7 +134,7 @@ class AttendanceEmployeeController extends Controller
     }
 
     public function store(Request $request)
-    {  
+    {
         if (\Auth::user()->can('create attendance')) {
             $validator = \Validator::make(
                 $request->all(), [
@@ -223,7 +223,6 @@ class AttendanceEmployeeController extends Controller
 
     public function update(Request $request, $id)
     {
-        //        dd($request->all());
 
         if (\Auth::user()->type == 'company' || \Auth::user()->type == 'HR') {
             $employeeId = AttendanceEmployee::where('employee_id', $request->employee_id)->first();
@@ -294,31 +293,64 @@ class AttendanceEmployeeController extends Controller
 
         if (Auth::user()->type == 'Employee') {
 
-            $date = date("Y-m-d");
-            $time = date("H:i:s");
-            //                dd($time);
-            //early Leaving
-            $totalEarlyLeavingSeconds = strtotime($date . $endTime) - time();
-            $hours = floor($totalEarlyLeavingSeconds / 3600);
-            $mins = floor($totalEarlyLeavingSeconds / 60 % 60);
-            $secs = floor($totalEarlyLeavingSeconds % 60);
-            $earlyLeaving = sprintf('%02d:%02d:%02d', $hours, $mins, $secs);
+            $startTime = Carbon::parse(Utility::getValByName('company_start_time'));
+            $endTime = Carbon::parse(Utility::getValByName('company_end_time'));
+            $defaultBreakTimeInMinutes = Utility::getValByName('break_time');
 
-            if (time() > strtotime($date . $endTime)) {
-                //Overtime
-                $totalOvertimeSeconds = time() - strtotime($date . $endTime);
-                $hours = floor($totalOvertimeSeconds / 3600);
-                $mins = floor($totalOvertimeSeconds / 60 % 60);
-                $secs = floor($totalOvertimeSeconds % 60);
-                $overtime = sprintf('%02d:%02d:%02d', $hours, $mins, $secs);
-            } else {
-                $overtime = '00:00:00';
+            $attendance = AttendanceEmployee::find($id);
+            $punch_in = Carbon::parse($attendance->clock_in);
+            $punch_out = Carbon::parse(date("H:i:s"));
+            if($attendance->total_break_duration){
+
+                $break_taken = Carbon::parse($attendance->total_break_duration);
+                $break_taken_minutes = $break_taken->hour * 60 + $break_taken->minute;
+            }else
+                $break_taken_minutes = 0;
+
+            $totalScheduledMinutes = $endTime->diffInMinutes($startTime) - $defaultBreakTimeInMinutes;
+
+            $totalWorkedMinutes = $punch_out->diffInMinutes($punch_in) - $break_taken_minutes;
+
+            $earlyLeavingMinutes = 0;
+            if ($punch_out < $endTime) {
+                $earlyLeavingMinutes = $endTime->diffInMinutes($punch_out);
             }
 
+            $overtimeMinutes = 0;
+            if ($totalWorkedMinutes > $totalScheduledMinutes) {
+                $overtimeMinutes = $totalWorkedMinutes - $totalScheduledMinutes;
+            }
+
+            // $workedTime = gmdate('H:i:s', $totalWorkedMinutes * 60);
+            $earlyLeavingTime = gmdate('H:i:s', $earlyLeavingMinutes * 60);
+            $overtimeTime = gmdate('H:i:s', $overtimeMinutes * 60);
+
+
+            // $date = date("Y-m-d");
+            // $time = date("H:i:s");
+            //                dd($time);
+            // //early Leaving
+            // $totalEarlyLeavingSeconds = strtotime($date . $endTime) - time();
+            // $hours = floor($totalEarlyLeavingSeconds / 3600);
+            // $mins = floor($totalEarlyLeavingSeconds / 60 % 60);
+            // $secs = floor($totalEarlyLeavingSeconds % 60);
+            // $earlyLeaving = sprintf('%02d:%02d:%02d', $hours, $mins, $secs);
+
+            // if (time() > strtotime($date . $endTime)) {
+            //     //Overtime
+            //     $totalOvertimeSeconds = time() - strtotime($date . $endTime);
+            //     $hours = floor($totalOvertimeSeconds / 3600);
+            //     $mins = floor($totalOvertimeSeconds / 60 % 60);
+            //     $secs = floor($totalOvertimeSeconds % 60);
+            //     $overtime = sprintf('%02d:%02d:%02d', $hours, $mins, $secs);
+            // } else {
+            //     $overtime = '00:00:00';
+            // }
+
             //                $attendanceEmployee                = AttendanceEmployee::find($id);
-            $attendanceEmployee['clock_out'] = $time;
-            $attendanceEmployee['early_leaving'] = $earlyLeaving;
-            $attendanceEmployee['overtime'] = $overtime;
+            $attendanceEmployee['clock_out'] = $punch_out;
+            $attendanceEmployee['early_leaving'] = $earlyLeavingTime;
+            $attendanceEmployee['overtime'] = $overtimeTime;
 
             if (!empty($request->date)) {
                 $attendanceEmployee['date'] = $request->date;
@@ -326,7 +358,7 @@ class AttendanceEmployeeController extends Controller
             //                dd($attendanceEmployee);
             AttendanceEmployee::where('id', $id)->update($attendanceEmployee);
             //                $attendanceEmployee->save();
-             
+
             return redirect()->route('hrm.dashboard')->with('success', __('Employee successfully clock Out.'));
         } else {
             $date = date("Y-m-d");
@@ -393,7 +425,7 @@ class AttendanceEmployeeController extends Controller
     }
 
     public function attendance(Request $request)
-    {   
+    {
         $settings = Utility::settings();
 
         if ($settings['ip_restrict'] == 'on') {
@@ -404,7 +436,7 @@ class AttendanceEmployeeController extends Controller
             }
         }
 
-       
+
         $employeeId = !empty(\Auth::user()->employee)?\Auth::user()->employee->id : 0;
 
         $todayAttendance = AttendanceEmployee::where('employee_id', '=', $employeeId)->where('date', date('Y-m-d'))->orderBy('id', 'desc')->first();
@@ -745,7 +777,7 @@ class AttendanceEmployeeController extends Controller
 {
     // Get filtered attendance data
     $attendanceEmployee = $this->filterAttendance($request);
-    
+
     // Pass the filtered data to the export class
     return Excel::download(new AttendanceExport($attendanceEmployee), 'Attendance_' . date('Y-m-d_H-i-s') . '.xlsx');
 }
