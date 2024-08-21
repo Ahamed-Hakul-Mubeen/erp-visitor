@@ -10,7 +10,7 @@
 @section('action-btn')
     <div class="float-end">
         @can('create payment')
-            <a href="#" data-url="{{ route('payment.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip"  data-size="lg" data-title="{{__('Create New Payment')}}"  title="{{__('Create')}}" class="btn btn-sm btn-primary">
+            <a href="#" id="createPaymentLink" data-url="{{ route('payment.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip"  data-size="lg" data-title="{{__('Create New Payment')}}"  title="{{__('Create')}}" class="btn btn-sm btn-primary">
                 <i class="ti ti-plus"></i>
             </a>
         @endcan
@@ -152,3 +152,15 @@
         </div>
     </div>
 @endsection
+@push('script-page')
+<script>
+    $(document).ready(function() {
+    // Check if the URL contains the query parameter "event=new"
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('event') && urlParams.get('event') === 'new') {
+        // Trigger the click event on the specific <a> tag
+        $('#createPaymentLink').trigger('click');
+    }
+});
+</script>
+@endpush

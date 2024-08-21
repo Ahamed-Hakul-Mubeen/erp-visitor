@@ -2,7 +2,12 @@
 <div class="modal-body">
     <div class="row">
         <div class="form-group col-md-6">
-            {{ Form::label('vender_id', __('Vendor'),['class'=>'form-label']) }}
+            <div class="d-flex justify-content-between">
+                {{ Form::label('vender_id', __('Vendor'),['class'=>'form-label']) }}
+                <a href="#" data-size="lg" data-url="{{ route('vender.create',['redirect_to_payment' => 1]) }}" data-ajax-popup="true" data-title="{{__('Create New Vendor')}}" data-bs-toggle="tooltip" title="{{ __('Create') }}">
+                    <i class="ti ti-plus"></i>{{__('Add Vendor')}}
+                </a>
+            </div>
             {{ Form::select('vender_id', $venders,null, array('class' => 'form-control select','required'=>'required')) }}
         </div>
         <div class="form-group col-md-6">
