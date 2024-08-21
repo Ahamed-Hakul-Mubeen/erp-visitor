@@ -142,13 +142,19 @@ class CustomerController extends Controller
             }
 
 
-            if ($request->has('redirect_to_invoice') && $request->redirect_to_invoice == 1) {
-            return redirect()->route('invoice.create', ['cid' => 0])->with('success', __('Customer successfully created.'));
-        } else {
-            return redirect()->route('customer.index')->with('success', __('Customer successfully created.'));
-        }
-        }
-        else
+                if ($request->has('redirect_to_invoice') && $request->redirect_to_invoice == 1) {
+                return redirect()->route('invoice.create', ['cid' => 0])->with('success', __('Customer successfully created.'));
+                }elseif ($request->has('redirect_to_proposal') && $request->redirect_to_proposal == 1) {
+                    return redirect()->route('proposal.create', ['cid' => 0])->with('success', __('Customer successfully created.'));
+                }elseif ($request->has('redirect_to_advance') && $request->redirect_to_advance == 1) {
+                    return redirect()->route('advance.index',['event' => 'new'])->with('success', __('Customer successfully created.'));
+                }elseif ($request->has('redirect_to_revenue') && $request->redirect_to_revenue == 1) {
+                    return redirect()->route('revenue.index',['event' => 'new'])->with('success', __('Customer successfully created.'));
+                }
+                else {
+                    return redirect()->route('customer.index')->with('success', __('Customer successfully created.'));
+                }
+            }else
         {
             return redirect()->back()->with('error', __('Permission denied.'));
         }

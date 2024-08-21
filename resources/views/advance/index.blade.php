@@ -15,7 +15,7 @@
         {{--        </a>--}}
 
         {{-- @can('create advance') --}}
-            <a href="#" data-url="{{ route('advance.create') }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Create New Advance')}}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="{{__('Create')}}">
+            <a href="#" id="createAdvanceLink" data-url="{{ route('advance.create') }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Create New Advance')}}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="{{__('Create')}}">
                 <i class="ti ti-plus"></i>
             </a>
         {{-- @endcan --}}
@@ -183,3 +183,15 @@
         </div>
     </div>
 @endsection
+@push('script-page')
+<script>
+    $(document).ready(function() {
+    // Check if the URL contains the query parameter "event=new"
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('event') && urlParams.get('event') === 'new') {
+        // Trigger the click event on the specific <a> tag
+        $('#createAdvanceLink').trigger('click');
+    }
+});
+</script>
+@endpush

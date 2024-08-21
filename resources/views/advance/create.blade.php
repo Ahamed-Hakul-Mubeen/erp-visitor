@@ -14,7 +14,12 @@
             {{ Form::select('account_id',$accounts,null, array('class' => 'form-control select','required'=>'required')) }}
         </div>
         <div class="form-group col-md-6">
+            <div class="d-flex justify-content-between">
             {{ Form::label('customer_id', __('Customer'),['class'=>'form-label']) }}
+            <a href="#" data-size="lg" data-url="{{ route('customer.create',['redirect_to_advance' => 1]) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create')}}" data-title="{{__('Create Customer')}}">
+                <i class="ti ti-plus"></i>{{__('Add Customer')}}
+            </a>
+           </div>
             {{ Form::select('customer_id', $customers,null, array('class' => 'form-control select','required'=>'required')) }}
         </div>
         <div class="form-group col-md-12">
@@ -45,4 +50,5 @@
         var src = URL.createObjectURL(this.files[0])
         document.getElementById('image').src = src
     }
+    
 </script>

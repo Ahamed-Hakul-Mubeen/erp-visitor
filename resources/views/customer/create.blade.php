@@ -1,7 +1,9 @@
 {{Form::open(array('url'=>'customer','method'=>'post'))}}
-@if(request()->has('redirect_to_invoice') && request()->redirect_to_invoice == 1)
-        <input type="hidden" name="redirect_to_invoice" value="1">
+@foreach(['redirect_to_invoice', 'redirect_to_proposal','redirect_to_advance','redirect_to_revenue'] as $param)
+    @if(request()->has($param) && request()->get($param) == 1)
+        <input type="hidden" name="{{ $param }}" value="1">
     @endif
+@endforeach
 <div class="modal-body">
 
     <h6 class="sub-title">{{__('Basic Info')}}</h6>
