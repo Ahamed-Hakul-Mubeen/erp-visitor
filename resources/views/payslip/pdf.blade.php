@@ -124,27 +124,20 @@
                                             </tr>
                                         @endforeach
                                     @endforeach
-                                    @foreach ($payslipDetail['earning']['overTime'] as $overTime)
-                                        @php
-                                            $arrayJson = json_decode($overTime->overtime);
-                                            foreach ($arrayJson as $key => $overtime) {
-                                                foreach ($arrayJson as $key => $overtimes) {
-                                                    $overtitle = $overtimes->title;
-                                                    $OverTime = $overtimes->number_of_days * $overtimes->hours * $overtimes->rate;
-                                                }
-                                            }
-                                        @endphp
-                                        @foreach ($arrayJson as $overtime)
-                                            <tr>
-                                                <td>{{ __('OverTime') }}</td>
-                                                <td>{{ $overtime->title }}</td>
-                                                <td>-</td>
-                                                <td class="text-end">
-                                                    {{ \Auth::user()->priceFormat($overtime->number_of_days * $overtime->hours * $overtime->rate) }}
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    @endforeach
+                                    <?php
+                                        $overTime_arr = $payslipDetail['earning']['overTime'];
+                                    ?>
+                                    @if(isset($overTime_arr->amount))
+                                    <tr>
+                                        <td>{{ __('OverTime') }}</td>
+                                        <td> - </td>
+                                        <td>-</td>
+                                        <td class="text-end">
+                                            {{ \Auth::user()->priceFormat($overTime_arr->amount) }}
+                                        </td>
+                                    </tr>
+                                    @endif
+
                                     </tbody>
                                 </table>
                             </div>
@@ -152,7 +145,7 @@
                         <div class="card-body table-border-style">
 
                             <div class="table-responsive">
-                                <table class="table table-striped table-hover table-md">
+                                <table class="table table-md">
                                     <tbody>
                                     <tr class="font-weight-bold">
                                         <th>{{__('Deduction')}}</th>
@@ -207,6 +200,19 @@
                                             </tr>
                                         @endforeach
                                     @endforeach
+                                    <?php
+                                        $leave_deduction = $payslipDetail['deduction']['leave'];
+                                    ?>
+                                    @if($leave_deduction)
+                                    <tr>
+                                        <td>{{ __('Leave Deduction') }}</td>
+                                        <td> - </td>
+                                        <td>-</td>
+                                        <td class="text-end">
+                                            {{ \Auth::user()->priceFormat($leave_deduction) }}
+                                        </td>
+                                    </tr>
+                                    @endif
                                     </tbody>
                                 </table>
                             </div>

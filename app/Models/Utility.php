@@ -3329,18 +3329,24 @@ class Utility extends Model
             }
         }
 
-        //overtime
-        $earning['overTime'] = Payslip::where('employee_id', $employeeId)->where('salary_month', $month)->get();
-
+        //overtime & leave
+        $overTime = Payslip::where('employee_id', $employeeId)->where('salary_month', $month)->first();
         $ot = 0;
+        $totaldeduction = 0;
 
-        $arrayJson = json_decode($earning['overTime']);
-        foreach ($arrayJson as $overtime) {
-            $overtimes = json_decode($overtime->overtime);
-            foreach ($overtimes as $overt) {
-                $OverTime = $overt->number_of_days * $overt->hours * $overt->rate;
-                $ot += $OverTime;
+        if($overTime) {
+            $arrayJson = json_decode($overTime->overtime);
+            if(isset($arrayJson->amount)) {
+                $ot += $arrayJson->amount;
+                $earning['overTime'] = $arrayJson;
+            } else {
+                $earning['overTime'] = [];
             }
+            $totaldeduction += $overTime->leave_deductions;
+            $deduction['leave'] = $overTime->leave_deductions;
+        } else {
+            $earning['overTime'] = [];
+            $deduction['leave'] = 0;
         }
 
         // loan
@@ -3371,7 +3377,6 @@ class Utility extends Model
 
         $employess = Employee::find($employeeId);
 
-        $totaldeduction = 0;
 
         $arrayJson = json_decode($deduction['deduction']);
 

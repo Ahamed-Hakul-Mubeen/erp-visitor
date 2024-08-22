@@ -25,6 +25,7 @@ class CreatePaySlipsTable extends Migration
             $table->text('commission');
             $table->text('loan');
             $table->text('saturation_deduction');
+            $table->float('leave_deductions', 8, 2);
             $table->text('other_payment');
             $table->text('overtime');
             $table->integer('created_by');

@@ -2,7 +2,10 @@
 
 namespace App\Models;
 
+use App\Http\Controllers\AttendanceEmployeeController;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use DateTime;
 
 class Employee extends Model
 {
@@ -73,168 +76,119 @@ class Employee extends Model
         return $this->hasMany(Overtime::class);
     }
 
-    public function get_net_salary()
-{
-    // Load related data efficiently using Eloquent relationships
-    // $this->load('allowances', 'commissions', 'loans', 'saturationDeductions', 'otherPayments', 'overtimes');
+    public function get_net_salary($year = null, $month = null)
+    {
+        if($year == null)
+        {
+            $year = date("Y");
+        }
+        if($month == null)
+        {
+            $month = date("Y");
+        }
+        $basic_salary = $this->salary;
 
-    // Calculate total allowances
-    $total_allowance = $this->allowances->sum(function ($allowance) {
-        return ($allowance->type === 'fixed') ? $allowance->amount : ($allowance->amount * $this->salary / 100);
-    });
+        // Calculate total allowances
+        $total_allowance = $this->allowances->sum(function ($allowance) use ($basic_salary) {
+            return ($allowance->type === 'fixed') ? $allowance->amount : ($allowance->amount * $basic_salary / 100);
+        });
 
-    // Calculate total commissions
-    $total_commission = $this->commissions->sum(function ($commission) {
-        return ($commission->type === 'fixed') ? $commission->amount : ($commission->amount * $this->salary / 100);
-    });
+        // Calculate total commissions
+        $total_commission = $this->commissions->sum(function ($commission) use ($basic_salary) {
+            return ($commission->type === 'fixed') ? $commission->amount : ($commission->amount * $basic_salary / 100);
+        });
 
-    // Calculate total loans
-    $total_loan = $this->loans->sum(function ($loan) {
-        return ($loan->type === 'fixed') ? $loan->amount : ($loan->amount * $this->salary / 100);
-    });
+        // Calculate total loans
+        $total_loan = $this->loans->sum(function ($loan) use ($basic_salary) {
+            return ($loan->type === 'fixed') ? $loan->amount : ($loan->amount * $basic_salary / 100);
+        });
 
-    // Calculate total saturation deductions
-    $total_saturation_deduction = $this->saturationDeductions->sum(function ($deduction) {
-        return ($deduction->type === 'fixed') ? $deduction->amount : ($deduction->amount * $this->salary / 100);
-    });
+        // Calculate total saturation deductions
+        $total_saturation_deduction = $this->saturationDeductions->sum(function ($deduction) use ($basic_salary) {
+            return ($deduction->type === 'fixed') ? $deduction->amount : ($deduction->amount * $basic_salary / 100);
+        });
 
-    // Calculate total other payments
-    $total_other_payment = $this->otherPayments->sum(function ($otherPayment) {
-        return ($otherPayment->type === 'fixed') ? $otherPayment->amount : ($otherPayment->amount * $this->salary / 100);
-    });
+        // Leave deductions
+        $leave_deductions = $this->leave_deductions($year, $month);
 
-    // Calculate total overtime
-    $total_over_time = $this->overtimes->sum(function ($over_time) {
-        return $over_time->number_of_days * $over_time->hours * $over_time->rate;
-    });
+        // Calculate total other payments
+        $total_other_payment = $this->otherPayments->sum(function ($otherPayment) use ($basic_salary) {
+            return ($otherPayment->type === 'fixed') ? $otherPayment->amount : ($otherPayment->amount * $basic_salary / 100);
+        });
 
-    // Calculate net salary
-    $net_salary = $this->salary + $total_allowance + $total_commission - $total_loan - $total_saturation_deduction + $total_other_payment + $total_over_time;
+        // Calculate total overtime
+        $start_date = $year."-".$month."-01";
+        $no_of_days = date('t', strtotime($start_date));
+        $end_date = $year."-".$month."-".$no_of_days;
 
-    return $net_salary;
-}
-    // public function get_net_salary()
-    // {
+        $total_over_time = 0;
+        $over_times      = Overtime::where('employee_id', '=', $this->id)->first();
+        if($over_times)
+        {
+            $totalDuration = \DB::table('attendance_employees')
+                            ->select(\DB::raw('SEC_TO_TIME(SUM(TIME_TO_SEC(overtime))) as total_duration'))
+                            ->where("employee_id", $this->id)->whereBetween('date', [$start_date, $end_date])
+                            ->value('total_duration');
+            $overtimes = explode(":", $totalDuration);
 
-    //     //allowance
-    //     $allowances      = Allowance::where('employee_id', '=', $this->id)->get();
-    //     $total_allowance = 0 ;
-    //     foreach($allowances as $allowance)
-    //     {
-    //         if($allowance->type == 'fixed')
-    //         {
-    //             $totalAllowances  = $allowance->amount;
-    //         }
-    //         else
-    //         {
-    //             $totalAllowances  = $allowance->amount * $this->salary / 100;
-    //         }
-    //         $total_allowance += $totalAllowances ;
-    //     }
+            $total_over_time = ($overtimes[0] + ($overtimes[1] * (1/60))) * $over_times->rate ;
+        }
 
-    //     //commission
-    //     $commissions      = Commission::where('employee_id', '=', $this->id)->get();
-    //     $total_commission = 0;
-    //     foreach($commissions as $commission)
-    //     {
-    //         if($commission->type == 'fixed')
-    //         {
-    //             $totalCom  = $commission->amount;
-    //         }
-    //         else
-    //         {
-    //             $totalCom  = $commission->amount * $this->salary / 100;
-    //         }
-    //         $total_commission += $totalCom ;
-    //     }
+        // Calculate net salary
+        $net_salary = $basic_salary + $total_allowance + $total_commission - $total_loan - $total_saturation_deduction - $leave_deductions + $total_other_payment + $total_over_time;
 
-    //     //Loan
-    //     $loans      = Loan::where('employee_id', '=', $this->id)->get();
-    //     $total_loan = 0;
-    //     foreach($loans as $loan)
-    //     {
-    //         if($loan->type == 'fixed')
-    //         {
-    //             $totalloan  = $loan->amount;
-    //         }
-    //         else
-    //         {
-    //             $totalloan  = $loan->amount * $this->salary / 100;
-    //         }
-    //         $total_loan += $totalloan ;
-    //     }
+        return number_format($net_salary, 2, ".", "");
+    }
+    public function leave_deductions($year, $month)
+    {
+        $basic_salary = $this->salary;
+        $start_date = $year."-".$month."-01";
+        $no_of_days = date('t', strtotime($start_date));
+        $end_date = $year."-".$month."-".$no_of_days;
 
+        $attendance_days = AttendanceEmployee::where("employee_id", $this->id)->whereBetween('date', [$start_date, $end_date])->get()->count();
+        $holidays = Holiday::whereBetween('date', [$start_date, $end_date])->where('created_by', \Auth::user()->creatorId())->get()->count();
+        $approved_leave = Leave::where('employee_id', $this->id)->where(function($query) use ($start_date, $end_date) {
+                    $query->whereBetween('start_date', [$start_date, $end_date])->orWhereBetween('end_date', [$start_date, $end_date]);
+                })->where('status', 'Approved')->get();
 
-    //     //Saturation Deduction
-    //     $saturation_deductions      = SaturationDeduction::where('employee_id', '=', $this->id)->get();
-    //     $total_saturation_deduction = 0 ;
-    //     foreach($saturation_deductions as $deductions)
-    //     {
-    //         if($deductions->type == 'fixed')
-    //         {
-    //             $totaldeduction  = $deductions->amount;
-    //         }
-    //         else
-    //         {
-    //             $totaldeduction  = $deductions->amount * $this->salary / 100;
-    //         }
-    //         $total_saturation_deduction += $totaldeduction ;
-    //     }
+        $approved_leave_count = 0;
+        foreach($approved_leave as $leave)
+        {
+            if($leave->start_date >= $start_date && $leave->end_date <= $end_date)
+            {
+                $approved_leave_count += $leave->total_leave_days;
+            }
+            else if($leave->start_date < $start_date && $leave->end_date <= $end_date)
+            {
+                $date1 = new DateTime($start_date);
+                $date2 = new DateTime($leave->end_date);
+                $interval = $date1->diff($date2);
+                $approved_leave_count += ($interval->days + 1);
+            }
+        }
 
-    //     //OtherPayment
-    //     $other_payments      = OtherPayment::where('employee_id', '=', $this->id)->get();
-    //     $total_other_payment = 0;
-    //     $total_other_payment = 0 ;
-    //     foreach($other_payments as $otherPayment)
-    //     {
-    //         if($otherPayment->type == 'fixed')
-    //         {
-    //             $totalother  = $otherPayment->amount;
-    //         }
-    //         else
-    //         {
-    //             $totalother  = $otherPayment->amount * $this->salary / 100;
-    //         }
-    //         $total_other_payment += $totalother ;
-    //     }
-
-    //     //Overtime
-    //     $over_times      = Overtime::where('employee_id', '=', $this->id)->get();
-    //     $total_over_time = 0;
-    //     foreach($over_times as $over_time)
-    //     {
-    //         $total_work      = $over_time->number_of_days * $over_time->hours;
-    //         $amount          = $total_work * $over_time->rate;
-    //         $total_over_time = $amount + $total_over_time;
-    //     }
-
-
-    //     //Net Salary Calculate
-    //     $advance_salary = $total_allowance + $total_commission - $total_loan - $total_saturation_deduction + $total_other_payment + $total_over_time;
-
-    //     $employee       = Employee::where('id', '=', $this->id)->first();
-
-    //     $net_salary     = (!empty($employee->salary) ? $employee->salary : 0) + $advance_salary;
-
-    //     return $net_salary;
-
-    // }
-
+        $acceptable_days = $attendance_days + $holidays + $approved_leave_count;
+        $deduction_days = $no_of_days - $acceptable_days;
+        if($deduction_days == 0) {
+            $leave_deductions = 0;
+        } else {
+            $leave_deductions = ($basic_salary / 30 ) * $deduction_days;
+        }
+        return number_format($leave_deductions, 2, ".", "");
+    }
     public static function allowance($id)
     {
-
         //allowance
         $allowances      = Allowance::where('employee_id', '=', $id)->get();
         $total_allowance = 0;
-        foreach($allowances as $allowance)
-        {
+        foreach ($allowances as $allowance) {
             $total_allowance = $allowance->amount + $total_allowance;
         }
 
         $allowance_json = json_encode($allowances);
 
         return $allowance_json;
-
     }
 
     public static function commission($id)
@@ -242,14 +196,12 @@ class Employee extends Model
         //commission
         $commissions      = Commission::where('employee_id', '=', $id)->get();
         $total_commission = 0;
-        foreach($commissions as $commission)
-        {
+        foreach ($commissions as $commission) {
             $total_commission = $commission->amount + $total_commission;
         }
         $commission_json = json_encode($commissions);
 
         return $commission_json;
-
     }
 
     public static function loan($id)
@@ -257,8 +209,7 @@ class Employee extends Model
         //Loan
         $loans      = Loan::where('employee_id', '=', $id)->get();
         $total_loan = 0;
-        foreach($loans as $loan)
-        {
+        foreach ($loans as $loan) {
             $total_loan = $loan->amount + $total_loan;
         }
         $loan_json = json_encode($loans);
@@ -271,14 +222,12 @@ class Employee extends Model
         //Saturation Deduction
         $saturation_deductions      = SaturationDeduction::where('employee_id', '=', $id)->get();
         $total_saturation_deduction = 0;
-        foreach($saturation_deductions as $saturation_deduction)
-        {
+        foreach ($saturation_deductions as $saturation_deduction) {
             $total_saturation_deduction = $saturation_deduction->amount + $total_saturation_deduction;
         }
         $saturation_deduction_json = json_encode($saturation_deductions);
 
         return $saturation_deduction_json;
-
     }
 
     public static function other_payment($id)
@@ -286,8 +235,7 @@ class Employee extends Model
         //OtherPayment
         $other_payments      = OtherPayment::where('employee_id', '=', $id)->get();
         $total_other_payment = 0;
-        foreach($other_payments as $other_payment)
-        {
+        foreach ($other_payments as $other_payment) {
             $total_other_payment = $other_payment->amount + $total_other_payment;
         }
         $other_payment_json = json_encode($other_payments);
@@ -295,20 +243,27 @@ class Employee extends Model
         return $other_payment_json;
     }
 
-    public static function overtime($id)
+    public static function overtime($year, $month, $id)
     {
-        //Overtime
-        $over_times      = Overtime::where('employee_id', '=', $id)->get();
-        $total_over_time = 0;
-        foreach($over_times as $over_time)
-        {
-            $total_work      = $over_time->number_of_days * $over_time->hours;
-            $amount          = $total_work * $over_time->rate;
-            $total_over_time = $amount + $total_over_time;
-        }
-        $over_time_json = json_encode($over_times);
+        $start_date = $year."-".$month."-01";
+        $no_of_days = date('t', strtotime($start_date));
+        $end_date = $year."-".$month."-".$no_of_days;
 
-        return $over_time_json;
+        $over_time_arr = [];
+        $over_times      = Overtime::where('employee_id', '=', $id)->first();
+        if($over_times)
+        {
+            $totalDuration = \DB::table('attendance_employees')
+                            ->select(\DB::raw('SEC_TO_TIME(SUM(TIME_TO_SEC(overtime))) as total_duration'))
+                            ->where("employee_id", $id)->whereBetween('date', [$start_date, $end_date])
+                            ->value('total_duration');
+            $overtimes = explode(":", $totalDuration);
+
+            $over_time_amount = ($overtimes[0] + ($overtimes[1] * (1/60))) * $over_times->rate ;
+            $over_time_arr = array("hours" => $overtimes[0], "minutes" => $overtimes[0], "amount" => $over_time_amount);
+        }
+
+        return json_encode($over_time_arr);
     }
 
     public static function employee_id()
@@ -369,9 +324,4 @@ class Employee extends Model
             return $employee->salary;
         }
     }
-
-
-
-
-
 }

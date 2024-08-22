@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('advances', function (Blueprint $table) {
             $table->bigIncrements("id");
+            $table->integer('advance_id');
             $table->date('date');
             $table->decimal('amount', 16, 2)->default('0.0');
             $table->decimal('balance', 16, 2)->default('0.0');

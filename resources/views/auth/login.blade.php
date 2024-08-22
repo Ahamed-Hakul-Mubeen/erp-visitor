@@ -17,7 +17,7 @@
 
 {{-- @section('auth-topbar')
     <li class="nav-item">
-        <select class="btn btn-primary ms-2 me-2 language_option_bg text-center" style="text-align-last: center;" onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);" id="language">
+        <select class="text-center btn btn-primary ms-2 me-2 language_option_bg" style="text-align-last: center;" onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);" id="language">
             @foreach (Utility::languages() as $code => $language)
                 <option class="text-center" @if ($lang == $code) selected @endif value="{{ route('login',$code) }}">{{ucfirst($language)}}</option>
             @endforeach
@@ -55,12 +55,18 @@
         </div>
         {{ Form::open(['route' => 'login', 'method' => 'post', 'id' => 'loginForm', 'class' => 'login-form']) }}
         @if (session('status'))
-        <div class="mb-4 font-medium text-lg text-green-600 text-danger">
+        <div class="mb-4 text-lg font-medium text-green-600 text-danger">
             {{session('status') }}
         </div>
     @endif
+        
+        @if ($message = Session::get('error'))
+            <div class="alert alert-danger alert-block">
+                <strong>{{ $message }}</strong>
+            </div>
+        @endif
         <div class="custom-login-form">
-            <div class="form-group mb-3">
+            <div class="mb-3 form-group">
                 <label class="form-label">{{ __('Email') }}</label>
                 {{ Form::text('email', null, ['class' => 'form-control', 'placeholder' => __('Enter Your Email')]) }}
                 @error('email')
@@ -69,7 +75,7 @@
                     </span>
                 @enderror
             </div>
-            <div class="form-group mb-3">
+            <div class="mb-3 form-group">
                 <label class="form-label">{{ __('Password') }}</label>
                 {{ Form::password('password', ['class' => 'form-control', 'placeholder' => __('Enter Your Password'), 'id' => 'input-password']) }}
                 @error('password')
@@ -78,8 +84,8 @@
                     </span>
                 @enderror
             </div>
-            <div class="form-group mb-4">
-                <div class="d-flex flex-wrap align-items-center justify-content-between">
+            <div class="mb-4 form-group">
+                <div class="flex-wrap d-flex align-items-center justify-content-between">
                    
                     @if (Route::has('password.request'))
                         <span><a href="{{ route('password.request',$lang) }}"
@@ -90,7 +96,7 @@
 
 
             @if ($settings['recaptcha_module'] == 'on')
-                <div class="form-group col-lg-12 col-md-12 mt-3">
+                <div class="mt-3 form-group col-lg-12 col-md-12">
                      {!! NoCaptcha::display($settings['cust_darklayout']=='on' ? ['data-theme' => 'dark'] : []) !!}
                     @error('g-recaptcha-response')
                         <span class="small text-danger" role="alert">
@@ -121,14 +127,14 @@
     {{Form::open(array('route'=>'login','method'=>'post','id'=>'loginForm' ))}}
     @csrf
     <div class="">
-        <div class="form-group mb-3">
+        <div class="mb-3 form-group">
             <label for="email" class="form-label">{{__('Email')}}</label>
             <input class="form-control @error('email') is-invalid @enderror" id="email" type="email" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
             @error('email')
             <div class="invalid-feedback" role="alert">{{ $message }}</div>
             @enderror
         </div>
-        <div class="form-group mb-3">
+        <div class="mb-3 form-group">
             <label for="password" class="form-label">{{__('Password')}}</label>
             <input class="form-control @error('password') is-invalid @enderror" id="password" type="password" name="password" required autocomplete="current-password">
             @error('password')
@@ -138,7 +144,7 @@
         </div>
 
         @if (env('RECAPTCHA_MODULE') == 'on')
-            <div class="form-group mb-3">
+            <div class="mb-3 form-group">
                 {!! NoCaptcha::display() !!}
                 @error('g-recaptcha-response')
                 <span class="small text-danger" role="alert">
@@ -147,14 +153,14 @@
                 @enderror
             </div>
         @endif
-        <div class="form-group mb-4">
+        <div class="mb-4 form-group">
             @if (Route::has('password.request'))
                 <a href="{{ route('password.request') }}" class="text-xs">{{ __('Forgot Your Password?') }}</a>
             @endif
 
         </div>
         <div class="d-grid">
-            <button type="submit" class="btn-login btn btn-primary btn-block mt-2" id="login_button">{{__('Login')}}</button>
+            <button type="submit" class="mt-2 btn-login btn btn-primary btn-block" id="login_button">{{__('Login')}}</button>
         </div>
         @if ($settings['enable_signup'] == 'on')
 

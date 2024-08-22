@@ -278,7 +278,6 @@ class DashboardController extends Controller
             if (\Auth::user()->can('show hrm dashboard')) {
 
                 $user = Auth::user();
-                
 
                 if ($user->type != 'client' && $user->type != 'company') {
                     $emp = Employee::where('user_id', '=', $user->id)->first();
@@ -384,8 +383,13 @@ class DashboardController extends Controller
                     return view('dashboard.dashboard', compact('arrEvents', 'onGoingTraining', 'activeJob', 'inActiveJOb', 'doneTraining', 'announcements', 'employees', 'meetings', 'countTrainer', 'countClient', 'countUser', 'notClockIns'));
                 }
             } else {
-
-                return $this->project_dashboard_index();
+                if(Auth::user()->type == "Employee")
+                {
+                    Auth::logout();
+                    return redirect('login')->with('error','No Access for dashboard.');
+                } else {
+                    return $this->project_dashboard_index();
+                }
             }
         } else {
             if (!file_exists(storage_path() . "/installed")) {
