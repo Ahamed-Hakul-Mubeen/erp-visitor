@@ -195,7 +195,7 @@
                         </div>
                        
                        
-                        @if($stagejob->title != 'Applied' && $stagejob->title !='Phone Screen')
+                        @if($stagejob->title != 'Applied' && $stagejob->title !='Phone Screen' && $stagejob->title !='Rejected' )
                         <div class="col text-end">
                             <div class="col-12 text-end">
                                 <a href="#" data-url="{{route('job.on.board.create', $jobApplication->id)}}" data-title="{{__('Add to Job OnBoard')}}" data-ajax-popup="true" class="btn-sm btn btn-primary">
