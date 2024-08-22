@@ -129,13 +129,52 @@ class Employee extends Model
                             ->select(\DB::raw('SEC_TO_TIME(SUM(TIME_TO_SEC(overtime))) as total_duration'))
                             ->where("employee_id", $this->id)->whereBetween('date', [$start_date, $end_date])
                             ->value('total_duration');
-            $overtimes = explode(":", $totalDuration);
+            if($totalDuration)
+            {
+                $overtimes = explode(":", $totalDuration);
+                $total_over_time = ($overtimes[0] + ($overtimes[1] * (1/60))) * $over_times->rate ;
+            } else {
+                $total_over_time = 0;
+            }
 
-            $total_over_time = ($overtimes[0] + ($overtimes[1] * (1/60))) * $over_times->rate ;
         }
 
         // Calculate net salary
         $net_salary = $basic_salary + $total_allowance + $total_commission - $total_loan - $total_saturation_deduction - $leave_deductions + $total_other_payment + $total_over_time;
+
+        return number_format($net_salary, 2, ".", "");
+    }
+    public function get_net_salary2()
+    {
+        $basic_salary = $this->salary;
+
+        // Calculate total allowances
+        $total_allowance = $this->allowances->sum(function ($allowance) use ($basic_salary) {
+            return ($allowance->type === 'fixed') ? $allowance->amount : ($allowance->amount * $basic_salary / 100);
+        });
+
+        // Calculate total commissions
+        $total_commission = $this->commissions->sum(function ($commission) use ($basic_salary) {
+            return ($commission->type === 'fixed') ? $commission->amount : ($commission->amount * $basic_salary / 100);
+        });
+
+        // Calculate total loans
+        $total_loan = $this->loans->sum(function ($loan) use ($basic_salary) {
+            return ($loan->type === 'fixed') ? $loan->amount : ($loan->amount * $basic_salary / 100);
+        });
+
+        // Calculate total saturation deductions
+        $total_saturation_deduction = $this->saturationDeductions->sum(function ($deduction) use ($basic_salary) {
+            return ($deduction->type === 'fixed') ? $deduction->amount : ($deduction->amount * $basic_salary / 100);
+        });
+
+        // Calculate total other payments
+        $total_other_payment = $this->otherPayments->sum(function ($otherPayment) use ($basic_salary) {
+            return ($otherPayment->type === 'fixed') ? $otherPayment->amount : ($otherPayment->amount * $basic_salary / 100);
+        });
+
+        // Calculate net salary
+        $net_salary = $basic_salary + $total_allowance + $total_commission - $total_loan - $total_saturation_deduction + $total_other_payment;
 
         return number_format($net_salary, 2, ".", "");
     }
@@ -264,10 +303,15 @@ class Employee extends Model
                             ->select(\DB::raw('SEC_TO_TIME(SUM(TIME_TO_SEC(overtime))) as total_duration'))
                             ->where("employee_id", $id)->whereBetween('date', [$start_date, $end_date])
                             ->value('total_duration');
-            $overtimes = explode(":", $totalDuration);
+            if($totalDuration)
+            {
+                $overtimes = explode(":", $totalDuration);
+                $over_time_amount = ($overtimes[0] + ($overtimes[1] * (1/60))) * $over_times->rate ;
+                $over_time_arr = array("hours" => $overtimes[0], "minutes" => $overtimes[0], "amount" => $over_time_amount);
+            } else {
+                $over_time_arr = [];
+            }
 
-            $over_time_amount = ($overtimes[0] + ($overtimes[1] * (1/60))) * $over_times->rate ;
-            $over_time_arr = array("hours" => $overtimes[0], "minutes" => $overtimes[0], "amount" => $over_time_amount);
         }
 
         return json_encode($over_time_arr);
