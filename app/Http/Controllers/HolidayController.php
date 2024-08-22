@@ -59,77 +59,73 @@ class HolidayController extends Controller
                                    'occasion' => 'required',
                                ]
             );
-
+    
             if($validator->fails())
             {
                 $messages = $validator->getMessageBag();
-
+    
                 return redirect()->back()->with('error', $messages->first());
             }
-
-            $holiday             = new Holiday();
-            $holiday->date       = $request->date;
-            $holiday->end_date     = $request->end_date;
-            $holiday->occasion   = $request->occasion;
-            $holiday->created_by = \Auth::user()->creatorId();
-            $holiday->save();
-
-            //For Notification
-            $setting  = Utility::settings(\Auth::user()->creatorId());
-            $holidayNotificationArr = [
-                'holiday_title' => $request->occasion,
-                'holiday_date' => $request->date,
-            ];
-            //Slack Notification
-            if(isset($setting['holiday_notification']) && $setting['holiday_notification'] ==1)
-            {
-                Utility::send_slack_msg('new_holiday', $holidayNotificationArr);
-            }
-            //Telegram Notification
-            if(isset($setting['telegram_holiday_notification']) && $setting['telegram_holiday_notification'] ==1)
-            {
-                Utility::send_telegram_msg('new_holiday', $holidayNotificationArr);
-            }
-
-            //For Google Calendar
-            if($request->get('synchronize_type')  == 'google_calender')
-            {
-
-                $type ='holiday';
-                $request1=new Holiday();
-                $request1->title=$request->occasion;
-                $request1->start_date=$request->date;
-                $request1->end_date=$request->end_date;
-
-                Utility::addCalendarData($request1 , $type);
-
-            }
-
-            //webhook
-            $module ='New Holiday';
-            $webhook =  Utility::webhookSetting($module);
-            if($webhook)
-            {
-                $parameter = json_encode($holiday);
-                $status = Utility::WebhookCall($webhook['url'],$parameter,$webhook['method']);
-
-                if($status == true)
+    
+            // Split the dates by the comma separator
+            $dates = explode(',', $request->date);
+    
+            foreach ($dates as $date) {
+                $holiday = new Holiday();
+                $holiday->date       = $date;
+                $holiday->occasion   = $request->occasion;
+                $holiday->created_by = \Auth::user()->creatorId();
+                $holiday->save();
+    
+                // Handle notifications and Google Calendar synchronization for each holiday
+                $setting  = Utility::settings(\Auth::user()->creatorId());
+                $holidayNotificationArr = [
+                    'holiday_title' => $request->occasion,
+                    'holiday_date' => $date,
+                ];
+    
+                if(isset($setting['holiday_notification']) && $setting['holiday_notification'] == 1)
                 {
-                    return redirect()->route('holiday.index')->with('success', 'Holiday successfully created.');
+                    Utility::send_slack_msg('new_holiday', $holidayNotificationArr);
                 }
-                else
+    
+                if(isset($setting['telegram_holiday_notification']) && $setting['telegram_holiday_notification'] == 1)
                 {
-                    return redirect()->back()->with('error', __('Webhook call failed.'));
+                    Utility::send_telegram_msg('new_holiday', $holidayNotificationArr);
+                }
+    
+                if($request->get('synchronize_type')  == 'google_calender')
+                {
+                    $type = 'holiday';
+                    $request1 = new Holiday();
+                    $request1->title = $request->occasion;
+                    $request1->start_date = $date;
+                    $request1->end_date = $date; // Single date entry
+    
+                    Utility::addCalendarData($request1, $type);
+                }
+    
+                // Webhook
+                $module = 'New Holiday';
+                $webhook = Utility::webhookSetting($module);
+                if($webhook)
+                {
+                    $parameter = json_encode($holiday);
+                    $status = Utility::WebhookCall($webhook['url'], $parameter, $webhook['method']);
+    
+                    if(!$status)
+                    {
+                        return redirect()->back()->with('error', __('Webhook call failed.'));
+                    }
                 }
             }
-
+    
             return redirect()->route('holiday.index')->with('success', 'Holiday successfully created.');
         }
         else
         {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
-
     }
 
 
@@ -170,7 +166,7 @@ class HolidayController extends Controller
                 return redirect()->back()->with('error', $messages->first());
             }
             $holiday->date     = $request->date;
-            $holiday->end_date       = $request->end_date;
+            $holiday->end_date = $request->end_date;
             $holiday->occasion = $request->occasion;
             $holiday->save();
 

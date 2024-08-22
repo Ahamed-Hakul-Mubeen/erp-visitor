@@ -84,8 +84,8 @@
                             <thead>
                             <tr>
                                 <th>{{__('Occasion')}}</th>
-                                <th>{{__('Start Date')}}</th>
-                                <th>{{__('End Date')}}</th>
+                                <th>{{__('Date')}}</th>
+                                {{-- <th>{{__('End Date')}}</th> --}}
                                 @if(Gate::check('edit holiday') || Gate::check('delete holiday'))
                                     <th>{{__('Action')}}</th>
                                 @endif
@@ -96,7 +96,7 @@
                                 <tr>
                                     <td>{{ $holiday->occasion }}</td>
                                     <td>{{ \Auth::user()->dateFormat($holiday->date) }}</td>
-                                    <td>{{ \Auth::user()->dateFormat($holiday->end_date) }}</td>
+                                    {{-- <td>{{ \Auth::user()->dateFormat($holiday->end_date) }}</td> --}}
                                     @if(Gate::check('edit holiday') || Gate::check('delete holiday'))
                                         <td class="Action">
                                             <span>

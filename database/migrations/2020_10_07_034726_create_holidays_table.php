@@ -17,7 +17,7 @@ class CreateHolidaysTable extends Migration
             'holidays', function (Blueprint $table){
             $table->id();
             $table->date('date');
-            $table->date('end_date');
+            $table->date('end_date')->nullable();
             $table->text('occasion');
             $table->integer('created_by');
             $table->timestamps();
