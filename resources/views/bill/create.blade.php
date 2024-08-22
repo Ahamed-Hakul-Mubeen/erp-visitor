@@ -581,7 +581,14 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group" id="vender-box">
-                                {{ Form::label('vender_id', __('Vendor'),['class'=>'form-label']) }}
+                                <div class="d-flex justify-content-between">
+                                    {{ Form::label('vender_id', __('Vendor'),['class'=>'form-label']) }}
+                                  
+                                    <a href="#" data-size="lg" data-url="{{ route('vender.create',['redirect_to_bill' => 1]) }}" data-ajax-popup="true" data-title="{{__('Create New Vendor')}}" data-bs-toggle="tooltip" title="{{ __('Create') }}" >
+                                        <i class="ti ti-plus"></i>{{__('Add Vendor')}}
+                                    </a>                                                        
+                               
+                                </div>
                                 {{ Form::select('vender_id', $venders,$vendorId, array('class' => 'form-control select','id'=>'vender','data-url'=>route('bill.vender'),'required'=>'required')) }}
                             </div>
                             <div id="vender_detail" class="d-none">

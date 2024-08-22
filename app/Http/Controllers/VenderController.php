@@ -138,8 +138,14 @@ class VenderController extends Controller
             {
                 Utility::send_twilio_msg($request->contact,'new_vendor', $vendorNotificationArr);
             }
-
-            return redirect()->route('vender.index')->with('success', __('Vendor successfully created.'));
+             
+                if ($request->has('redirect_to_bill') && $request->redirect_to_bill == 1) {
+                    return redirect()->route('bill.create', ['cid' => 0])->with('success', __('Customer successfully created.'));
+                }elseif ($request->has('redirect_to_payment') && $request->redirect_to_payment == 1) {
+                    return redirect()->route('payment.index',['event' => 'new'])->with('success', __('Customer successfully created.'));
+                }else{
+                    return redirect()->route('vender.index')->with('success', __('Vendor successfully created.'));
+                }
         }
         else
         {

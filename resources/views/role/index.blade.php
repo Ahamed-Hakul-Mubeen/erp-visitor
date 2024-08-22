@@ -57,7 +57,7 @@
                                                         </div>
                                                     @endcan
 
-                                                    @if ($role->name != 'Employee')
+                                                    @if ($role->name != 'Employee' && $role->name != 'project member')
                                                         @can('delete role')
                                                             <div class="action-btn bg-danger ms-2">
                                                                 {!! Form::open([

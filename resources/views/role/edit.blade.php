@@ -4,7 +4,7 @@
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="form-group">
                 {{Form::label('name',__('Name'),['class'=>'form-label'])}}
-                {{Form::text('name',null,array('class'=>'form-control','placeholder'=>__('Enter Role Name')))}}
+                {{Form::text('name',null,array('class'=>'form-control','placeholder'=>__('Enter Role Name'),'readonly' => ($role->name == 'Employee' || $role->name == 'project member') ? 'readonly' : null) ) }}
                 @error('name')
                 <small class="invalid-name" role="alert">
                     <strong class="text-danger">{{ $message }}</strong>
@@ -492,7 +492,7 @@
                                         <th>{{__('Module')}} </th>
                                         <th>{{__('Permissions')}} </th>
                                     </tr>
-                                    </thead>                                    
+                                    </thead>
                                     <tbody>
 
                                     @foreach($modules as $module)

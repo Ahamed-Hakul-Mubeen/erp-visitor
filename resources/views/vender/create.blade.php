@@ -1,4 +1,9 @@
 {{Form::open(array('url'=>'vender','method'=>'post'))}}
+@foreach(['redirect_to_bill','redirect_to_payment'] as $param)
+    @if(request()->has($param) && request()->get($param) == 1)
+        <input type="hidden" name="{{ $param }}" value="1">
+    @endif
+@endforeach
 <div class="modal-body">
 
     <h6 class="sub-title">{{__('Basic Info')}}</h6>
