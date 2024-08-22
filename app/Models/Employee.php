@@ -166,6 +166,13 @@ class Employee extends Model
                 $interval = $date1->diff($date2);
                 $approved_leave_count += ($interval->days + 1);
             }
+            else if($leave->start_date >= $start_date && $leave->end_date > $end_date)
+            {
+                $date1 = new DateTime($leave->start_date);
+                $date2 = new DateTime($end_date);
+                $interval = $date1->diff($date2);
+                $approved_leave_count += ($interval->days + 1);
+            }
         }
 
         $acceptable_days = $attendance_days + $holidays + $approved_leave_count;
