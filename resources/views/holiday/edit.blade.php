@@ -20,14 +20,14 @@
         </div>
     </div>
     <div class="row">
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-12">
             {{Form::label('date',__('Start Date'),['class'=>'form-label'])}}
             {{Form::date('date',null,array('class'=>'form-control '))}}
         </div>
-        <div class="form-group col-md-6">
+        {{-- <div class="form-group col-md-6">
             {{Form::label('end_date',__('End Date'),['class'=>'form-label'])}}
             {{Form::date('end_date',null,array('class'=>'form-control '))}}
-        </div>
+        </div> --}}
 
     </div>
 </div>
