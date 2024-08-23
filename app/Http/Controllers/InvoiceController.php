@@ -108,6 +108,7 @@ class InvoiceController extends Controller
             $validator = \Validator::make(
                 $request->all(), [
                     'customer_id' => 'required',
+                    'invoice_number' => 'required',
                     'issue_date' => 'required',
                     'due_date' => 'required',
                     'category_id' => 'required',
@@ -121,6 +122,7 @@ class InvoiceController extends Controller
             $status = Invoice::$statues;
             $invoice = new Invoice();
             $invoice->invoice_id = $this->invoiceNumber();
+            $invoice->actual_invoice_number = $request->invoice_number;
             $invoice->customer_id = $request->customer_id;
             $invoice->status = 0;
             $invoice->issue_date = $request->issue_date;
@@ -228,6 +230,7 @@ class InvoiceController extends Controller
                     $request->all(),
                     [
                         'customer_id' => 'required',
+                        'invoice_number' => 'required',
                         'issue_date' => 'required',
                         'due_date' => 'required',
                         'category_id' => 'required',
@@ -243,6 +246,7 @@ class InvoiceController extends Controller
                 $invoice->issue_date = $request->issue_date;
                 $invoice->due_date = $request->due_date;
                 $invoice->ref_number = $request->ref_number;
+                $invoice->actual_invoice_number = $request->invoice_number;
 //                $invoice->discount_apply = isset($request->discount_apply) ? 1 : 0;
                 $invoice->category_id = $request->category_id;
                 $invoice->save();
@@ -1030,6 +1034,7 @@ class InvoiceController extends Controller
             $invoice = Invoice::where('id', $invoice_id)->first();
             $duplicateInvoice = new Invoice();
             $duplicateInvoice->invoice_id = $this->invoiceNumber();
+            $duplicateInvoice->actual_invoice_number = \Auth::user()->invoiceNumberFormat($this->invoiceNumber());
             $duplicateInvoice->customer_id = $invoice['customer_id'];
             $duplicateInvoice->issue_date = date('Y-m-d');
             $duplicateInvoice->due_date = $invoice['due_date'];

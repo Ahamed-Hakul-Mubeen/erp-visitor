@@ -18,6 +18,7 @@ class CreateInvoicesTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('invoice_id');
             $table->unsignedBigInteger('customer_id');
+            $table->string('actual_invoice_number')->nullable()->default(null);;
             $table->date('issue_date');
             $table->date('due_date');
             $table->date('send_date')->nullable();

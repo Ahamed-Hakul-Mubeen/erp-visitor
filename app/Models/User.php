@@ -161,9 +161,15 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function invoiceNumberFormat($number)
     {
-        $settings = Utility::settings();
+        $invoice = Invoice::where("invoice_id", $number)->where('created_by', \Auth::user()->creatorId())->first();
+        if($invoice && $invoice->actual_invoice_number != null)
+        {
+            return $invoice->actual_invoice_number;
+        } else {
+            $settings = Utility::settings();
+            return $settings["invoice_prefix"] . sprintf("%05d", $number);
+        }
 
-        return $settings["invoice_prefix"] . sprintf("%05d", $number);
     }
     public function advanceNumberFormat($number)
     {

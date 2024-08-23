@@ -555,7 +555,7 @@
                                     <div class="form-group">
                                         {{ Form::label('invoice_number', __('Invoice Number'),['class'=>'form-label']) }}
                                         <div class="form-icon-user">
-                                            <input type="text" class="form-control" value="{{$invoice_number}}" readonly>
+                                            <input type="text" name="invoice_number" class="form-control" value="{{$invoice_number}}">
                                         </div>
                                     </div>
                                 </div>
