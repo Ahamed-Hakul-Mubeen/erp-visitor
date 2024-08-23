@@ -477,7 +477,7 @@
                 </div>
                 <div class="tab-pane fade" id="project" role="tabpanel" aria-labelledby="pills-contact-tab">
                     @php
-                        $modules=['project dashboard','project','milestone','grant chart','project stage','timesheet','project expense','project task','activity','CRM activity','project task stage','bug report','bug status'];
+                        $modules=['project dashboard','project','milestone','attachment' ,'grant chart','project stage','timesheet','project expense','project task','activity','CRM activity','project task stage','bug report','bug status'];
                     @endphp
                     <div class="col-md-12">
                         <div class="form-group">
@@ -541,6 +541,22 @@
                                                             <div class="col-md-3 custom-control custom-checkbox">
                                                                 {{Form::checkbox('permissions[]',$key,$role->permission, ['class'=>'form-check-input project_checkall isscheck_'.str_replace(' ', '', $module),'id' =>'permission'.$key])}}
                                                                 {{Form::label('permission'.$key,'Create',['class'=>'custom-control-label'])}}<br>
+                                                            </div>
+                                                        @endif
+                                                    @endif
+                                                    @if(in_array('share '.$module,(array) $permissions))
+                                                        @if($key = array_search('share '.$module,$permissions))
+                                                            <div class="col-md-3 custom-control custom-checkbox">
+                                                                {{Form::checkbox('permissions[]',$key,false, ['class'=>'form-check-input isscheck project_checkall isscheck_'.str_replace(' ', '', $module),'id' =>'permission'.$key])}}
+                                                                {{Form::label('permission'.$key,'Share',['class'=>'custom-control-label'])}}<br>
+                                                            </div>
+                                                        @endif
+                                                    @endif
+                                                    @if(in_array('download '.$module,(array) $permissions))
+                                                        @if($key = array_search('download '.$module,$permissions))
+                                                            <div class="col-md-3 custom-control custom-checkbox">
+                                                                {{Form::checkbox('permissions[]',$key,false, ['class'=>'form-check-input isscheck project_checkall isscheck_'.str_replace(' ', '', $module),'id' =>'permission'.$key])}}
+                                                                {{Form::label('permission'.$key,'Download',['class'=>'custom-control-label'])}}<br>
                                                             </div>
                                                         @endif
                                                     @endif
