@@ -6,9 +6,11 @@ use App\Models\Employee;
 use App\Models\Termination;
 use App\Models\TerminationType;
 use App\Models\Utility;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Carbon\Carbon;
 
 class TerminationController extends Controller
 {
@@ -78,7 +80,8 @@ class TerminationController extends Controller
             $termination->description      = $request->description;
             $termination->created_by       = \Auth::user()->creatorId();
             $termination->save();
-
+            
+            
             $setings = Utility::settings();
             if($setings['termination_sent'] == 1)
             {
@@ -167,6 +170,8 @@ class TerminationController extends Controller
                 $termination->termination_date = $request->termination_date;
                 $termination->description      = $request->description;
                 $termination->save();
+
+                
 
                 return redirect()->route('termination.index')->with('success', __('Termination successfully updated.'));
             }

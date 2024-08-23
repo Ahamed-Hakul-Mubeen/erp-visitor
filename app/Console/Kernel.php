@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->command('jobs:job-auto-expiry-date')->daily();
+        $schedule->command('user:update-login-status')->daily();
     }
 
     /**

@@ -364,7 +364,16 @@ class Employee extends Model
     {
         return AttendanceEmployee::where('employee_id', $employee_id)->where('date', $data)->first();
     }
+    
+    public function termination()
+    {
+    return $this->hasOne(Termination::class, 'employee_id', 'id');
+    }
 
+    public function resignation()
+    {
+    return $this->hasOne(Resignation::class, 'employee_id', 'id');
+    }
 
     public static function employee_salary($salary)
     {
