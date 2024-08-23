@@ -19,18 +19,15 @@ class JobController extends Controller
 
     public function index()
     {
-        if(\Auth::user()->can('manage job'))
-        {
-            $jobs = Job::where('created_by', '=', \Auth::user()->creatorId())->with('branches','createdBy')->get();
+        if (\Auth::user()->can('manage job')) {
+            $jobs = Job::where('created_by', '=', \Auth::user()->creatorId())->with('branches', 'createdBy')->get();
 
             $data['total']     = Job::where('created_by', '=', \Auth::user()->creatorId())->count();
             $data['active']    = Job::where('status', 'active')->where('created_by', '=', \Auth::user()->creatorId())->count();
             $data['in_active'] = Job::where('status', 'in_active')->where('created_by', '=', \Auth::user()->creatorId())->count();
 
             return view('job.index', compact('jobs', 'data'));
-        }
-        else
-        {
+        } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
     }
@@ -54,25 +51,24 @@ class JobController extends Controller
     public function store(Request $request)
     {
 
-        if(\Auth::user()->can('create job'))
-        {
+        if (\Auth::user()->can('create job')) {
 
             $validator = \Validator::make(
-                $request->all(), [
-                                   'title' => 'required',
-                                   'branch' => 'required',
-                                   'category' => 'required',
-                                   'skill' => 'required',
-                                   'position' => 'required|integer',
-                                   'start_date' => 'required',
-                                   'end_date' => 'required',
-                                   'description' => 'required',
-                                   'requirement' => 'required',
-                               ]
+                $request->all(),
+                [
+                    'title' => 'required',
+                    'branch' => 'required',
+                    'category' => 'required',
+                    'skill' => 'required',
+                    'position' => 'required|integer',
+                    'start_date' => 'required',
+                    'end_date' => 'required',
+                    'description' => 'required',
+                    'requirement' => 'required',
+                ]
             );
 
-            if($validator->fails())
-            {
+            if ($validator->fails()) {
                 $messages = $validator->getMessageBag();
 
                 return redirect()->back()->with('error', $messages->first());
@@ -97,9 +93,7 @@ class JobController extends Controller
             $job->save();
 
             return redirect()->route('job.index')->with('success', __('Job  successfully created.'));
-        }
-        else
-        {
+        } else {
             return redirect()->route('job.index')->with('error', __('Permission denied.'));
         }
     }
@@ -136,25 +130,24 @@ class JobController extends Controller
 
     public function update(Request $request, Job $job)
     {
-        if(\Auth::user()->can('edit job'))
-        {
+        if (\Auth::user()->can('edit job')) {
 
             $validator = \Validator::make(
-                $request->all(), [
-                                   'title' => 'required',
-                                   'branch' => 'required',
-                                   'category' => 'required',
-                                   'skill' => 'required',
-                                   'position' => 'required|integer',
-                                   'start_date' => 'required',
-                                   'end_date' => 'required',
-                                   'description' => 'required',
-                                   'requirement' => 'required',
-                               ]
+                $request->all(),
+                [
+                    'title' => 'required',
+                    'branch' => 'required',
+                    'category' => 'required',
+                    'skill' => 'required',
+                    'position' => 'required|integer',
+                    'start_date' => 'required',
+                    'end_date' => 'required',
+                    'description' => 'required',
+                    'requirement' => 'required',
+                ]
             );
 
-            if($validator->fails())
-            {
+            if ($validator->fails()) {
                 $messages = $validator->getMessageBag();
 
                 return redirect()->back()->with('error', $messages->first());
@@ -176,9 +169,7 @@ class JobController extends Controller
             $job->save();
 
             return redirect()->route('job.index')->with('success', __('Job  successfully updated.'));
-        }
-        else
-        {
+        } else {
             return redirect()->route('job.index')->with('error', __('Permission denied.'));
         }
     }
@@ -192,11 +183,11 @@ class JobController extends Controller
 
         return redirect()->route('job.index')->with('success', __('Job  successfully deleted.'));
     }
-    
+
     public function career($id, $lang)
     {
-//        dd($lang);
-        $jobs= Job::where('created_by', $id)->with(['branches','createdBy'])->get();
+        //        dd($lang);
+        $jobs = Job::where('created_by', $id)->with(['branches', 'createdBy'])->get();
 
         \Session::put('lang', $lang);
 
@@ -209,21 +200,19 @@ class JobController extends Controller
         $languages                          = Utility::languages();
 
         $currantLang = \Session::get('lang');
-        if(empty($currantLang))
-        {
+        if (empty($currantLang)) {
             $user        = User::find($id);
             $currantLang = !empty($user) && !empty($user->lang) ? $user->lang : 'en';
         }
 
 
-        return view('job.career', compact('companySettings', 'jobs', 'languages', 'currantLang','id'));
+        return view('job.career', compact('companySettings', 'jobs', 'languages', 'currantLang', 'id'));
     }
 
     public function jobRequirement($code, $lang)
     {
         $job = Job::where('code', $code)->first();
-        if($job->status == 'in_active')
-        {
+        if ($job->status == 'in_active') {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
 
@@ -238,8 +227,7 @@ class JobController extends Controller
         $languages                          = Utility::languages();
 
         $currantLang = \Session::get('lang');
-        if(empty($currantLang))
-        {
+        if (empty($currantLang)) {
             $currantLang = !empty($job->createdBy) ? $job->createdBy->lang : 'en';
         }
 
@@ -258,13 +246,12 @@ class JobController extends Controller
         $companySettings['footer_text']     = \DB::table('settings')->where('created_by', $job->created_by)->where('name', 'footer_text')->first();
         $companySettings['company_favicon'] = \DB::table('settings')->where('created_by', $job->created_by)->where('name', 'company_favicon')->first();
         $companySettings['company_logo']    = \DB::table('settings')->where('created_by', $job->created_by)->where('name', 'company_logo')->first();
-       
+
         $customQuestionIds = explode(',', $job->custom_question);
         $questions = CustomQuestion::whereIn('id', $customQuestionIds)->where('created_by', $job->created_by)->get();
         $languages = Utility::languages();
         $currantLang = \Session::get('lang');
-        if(empty($currantLang))
-        {
+        if (empty($currantLang)) {
             $currantLang = !empty($job->createdBy) ? $job->createdBy->lang : 'en';
         }
 
@@ -276,36 +263,35 @@ class JobController extends Controller
     {
 
         $validator = \Validator::make(
-            $request->all(), [
-                               'name' => 'required',
-                               'email' => 'required',
-                               'phone' => 'required',
-//                               'profile' => 'mimes:jpeg,png,jpg,gif,svg|max:20480',
-//                               'resume' => 'mimes:jpeg,png,jpg,gif,svg,pdf,doc,zip|max:20480',
-]
-);
+            $request->all(),
+            [
+                'name' => 'required',
+                'email' => 'required|email',
+                'phone' => 'required',
+                //                               'profile' => 'mimes:jpeg,png,jpg,gif,svg|max:20480',
+                //                               'resume' => 'mimes:jpeg,png,jpg,gif,svg,pdf,doc,zip|max:20480',
+            ]
+        );
 
-if($validator->fails())
-{
-    $messages = $validator->getMessageBag();
-    
-    return redirect()->back()->with('error', $messages->first());
-}
+        if ($validator->fails()) {
+            $messages = $validator->getMessageBag();
 
-$existingJobApplication = JobApplication::where('email', $request->email)->first();
-if ($existingJobApplication) {
-    return redirect()->back()->with('error', __('Email already exists'));
-}
-$job = Job::where('code', $code)->first();
+            return redirect()->back()->with('error', $messages->first());
+        }
+        
+        $job = Job::where('code', $code)->first();
+        $creatorId = $job->created_by;
+        $existingJobApplication = JobApplication::where('email', $request->email)->where('job', $job->id)->first();
+        if ($existingJobApplication) {
+            return redirect()->back()->with('error', __('Email already exists'));
+        }
 
-if(!empty($request->profile))
-{
-    
+        if (!empty($request->profile)) {
+
             //storage limit
             $image_size = $request->file('profile')->getSize();
-            $result = Utility::updateStorageLimit(\Auth::user()->creatorId(), $image_size);
-            if($result==1)
-            {
+            $result = Utility::updateStorageLimit($creatorId, $image_size);
+            if ($result == 1) {
                 $filenameWithExt = $request->file('profile')->getClientOriginalName();
                 $filename        = pathinfo($filenameWithExt, PATHINFO_FILENAME);
                 $extension       = $request->file('profile')->getClientOriginalExtension();
@@ -318,27 +304,21 @@ if(!empty($request->profile))
                     \File::delete($image_path);
                 }
                 $url = '';
-                $path = Utility::upload_file($request,'profile',$fileNameToStore,$dir,[]);
+                $path = Utility::upload_file($request, 'profile', $fileNameToStore, $dir, []);
+            } else {
+                $fileNameToStore = '';
             }
-            else
-            {
-                $fileNameToStore ='';
-            }
-
-
         }
 
 
-        if(!empty($request->resume))
-        {
+        if (!empty($request->resume)) {
 
             //storage limit
             $image_size = $request->file('resume')->getSize();
-            $result = Utility::updateStorageLimit(\Auth::user()->creatorId(), $image_size);
+            $result = Utility::updateStorageLimit($creatorId, $image_size);
 
 
-            if($result==1)
-            {
+            if ($result == 1) {
 
                 $filenameWithExt1 = $request->file('resume')->getClientOriginalName();
                 $filename1        = pathinfo($filenameWithExt1, PATHINFO_FILENAME);
@@ -352,19 +332,14 @@ if(!empty($request->profile))
                     \File::delete($image_path);
                 }
                 $url = '';
-                $path = Utility::upload_file($request,'resume',$fileNameToStore1,$dir,[]);
+                $path = Utility::upload_file($request, 'resume', $fileNameToStore1, $dir, []);
+            } else {
+                $fileNameToStore1 = '';
             }
-
-            else
-            {
-                $fileNameToStore1 ='';
-            }
-
-
         }
-       
-        
-        $stage=JobStage::where('created_by',$job->created_by)->first();
+
+
+        $stage = JobStage::where('created_by', $job->created_by)->first();
         $jobApplication                  = new JobApplication();
         $jobApplication->job             = $job->id;
         $jobApplication->name            = $request->name;
@@ -384,10 +359,6 @@ if(!empty($request->profile))
         $jobApplication->save();
 
 
-        return redirect()->back()->with('success', __('Job application successfully send'). ((isset($result) && $result!=1) ? '<br> <span class="text-danger">' . $result . '</span>' : ''));
-       
-        
+        return redirect()->back()->with('success', __('Job application successfully send') . ((isset($result) && $result != 1) ? '<br> <span class="text-danger">' . $result . '</span>' : ''));
     }
-
-
 }

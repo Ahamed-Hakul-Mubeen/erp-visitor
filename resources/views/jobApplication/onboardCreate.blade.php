@@ -9,7 +9,7 @@
         @endif
         <div class="form-group col-md-12">
             {!! Form::label('joining_date', __('Joining Date'), ['class' => 'col-form-label']) !!}
-            {!! Form::date('joining_date', null, ['class' => 'form-control ','autocomplete'=>'off']) !!}
+            {!! Form::date('joining_date', null, ['class' => 'form-control ','autocomplete'=>'off','min' => \Carbon\Carbon::today()->format('Y-m-d')]) !!}
         </div>
 
         <div class="form-group col-md-6">
