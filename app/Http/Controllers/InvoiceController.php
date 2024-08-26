@@ -403,7 +403,6 @@ class InvoiceController extends Controller
 
     public function show($ids)
     {
-
         if (\Auth::user()->can('show invoice')) {
             try {
                 $id = Crypt::decrypt($ids);
@@ -704,7 +703,7 @@ class InvoiceController extends Controller
     {
         if (\Auth::user()->can('create payment invoice')) {
             $invoice = Invoice::where('id', $invoice_id)->first();
-            $advance = Advance::select("advance_id", "id", "balance", "date")->where("customer_id", $invoice->customer_id)->where("status", 0)->where('created_by', \Auth::user()->creatorId())->get();
+            $advance = Advance::select("advance_id", "id", "balance", "date", "account_id")->where("customer_id", $invoice->customer_id)->where("status", 0)->where('created_by', \Auth::user()->creatorId())->get();
             $accounts = BankAccount::select('*', \DB::raw("CONCAT(bank_name,' ',holder_name) AS name"))->where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             return view('invoice.payment', compact('accounts', 'invoice', 'advance'));
         } else {
@@ -841,6 +840,10 @@ class InvoiceController extends Controller
                     $advance->status = 1;
                 }
                 $advance->save();
+                $invoicePayment = InvoicePayment::find($invoicePayment->id);
+                $invoicePayment->advance_id = $request->advance_id;
+                $invoicePayment->advance_amount = $request->amount;
+                $invoicePayment->save();
             }
 
 
@@ -885,6 +888,13 @@ class InvoiceController extends Controller
         if (\Auth::user()->can('delete payment invoice')) {
             $payment = InvoicePayment::find($payment_id);
 
+            if($payment->advance_id && $payment->advance_amount)
+            {
+                $advance = Advance::find($payment->advance_id);
+                $advance->balance += $payment->advance_amount;
+                $advance->status = 0;
+                $advance->save();
+            }
             InvoicePayment::where('id', '=', $payment_id)->delete();
 
             InvoiceBankTransfer::where('id', '=', $payment_id)->delete();

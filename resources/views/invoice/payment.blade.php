@@ -1,34 +1,32 @@
-{{ Form::open(['route' => ['invoice.payment', $invoice->id], 'method' => 'post', 'enctype' => 'multipart/form-data']) }}
+{{ Form::open(['route' => ['invoice.payment', $invoice->id], 'method' => 'post', 'id' => 'payment_form', 'enctype' => 'multipart/form-data']) }}
 <div class="modal-body">
     <div class="row">
-        <div class="form-group  col-md-12">
-            {{ Form::label('advance_id', __('Pending Advance'), ['class' => 'form-label']) }}
-            <select class="form-control select" name="advance_id" id="advance_id">
-                @if (count($advance) == 0)
-                    <option value="">No Pending Advance</option>
-                @else
+        @if (count($advance) != 0)
+            <div class="form-group col-md-12">
+                {{ Form::label('advance_id', __('Pending Advance'), ['class' => 'form-label']) }}
+                <select class="form-control select" name="advance_id" id="advance_id">
                     <option value="">Select Advance</option>
                     @foreach ($advance as $adv)
-                        <option data-date="{{ $adv->date }}" data-amount="{{ $adv->balance }}" value="{{ $adv->id }}"> {{  Auth::user()->advanceNumberFormat($adv->advance_id)}} ({{  Auth::user()->priceFormat($adv->balance)}}) </option>
+                        <option data-date="{{ $adv->date }}" data-amount="{{ $adv->balance }}" data-account="{{ $adv->account_id }}" value="{{ $adv->id }}"> {{  Auth::user()->advanceNumberFormat($adv->advance_id)}} ({{  Auth::user()->priceFormat($adv->balance)}}) </option>
                     @endforeach
-                @endif
-            </select>
-            {{-- {{ Form::select('advance_id', $advance, null, ['class' => 'form-control select', 'id' => 'advance_id', 'required' => 'required']) }} --}}
-        </div>
-        <div class="form-group  col-md-6">
+                </select>
+                {{-- {{ Form::select('advance_id', $advance, null, ['class' => 'form-control select', 'id' => 'advance_id', 'required' => 'required']) }} --}}
+            </div>
+        @endif
+        <div class="form-group col-md-6">
             {{ Form::label('date', __('Date'), ['class' => 'form-label']) }}
             {{ Form::date('date', '', ['id' => 'date', 'class' => 'form-control ', 'required' => 'required']) }}
         </div>
-        <div class="form-group  col-md-6">
+        <div class="form-group col-md-6">
             {{ Form::label('amount', __('Amount'), ['class' => 'form-label']) }}
             {{ Form::number('amount', $invoice->getDue(), ['id' => 'amount', 'class' => 'form-control', 'required' => 'required', 'step' => '0.01', 'placeholder' => __('Enter Amount')]) }}
         </div>
-        <div class="form-group  col-md-6">
+        <div class="form-group col-md-6">
             {{ Form::label('account_id', __('Account'), ['class' => 'form-label']) }}
-            {{ Form::select('account_id', $accounts, null, ['class' => 'form-control select', 'id' => 'account_id', 'required' => 'required']) }}
+            {{ Form::select('account_id', $accounts, null, ['class' => 'form-control select', 'id' => 'account_id', 'required' => 'required', 'readonly' => "readonly"]) }}
         </div>
 
-        <div class="form-group  col-md-6">
+        <div class="form-group col-md-6">
             {{ Form::label('reference', __('Reference'), ['class' => 'form-label']) }}
             {{ Form::text('reference', '', ['class' => 'form-control', 'placeholder' => __('Enter Reference')]) }}
         </div>
@@ -58,10 +56,25 @@
 <script>
     $(document).ready(function(){
         $("#advance_id").change(function(){
-            var date = $("#advance_id option:selected").attr('data-date');
-            var amount = $("#advance_id option:selected").attr('data-amount');
-            $("#date").val(date);
-            $("#amount").val(amount);
+            if(this.value === "")
+            {
+                $("#amount").val("");
+                $("#date").val("").attr("disabled", false);
+                $("#account_id").val("").attr("disabled", false);
+            }
+            else
+            {
+                var date = $("#advance_id option:selected").attr('data-date');
+                var amount = $("#advance_id option:selected").attr('data-amount');
+                var account_id = $("#advance_id option:selected").attr('data-account');
+                $("#amount").val(amount);
+                $("#date").val(date).attr("disabled", true);
+                $("#account_id").val(account_id).prop('disabled', true);
+            }
+        });
+        $('#payment_form').on('submit', function() {
+            $('#account_id').prop('disabled', false);
+            $('#date').prop('disabled', false);
         });
     });
 </script>

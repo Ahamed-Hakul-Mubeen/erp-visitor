@@ -20,6 +20,8 @@ class CreateInvoicePaymentsTable extends Migration
             $table->date('date');
             $table->decimal('amount', 16, 2)->default('0.0');
             $table->integer('account_id')->default(0);
+            $table->integer('advance_id')->nullable();
+            $table->decimal('advance_amount', 16, 2)->default('0.0');
             $table->integer('payment_method')->default(0);
             $table->string('order_id')->nullable();
             $table->string('currency')->nullable();
