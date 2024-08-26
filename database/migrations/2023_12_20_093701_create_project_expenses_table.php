@@ -20,6 +20,8 @@ return new class extends Migration
             $table->text('attachment');
             $table->integer('project_id');
             $table->integer('task_id')->default(0);
+            $table->integer('account_id')->nullable();
+            $table->integer('chart_accounts')->nullable();
             $table->integer('created_by');
             $table->timestamps();
         });

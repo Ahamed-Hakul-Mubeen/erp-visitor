@@ -426,7 +426,7 @@
                                                     <td>{{ $account->account_name }}</td>
                                                     <td>{{ '-' }}
                                                     </td>
-                                                    <td>Advance
+                                                    <td>Advance Payment
                                                     </td>
                                                     <td>{{ $account->date }}</td>
                                                     <td>{{ \Auth::user()->priceFormat($account->debit) }}</td>

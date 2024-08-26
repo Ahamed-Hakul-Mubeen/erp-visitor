@@ -15,6 +15,8 @@ class ProjectExpense extends Model
         'attachment',
         'project_id',
         'task_id',
+        'account_id',
+        'chart_accounts',
         'created_by',
     ];
 

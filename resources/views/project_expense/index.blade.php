@@ -35,10 +35,10 @@
                     <table class="table datatable">
                         <thead>
                         <tr>
-                            <th>{{__('Attachment')}}</th>
                             <th>{{__('Name')}}</th>
                             <th>{{__('Date')}}</th>
                             <th>{{__('Amount')}}</th>
+                            <th>{{__('Attachment')}}</th>
                             @if(Gate::check('edit project expense') || Gate::check('delete project expense'))
                                 <th>{{__('Action')}}</th>
                             @endif
@@ -48,6 +48,12 @@
                             @if(isset($project->expense) && !empty($project->expense) && count($project->expense) > 0)
                                 @foreach($project->expense as $expense)
                                     <tr>
+                                        <td>
+                                            <span class="mb-0 text-sm h6 font-weight-bold">{{ $expense->name }}</span>
+                                            @if(!empty($expense->task))<span class="text-sm d-block text-muted">{{ $expense->task->name }}</span>@endif
+                                        </td>
+                                        <td>{{ (!empty($expense->date)) ? Utility::getDateFormated($expense->date) : '-' }}</td>
+                                        <td>{{ \Auth::user()->priceFormat($expense->amount) }}</td>
                                         <th>
                                             @if(!empty($expense->attachment))
                                                 <a href="{{ asset(Storage::url($expense->attachment)) }}" class="btn btn-sm btn-primary btn-icon rounded-pill" data-bs-toggle="tooltip" title="{{__('Download')}}" download>
@@ -57,12 +63,6 @@
                                                 -
                                             @endif
                                         </th>
-                                        <td>
-                                            <span class="h6 text-sm font-weight-bold mb-0">{{ $expense->name }}</span>
-                                            @if(!empty($expense->task))<span class="d-block text-sm text-muted">{{ $expense->task->name }}</span>@endif
-                                        </td>
-                                        <td>{{ (!empty($expense->date)) ? Utility::getDateFormated($expense->date) : '-' }}</td>
-                                        <td>{{ \Auth::user()->priceFormat($expense->amount) }}</td>
                                         @if(Gate::check('edit project expense') || Gate::check('delete project expense'))
                                             <td class="text-end">
                                                 <div class="actions">
@@ -70,7 +70,7 @@
 
                                                     <div class="action-btn bg-primary ms-2">
                                                         <a href="#" data-url="{{ route('projects.expenses.edit',[$project->id,$expense->id]) }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Edit project Expense')}}" data-bs-toggle="tooltip" title="{{__('Edit')}}" data-original-title="{{__('Edit')}}" class="mx-3 btn btn-sm align-items-center">
-                                                            <i class="ti ti-pencil text-white"></i>
+                                                            <i class="text-white ti ti-pencil"></i>
                                                         </a>
                                                     </div>
                                                 @endcan
@@ -78,7 +78,7 @@
                                                     <div class="action-btn bg-danger ms-2">
                                                         {!! Form::open(['method' => 'DELETE', 'route' => ['projects.expenses.destroy',$expense->id],'id'=>'delete-expense-'.$expense->id]) !!}
                                                         <a href="#" class="mx-3 btn btn-sm align-items-center bs-pass-para" data-confirm="{{__('Are You Sure?').'|'.__('This action can not be undone. Do you want to continue?')}}" data-bs-toggle="tooltip" title="{{__('Delete')}}" data-original-title="{{__('Delete')}}" data-confirm-yes="document.getElementById('delete-expense-{{$expense->id}}').submit();">
-                                                            <i class="ti ti-trash text-white"></i>
+                                                            <i class="text-white ti ti-trash"></i>
                                                         </a>
                                                         {!! Form::close() !!}
                                                     </div>
