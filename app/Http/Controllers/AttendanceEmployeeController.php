@@ -468,6 +468,7 @@ class AttendanceEmployeeController extends Controller
         $mins = abs(floor($totalLateSeconds / 60 % 60));
         $secs = abs(floor($totalLateSeconds % 60));
 
+        $hours -= 1;
         $late = sprintf('%02d:%02d:%02d', $hours, $mins, $secs);
 
         $checkDb = AttendanceEmployee::where('employee_id', '=', \Auth::user()->id)->get()->toArray();
