@@ -259,10 +259,10 @@ class LeaveController extends Controller
         $leave->status = $request->status;
         if($leave->status == 'Approval')
         {
-            $startDate               = new \DateTime($leave->start_date);
-            $endDate                 = new \DateTime($leave->end_date);
-            $total_leave_days        = $startDate->diff($endDate)->days;
-            $leave->total_leave_days = $total_leave_days;
+            // $startDate               = new \DateTime($leave->start_date);
+            // $endDate                 = new \DateTime($leave->end_date);
+            // $total_leave_days        = $startDate->diff($endDate)->days;
+            // $leave->total_leave_days = $total_leave_days;
             $leave->status           = 'Approved';
         }
 
