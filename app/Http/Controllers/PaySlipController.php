@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\AttendanceExport;
 use App\Exports\PayslipExport;
 use App\Models\Allowance;
+use App\Models\AttendanceEmployee;
 use App\Models\BankAccount;
 use App\Models\ChartOfAccount;
 use App\Models\Commission;
@@ -104,22 +106,30 @@ class PaySlipController extends Controller
 
         foreach($employee_list as $employee)
         {
-            $payslipEmployee                       = new PaySlip();
-            $payslipEmployee->employee_id          = $employee->id;
-            $payslipEmployee->net_payble           = $employee->get_net_salary($year, $month);
-            $payslipEmployee->salary_month         = $formate_month_year;
-            $payslipEmployee->status               = 0;
-            $payslipEmployee->basic_salary         = $employee->salary;
-            $payslipEmployee->allowance            = Employee::allowance($employee->id);
-            $payslipEmployee->commission           = Employee::commission($employee->id);
-            $payslipEmployee->loan                 = Employee::loan($employee->id);
-            $payslipEmployee->saturation_deduction = Employee::saturation_deduction($employee->id);
-            $payslipEmployee->leave_deductions     = $employee->leave_deductions($year, $month);
-            $payslipEmployee->other_payment        = Employee::other_payment($employee->id);
-            $payslipEmployee->overtime             = Employee::overtime($year, $month, $employee->id);
-            $payslipEmployee->created_by           = \Auth::user()->creatorId();
-            // dd($payslipEmployee);
-            $payslipEmployee->save();
+            $start_date = $year."-".$month."-01";
+            $no_of_days = date('t', strtotime($start_date));
+            $end_date = $year."-".$month."-".$no_of_days;
+
+            $check_attendance = AttendanceEmployee::where('employee_id', $employee->id)->whereBetween('date', [$start_date, $end_date])->first();
+            if($check_attendance)
+            {
+                $payslipEmployee                       = new PaySlip();
+                $payslipEmployee->employee_id          = $employee->id;
+                $payslipEmployee->net_payble           = $employee->get_net_salary($year, $month);
+                $payslipEmployee->salary_month         = $formate_month_year;
+                $payslipEmployee->status               = 0;
+                $payslipEmployee->basic_salary         = $employee->salary;
+                $payslipEmployee->allowance            = Employee::allowance($employee->id);
+                $payslipEmployee->commission           = Employee::commission($employee->id);
+                $payslipEmployee->loan                 = Employee::loan($employee->id);
+                $payslipEmployee->saturation_deduction = Employee::saturation_deduction($employee->id);
+                $payslipEmployee->leave_deductions     = $employee->leave_deductions($year, $month);
+                $payslipEmployee->other_payment        = Employee::other_payment($employee->id);
+                $payslipEmployee->overtime             = Employee::overtime($year, $month, $employee->id);
+                $payslipEmployee->created_by           = \Auth::user()->creatorId();
+                // dd($payslipEmployee);
+                $payslipEmployee->save();
+            }
         }
         if(count($employee_list) == 0 && count($existingPaysilp) == 0)
         {
