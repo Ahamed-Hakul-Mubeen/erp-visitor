@@ -8,21 +8,21 @@
     <input type="hidden" name="date" value="{{ $parseArray['date'] }}">
     <input type="hidden" id="totaltasktime" value="{{ $parseArray['totaltaskhour'] . ':' . $parseArray['totaltaskminute'] }}">
 
-    <div class="details mb-2">
-        <div class="form-group text-center">
+    <div class="mb-2 details">
+        <div class="text-center form-group">
             <label for="descriptions" class="form-label">{{ $parseArray['project_name'] . ' : ' . $parseArray['task_name'] }}</label>
         </div>
     </div>
 
     <div class="row">
         <div class="col-md-12">
-            <div class="form-group mb-0">
+            <div class="mb-0 form-group">
                 <label for="time">{{ __('Time')}}</label>
             </div>
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                <select class="form-control  select2" name="time_hour" id="time_hour" required="">
+                <select class="form-control select2" name="time_hour" id="time_hour" required="">
                     <option value="">{{ __('Hours') }}</option>
 
                     <?php for ($i = 0; $i < 23; $i++) { $i = $i < 10 ? '0' . $i : $i; ?>
@@ -69,7 +69,7 @@
 
 
 <div class="modal-footer">
-    <input type="submit" value="{{ __('Save') }}" class="btn btn-primary">
+    <button type="submit" class="btn btn-primary">{{ __('Save') }}</button>
 </div>
 {{ Form::close() }}
 

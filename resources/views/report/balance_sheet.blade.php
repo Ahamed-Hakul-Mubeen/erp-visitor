@@ -352,6 +352,7 @@
 
 
 @push('script-page')
+
     <script>
         $(document).on('click', '#collapse', function() {
             view = "collapse";

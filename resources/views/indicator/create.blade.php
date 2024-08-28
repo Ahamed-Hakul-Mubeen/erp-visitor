@@ -24,7 +24,7 @@
     </div>
     @foreach($performance as $performances)
     <div class="row">
-        <div class="col-md-12 mt-3">
+        <div class="mt-3 col-md-12">
                     <h6>{{$performances->name}}</h6>
             <hr class="mt-0">
         </div>
@@ -53,6 +53,6 @@
 </div>
 <div class="modal-footer">
     <input type="button" value="{{__('Cancel')}}" class="btn btn-light" data-bs-dismiss="modal">
-    <input type="submit" value="{{__('Create')}}" class="btn  btn-primary">
+    <button type="submit" class="btn btn-primary">{{__('Create')}}</button>
 </div>
 {{Form::close()}}

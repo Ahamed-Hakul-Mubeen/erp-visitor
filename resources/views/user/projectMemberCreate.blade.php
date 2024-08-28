@@ -32,7 +32,7 @@
                     </small>
                 @enderror
             </div>
-            {{-- <div class="col-md-5 mb-3 form-group mt-4">
+            {{-- <div class="mt-4 mb-3 col-md-5 form-group">
                 <label for="password_switch">{{ __('Login is enable') }}</label>
                 <div class="form-check form-switch custom-switch-v1 float-end">
                     <input type="checkbox" name="password_switch" class="form-check-input input-primary pointer" value="on" id="password_switch">
@@ -56,8 +56,8 @@
 {{ Form::hidden('project_id', $project_id,['id'=>'project_id']) }}
 
 <div class="modal-footer">
-    <input type="button" value="{{ __('Cancel') }}" class="btn  btn-light" data-bs-dismiss="modal">
-    <input type="submit" value="{{ __('Add') }}" class="btn  btn-primary">
+    <input type="button" value="{{ __('Cancel') }}" class="btn btn-light" data-bs-dismiss="modal">
+    <button type="submit" class="btn btn-primary">{{ __('Add') }}</button>
 </div>
 
 {{ Form::close() }}

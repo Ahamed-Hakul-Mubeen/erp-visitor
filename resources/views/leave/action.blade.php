@@ -39,8 +39,8 @@
 {{-- @if(\Auth::user()->type == 'company' || Auth::user()->type == 'HR' ) --}}
 @if(\Auth::user()->type == 'company' )
 <div class="modal-footer">
-    <input type="submit" value="{{__('Approval')}}" class="btn btn-success" data-bs-dismiss="modal" name="status">
-    <input type="submit" value="{{__('Reject')}}" class="btn btn-danger" name="status">
+    <input type="submit" value="Approval" class="btn btn-success" data-bs-dismiss="modal" name="status">
+    <input type="submit" value="Reject" class="btn btn-danger" name="status">
 </div>
 @endif
 {{Form::close()}}

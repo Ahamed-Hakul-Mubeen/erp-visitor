@@ -53,11 +53,11 @@
     </script>
 @endpush
 @section('content')
-    <div class="col-sm-12 mt-4">
+    <div class="mt-4 col-sm-12">
         <div class="card">
             <div class="card-body">
 
-                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                <ul class="mb-3 nav nav-pills" id="pills-tab" role="tablist">
                     <li class="nav-item">
                         <a class="nav-link active" id="pills-proposal-tab" data-bs-toggle="pill" href="#pills-proposal" role="tab" aria-controls="pills-proposal" aria-selected="true">{{ __('Proposal Print Setting') }}</a>
 
@@ -111,14 +111,14 @@
                                                 <label class="col-form-label">{{__('Proposal Logo')}}</label>
                                                 <div class="choose-files">
                                                     <label for="proposal_logo">
-                                                        <div class=" bg-primary proposal_logo_update"> <i class="ti ti-upload px-1"></i>{{__('Choose file here')}}</div>
+                                                        <div class=" bg-primary proposal_logo_update"> <i class="px-1 ti ti-upload"></i>{{__('Choose file here')}}</div>
                                                         <input type="file" class="form-control file" name="proposal_logo" id="proposal_logo" data-filename="proposal_logo_update">
                                                         <img id="proposal_image" class="mt-2" style="width:25%;"/>
                                                     </label>
                                                 </div>
                                             </div>
-                                            <div class="form-group mt-2 text-end">
-                                                <input type="submit" value="{{__('Save')}}" class="btn btn-print-invoice  btn-primary m-r-10">
+                                            <div class="mt-2 form-group text-end">
+                                                <button type="submit" class="btn btn-print-invoice btn-primary m-r-10">{{ __('Save') }}</button>
                                             </div>
                                         </form>
                                     </div>
@@ -170,15 +170,15 @@
                                                 <label class="col-form-label">{{__('Invoice Logo')}}</label>
                                                 <div class="choose-files">
                                                     <label for="invoice_logo">
-                                                        <div class=" bg-primary invoice_logo_update"> <i class="ti ti-upload px-1"></i>{{__('Choose file here')}}</div>
+                                                        <div class=" bg-primary invoice_logo_update"> <i class="px-1 ti ti-upload"></i>{{__('Choose file here')}}</div>
                                                         <input type="file" class="form-control file" name="invoice_logo" id="invoice_logo" data-filename="invoice_logo_update">
                                                         <img id="invoice_image" class="mt-2" style="width:25%;"/>
 
                                                     </label>
                                                 </div>
                                             </div>
-                                            <div class="form-group mt-2 text-end">
-                                                <input type="submit" value="{{__('Save')}}" class="btn btn-print-invoice  btn-primary m-r-10">
+                                            <div class="mt-2 form-group text-end">
+                                                <button type="submit" class="btn btn-print-invoice btn-primary m-r-10">{{ __('Save') }}</button>
                                             </div>
                                         </form>
                                     </div>
@@ -231,15 +231,15 @@
                                                 <label class="col-form-label">{{__('Bill Logo')}}</label>
                                                 <div class="choose-files">
                                                     <label for="bill_logo">
-                                                        <div class=" bg-primary bill_logo_update"> <i class="ti ti-upload px-1"></i>{{__('Choose file here')}}</div>
+                                                        <div class=" bg-primary bill_logo_update"> <i class="px-1 ti ti-upload"></i>{{__('Choose file here')}}</div>
                                                         <input type="file" class="form-control file" name="bill_logo" id="bill_logo" data-filename="bill_logo_update">
                                                         <img id="bill_image" class="mt-2" style="width:25%;"/>
 
                                                     </label>
                                                 </div>
                                             </div>
-                                            <div class="form-group mt-2 text-end">
-                                                <input type="submit" value="{{__('Save')}}" class="btn btn-print-invoice  btn-primary m-r-10">
+                                            <div class="mt-2 form-group text-end">
+                                                <button type="submit" class="btn btn-print-invoice btn-primary m-r-10">{{ __('Save') }}</button>
                                             </div>
                                         </form>
                                     </div>

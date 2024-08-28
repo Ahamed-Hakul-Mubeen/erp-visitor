@@ -77,10 +77,10 @@
     </script>
 @endpush
 @section('content')
-    <div class="col-sm-12 mt-4">
+    <div class="mt-4 col-sm-12">
         <div class="card">
             <div class="card-body">
-                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                <ul class="mb-3 nav nav-pills" id="pills-tab" role="tablist">
                     <li class="nav-item">
                         <a class="nav-link active" id="pills-purchase-tab" data-bs-toggle="pill" href="#pills-purchase"
                             role="tab" aria-controls="pills-purchase"
@@ -101,7 +101,7 @@
                 <div class="tab-content" id="pills-tabContent">
 
                     <!--Purchase Setting-->
-                    <div class="tab-pane fade  show active" id="pills-purchase" role="tabpanel"
+                    <div class="tab-pane fade show active" id="pills-purchase" role="tabpanel"
                         aria-labelledby="pills-purchase-tab">
 
                         <div class="bg-none">
@@ -141,10 +141,10 @@
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-form-label">{{ __('Purchase Logo') }}</label>
-                                                <div class="choose-files mt-2 ">
+                                                <div class="mt-2 choose-files ">
                                                     <label for="purchase_logo">
                                                         <div class=" bg-primary purchase_logo_update"> <i
-                                                                class="ti ti-upload px-1"></i>{{ __('Choose file here') }}
+                                                                class="px-1 ti ti-upload"></i>{{ __('Choose file here') }}
                                                         </div>
                                                         <input type="file" class="form-control file" name="purchase_logo"
                                                             id="purchase_logo" data-filename="purchase_logo_update">
@@ -152,9 +152,8 @@
                                                     </label>
                                                 </div>
                                             </div>
-                                            <div class="form-group mt-2 text-end">
-                                                <input type="submit" value="{{ __('Save') }}"
-                                                    class="btn btn-print-invoice  btn-primary m-r-10">
+                                            <div class="mt-2 form-group text-end">
+                                                <button type="submit" class="btn btn-print-invoice btn-primary m-r-10">{{ __('Save') }}</button>
                                             </div>
                                         </form>
                                     </div>
@@ -212,10 +211,10 @@
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-form-label">{{ __('Quotation Logo') }}</label>
-                                                <div class="choose-files mt-2 ">
+                                                <div class="mt-2 choose-files ">
                                                     <label for="quotation_logo">
                                                         <div class=" bg-primary quotation_logo_update"> <i
-                                                                class="ti ti-upload px-1"></i>{{ __('Choose file here') }}
+                                                                class="px-1 ti ti-upload"></i>{{ __('Choose file here') }}
                                                         </div>
                                                         <input type="file" class="form-control file" name="quotation_logo"
                                                             id="quotation_logo" data-filename="quotation_logo_update">
@@ -223,9 +222,8 @@
                                                     </label>
                                                 </div>
                                             </div>
-                                            <div class="form-group mt-2 text-end">
-                                                <input type="submit" value="{{ __('Save') }}"
-                                                    class="btn btn-print-invoice  btn-primary m-r-10">
+                                            <div class="mt-2 form-group text-end">
+                                                <button type="submit" class="btn btn-print-invoice btn-primary m-r-10">{{ __('Save') }}</button>
                                             </div>
                                         </form>
                                     </div>
@@ -281,10 +279,10 @@
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-form-label">{{ __('POS Logo') }}</label>
-                                                <div class="choose-files mt-2 ">
+                                                <div class="mt-2 choose-files ">
                                                     <label for="pos_logo">
                                                         <div class=" bg-primary pos_logo_update"> <i
-                                                                class="ti ti-upload px-1"></i>{{ __('Choose file here') }}
+                                                                class="px-1 ti ti-upload"></i>{{ __('Choose file here') }}
                                                         </div>
                                                         <input type="file" class="form-control file" name="pos_logo"
                                                             id="pos_logo" data-filename="pos_logo_update">
@@ -292,9 +290,8 @@
                                                     </label>
                                                 </div>
                                             </div>
-                                            <div class="form-group mt-2 text-end">
-                                                <input type="submit" value="{{ __('Save') }}"
-                                                    class="btn btn-print-invoice  btn-primary m-r-10">
+                                            <div class="mt-2 form-group text-end">
+                                                <button type="submit" class="btn btn-print-invoice btn-primary m-r-10">{{ __('Save') }}</button>
                                             </div>
                                         </form>
                                     </div>

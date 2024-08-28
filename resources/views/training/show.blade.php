@@ -97,7 +97,7 @@
                                 </div>
                             </div>
                             <div class="form-group col-lg-12 text-end">
-                                <input type="submit" value="{{__('Save')}}" class="btn  btn-primary">
+                                <button type="submit" class="btn btn-primary">{{ __('Save') }}</button>
                             </div>
                             {{Form::close()}}
                         </div>

@@ -13,7 +13,7 @@
             {{ Form::label('tax_id', __('Tax %'),['class'=>'form-label']) }}
             {{ Form::select('tax_id', $taxes,null, array('class' => 'form-control select2','required'=>'required')) }}
             @if(count($taxes) <= 0)
-                <div class="text-muted text-xs">
+                <div class="text-xs text-muted">
                     {{__('Please create new Tax')}} <a href="{{route('taxes.index')}}">{{__('here')}}</a>.
                 </div>
             @endif
@@ -23,7 +23,7 @@
             {{ Form::textarea('terms',null, array('class' => 'form-control')) }}
         </div>
         <div class="col-12 text-end">
-            <input type="submit" value="{{__('Create')}}" class="btn-create badge-blue">
+            <button type="submit" class="btn-create badge-blue">{{ __('Create') }}</button>
             <input type="button" value="{{__('Cancel')}}" class="btn-create bg-gray" data-dismiss="modal">
         </div>
     </div>

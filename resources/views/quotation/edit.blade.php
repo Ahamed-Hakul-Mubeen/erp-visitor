@@ -166,7 +166,7 @@
                             var totalItemTaxRate = 0;
                             for (var i = 0; i < item.taxes.length; i++) {
 
-                                taxes += '<span class="badge bg-primary p-2 px-3 rounded mt-1 mr-1">' + item.taxes[i].name + ' ' + '(' + item.taxes[i].rate + '%)' + '</span>';
+                                taxes += '<span class="p-2 px-3 mt-1 mr-1 rounded badge bg-primary">' + item.taxes[i].name + ' ' + '(' + item.taxes[i].rate + '%)' + '</span>';
                                 tax.push(item.taxes[i].id);
                                 totalItemTaxRate += parseFloat(item.taxes[i].rate);
 
@@ -510,7 +510,7 @@
                                 </div>
 
                             </div>
-{{--                            <div class="form-check custom-checkbox mt-4">--}}
+{{--                            <div class="mt-4 form-check custom-checkbox">--}}
 {{--                                        <input class="form-check-input" type="checkbox" name="discount_apply" id="discount_apply" {{$purchase->discount_apply==1?'checked':''}}>--}}
 {{--                                        <label class="form-check-label" for="discount_apply">{{__('Discount Apply')}}</label>--}}
 {{--                                    </div>--}}
@@ -522,9 +522,9 @@
         </div>
 
         <div class="col-12">
-            <h5 class="d-inline-block mb-4">{{__('Product & Services')}}</h5>
+            <h5 class="mb-4 d-inline-block">{{__('Product & Services')}}</h5>
             <div class="card repeater" data-value='{!! json_encode($quotation->items) !!}'>
-                <div class="item-section py-2">
+                <div class="py-2 item-section">
                     <div class="row justify-content-between align-items-center">
                         <div class="col-md-12 d-flex align-items-center justify-content-between justify-content-md-end">
                             <div class="all-button-box me-2">
@@ -537,7 +537,7 @@
                 </div>
                 <div class="card-body table-border-style ">
                     <div class="table-responsive">
-                        <table class="table  mb-0" data-repeater-list="items" id="sortable-table">
+                        <table class="table mb-0" data-repeater-list="items" id="sortable-table">
                             <thead>
                             <tr>
                                 <th>{{__('Items')}}</th>
@@ -561,19 +561,19 @@
                                 <td>
                                     <div class="form-group price-input input-group search-form">
                                         {{ Form::text('quantity',null, array('class' => 'form-control quantity','required'=>'required','placeholder'=>__('Qty'),'required'=>'required')) }}
-                                        <span class="unit input-group-text bg-transparent"></span>
+                                        <span class="bg-transparent unit input-group-text"></span>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="form-group price-input input-group search-form">
                                         {{ Form::text('price',null, array('class' => 'form-control price','required'=>'required','placeholder'=>__('Price'),'required'=>'required')) }}
-                                        <span class="input-group-text bg-transparent">{{\Auth::user()->currencySymbol()}}</span>
+                                        <span class="bg-transparent input-group-text">{{\Auth::user()->currencySymbol()}}</span>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="form-group price-input input-group search-form">
                                         {{ Form::text('discount',null, array('class' => 'form-control discount','required'=>'required','placeholder'=>__('Discount'))) }}
-                                        <span class="input-group-text bg-transparent">{{\Auth::user()->currencySymbol()}}</span>
+                                        <span class="bg-transparent input-group-text">{{\Auth::user()->currencySymbol()}}</span>
                                     </div>
                                 </td>
                                 <td>
@@ -593,7 +593,7 @@
 
                                 <td>
                                     @can('delete proposal product')
-                                        <a href="#" class="ti ti-trash text-white repeater-action-btn bg-danger ms-2 bs-pass-para" data-repeater-delete></a>
+                                        <a href="#" class="text-white ti ti-trash repeater-action-btn bg-danger ms-2 bs-pass-para" data-repeater-delete></a>
                                     @endcan
                                 </td>
                             </tr>
@@ -652,7 +652,7 @@
 
         <div class="modal-footer">
             <input type="button" value="{{__('Cancel')}}" onclick="location.href = '{{route("quotation.index")}}';" class="btn btn-light">
-            <input type="submit" value="{{__('Update')}}" class="btn btn-primary">
+            <button type="submit" class="btn btn-primary">{{__('Update')}}</button>
         </div>
         {{ Form::close() }}
     </div>

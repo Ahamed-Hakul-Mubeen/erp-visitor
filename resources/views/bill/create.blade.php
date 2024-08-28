@@ -641,9 +641,9 @@
         </div>
 
         <div class="col-12">
-            <h5 class="d-inline-block mb-4">{{__('Product & Services')}}</h5>
+            <h5 class="mb-4 d-inline-block">{{__('Product & Services')}}</h5>
             <div class="card repeater">
-                <div class="item-section py-2">
+                <div class="py-2 item-section">
                     <div class="row justify-content-between align-items-center">
                         <div class="col-md-12 d-flex align-items-center justify-content-between justify-content-md-end">
                             <div class="all-button-box me-2">
@@ -665,32 +665,32 @@
                                 <th>{{__('Discount')}}</th>
                                 <th>{{__('Tax')}} (%)</th>
                                 <th class="text-end">{{__('Amount')}}
-                                    <br><small class="text-danger font-bold">{{__('after tax & discount')}}</small>
+                                    <br><small class="font-bold text-danger">{{__('after tax & discount')}}</small>
                                 </th>
                                 <th></th>
                             </tr>
                             </thead>
                             <tbody class="ui-sortable" data-repeater-item>
                             <tr>
-                                <td width="25%" class="form-group pt-0">
+                                <td width="25%" class="pt-0 form-group">
                                      {{ Form::select('item', $product_services,'', array('class' => 'form-control select2 item ','data-url'=>route('bill.product'))) }}
                                 </td>
                                 <td>
                                     <div class="form-group price-input input-group search-form">
                                         {{ Form::text('quantity','', array('class' => 'form-control quantity','placeholder'=>__('Qty'))) }}
-                                        <span class="unit input-group-text bg-transparent"></span>
+                                        <span class="bg-transparent unit input-group-text"></span>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="form-group price-input input-group search-form">
                                         {{ Form::text('price','', array('class' => 'form-control price','placeholder'=>__('Price'))) }}
-                                        <span class="input-group-text bg-transparent">{{\Auth::user()->currencySymbol()}}</span>
+                                        <span class="bg-transparent input-group-text">{{\Auth::user()->currencySymbol()}}</span>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="form-group price-input input-group search-form">
                                         {{ Form::text('discount','', array('class' => 'form-control discount','placeholder'=>__('Discount'))) }}
-                                        <span class="input-group-text bg-transparent">{{\Auth::user()->currencySymbol()}}</span>
+                                        <span class="bg-transparent input-group-text">{{\Auth::user()->currencySymbol()}}</span>
                                     </div>
                                 </td>
                                 <td width="10%">
@@ -709,7 +709,7 @@
                                 </td>
                                 <td>
                                     @can('delete proposal product')
-                                        <a href="#" class="ti ti-trash text-white repeater-action-btn bg-danger ms-2" data-repeater-delete></a>
+                                        <a href="#" class="text-white ti ti-trash repeater-action-btn bg-danger ms-2" data-repeater-delete></a>
                                     @endcan
                                 </td>
                             </tr>
@@ -731,7 +731,7 @@
                                 <td class="form-group">
                                     <div class="input-group">
                                         {{ Form::text('amount','', array('class' => 'form-control accountAmount','placeholder'=>__('Amount'))) }}
-                                        <span class="input-group-text bg-transparent">{{\Auth::user()->currencySymbol()}}</span>
+                                        <span class="bg-transparent input-group-text">{{\Auth::user()->currencySymbol()}}</span>
                                     </div>
                                 </td>
 
@@ -796,7 +796,7 @@
 
         <div class="modal-footer">
             <input type="button" value="{{__('Cancel')}}" onclick="location.href = '{{route("bill.index")}}';" class="btn btn-light">
-            <input type="submit" value="{{__('Create')}}" class="btn  btn-primary">
+            <button type="submit" class="btn btn-primary">{{__('Create')}}</button>
         </div>
         {{ Form::close() }}
     </div>

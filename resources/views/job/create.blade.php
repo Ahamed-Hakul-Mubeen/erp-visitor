@@ -180,7 +180,7 @@
         </div>
         <div class="col-md-12 text-end">
             <div class="form-group">
-                <input type="submit" value="{{__('Create')}}" class="btn btn-primary">
+                <button type="submit" class="btn btn-primary">{{__('Create')}}</button>
             </div>
         </div>
         {{Form::close()}}

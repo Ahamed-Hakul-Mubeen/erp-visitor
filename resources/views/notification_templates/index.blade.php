@@ -12,10 +12,10 @@
 
 @section('action-btn')
     <div class="row">
-        <div class="text-end mb-3">
+        <div class="mb-3 text-end">
             <div class="text-end">
                 <div class="d-flex justify-content-end drp-languages">
-                    <ul class="list-unstyled mb-0 m-2 me-0">
+                    <ul class="m-2 mb-0 list-unstyled me-0">
                         <li class="dropdown dash-h-item drp-language">
                             <a class="email-color dash-head-link dropdown-toggle arrow-none me-0" data-bs-toggle="dropdown"
                                href="#" role="button" aria-haspopup="false" aria-expanded="false"
@@ -34,7 +34,7 @@
                             </div>
                         </li>
                     </ul>
-                    <ul class="list-unstyled mb-0 m-2 me-2">
+                    <ul class="m-2 mb-0 list-unstyled me-2">
                         <li class="dropdown dash-h-item drp-language">
                             <a class="email-color dash-head-link dropdown-toggle arrow-none me-0" data-bs-toggle="dropdown"
                                href="#" role="button" aria-haspopup="false" aria-expanded="false"
@@ -58,9 +58,9 @@
                     $plan= \App\Models\Plan::getPlan($user->plan);
                 @endphp
                     @if($plan->chatgpt == 1)
-                        <ul class="list-unstyled mb-0 mt-3">
+                        <ul class="mt-3 mb-0 list-unstyled">
                             <div class="">
-                                <a href="#" data-size="md" class="btn  btn-primary btn-sm" data-ajax-popup-over="true" data-url="{{ route('generate',['notification template']) }}"
+                                <a href="#" data-size="md" class="btn btn-primary btn-sm" data-ajax-popup-over="true" data-url="{{ route('generate',['notification template']) }}"
                                    data-bs-placement="top" data-title="{{ __('Generate content with AI') }}">
                                     <i class="fas fa-robot"></i> <span>{{__('Generate with AI')}}</span>
                                 </a>
@@ -79,19 +79,19 @@
         <div class="col-xl-12">
             <div class="card">
                 <div class="card-body ">
-                    <h5 class= "font-weight-bold pb-3">{{ __('Placeholders') }}</h5>
+                    <h5 class= "pb-3 font-weight-bold">{{ __('Placeholders') }}</h5>
                     <div class="col-lg-12 col-md-12 col-sm-12">
                         <div class="card">
                             <div class="card-header card-body">
-                                <div class="row text-xs">
-                                    <h6 class="font-weight-bold mb-4">{{__('Variables')}}</h6>
+                                <div class="text-xs row">
+                                    <h6 class="mb-4 font-weight-bold">{{__('Variables')}}</h6>
 
                                     @php
                                         $variables = json_decode($curr_noti_tempLang->variables);
                                     @endphp
                                     @if(!empty($variables) > 0)
                                         @foreach  ($variables as $key => $var)
-                                            <div class="col-6 pb-1">
+                                            <div class="pb-1 col-6">
                                                 <p class="mb-1">{{__($key)}} : <span class="pull-right text-primary">{{ '{'.$var.'}' }}</span></p>
                                             </div>
                                         @endforeach
@@ -111,7 +111,7 @@
                     <hr>
                     <div class="col-md-12 text-end">
                         {{Form::hidden('lang',null)}}
-                        <input type="submit" value="{{__('Save Changes')}}" class="btn btn-print-invoice  btn-primary m-r-10">
+                        <button type="submit" class="btn btn-print-invoice btn-primary m-r-10">{{ __('Save Changes') }}</button>
                     </div>
                     {{ Form::close() }}
                 </div>

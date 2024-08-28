@@ -19,9 +19,9 @@
         </div>
         <div class="form-group col-md-12 text-end">
             @if(isset($product))
-                <input type="submit" value="{{__('Update')}}" class="btn-create badge-blue">
+                <button type="submit" class="btn-create badge-blue">{{ __('Update') }}</button>
             @else
-                <input type="submit" value="{{__('Add')}}" class="btn-create badge-blue">
+                <button type="submit" class="btn-create badge-blue">{{ __('Add') }}</button>
             @endif
             <input type="button" value="{{__('Cancel')}}" class="btn-create bg-gray" data-dismiss="modal">
         </div>

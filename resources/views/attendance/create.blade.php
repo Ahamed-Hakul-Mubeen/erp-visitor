@@ -1,5 +1,5 @@
 {{Form::open(array('url'=>'attendanceemployee','method'=>'post'))}}
-<div class="card-body p-0">
+<div class="p-0 card-body">
     <div class="row">
         <div class="form-group col-lg-6 col-md-6">
             {{Form::label('employee_id',__('Employee'))}}
@@ -20,7 +20,7 @@
         </div>
     </div>
 </div>
-<div class="modal-footer pr-0">
+<div class="pr-0 modal-footer">
     <button type="button" class="btn dark btn-outline" data-dismiss="modal">{{__('Cancel')}}</button>
     {{Form::submit(__('Create'),array('class'=>'btn btn-primary'))}}
 </div>

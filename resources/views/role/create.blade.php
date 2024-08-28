@@ -11,7 +11,7 @@
                 </small>
                 @enderror
             </div>
-            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+            <ul class="mb-3 nav nav-pills" id="pills-tab" role="tablist">
                 <li class="nav-item">
                     <a class="nav-link active" id="pills-staff-tab" data-bs-toggle="pill" href="#staff" role="tab" aria-controls="pills-home" aria-selected="true">{{__('Staff')}}</a>
                 </li>
@@ -43,7 +43,7 @@
                         <div class="form-group">
                             @if(!empty($permissions))
                                 <h6 class="my-3">{{__('Assign General Permission to Roles')}}</h6>
-                                <table class="table table-striped mb-0" id="dataTable-1">
+                                <table class="table mb-0 table-striped" id="dataTable-1">
                                     <thead>
                                     <tr>
                                         <th>
@@ -261,7 +261,7 @@
                         <div class="form-group">
                             @if(!empty($permissions))
                                 <h6 class="my-3">{{__('Assign CRM related Permission to Roles')}}</h6>
-                                <table class="table table-striped mb-0" id="dataTable-1">
+                                <table class="table mb-0 table-striped" id="dataTable-1">
                                     <thead>
                                     <tr>
                                         <th>
@@ -479,11 +479,11 @@
                         <div class="form-group">
                             @if(!empty($permissions))
                                 <h6 class="my-3">{{__('Assign Project related Permission to Roles')}}</h6>
-                                <table class="table table-striped mb-0" id="dataTable-1">
+                                <table class="table mb-0 table-striped" id="dataTable-1">
                                     <thead>
                                     <tr>
                                         <th>
-                                            <input type="checkbox" class="form-check-input align-middle custom_align_middle" name="project_checkall"  id="project_checkall" >
+                                            <input type="checkbox" class="align-middle form-check-input custom_align_middle" name="project_checkall"  id="project_checkall" >
                                         </th>
                                         <th>{{__('Module')}} </th>
                                         <th>{{__('Permissions')}} </th>
@@ -493,7 +493,7 @@
 
                                     @foreach($modules as $module)
                                         <tr>
-                                            <td><input type="checkbox" class="form-check-input align-middle ischeck project_checkall"  data-id="{{str_replace(' ', '', $module)}}" ></td>
+                                            <td><input type="checkbox" class="align-middle form-check-input ischeck project_checkall"  data-id="{{str_replace(' ', '', $module)}}" ></td>
                                             <td><label class="ischeck project_checkall" data-id="{{str_replace(' ', '', $module)}}">{{ ucfirst($module) }}</label></td>
                                             <td>
                                                 <div class="row ">
@@ -717,11 +717,11 @@
                                 <h6 class="my-3">{{__('Assign HRM related Permission to Roles')}}
                                 </h6>
 
-                                <table class="table table-striped mb-0" id="dataTable-1">
+                                <table class="table mb-0 table-striped" id="dataTable-1">
                                     <thead>
                                     <tr>
                                         <th>
-                                            <input type="checkbox" class="form-check-input align-middle custom_align_middle" name="hrm_checkall"  id="hrm_checkall" >
+                                            <input type="checkbox" class="align-middle form-check-input custom_align_middle" name="hrm_checkall"  id="hrm_checkall" >
                                         </th>
                                         <th>{{__('Module')}} </th>
                                         <th>{{__('Permissions')}} </th>
@@ -730,7 +730,7 @@
                                     <tbody>
                                     @foreach($modules as $module)
                                         <tr>
-                                            <td><input type="checkbox" class="form-check-input align-middle ischeck hrm_checkall"  data-id="{{str_replace(' ', '', $module)}}" ></td>
+                                            <td><input type="checkbox" class="align-middle form-check-input ischeck hrm_checkall"  data-id="{{str_replace(' ', '', $module)}}" ></td>
                                             <td><label class="ischeck hrm_checkall" data-id="{{str_replace(' ', '', $module)}}">{{ ucfirst($module) }}</label></td>
                                             <td>
                                                 <div class="row ">
@@ -936,7 +936,7 @@
                         <div class="form-group">
                             @if(!empty($permissions))
                                 <h6 class="my-3">{{__('Assign Account related Permission to Roles')}}</h6>
-                                <table class="table table-striped mb-0" id="dataTable-1">
+                                <table class="table mb-0 table-striped" id="dataTable-1">
                                     <thead>
                                     <tr>
                                         <th>
@@ -1156,7 +1156,7 @@
                         <div class="form-group">
                             @if(!empty($permissions))
                                 <h6 class="my-3">{{__('Assign POS related Permission to Roles')}}</h6>
-                                <table class="table table-striped mb-0" id="dataTable-1">
+                                <table class="table mb-0 table-striped" id="dataTable-1">
                                     <thead>
                                     <tr>
                                         <th>
@@ -1287,8 +1287,8 @@
 </div>
 
 <div class="modal-footer">
-    <input type="button" value="{{__('Cancel')}}" class="btn  btn-light" data-bs-dismiss="modal">
-    <input type="submit" value="{{__('Create')}}" class="btn  btn-primary">
+    <input type="button" value="{{__('Cancel')}}" class="btn btn-light" data-bs-dismiss="modal">
+    <button type="submit" class="btn btn-primary">{{__('Create')}}</button>
 </div>
 
 {{Form::close()}}

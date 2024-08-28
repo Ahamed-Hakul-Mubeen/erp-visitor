@@ -12,8 +12,7 @@
 
 
 @section('content')
-<div class="row">
-    <div class="">
+    <div class="row">
         <div class="">
             <div class="row">
             </div>
@@ -28,21 +27,29 @@
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     {!! Form::label('name', __('Name'), ['class' => 'form-label']) !!}<span class="pl-1 text-danger">*</span>
-                                    {!! Form::text('name', old('name'), ['class' => 'form-control', 'required' => 'required' ,'placeholder'=>'Enter employee name']) !!}
+                                    {!! Form::text('name', old('name'), [
+                                        'class' => 'form-control',
+                                        'required' => 'required',
+                                        'placeholder' => 'Enter employee name',
+                                    ]) !!}
                                 </div>
                                 <div class="form-group col-md-6">
                                     {!! Form::label('phone', __('Phone'), ['class' => 'form-label']) !!}<span class="pl-1 text-danger">*</span>
-                                    {!! Form::text('phone', old('phone'), ['class' => 'form-control' , 'required' => 'required' ,'placeholder'=>'Enter employee phone'  ]) !!}
+                                    {!! Form::text('phone', old('phone'), [
+                                        'class' => 'form-control',
+                                        'required' => 'required',
+                                        'placeholder' => 'Enter employee phone',
+                                    ]) !!}
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         {!! Form::label('dob', __('Date of Birth'), ['class' => 'form-label']) !!}<span class="pl-1 text-danger">*</span>
-                                        {{ Form::date('dob', null, ['class' => 'form-control ', 'required' => 'required', 'autocomplete' => 'off','placeholder'=>'Select Date of Birth']) }}
+                                        {{ Form::date('dob', null, ['class' => 'form-control ', 'required' => 'required', 'autocomplete' => 'off', 'placeholder' => 'Select Date of Birth']) }}
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        {!! Form::label('gender', __('Gender'), ['class' => 'form-label' , 'required' => 'required' ]) !!}<span class="pl-1 text-danger">*</span>
+                                        {!! Form::label('gender', __('Gender'), ['class' => 'form-label', 'required' => 'required']) !!}<span class="pl-1 text-danger">*</span>
                                         <div class="d-flex radio-check">
                                             <div class="custom-control custom-radio custom-control-inline">
                                                 <input type="radio" id="g_male" value="Male" name="gender"
@@ -52,24 +59,36 @@
                                             <div class="custom-control custom-radio ms-1 custom-control-inline">
                                                 <input type="radio" id="g_female" value="Female" name="gender"
                                                     class="form-check-input">
-                                                <label class="form-check-label "
-                                                    for="g_female">{{ __('Female') }}</label>
+                                                <label class="form-check-label " for="g_female">{{ __('Female') }}</label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group col-md-6">
                                     {!! Form::label('email', __('Email'), ['class' => 'form-label']) !!}<span class="pl-1 text-danger">*</span>
-                                    {!! Form::email('email', old('email'), ['class' => 'form-control', 'required' => 'required' ,'placeholder'=>'Enter employee email']) !!}
+                                    {!! Form::email('email', old('email'), [
+                                        'class' => 'form-control',
+                                        'required' => 'required',
+                                        'placeholder' => 'Enter employee email',
+                                    ]) !!}
                                 </div>
                                 <div class="form-group col-md-6">
                                     {!! Form::label('password', __('Password'), ['class' => 'form-label']) !!}<span class="pl-1 text-danger">*</span>
-                                    {!! Form::password('password',['class' => 'form-control', 'required' => 'required' ,'placeholder'=>'Enter employee new password']) !!}
+                                    {!! Form::password('password', [
+                                        'class' => 'form-control',
+                                        'required' => 'required',
+                                        'placeholder' => 'Enter employee new password',
+                                    ]) !!}
                                 </div>
                             </div>
                             <div class="form-group">
                                 {!! Form::label('address', __('Address'), ['class' => 'form-label']) !!}<span class="pl-1 text-danger">*</span>
-                                {!! Form::textarea('address', old('address'), ['class' => 'form-control', 'rows' => 2 ,'placeholder'=>'Enter employee address' , 'required' => 'required']) !!}
+                                {!! Form::textarea('address', old('address'), [
+                                    'class' => 'form-control',
+                                    'rows' => 2,
+                                    'placeholder' => 'Enter employee address',
+                                    'required' => 'required',
+                                ]) !!}
                             </div>
                         </div>
                     </div>
@@ -97,7 +116,7 @@
                                 <div class="form-group col-md-6">
                                     {{ Form::label('department_id', __('Select Department*'), ['class' => 'form-label']) }}
                                     <div class="form-icon-user">
-                                        {{ Form::select('department_id', $departments, null, ['class' => 'form-control select2', 'id' => 'department_id' , 'placeholder' => 'Select Department']) }}
+                                        {{ Form::select('department_id', $departments, null, ['class' => 'form-control select2', 'id' => 'department_id', 'placeholder' => 'Select Department']) }}
                                     </div>
                                 </div>
 
@@ -110,13 +129,13 @@
                                                 id="choices-multiple" placeholder="Select Designation">
                                             </select>
                                         </div>  --}}
-                                        {{ Form::select('designation_id', $designations, null, ['class' => 'form-control select2', 'id' => 'designation_id' , 'placeholder' => 'Select Designation']) }}
+                                        {{ Form::select('designation_id', $designations, null, ['class' => 'form-control select2', 'id' => 'designation_id', 'placeholder' => 'Select Designation']) }}
 
                                     </div>
                                 </div>
                                 <div class="form-group ">
                                     {!! Form::label('company_doj', __('Company Date Of Joining'), ['class' => '  form-label']) !!}
-                                    {{ Form::date('company_doj', null, ['class' => 'form-control ', 'required' => 'required', 'autocomplete' => 'off' ,'placeholder'=>'Select company date of joining']) }}
+                                    {{ Form::date('company_doj', null, ['class' => 'form-control ', 'required' => 'required', 'autocomplete' => 'off', 'placeholder' => 'Select company date of joining']) }}
                                 </div>
 
                             </div>
@@ -135,8 +154,8 @@
                                 <div class="row">
                                     <div class="form-group col-12 d-flex">
                                         <div class="float-left col-4">
-                                            <label for="document"
-                                                class="float-left pt-1 form-label">{{ $document->name }} @if ($document->is_required == 1)
+                                            <label for="document" class="float-left pt-1 form-label">{{ $document->name }}
+                                                @if ($document->is_required == 1)
                                                     <span class="text-danger">*</span>
                                                 @endif
                                             </label>
@@ -152,10 +171,12 @@
                                                     <input type="file"
                                                         class="form-control file  d-none @error('document') is-invalid @enderror"
                                                         @if ($document->is_required == 1) required @endif
-                                                        name="document[{{ $document->id }}]" id="document[{{ $document->id }}]"
-                                                        data-filename="{{ $document->id . '_filename' }}" onchange="document.getElementById('{{'blah'.$key}}').src = window.URL.createObjectURL(this.files[0])">
+                                                        name="document[{{ $document->id }}]"
+                                                        id="document[{{ $document->id }}]"
+                                                        data-filename="{{ $document->id . '_filename' }}"
+                                                        onchange="document.getElementById('{{ 'blah' . $key }}').src = window.URL.createObjectURL(this.files[0])">
                                                 </label>
-                                                <img id="{{'blah'.$key}}" src=""  width="50%" />
+                                                <img id="{{ 'blah' . $key }}" src="" width="50%" />
 
                                             </div>
 
@@ -176,30 +197,45 @@
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     {!! Form::label('account_holder_name', __('Account Holder Name'), ['class' => 'form-label']) !!}
-                                    {!! Form::text('account_holder_name', old('account_holder_name'), ['class' => 'form-control' ,'placeholder'=>'Enter account holder name']) !!}
+                                    {!! Form::text('account_holder_name', old('account_holder_name'), [
+                                        'class' => 'form-control',
+                                        'placeholder' => 'Enter account holder name',
+                                    ]) !!}
 
                                 </div>
                                 <div class="form-group col-md-6">
                                     {!! Form::label('account_number', __('Account Number'), ['class' => 'form-label']) !!}
-                                    {!! Form::number('account_number', old('account_number'), ['class' => 'form-control' ,'placeholder'=>'Enter account number']) !!}
+                                    {!! Form::number('account_number', old('account_number'), [
+                                        'class' => 'form-control',
+                                        'placeholder' => 'Enter account number',
+                                    ]) !!}
 
                                 </div>
                                 <div class="form-group col-md-6">
                                     {!! Form::label('bank_name', __('Bank Name'), ['class' => 'form-label']) !!}
-                                    {!! Form::text('bank_name', old('bank_name'), ['class' => 'form-control'  ,'placeholder'=>'Enter bank name']) !!}
+                                    {!! Form::text('bank_name', old('bank_name'), ['class' => 'form-control', 'placeholder' => 'Enter bank name']) !!}
 
                                 </div>
                                 <div class="form-group col-md-6">
                                     {!! Form::label('bank_identifier_code', __('Bank Identifier Code'), ['class' => 'form-label']) !!}
-                                    {!! Form::text('bank_identifier_code', old('bank_identifier_code'), ['class' => 'form-control' ,'placeholder'=>'Enter bank identifier code']) !!}
+                                    {!! Form::text('bank_identifier_code', old('bank_identifier_code'), [
+                                        'class' => 'form-control',
+                                        'placeholder' => 'Enter bank identifier code',
+                                    ]) !!}
                                 </div>
                                 <div class="form-group col-md-6">
                                     {!! Form::label('branch_location', __('Company Location'), ['class' => 'form-label']) !!}
-                                    {!! Form::text('branch_location', old('branch_location'), ['class' => 'form-control' ,'placeholder'=>'Enter branch location']) !!}
+                                    {!! Form::text('branch_location', old('branch_location'), [
+                                        'class' => 'form-control',
+                                        'placeholder' => 'Enter branch location',
+                                    ]) !!}
                                 </div>
                                 <div class="form-group col-md-6">
                                     {!! Form::label('tax_payer_id', __('Tax Payer Id'), ['class' => 'form-label']) !!}
-                                    {!! Form::text('tax_payer_id', old('tax_payer_id'), ['class' => 'form-control' ,'placeholder'=>'Enter tax payer id']) !!}
+                                    {!! Form::text('tax_payer_id', old('tax_payer_id'), [
+                                        'class' => 'form-control',
+                                        'placeholder' => 'Enter tax payer id',
+                                    ]) !!}
                                 </div>
                             </div>
                         </div>
@@ -207,14 +243,12 @@
                 </div>
             </div>
 
+            <div class="float-end">
+                <button type="submit" class="btn btn-primary">{{ 'Create' }}</button>
+            </div>
+            {!! Form::close() !!}
         </div>
-
-        <div class="float-end">
-            <button type="submit" class="btn btn-primary">{{ 'Create' }}</button>
-        </div>
-        </form>
     </div>
-</div>
 @endsection
 
 @push('script-page')

@@ -114,7 +114,7 @@
                             <h6 class="text-muted">{{__('Basic Details')}}</h6>
                         </div>
                         <div class="col float-end">
-                            <ul class="list-inline mb-0">
+                            <ul class="mb-0 list-inline">
                                 @can('delete job application')
                                     <li class="list-inline-item float-end">
                                         {!! Form::open(['method' => 'DELETE', 'route' => ['job.application.archive', $jobApplication->id],'id'=>'archive-form-'.$jobApplication->id]) !!}
@@ -122,9 +122,9 @@
 
                                         <a href="#" data-confirm="Are You Sure?|This action can not be undone. Do you want to continue?" class="bs-pass-para" data-bs-toggle="tooltip" data-confirm-yes="document.getElementById('archive-form-{{$jobApplication->id}}').submit();">
                                             @if($jobApplication->is_archive==0)
-                                                <span class="badge bg-info p-2 px-3 rounded">{{__('Archive')}}</span>
+                                                <span class="p-2 px-3 rounded badge bg-info">{{__('Archive')}}</span>
                                             @else
-                                                <span class="badge bg-warning p-2 px-3 rounded">{{__('UnArchive')}}</span>
+                                                <span class="p-2 px-3 rounded badge bg-warning">{{__('UnArchive')}}</span>
                                             @endif
                                         </a>
                                         {!! Form::close() !!}
@@ -164,8 +164,8 @@
 
                             </div>
                             <div class="flex-fill ms-3">
-                                <div class="h6 text-sm mb-0"> {{$jobApplication->name}}</div>
-                                <p class="text-sm lh-140 mb-0">
+                                <div class="mb-0 text-sm h6"> {{$jobApplication->name}}</div>
+                                <p class="mb-0 text-sm lh-140">
                                     {{ $jobApplication->email}}
                                 </p>
                             </div>
@@ -209,50 +209,50 @@
               
                 <div class="card-body">
                     <dl class="row">
-                        <dt class="col-sm-3"><span class="h6 text-sm mb-0">{{__('Phone')}}</span></dt>
+                        <dt class="col-sm-3"><span class="mb-0 text-sm h6">{{__('Phone')}}</span></dt>
                         <dd class="col-sm-9"><span class="text-sm">{{$jobApplication->phone}}</span></dd>
                         @if(!empty($jobApplication->dob))
-                            <dt class="col-sm-3"><span class="h6 text-sm mb-0">{{__('DOB')}}</span></dt>
+                            <dt class="col-sm-3"><span class="mb-0 text-sm h6">{{__('DOB')}}</span></dt>
                             <dd class="col-sm-9"><span class="text-sm">{{\Auth::user()->dateFormat($jobApplication->dob)}}</span></dd>
                         @endif
                         @if(!empty($jobApplication->gender))
-                            <dt class="col-sm-3"><span class="h6 text-sm mb-0">{{__('Gender')}}</span></dt>
+                            <dt class="col-sm-3"><span class="mb-0 text-sm h6">{{__('Gender')}}</span></dt>
                             <dd class="col-sm-9"><span class="text-sm">{{$jobApplication->gender}}</span></dd>
                         @endif
                         @if(!empty($jobApplication->country))
-                            <dt class="col-sm-3"><span class="h6 text-sm mb-0">{{__('Country')}}</span></dt>
+                            <dt class="col-sm-3"><span class="mb-0 text-sm h6">{{__('Country')}}</span></dt>
                             <dd class="col-sm-9"><span class="text-sm">{{$jobApplication->country}}</span></dd>
                         @endif
                         @if(!empty($jobApplication->state))
-                            <dt class="col-sm-3"><span class="h6 text-sm mb-0">{{__('State')}}</span></dt>
+                            <dt class="col-sm-3"><span class="mb-0 text-sm h6">{{__('State')}}</span></dt>
                             <dd class="col-sm-9"><span class="text-sm">{{$jobApplication->state}}</span></dd>
                         @endif
                         @if(!empty($jobApplication->city))
-                            <dt class="col-sm-3"><span class="h6 text-sm mb-0">{{__('City')}}</span></dt>
+                            <dt class="col-sm-3"><span class="mb-0 text-sm h6">{{__('City')}}</span></dt>
                             <dd class="col-sm-9"><span class="text-sm">{{$jobApplication->city}}</span></dd>
                         @endif
 
-                        <dt class="col-sm-3"><span class="h6 text-sm mb-0">{{__('Applied For')}}</span></dt>
+                        <dt class="col-sm-3"><span class="mb-0 text-sm h6">{{__('Applied For')}}</span></dt>
                         <dd class="col-sm-9"><span class="text-sm">{{ !empty($jobApplication->jobs)?$jobApplication->jobs->title:'-' }}</span></dd>
 
-                        <dt class="col-sm-3"><span class="h6 text-sm mb-0">{{__('Applied at')}}</span></dt>
+                        <dt class="col-sm-3"><span class="mb-0 text-sm h6">{{__('Applied at')}}</span></dt>
                         <dd class="col-sm-9"><span class="text-sm">{{\Auth::user()->dateFormat($jobApplication->created_at)}}</span></dd>
-                        <dt class="col-sm-3"><span class="h6 text-sm mb-0">{{__('CV / Resume')}}</span></dt>
+                        <dt class="col-sm-3"><span class="mb-0 text-sm h6">{{__('CV / Resume')}}</span></dt>
                         <dd class="col-sm-9">
                             @if(!empty($jobApplication->resume))
                                 <span class="text-sm action-btn bg-primary ms-2 ">
-                                <a href="{{asset(Storage::url('uploads/job/resume')).'/'.$jobApplication->resume}}" download=""  target="_blank"><i class="ti ti-download text-white"></i></a>
+                                <a href="{{asset(Storage::url('uploads/job/resume')).'/'.$jobApplication->resume}}" download=""  target="_blank"><i class="text-white ti ti-download"></i></a>
                             </span>
                             @else
                                 -
                             @endif
                         </dd>
-                        <dt class="col-sm-3"><span class="h6 text-sm mb-0">{{__('Cover Letter')}}</span></dt>
+                        <dt class="col-sm-3"><span class="mb-0 text-sm h6">{{__('Cover Letter')}}</span></dt>
                         <dd class="col-sm-9"><span class="text-sm">{{$jobApplication->cover_letter}}</span></dd>
 
 
                     </dl>
-                    <div class='rating-stars text-right'>
+                    <div class='text-right rating-stars'>
                         <ul id='stars'>
                             <li class='star {{(in_array($jobApplication->rating,[1,2,3,4,5])==true)?'selected':''}}' data-bs-toggle="tooltip"   data-bs-title="Poor" data-value='1'>
                                 <i class='fas fa-star fa-fw'></i>
@@ -294,14 +294,14 @@
         </div>
         <div class="card-body">
             @if(!empty(json_decode($jobApplication->custom_question)))
-                <div class="list-group list-group-flush mb-4">
+                <div class="mb-4 list-group list-group-flush">
                     @foreach(json_decode($jobApplication->custom_question) as $que => $ans)
                         @if(!empty($ans))
-                            <div class="list-group-item px-0">
+                            <div class="px-0 list-group-item">
                                 <div class="row align-items-center">
                                     <div class="col">
-                                        <a href="#!" class="d-block h6 text-sm mb-0">{{$que}}</a>
-                                        <p class="card-text text-sm text-muted mb-0">
+                                        <a href="#!" class="mb-0 text-sm d-block h6">{{$que}}</a>
+                                        <p class="mb-0 text-sm card-text text-muted">
                                             {{$ans}}
                                         </p>
                                     </div>
@@ -318,7 +318,7 @@
             </div>
             @can('add job application skill')
                 <div class="form-group">
-                    <input type="submit" value="{{__('Add Skills')}}" class="btn-sm btn btn-primary">
+                    <button type="submit" class="btn-sm btn btn-primary">{{ __('Add Skills') }}</button>
                 </div>
             @endcan
             {{Form::close()}}
@@ -331,18 +331,18 @@
             </div>
             @can('add job application note')
                 <div class="form-group">
-                    <input type="submit" value="{{__('Add Notes')}}" class="btn-sm btn btn-primary">
+                    <button type="submit" class="btn-sm btn btn-primary">{{ __('Add Notes') }}</button>
                 </div>
             @endcan
             {{Form::close()}}
 
-            <div class="list-group list-group-flush mb-4">
+            <div class="mb-4 list-group list-group-flush">
                 @foreach($notes as $note)
-                    <div class="list-group-item px-0">
+                    <div class="px-0 list-group-item">
                         <div class="row align-items-center">
                             <div class="col">
-                                <a href="#!" class="d-block h6 text-sm mb-0">{{!empty($note->noteCreated)?$note->noteCreated->name:'-'}}</a>
-                                <p class="card-text text-sm text-muted mb-0">
+                                <a href="#!" class="mb-0 text-sm d-block h6">{{!empty($note->noteCreated)?$note->noteCreated->name:'-'}}</a>
+                                <p class="mb-0 text-sm card-text text-muted">
                                     {{$note->note}}
                                 </p>
                             </div>
@@ -355,7 +355,7 @@
                                         {!! Form::open(['method' => 'DELETE', 'route' => ['job.application.note.destroy', $note->id],'id'=>'delete-form-'.$note->id]) !!}
 
                                         <a class="mx-3 btn btn-sm align-items-center bs-pass-para" href="#" data-confirm="Are You Sure?|This action can not be undone. Do you want to continue?" data-bs-toggle="tooltip" title="{{__('Delete')}}" data-confirm-yes="document.getElementById('delete-form-{{$note->id}}').submit();">
-                                            <i class="ti ti-trash text-white"></i></a>
+                                            <i class="text-white ti ti-trash"></i></a>
                                         {!! Form::close() !!}
                                     </div>
                                 @endif

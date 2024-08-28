@@ -104,7 +104,7 @@
 
 @section('content')
 
-    <div class="card bg-none card-box mt-3">
+    <div class="mt-3 card bg-none card-box">
         <div class="card-body">
             {{ Form::open(array('url' => 'budget','class'=>'w-100')) }}
             <div class="row">
@@ -120,7 +120,7 @@
 
                 </div>
 
-                <div class="form-group  col-md-4">
+                <div class="form-group col-md-4">
                     <div class="btn-box">
                         {{ Form::label('year', __('Year'),['class'=>'form-label']) }}
                         {{ Form::select('year',$yearList,isset($_GET['year'])?$_GET['year']:'', array('class' => 'form-control select')) }}
@@ -137,7 +137,7 @@
 
                 <!---- Start Monthly Budget ------------------------------------------------------------------------>
                 <div class="table-responsive budget_plan d-block"  id="monthly">
-                    <table class="table  mb-0" id="dataTable-manual">
+                    <table class="table mb-0" id="dataTable-manual">
                         <thead>
                         <tr>
                             <th>{{__('Category')}}</th>
@@ -218,7 +218,7 @@
 
                     <div class="modal-footer budget">
                         <input type="button" value="{{__('Cancel')}}" onclick="location.href = '{{route("budget.index")}}';" class="btn btn-light">
-                        <input type="submit" value="{{__('Create')}}" class="btn  btn-primary">
+                        <button type="submit" class="btn btn-primary">{{__('Create')}}</button>
                     </div>
 
                 </div>
@@ -253,7 +253,7 @@
                                                name="income[{{$productService->id}}][{{$month}}]" value="0" id="income_data_{{$month}}">
                                     </td>
                                 @endforeach
-                                <td class="text-end totalIncome  text-dark">
+                                <td class="text-end totalIncome text-dark">
                                     0.00
                                 </td>
                             </tr>
@@ -267,7 +267,7 @@
                                 </td>
                             @endforeach
                             <td class="text-end">
-                                <span class="income  text-dark">0.00</span>
+                                <span class="income text-dark">0.00</span>
                             </td>
                         </tr>
 
@@ -287,7 +287,7 @@
                                         <input type="number" class="form-control expense_data {{$month}}_expense" data-month="{{$month}}" name="expense[{{$productService->id}}][{{$month}}]" value="0" id="expense_data_{{$month}}">
                                     </td>
                                 @endforeach
-                                <td class="text-end totalExpense  text-dark">
+                                <td class="text-end totalExpense text-dark">
                                     0.00
                                 </td>
                             </tr>
@@ -301,7 +301,7 @@
                                 </td>
                             @endforeach
                             <td class="text-end">
-                                <span class="expense  text-dark">0.00</span>
+                                <span class="expense text-dark">0.00</span>
                             </td>
 
                         </tr>
@@ -311,7 +311,7 @@
                     </table>
                     <div class="modal-footer budget">
                         <input type="button" value="{{__('Cancel')}}" onclick="location.href = '{{route("budget.index")}}';" class="btn btn-light">
-                        <input type="submit" value="{{__('Create')}}" class="btn  btn-primary">
+                        <button type="submit" class="btn btn-primary">{{__('Create')}}</button>
                     </div>
                 </div>
 
@@ -320,7 +320,7 @@
 
                 <!---Start Half-Yearly Budget --------------------------------------------------------------------->
                 <div class="table-responsive budget_plan d-none" id="half-yearly">
-                    <table class="table  mb-0" id="dataTable-manual">
+                    <table class="table mb-0" id="dataTable-manual">
                         <thead>
                         <tr>
                             <th>{{__('Category')}}</th>
@@ -344,7 +344,7 @@
                                         <input type="number" class="form-control income_data {{$month}}_income" data-month="{{$month}}" name="income[{{$productService->id}}][{{$month}}]" value="0" id="income_data_{{$month}}">
                                     </td>
                                 @endforeach
-                                <td class="text-end totalIncome  text-dark">
+                                <td class="text-end totalIncome text-dark">
                                     0.00
                                 </td>
                             </tr>
@@ -400,7 +400,7 @@
                     </table>
                     <div class="modal-footer budget">
                         <input type="button" value="{{__('Cancel')}}" onclick="location.href = '{{route("budget.index")}}';" class="btn btn-light">
-                        <input type="submit" value="{{__('Create')}}" class="btn  btn-primary">
+                        <button type="submit" class="btn btn-primary">{{__('Create')}}</button>
                     </div>
                 </div>
 
@@ -408,7 +408,7 @@
 
                 <!---Start Yearly Budget --------------------------------------------------------------------------------->
                 <div class="table-responsive budget_plan d-none" id="yearly">
-                    <table class="table  mb-0" id="dataTable-manual">
+                    <table class="table mb-0" id="dataTable-manual">
                         <thead>
                         <tr>
                             <th>{{__('Category')}}</th>
@@ -490,7 +490,7 @@
                     </table>
                     <div class="modal-footer budget">
                         <input type="button" value="{{__('Cancel')}}" onclick="location.href = '{{route("budget.index")}}';" class="btn btn-light">
-                        <input type="submit" value="{{__('Create')}}" class="btn  btn-primary">
+                        <button type="submit" class="btn btn-primary">{{__('Create')}}</button>
                     </div>
                 </div>
 

@@ -168,7 +168,7 @@
                        {{__('Copy Project')}}
                     </a>
                 @endcan
-                <input type="submit" value="{{__('Save')}}" class="btn  btn-primary">
+                <button type="submit" class="btn btn-primary">{{ __('Save') }}</button>
             </div>
 
         {{ Form::close() }}

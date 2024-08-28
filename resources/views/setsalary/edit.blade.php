@@ -8,7 +8,7 @@
             <section class="nav-tabs">
                 <div class="col-lg-12 our-system">
                     <div class="row">
-                        <ul class="nav nav-tabs my-4">
+                        <ul class="my-4 nav nav-tabs">
                             <li>
                                 <a data-toggle="tab" href="#salary" class="active">{{__('Salary')}}</a>
                             </li>
@@ -54,8 +54,8 @@
                                 </div>
                                 @can('create set salary')
                                     <div class="row">
-                                        <div class="col-12 text-end mt-1">
-                                            <input type="submit" value="{{__('Save Change')}}" class="btn-create badge-blue">
+                                        <div class="mt-1 col-12 text-end">
+                                            <button type="submit" class="btn-create badge-blue">{{ __('Save Change') }}</button>
                                         </div>
                                     </div>
                                 @endcan
@@ -91,15 +91,16 @@
                                 </div>
                                 @can('create allowance')
                                     <div class="row">
-                                        <div class="col-12 text-end mt-1">
-                                            <input type="submit" value="{{__('Save Change')}}" class="btn-create badge-blue">
+                                        <div class="mt-1 col-12 text-end">
+                                            <button type="submit" class="btn-create badge-blue">{{ __('Save Change') }}</button>
+
                                         </div>
                                     </div>
                                 @endcan
                                 {{Form::close()}}
                                 <hr>
                                 <div class="table-responsive">
-                                    <table class="table table-striped mb-0" id="allowance-dataTable">
+                                    <table class="table mb-0 table-striped" id="allowance-dataTable">
                                         <thead>
                                         <tr>
                                             <th>{{__('Employee Name')}}</th>
@@ -119,7 +120,7 @@
                                                 @can('delete set salary')
                                                     <td>
                                                         @can('edit allowance')
-                                                            <a href="#" data-url="{{ URL::to('allowance/'.$allowance->id.'/edit') }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Edit Allowance')}}" class="edit-icon" data-toggle="tooltip" data-original-title="{{__('Edit')}}"><i class="ti ti-pencil text-white"></i></a>
+                                                            <a href="#" data-url="{{ URL::to('allowance/'.$allowance->id.'/edit') }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Edit Allowance')}}" class="edit-icon" data-toggle="tooltip" data-original-title="{{__('Edit')}}"><i class="text-white ti ti-pencil"></i></a>
                                                         @endcan
                                                         @can('delete allowance')
                                                             <a href="#" class="delete-icon" data-toggle="tooltip" data-original-title="{{__('Delete')}}" data-confirm="{{__('Are You Sure?').'|'.__('This action can not be undone. Do you want to continue?')}}" data-confirm-yes="document.getElementById('allowance-delete-form-{{$allowance->id}}').submit();"><i class="ti ti-trash"></i></a>
@@ -158,15 +159,15 @@
                                 </div>
                                 @can('create commission')
                                     <div class="row">
-                                        <div class="col-12 text-end mt-1">
-                                            <input type="submit" value="{{__('Save Change')}}" class="btn-create badge-blue">
+                                        <div class="mt-1 col-12 text-end">
+                                            <button type="submit" class="btn-create badge-blue">{{ __('Save Change') }}</button>
                                         </div>
                                     </div>
                                 @endcan
                                 {{Form::close()}}
                                 <hr>
                                 <div class="table-responsive">
-                                    <table class="table table-striped mb-0" id="commission-dataTable">
+                                    <table class="table mb-0 table-striped" id="commission-dataTable">
                                         <thead>
                                         <tr>
                                             <th>{{__('Employee Name')}}</th>
@@ -184,7 +185,7 @@
 
                                                 <td class="text-end">
                                                     @can('edit commission')
-                                                        <a href="#" data-url="{{ URL::to('commission/'.$commission->id.'/edit') }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Edit Commission')}}" class="edit-icon" data-toggle="tooltip" data-original-title="{{__('Edit')}}"><i class="ti ti-pencil text-white"></i></a>
+                                                        <a href="#" data-url="{{ URL::to('commission/'.$commission->id.'/edit') }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Edit Commission')}}" class="edit-icon" data-toggle="tooltip" data-original-title="{{__('Edit')}}"><i class="text-white ti ti-pencil"></i></a>
                                                     @endcan
                                                     @can('delete commission')
                                                         <a href="#" class="delete-icon" data-toggle="tooltip" data-original-title="{{__('Delete')}}" data-confirm="{{__('Are You Sure?').'|'.__('This action can not be undone. Do you want to continue?')}}" data-confirm-yes="document.getElementById('commission-delete-form-{{$commission->id}}').submit();"><i class="ti ti-trash"></i></a>
@@ -250,8 +251,8 @@
 
                                 @can('create loan')
                                     <div class="row">
-                                        <div class="col-12 text-end mt-1">
-                                            <input type="submit" value="{{__('Save Change')}}" class="btn-create badge-blue">
+                                        <div class="mt-1 col-12 text-end">
+                                            <button type="submit" class="btn-create badge-blue">{{ __('Save Change') }}</button>
                                         </div>
                                     </div>
                                 @endcan
@@ -260,7 +261,7 @@
                                 <hr>
 
                                 <div class="table-responsive">
-                                    <table class="table table-striped mb-0" id="loan-dataTable">
+                                    <table class="table mb-0 table-striped" id="loan-dataTable">
                                         <thead>
                                         <tr>
                                             <th>{{__('employee')}}</th>
@@ -284,7 +285,7 @@
 
                                                 <td class="text-end">
                                                     @can('edit loan')
-                                                        <a href="#" data-url="{{ URL::to('loan/'.$loan->id.'/edit') }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Edit Loan')}}" class="edit-icon" data-toggle="tooltip" data-original-title="{{__('Edit')}}"><i class="ti ti-pencil text-white"></i></a>
+                                                        <a href="#" data-url="{{ URL::to('loan/'.$loan->id.'/edit') }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Edit Loan')}}" class="edit-icon" data-toggle="tooltip" data-original-title="{{__('Edit')}}"><i class="text-white ti ti-pencil"></i></a>
                                                     @endcan
                                                     @can('delete loan')
                                                         <a href="#" class="delete-icon" data-toggle="tooltip" data-original-title="{{__('Delete')}}" data-confirm="{{__('Are You Sure?').'|'.__('This action can not be undone. Do you want to continue?')}}" data-confirm-yes="document.getElementById('loan-delete-form-{{$loan->id}}').submit();"><i class="ti ti-trash"></i></a>
@@ -329,8 +330,8 @@
                                 </div>
                                 @can('create saturation deduction')
                                     <div class="row">
-                                        <div class="col-12 text-end mt-1">
-                                            <input type="submit" value="{{__('Save Change')}}" class="btn-create badge-blue">
+                                        <div class="mt-1 col-12 text-end">
+                                            <button type="submit" class="btn-create badge-blue">{{ __('Save Change') }}</button>
                                         </div>
                                     </div>
                                 @endcan
@@ -338,7 +339,7 @@
 
                                 <hr>
                                 <div class="table-responsive">
-                                    <table class="table table-striped mb-0" id="saturation-deduction-dataTable">
+                                    <table class="table mb-0 table-striped" id="saturation-deduction-dataTable">
                                         <thead>
                                         <tr>
                                             <th>{{__('Employee Name')}}</th>
@@ -359,7 +360,7 @@
 
                                                 <td class="text-end">
                                                     @can('edit saturation deduction')
-                                                        <a href="#" data-url="{{ URL::to('saturationdeduction/'.$saturationdeduction->id.'/edit') }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Edit Saturation Deduction')}}" class="edit-icon" data-toggle="tooltip" data-original-title="{{__('Edit')}}"><i class="ti ti-pencil text-white"></i></a>
+                                                        <a href="#" data-url="{{ URL::to('saturationdeduction/'.$saturationdeduction->id.'/edit') }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Edit Saturation Deduction')}}" class="edit-icon" data-toggle="tooltip" data-original-title="{{__('Edit')}}"><i class="text-white ti ti-pencil"></i></a>
                                                     @endcan
                                                     @can('delete saturation deduction')
                                                         <a href="#" class="delete-icon" data-toggle="tooltip" data-original-title="{{__('Delete')}}" data-confirm="{{__('Are You Sure?').'|'.__('This action can not be undone. Do you want to continue?')}}" data-confirm-yes="document.getElementById('deduction-delete-form-{{$saturationdeduction->id}}').submit();"><i class="ti ti-trash"></i></a>
@@ -399,8 +400,8 @@
 
                                 @can('create other payment')
                                     <div class="row">
-                                        <div class="col-12 text-end mt-1">
-                                            <input type="submit" value="{{__('Save Change')}}" class="btn-create badge-blue">
+                                        <div class="mt-1 col-12 text-end">
+                                            <button type="submit" class="btn-create badge-blue">{{ __('Save Change') }}</button>
                                         </div>
                                     </div>
                                 @endcan
@@ -409,7 +410,7 @@
 
                                 <hr>
                                 <div class="table-responsive">
-                                    <table class="table table-striped mb-0" id="other-payment-dataTable">
+                                    <table class="table mb-0 table-striped" id="other-payment-dataTable">
                                         <thead>
                                         <tr>
                                             <th>{{__('employee')}}</th>
@@ -427,7 +428,7 @@
 
                                                 <td class="text-end">
                                                     @can('edit other payment')
-                                                        <a href="#" data-url="{{ URL::to('otherpayment/'.$otherpayment->id.'/edit') }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Edit Other Payment')}}" class="edit-icon" data-toggle="tooltip" data-original-title="{{__('Edit')}}"><i class="ti ti-pencil text-white"></i></a>
+                                                        <a href="#" data-url="{{ URL::to('otherpayment/'.$otherpayment->id.'/edit') }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Edit Other Payment')}}" class="edit-icon" data-toggle="tooltip" data-original-title="{{__('Edit')}}"><i class="text-white ti ti-pencil"></i></a>
                                                     @endcan
                                                     @can('delete other payment')
                                                         <a href="#" class="delete-icon" data-toggle="tooltip" data-original-title="{{__('Delete')}}" data-confirm="{{__('Are You Sure?').'|'.__('This action can not be undone. Do you want to continue?')}}" data-confirm-yes="document.getElementById('payment-delete-form-{{$otherpayment->id}}').submit();"><i class="ti ti-trash"></i></a>
@@ -480,8 +481,8 @@
                                 </div>
                                 @can('create overtime')
                                     <div class="row">
-                                        <div class="col-12 text-end mt-1">
-                                            <input type="submit" value="{{__('Save Change')}}" class="btn-create badge-blue">
+                                        <div class="mt-1 col-12 text-end">
+                                            <button type="submit" class="btn-create badge-blue">{{ __('Save Change') }}</button>
                                         </div>
                                     </div>
                                 @endcan
@@ -489,7 +490,7 @@
 
                                 <hr>
                                 <div class="table-responsive">
-                                    <table class="table table-striped mb-0" id="overtime-dataTable">
+                                    <table class="table mb-0 table-striped" id="overtime-dataTable">
                                         <thead>
                                         <tr>
                                             <th>{{__('Employee Name')}}</th>
@@ -512,7 +513,7 @@
 
                                                 <td class="text-end">
                                                     @can('edit overtime')
-                                                        <a href="#" data-url="{{ URL::to('overtime/'.$overtime->id.'/edit') }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Edit OverTime')}}" class="edit-icon" data-toggle="tooltip" data-original-title="{{__('Edit')}}"><i class="ti ti-pencil text-white"></i></a>
+                                                        <a href="#" data-url="{{ URL::to('overtime/'.$overtime->id.'/edit') }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Edit OverTime')}}" class="edit-icon" data-toggle="tooltip" data-original-title="{{__('Edit')}}"><i class="text-white ti ti-pencil"></i></a>
                                                     @endcan
                                                     @can('delete overtime')
                                                         <a href="#" class="delete-icon" data-toggle="tooltip" data-original-title="{{__('Delete')}}" data-confirm="{{__('Are You Sure?').'|'.__('This action can not be undone. Do you want to continue?')}}" data-confirm-yes="document.getElementById('overtime-delete-form-{{$overtime->id}}').submit();"><i class="ti ti-trash"></i></a>

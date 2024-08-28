@@ -16,7 +16,7 @@
     </div>
 </div>
 <div class="modal-footer">
-    <input type="button" value="{{__('Cancel')}}" class="btn  btn-light" data-bs-dismiss="modal">
-    <input type="submit" value="{{__('Save Change')}}" class="btn  btn-primary">
+    <input type="button" value="{{__('Cancel')}}" class="btn btn-light" data-bs-dismiss="modal">
+    <button type="submit" class="btn btn-primary">{{ __('Save Change') }}</button>
 </div>
 {{ Form::close() }}

@@ -1,11 +1,11 @@
 {{ Form::model($formField, array('route' => array('form.bind.store', $form->id))) }}
 <div class="modal-body">
     <div class="row">
-        <div class="col-12 pb-3">
+        <div class="pb-3 col-12">
             <span class="text-xs"><b>{{__('It will auto convert from response on lead based on below setting. It will not convert old response.')}}</b></span>
         </div>
     </div>
-    <div class="row px-2">
+    <div class="px-2 row">
         <div class="col-4">
             <div class="form-group">
                 {{ Form::label('active', __('Active'),['class'=>'form-label']) }}
@@ -25,7 +25,7 @@
         </div>
     </div>
     <div id="lead_activated" class="d-none">
-        <div class="row px-2">
+        <div class="px-2 row">
             <div class="col-4">
                 <div class="form-group">
                      {{Form::label('subject_id', __('Subject'),['class'=>'form-label']) }}
@@ -63,7 +63,7 @@
                 <div class="form-group">
                     {{ Form::select('user_id', $users,null, array('class' => 'form-control','data-toggle'=>'select')) }}
                     @if(count($users) == 0)
-                        <div class="text-muted text-xs">
+                        <div class="text-xs text-muted">
                             {{__('Please create new employee')}} <a href="{{ route('employee.index') }}" >{{__('here')}}</a>.
                         </div>
                     @endif
@@ -81,8 +81,8 @@
     </div>
 </div>
 <div class="modal-footer">
-    <input type="button" value="{{__('Cancel')}}" class="btn  btn-light" data-bs-dismiss="modal">
-    <input type="submit" value="{{__('Create')}}" class="btn  btn-primary">
+    <input type="button" value="{{__('Cancel')}}" class="btn btn-light" data-bs-dismiss="modal">
+    <button type="submit" class="btn btn-primary">{{__('Create')}}</button>
 </div>
 {{Form::close()}}
 

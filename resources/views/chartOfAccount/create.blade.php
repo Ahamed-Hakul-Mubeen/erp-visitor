@@ -6,7 +6,7 @@
     @endphp
     @if ($plan->chatgpt == 1)
         <div class="text-end">
-            <a href="#" data-size="md" class="btn  btn-primary btn-icon btn-sm" data-ajax-popup-over="true"
+            <a href="#" data-size="md" class="btn btn-primary btn-icon btn-sm" data-ajax-popup-over="true"
                 data-url="{{ route('generate', ['chart of account']) }}" data-bs-placement="top"
                 data-title="{{ __('Generate content with AI') }}">
                 <i class="fas fa-robot"></i> <span>{{ __('Generate with AI') }}</span>
@@ -39,7 +39,7 @@
             </div>
         </div>
 
-        <div class="col-md-4 mt-4 acc_check d-none">
+        <div class="mt-4 col-md-4 acc_check d-none">
             <div class="form-check">
                 <input type="checkbox" class="form-check-input" id="account">
                 <label class="form-check-label" for="account">{{__('Make this a sub-account')}}</label>
@@ -60,7 +60,7 @@
     </div>
 </div>
 <div class="modal-footer">
-    <input type="button" value="{{ __('Cancel') }}" class="btn  btn-light" data-bs-dismiss="modal">
-    <input type="submit" value="{{ __('Create') }}" class="btn  btn-primary">
+    <input type="button" value="{{ __('Cancel') }}" class="btn btn-light" data-bs-dismiss="modal">
+    <button type="submit" class="btn btn-primary">{{ __('Create') }}</button>
 </div>
 {{ Form::close() }}

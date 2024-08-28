@@ -70,7 +70,7 @@
                   </div>
                   <div class="app-modal-footer">
                       <a href="javascript:void(0)" class="app-btn cancel">Cancel</a>
-                      <input type="submit" class="app-btn a-btn-success update" value="Update" />
+                      <button type="submit" class="app-btn a-btn-success update">{{ __('Update') }}</button>
                   </div>
               </form>
           </div>

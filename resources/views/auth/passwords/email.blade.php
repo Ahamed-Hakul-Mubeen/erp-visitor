@@ -9,7 +9,7 @@
 @endphp
 @section('auth-topbar')
     <li class="nav-item ">
-        <select class="btn btn-primary my-1 me-2 " onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);" id="language">
+        <select class="my-1 btn btn-primary me-2 " onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);" id="language">
             @foreach(Utility::languages() as $language)
                 <option class="" @if($lang == $language) selected @endif value="{{ route('login',$language) }}">{{ucfirst($language)}}</option>
             @endforeach
@@ -31,7 +31,7 @@
     <form method="POST" action="{{ route('password.email') }}">
         @csrf
         <div class="">
-            <div class="form-group mb-3">
+            <div class="mb-3 form-group">
                 <label class="form-label" for="email">{{ __('E-Mail Address') }}</label>
                 <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
                 @error('email')
@@ -42,7 +42,7 @@
             </div>
 
             <div class="d-grid">
-                <button type="submit" class="btn btn-primary btn-block mt-2">{{__('Send Password Reset Link')}}</button>
+                <button type="submit" class="mt-2 btn btn-primary btn-block">{{__('Send Password Reset Link')}}</button>
             </div>
         </div>
         <p class="my-4">

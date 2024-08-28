@@ -52,7 +52,7 @@
         <form method="POST" action="{{ route('password.email') }}">
             @csrf
             <div class="">
-                <div class="form-group mb-3">
+                <div class="mb-3 form-group">
                     <label for="email" class="form-label">{{ __('E-Mail') }}</label>
                     <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus placeholder="{{__('Enter Email')}}">
                     @error('email')
@@ -63,7 +63,7 @@
                 </div>
     
                 @if ($settings['recaptcha_module'] == 'on')
-                    <div class="form-group mb-3">
+                    <div class="mb-3 form-group">
                      {!! NoCaptcha::display($settings['cust_darklayout']=='on' ? ['data-theme' => 'dark'] : []) !!}                        
                         @error('g-recaptcha-response')
                         <span class="small text-danger" role="alert">
@@ -74,7 +74,7 @@
                 @endif
     
                 <div class="d-grid">
-                    <button type="submit" class="btn btn-primary btn-block mt-2">{{ __('Send Password Reset Link') }}</button>
+                    <button type="submit" class="mt-2 btn btn-primary btn-block">{{ __('Send Password Reset Link') }}</button>
                 </div>
                 <p class="my-4 text-center">{{__("Back to")}} <a href="{{ route('login' ,$lang) }}" class="text-primary">{{__('Login')}}</a></p>
     
@@ -97,7 +97,7 @@
     <form method="POST" action="{{ route('password.email') }}">
         @csrf
         <div class="">
-            <div class="form-group mb-3">
+            <div class="mb-3 form-group">
                 <label for="email" class="form-label">{{ __('E-Mail') }}</label>
                 <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
                 @error('email')
@@ -108,7 +108,7 @@
             </div>
 
             @if(env('RECAPTCHA_MODULE') == 'on')
-                <div class="form-group mb-3">
+                <div class="mb-3 form-group">
                     {!! NoCaptcha::display() !!}
                     @error('g-recaptcha-response')
                     <span class="small text-danger" role="alert">
@@ -119,7 +119,7 @@
             @endif
 
             <div class="d-grid">
-                <button type="submit" class="btn btn-primary btn-block mt-2">{{ __('Send Password Reset Link') }}</button>
+                <button type="submit" class="mt-2 btn btn-primary btn-block">{{ __('Send Password Reset Link') }}</button>
             </div>
             <p class="my-4 text-center">{{__("Back to")}} <a href="{{ route('login') }}" class="text-primary">{{__('Sign In')}}</a></p>
 

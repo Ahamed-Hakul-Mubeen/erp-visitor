@@ -17,7 +17,7 @@
         </div>
 
 
-        <div class="col-md-6 mt-2">
+        <div class="mt-2 col-md-6">
             <div class="form-group">
                 {{ Form::label('employee', __('Employee*'), ['class' => 'form-label']) }}
 
@@ -49,7 +49,7 @@
 
 <div class="modal-footer">
     <input type="button" value="Cancel" class="btn btn-light" data-bs-dismiss="modal">
-    <input type="submit" value="{{ __('Create') }}" class="btn btn-primary">
+    <button type="submit" class="btn btn-primary">{{ __('Create') }}</button>
 </div>
 {{ Form::close() }}
 

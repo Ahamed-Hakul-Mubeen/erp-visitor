@@ -40,7 +40,7 @@
     <div class="modal-footer">
 
         <input type="button" value="{{__('Cancel')}}" class="btn btn-light" data-bs-dismiss="modal">
-        <input type="submit" value="{{__('Add')}}" class="btn  btn-primary">
+        <button type="submit" class="btn btn-primary">{{ __('Add') }}</button>
     </div>
 
 </div>

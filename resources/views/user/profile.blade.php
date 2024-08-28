@@ -35,9 +35,9 @@
         <div class="col-xl-3">
             <div class="card sticky-top" style="top:30px">
                 <div class="list-group list-group-flush" id="useradd-sidenav">
-                    <a href="#personal_info" class="list-group-item list-group-item-action border-0">{{__('Personal Info')}} <div class="float-end"><i class="ti ti-chevron-right"></i></div></a>
+                    <a href="#personal_info" class="border-0 list-group-item list-group-item-action">{{__('Personal Info')}} <div class="float-end"><i class="ti ti-chevron-right"></i></div></a>
 
-                    <a href="#change_password" class="list-group-item list-group-item-action border-0">{{__('Change Password')}}<div class="float-end"><i class="ti ti-chevron-right"></i></div></a>
+                    <a href="#change_password" class="border-0 list-group-item list-group-item-action">{{__('Change Password')}}<div class="float-end"><i class="ti ti-chevron-right"></i></div></a>
                 </div>
             </div>
         </div>
@@ -64,13 +64,13 @@
                             </div>
                             <div class="col-lg-6 col-md-6">
                                 <div class="form-group">
-                                    <div class="theme-avtar-logo mt-4">
+                                    <div class="mt-4 theme-avtar-logo">
                                         <img id="image" src="{{ ($userDetail->avatar) ? $profile  . $userDetail->avatar : $profile . 'avatar.png' }}"
                                              class="big-logo">
                                     </div>
-                                    <div class="choose-files mt-3">
+                                    <div class="mt-3 choose-files">
                                         <label for="avatar">
-                                            <div class=" bg-primary profile_update"> <i class="ti ti-upload px-1"></i>{{__('Choose file here')}}</div>
+                                            <div class=" bg-primary profile_update"> <i class="px-1 ti ti-upload"></i>{{__('Choose file here')}}</div>
                                             <input type="file" class="form-control file" name="profile" id="avatar" data-filename="profile_update">
                                         </label>
                                     </div>
@@ -79,7 +79,7 @@
 
                             </div>
                             <div class="col-lg-12 text-end">
-                                <input type="submit" value="{{__('Save Changes')}}" class="btn btn-print-invoice  btn-primary m-r-10">
+                                <button type="submit" class="btn btn-print-invoice btn-primary m-r-10">{{ __('Save Changes') }}</button>
                             </div>
                         </div>
                     </form>
@@ -108,7 +108,7 @@
                                 <input class="form-control" name="password_confirmation" type="password" required autocomplete="new-password" id="password_confirmation" placeholder="{{ __('Enter Your Confirm Password') }}">
                             </div>
                             <div class="col-lg-12 text-end">
-                                <input type="submit" value="{{__('Change Password')}}" class="btn btn-print-invoice  btn-primary m-r-10">
+                                <button type="submit" class="btn btn-print-invoice btn-primary m-r-10">{{ __('Change Password') }}</button>
                             </div>
                         </div>
                     </form>

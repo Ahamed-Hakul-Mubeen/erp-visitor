@@ -476,7 +476,7 @@
                                 </div>
 
 {{--                                <div class="col-md-6">--}}
-{{--                                    <div class="form-check custom-checkbox mt-4">--}}
+{{--                                    <div class="mt-4 form-check custom-checkbox">--}}
 {{--                                        <input class="form-check-input" type="checkbox" name="discount_apply" id="discount_apply">--}}
 {{--                                        <label class="form-check-label " for="discount_apply">{{__('Discount Apply')}}</label>--}}
 {{--                                    </div>--}}
@@ -503,16 +503,16 @@
             </div>
         </div>
         <div class="col-12">
-            <h5 class="d-inline-block mb-4">{{__('Product & Services')}}</h5>
+            <h5 class="mb-4 d-inline-block">{{__('Product & Services')}}</h5>
             <div class="card repeater">
-                <div class="item-section py-2">
+                <div class="py-2 item-section">
                     <div class="d-flex align-items-center float-end me-2">
-                        <a href="#" data-repeater-create="" class="btn btn-primary mb-2" data-bs-toggle="modal" data-target="#add-bank">
+                        <a href="#" data-repeater-create="" class="mb-2 btn btn-primary" data-bs-toggle="modal" data-target="#add-bank">
                             <i class="ti ti-plus"></i> {{__('Add item')}}
                         </a>
                     </div>
 
-                    <div class="card-body mt-3">
+                    <div class="mt-3 card-body">
                     <div class="table-responsive">
                         <table class="table mb-0" data-repeater-list="items">
                             <thead>
@@ -531,25 +531,25 @@
                             </thead>
                             <tbody class="ui-sortable" data-repeater-item>
                             <tr>
-                                <td width="25%" class="form-group pt-0">
+                                <td width="25%" class="pt-0 form-group">
                                     {{ Form::select('item', $product_services,'', array('class' => 'form-control item'  ,'data-url'=>route('proposal.product'),'required'=>'required')) }}
                                 </td>
                                 <td>
                                     <div class="form-group price-input input-group search-form">
                                         {{ Form::text('quantity','', array('class' => 'form-control quantity','required'=>'required','placeholder'=>__('Qty'),'required'=>'required')) }}
-                                        <span class="unit input-group-text bg-transparent"></span>
+                                        <span class="bg-transparent unit input-group-text"></span>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="form-group price-input input-group search-form">
                                         {{ Form::text('price','', array('class' => 'form-control price','required'=>'required','placeholder'=>__('Price'),'required'=>'required')) }}
-                                        <span class="input-group-text bg-transparent">{{\Auth::user()->currencySymbol()}}</span>
+                                        <span class="bg-transparent input-group-text">{{\Auth::user()->currencySymbol()}}</span>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="form-group price-input input-group search-form">
                                         {{ Form::text('discount','', array('class' => 'form-control discount','required'=>'required','placeholder'=>__('Discount'))) }}
-                                        <span class="input-group-text bg-transparent">{{\Auth::user()->currencySymbol()}}</span>
+                                        <span class="bg-transparent input-group-text">{{\Auth::user()->currencySymbol()}}</span>
                                     </div>
                                 </td>
                                 <td>
@@ -567,7 +567,7 @@
                                     0.00
                                 </td>
                                 <td>
-                                    <a href="#" class="ti ti-trash text-white text-danger" data-repeater-delete></a>
+                                    <a href="#" class="text-white ti ti-trash text-danger" data-repeater-delete></a>
                                 </td>
                             </tr>
                             <tr>
@@ -612,8 +612,8 @@
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
-                                <td class="blue-text border-none"><strong>{{__('Total Amount')}} ({{\Auth::user()->currencySymbol()}})</strong></td>
-                                <td class="text-end totalAmount blue-text border-none"></td>
+                                <td class="border-none blue-text"><strong>{{__('Total Amount')}} ({{\Auth::user()->currencySymbol()}})</strong></td>
+                                <td class="border-none text-end totalAmount blue-text"></td>
                                 <td></td>
                             </tr>
                             </tfoot>
@@ -625,7 +625,7 @@
 
             <div class="modal-footer">
                 <input type="button" value="{{__('Cancel')}}" onclick="location.href = '{{route("proposal.index")}}';" class="btn btn-light">
-                <input type="submit" value="{{__('Create')}}" class="btn  btn-primary">
+                <button type="submit" class="btn btn-primary">{{__('Create')}}</button>
             </div>
             {{ Form::close() }}
         </div>

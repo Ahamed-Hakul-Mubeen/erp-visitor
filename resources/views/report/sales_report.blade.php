@@ -155,7 +155,7 @@
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex justify-content-between w-100">
-                        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                        <ul class="mb-3 nav nav-pills" id="pills-tab" role="tablist">
                             <li class="nav-item">
                                 <a class="nav-link active" id="profile-tab3" data-bs-toggle="pill" href="#item" role="tab" aria-controls="pills-item" aria-selected="true">{{__('Sales by Item')}}</a>
                             </li>
@@ -170,7 +170,7 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="tab-content" id="myTabContent2">
-                                <div class="tab-pane fade fade show active" id="item" role="tabpanel" aria-labelledby="profile-tab3">
+                                <div class="tab-pane fade show active" id="item" role="tabpanel" aria-labelledby="profile-tab3">
                                     <div class="table-responsive">
                                     <table class="table pc-dt-simple" id="item-reort">
                                         <thead>
@@ -195,7 +195,7 @@
                                 </div>
                                 </div>
 
-                                <div class="tab-pane fade fade" id="customer" role="tabpanel" aria-labelledby="profile-tab3">
+                                <div class="tab-pane fade" id="customer" role="tabpanel" aria-labelledby="profile-tab3">
                                     <div class="table-responsive">
                                     <table class="table pc-dt-simple" id="customer-report">
                                         <thead>

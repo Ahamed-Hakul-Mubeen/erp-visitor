@@ -6,7 +6,7 @@
     @endphp
     @if($plan->chatgpt == 1)
     <div class="text-end">
-        <a href="#" data-size="md" class="btn  btn-primary btn-icon btn-sm" data-ajax-popup-over="true" data-url="{{ route('generate',['lead']) }}"
+        <a href="#" data-size="md" class="btn btn-primary btn-icon btn-sm" data-ajax-popup-over="true" data-url="{{ route('generate',['lead']) }}"
            data-bs-placement="top" data-title="{{ __('Generate content with AI') }}">
             <i class="fas fa-robot"></i> <span>{{__('Generate with AI')}}</span>
         </a>
@@ -22,7 +22,7 @@
             {{ Form::label('user_id', __('User'),['class'=>'form-label']) }}
             {{ Form::select('user_id', $users,null, array('class' => 'form-control select','required'=>'required')) }}
             @if(count($users) == 1)
-                <div class="text-muted text-xs">
+                <div class="text-xs text-muted">
                     {{__('Please create new users')}} <a href="{{route('users.index')}}">{{__('here')}}</a>.
                 </div>
             @endif
@@ -43,8 +43,8 @@
 </div>
 
 <div class="modal-footer">
-    <input type="button" value="{{__('Cancel')}}" class="btn  btn-light" data-bs-dismiss="modal">
-    <input type="submit" value="{{__('Create')}}" class="btn  btn-primary">
+    <input type="button" value="{{__('Cancel')}}" class="btn btn-light" data-bs-dismiss="modal">
+    <button type="submit" class="btn btn-primary">{{__('Create')}}</button>
 </div>
 
 {{Form::close()}}

@@ -14,9 +14,9 @@
             {{ Form::password('password', null, array('class' => 'form-control','required'=>'required')) }}
         </div>
 
-        <div class="form-group mt-4 mb-0">
+        <div class="mt-4 mb-0 form-group">
             {{ Form::hidden('ajax',true) }}
-            <input type="submit" value="{{__('Create')}}" class="btn-create badge-blue">
+            <button type="submit" class="btn-create badge-blue">{{ __('Create') }}</button>
         </div>
     </div>
     {{ Form::close() }}

@@ -37,7 +37,7 @@
                         <th>{{__('Payment Receipt')}}</th>
                         <td>
                             <a  class="action-btn bg-primary ms-2 btn btn-sm align-items-center" href="{{ $path . '/' . $order->receipt }}" download=""  data-bs-toggle="tooltip" title="{{__('Download')}}" target="_blank">
-                                <i class="ti ti-download text-white"></i>
+                                <i class="text-white ti ti-download"></i>
                             </a>
                         </td>
                     </tr>
@@ -49,7 +49,7 @@
 
 </div>
 <div class="modal-footer">
-    <input type="submit" value="{{__('Approval')}}" class="btn btn-success" data-bs-dismiss="modal" name="status">
-    <input type="submit" value="{{__('Reject')}}" class="btn btn-danger" name="status">
+    <input type="submit" value="Approval" class="btn btn-success" data-bs-dismiss="modal" name="status">
+    <input type="submit" value="Reject" class="btn btn-danger" name="status">
 </div>
 {{Form::close()}}

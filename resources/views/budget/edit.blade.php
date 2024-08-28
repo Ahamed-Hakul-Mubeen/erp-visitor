@@ -178,7 +178,7 @@
 
 @section('content')
 
-    <div class="card bg-none card-box mt-3">
+    <div class="mt-3 card bg-none card-box">
         <div class="card-body">
             {{ Form::model($budget, array('route' => array('budget.update', $budget->id), 'method' => 'PUT')) }}
             <div class="row">
@@ -196,7 +196,7 @@
 
                 </div>
 
-                <div class="form-group  col-md-4">
+                <div class="form-group col-md-4">
                     <div class="btn-box">
                         {{ Form::label('year', __('Year'),['class'=>'form-label']) }}
                         {{ Form::select('year',$yearList,isset($_GET['year'])?$_GET['year']:'', array('class' => 'form-control select')) }}
@@ -300,14 +300,14 @@
 
                     <div class="modal-footer">
                         <input type="button" value="{{__('Cancel')}}" onclick="location.href = '{{route("budget.index")}}';" class="btn btn-light">
-                        <input type="submit" value="{{__('Update')}}" class="btn  btn-primary">
+                        <button type="submit" class="btn btn-primary">{{__('Update')}}</button>
                     </div>
                 </div>
                 <!---End Monthly Budget ----->
 
                 <!---- Start Quarterly Budget ----->
                 <div class="table-responsive budget_plan d-none" id="quarterly">
-                    <table class="table  mb-0" id="dataTable-manual">
+                    <table class="table mb-0" id="dataTable-manual">
                         <thead>
                         <tr>
                             <th>{{__('Category')}}</th>
@@ -389,7 +389,7 @@
                     </table>
                     <div class="modal-footer">
                         <input type="button" value="{{__('Cancel')}}" onclick="location.href = '{{route("budget.index")}}';" class="btn btn-light">
-                        <input type="submit" value="{{__('Update')}}" class="btn  btn-primary">
+                        <button type="submit" class="btn btn-primary">{{__('Update')}}</button>
                     </div>
                 </div>
 
@@ -399,7 +399,7 @@
 
                 <!---Start Half-Yearly Budget ----->
                 <div class="table-responsive budget_plan d-none" id="half-yearly">
-                    <table class="table  mb-0" id="dataTable-manual">
+                    <table class="table mb-0" id="dataTable-manual">
                         <thead>
                         <tr>
                             <th>{{__('Category')}}</th>
@@ -481,7 +481,7 @@
                     </table>
                     <div class="modal-footer">
                         <input type="button" value="{{__('Cancel')}}" onclick="location.href = '{{route("budget.index")}}';" class="btn btn-light">
-                        <input type="submit" value="{{__('Update')}}" class="btn  btn-primary">
+                        <button type="submit" class="btn btn-primary">{{__('Update')}}</button>
                     </div>
                 </div>
 
@@ -490,7 +490,7 @@
 
                 <!---Start Yearly Budget ----->
                 <div class="table-responsive budget_plan d-none" id="yearly">
-                    <table class="table  mb-0" id="dataTable-manual">
+                    <table class="table mb-0" id="dataTable-manual">
                         <thead>
                         <tr>
                             <th>{{__('Category')}}</th>
@@ -572,7 +572,7 @@
                     </table>
                     <div class="modal-footer">
                         <input type="button" value="{{__('Cancel')}}" onclick="location.href = '{{route("budget.index")}}';" class="btn btn-light">
-                        <input type="submit" value="{{__('Update')}}" class="btn  btn-primary">
+                        <button type="submit" class="btn btn-primary">{{__('Update')}}</button>
                     </div>
                 </div>
                 <!---End Yearly Budget ----->

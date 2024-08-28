@@ -24,7 +24,7 @@
         @csrf
             <div class="">
                 <div class="form-group ">
-                    <label class="form-control-label mt-2 mb-2">{{__('Password')}}</label>
+                    <label class="mt-2 mb-2 form-control-label">{{__('Password')}}</label>
                     <div class="input-group input-group-merge">
                         <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
                         @error('password')
@@ -36,7 +36,7 @@
                 </div>
 
                 <div class="d-grid">
-                    <button type="submit" class="btn-login btn btn-primary btn-block mt-2" >{{__('Save')}}</button>
+                    <button type="submit" class="mt-2 btn-login btn btn-primary btn-block" >{{__('Save')}}</button>
                 </div>
             </div>
     {{Form::close()}}

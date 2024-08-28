@@ -146,7 +146,7 @@
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex justify-content-between w-100">
-                        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                        <ul class="mb-3 nav nav-pills" id="pills-tab" role="tablist">
                             <li class="nav-item">
                                 <a class="nav-link active" id="receivable-tab1" data-bs-toggle="pill"
                                     href="#customer_balance" role="tab" aria-controls="pills-customer-balance"
@@ -179,7 +179,7 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="tab-content" id="myTabContent2">
-                                <div class="tab-pane fade fade show active" id="customer_balance" role="tabpanel"
+                                <div class="tab-pane fade show active" id="customer_balance" role="tabpanel"
                                     aria-labelledby="receivable-tab1">
                                     <div class="table-responsive">
 
@@ -245,7 +245,7 @@
                                     </table>
                                 </div>
                                 </div>
-                                <div class="tab-pane fade fade show" id="receivable_summary" role="tabpanel"
+                                <div class="tab-pane fade show" id="receivable_summary" role="tabpanel"
                                     aria-labelledby="receivable-tab2">
                                     <div class="table-responsive">
                                     <table class="table pc-dt-simple" id="report-receivable-summary">
@@ -295,19 +295,19 @@
                                                     <td>
                                                         @if ($receivableSummary['status'] == 0)
                                                             <span
-                                                                class="status_badge badge bg-secondary p-2 px-3 rounded">{{ __(\App\Models\Invoice::$statues[$receivableSummary['status']]) }}</span>
+                                                                class="p-2 px-3 rounded status_badge badge bg-secondary">{{ __(\App\Models\Invoice::$statues[$receivableSummary['status']]) }}</span>
                                                         @elseif($receivableSummary['status'] == 1)
                                                             <span
-                                                                class="status_badge badge bg-warning p-2 px-3 rounded">{{ __(\App\Models\Invoice::$statues[$receivableSummary['status']]) }}</span>
+                                                                class="p-2 px-3 rounded status_badge badge bg-warning">{{ __(\App\Models\Invoice::$statues[$receivableSummary['status']]) }}</span>
                                                         @elseif($receivableSummary['status'] == 2)
                                                             <span
-                                                                class="status_badge badge bg-danger p-2 px-3 rounded">{{ __(\App\Models\Invoice::$statues[$receivableSummary['status']]) }}</span>
+                                                                class="p-2 px-3 rounded status_badge badge bg-danger">{{ __(\App\Models\Invoice::$statues[$receivableSummary['status']]) }}</span>
                                                         @elseif($receivableSummary['status'] == 3)
                                                             <span
-                                                                class="status_badge badge bg-info p-2 px-3 rounded">{{ __(\App\Models\Invoice::$statues[$receivableSummary['status']]) }}</span>
+                                                                class="p-2 px-3 rounded status_badge badge bg-info">{{ __(\App\Models\Invoice::$statues[$receivableSummary['status']]) }}</span>
                                                         @elseif($receivableSummary['status'] == 4)
                                                             <span
-                                                                class="status_badge badge bg-primary p-2 px-3 rounded">{{ __(\App\Models\Invoice::$statues[$receivableSummary['status']]) }}</span>
+                                                                class="p-2 px-3 rounded status_badge badge bg-primary">{{ __(\App\Models\Invoice::$statues[$receivableSummary['status']]) }}</span>
                                                         @else
                                                             <span class="p-2 px-3">-</span>
                                                         @endif
@@ -342,7 +342,7 @@
 
                                 </div>
 
-                                <div class="tab-pane fade fade show" id="receivable_details" role="tabpanel"
+                                <div class="tab-pane fade show" id="receivable_details" role="tabpanel"
                                     aria-labelledby="receivable-tab3">
                                     <div class="table-responsive">
 
@@ -406,19 +406,19 @@
                                                     <td>
                                                         @if ($receivableDetail['status'] == 0)
                                                             <span
-                                                                class="status_badge badge bg-secondary p-2 px-3 rounded">{{ __(\App\Models\Invoice::$statues[$receivableDetail['status']]) }}</span>
+                                                                class="p-2 px-3 rounded status_badge badge bg-secondary">{{ __(\App\Models\Invoice::$statues[$receivableDetail['status']]) }}</span>
                                                         @elseif($receivableDetail['status'] == 1)
                                                             <span
-                                                                class="status_badge badge bg-warning p-2 px-3 rounded">{{ __(\App\Models\Invoice::$statues[$receivableDetail['status']]) }}</span>
+                                                                class="p-2 px-3 rounded status_badge badge bg-warning">{{ __(\App\Models\Invoice::$statues[$receivableDetail['status']]) }}</span>
                                                         @elseif($receivableDetail['status'] == 2)
                                                             <span
-                                                                class="status_badge badge bg-danger p-2 px-3 rounded">{{ __(\App\Models\Invoice::$statues[$receivableDetail['status']]) }}</span>
+                                                                class="p-2 px-3 rounded status_badge badge bg-danger">{{ __(\App\Models\Invoice::$statues[$receivableDetail['status']]) }}</span>
                                                         @elseif($receivableDetail['status'] == 3)
                                                             <span
-                                                                class="status_badge badge bg-info p-2 px-3 rounded">{{ __(\App\Models\Invoice::$statues[$receivableDetail['status']]) }}</span>
+                                                                class="p-2 px-3 rounded status_badge badge bg-info">{{ __(\App\Models\Invoice::$statues[$receivableDetail['status']]) }}</span>
                                                         @elseif($receivableDetail['status'] == 4)
                                                             <span
-                                                                class="status_badge badge bg-primary p-2 px-3 rounded">{{ __(\App\Models\Invoice::$statues[$receivableDetail['status']]) }}</span>
+                                                                class="p-2 px-3 rounded status_badge badge bg-primary">{{ __(\App\Models\Invoice::$statues[$receivableDetail['status']]) }}</span>
                                                         @else
                                                             <span class="p-2 px-3">-</span>
                                                         @endif
@@ -454,7 +454,7 @@
 
                                 </div>
 
-                                <div class="tab-pane fade fade show" id="aging_summary" role="tabpanel"
+                                <div class="tab-pane fade show" id="aging_summary" role="tabpanel"
                                     aria-labelledby="receivable-tab4">
                                     <div class="table-responsive">
 
@@ -522,7 +522,7 @@
 
                                 </div>
 
-                                <div class="tab-pane fade fade show" id="aging_details" role="tabpanel"
+                                <div class="tab-pane fade show" id="aging_details" role="tabpanel"
                                     aria-labelledby="receivable-tab5">
                                     <div class="table-responsive">
 
@@ -576,19 +576,19 @@
                                                     <td>
                                                         @if ($value['status'] == 0)
                                                             <span
-                                                                class="status_badge badge bg-secondary p-2 px-3 rounded">{{ __(\App\Models\Invoice::$statues[$value['status']]) }}</span>
+                                                                class="p-2 px-3 rounded status_badge badge bg-secondary">{{ __(\App\Models\Invoice::$statues[$value['status']]) }}</span>
                                                         @elseif($value['status'] == 1)
                                                             <span
-                                                                class="status_badge badge bg-warning p-2 px-3 rounded">{{ __(\App\Models\Invoice::$statues[$value['status']]) }}</span>
+                                                                class="p-2 px-3 rounded status_badge badge bg-warning">{{ __(\App\Models\Invoice::$statues[$value['status']]) }}</span>
                                                         @elseif($value['status'] == 2)
                                                             <span
-                                                                class="status_badge badge bg-danger p-2 px-3 rounded">{{ __(\App\Models\Invoice::$statues[$value['status']]) }}</span>
+                                                                class="p-2 px-3 rounded status_badge badge bg-danger">{{ __(\App\Models\Invoice::$statues[$value['status']]) }}</span>
                                                         @elseif($value['status'] == 3)
                                                             <span
-                                                                class="status_badge badge bg-info p-2 px-3 rounded">{{ __(\App\Models\Invoice::$statues[$value['status']]) }}</span>
+                                                                class="p-2 px-3 rounded status_badge badge bg-info">{{ __(\App\Models\Invoice::$statues[$value['status']]) }}</span>
                                                         @elseif($value['status'] == 4)
                                                             <span
-                                                                class="status_badge badge bg-primary p-2 px-3 rounded">{{ __(\App\Models\Invoice::$statues[$value['status']]) }}</span>
+                                                                class="p-2 px-3 rounded status_badge badge bg-primary">{{ __(\App\Models\Invoice::$statues[$value['status']]) }}</span>
                                                         @endif
                                                     </td>
                                                     <td>{{ $value['name'] }}</td>
@@ -629,19 +629,19 @@
                                                     <td>
                                                         @if ($day31to45['status'] == 0)
                                                             <span
-                                                                class="status_badge badge bg-secondary p-2 px-3 rounded">{{ __(\App\Models\Invoice::$statues[$day31to45['status']]) }}</span>
+                                                                class="p-2 px-3 rounded status_badge badge bg-secondary">{{ __(\App\Models\Invoice::$statues[$day31to45['status']]) }}</span>
                                                         @elseif($day31to45['status'] == 1)
                                                             <span
-                                                                class="status_badge badge bg-warning p-2 px-3 rounded">{{ __(\App\Models\Invoice::$statues[$day31to45['status']]) }}</span>
+                                                                class="p-2 px-3 rounded status_badge badge bg-warning">{{ __(\App\Models\Invoice::$statues[$day31to45['status']]) }}</span>
                                                         @elseif($day31to45['status'] == 2)
                                                             <span
-                                                                class="status_badge badge bg-danger p-2 px-3 rounded">{{ __(\App\Models\Invoice::$statues[$day31to45['status']]) }}</span>
+                                                                class="p-2 px-3 rounded status_badge badge bg-danger">{{ __(\App\Models\Invoice::$statues[$day31to45['status']]) }}</span>
                                                         @elseif($day31to45['status'] == 3)
                                                             <span
-                                                                class="status_badge badge bg-info p-2 px-3 rounded">{{ __(\App\Models\Invoice::$statues[$day31to45['status']]) }}</span>
+                                                                class="p-2 px-3 rounded status_badge badge bg-info">{{ __(\App\Models\Invoice::$statues[$day31to45['status']]) }}</span>
                                                         @elseif($day31to45['status'] == 4)
                                                             <span
-                                                                class="status_badge badge bg-primary p-2 px-3 rounded">{{ __(\App\Models\Invoice::$statues[$day31to45['status']]) }}</span>
+                                                                class="p-2 px-3 rounded status_badge badge bg-primary">{{ __(\App\Models\Invoice::$statues[$day31to45['status']]) }}</span>
                                                         @endif
                                                     </td>
                                                     <td>{{ $day31to45['name'] }}</td>
@@ -681,19 +681,19 @@
                                                     <td>
                                                         @if ($day16to30['status'] == 0)
                                                             <span
-                                                                class="status_badge badge bg-secondary p-2 px-3 rounded">{{ __(\App\Models\Invoice::$statues[$day16to30['status']]) }}</span>
+                                                                class="p-2 px-3 rounded status_badge badge bg-secondary">{{ __(\App\Models\Invoice::$statues[$day16to30['status']]) }}</span>
                                                         @elseif($day16to30['status'] == 1)
                                                             <span
-                                                                class="status_badge badge bg-warning p-2 px-3 rounded">{{ __(\App\Models\Invoice::$statues[$day16to30['status']]) }}</span>
+                                                                class="p-2 px-3 rounded status_badge badge bg-warning">{{ __(\App\Models\Invoice::$statues[$day16to30['status']]) }}</span>
                                                         @elseif($day16to30['status'] == 2)
                                                             <span
-                                                                class="status_badge badge bg-danger p-2 px-3 rounded">{{ __(\App\Models\Invoice::$statues[$day16to30['status']]) }}</span>
+                                                                class="p-2 px-3 rounded status_badge badge bg-danger">{{ __(\App\Models\Invoice::$statues[$day16to30['status']]) }}</span>
                                                         @elseif($day16to30['status'] == 3)
                                                             <span
-                                                                class="status_badge badge bg-info p-2 px-3 rounded">{{ __(\App\Models\Invoice::$statues[$day16to30['status']]) }}</span>
+                                                                class="p-2 px-3 rounded status_badge badge bg-info">{{ __(\App\Models\Invoice::$statues[$day16to30['status']]) }}</span>
                                                         @elseif($day16to30['status'] == 4)
                                                             <span
-                                                                class="status_badge badge bg-primary p-2 px-3 rounded">{{ __(\App\Models\Invoice::$statues[$day16to30['status']]) }}</span>
+                                                                class="p-2 px-3 rounded status_badge badge bg-primary">{{ __(\App\Models\Invoice::$statues[$day16to30['status']]) }}</span>
                                                         @endif
                                                     </td>
                                                     <td>{{ $day16to30['name'] }}</td>
@@ -733,19 +733,19 @@
                                                     <td>
                                                         @if ($day1to15['status'] == 0)
                                                             <span
-                                                                class="status_badge badge bg-secondary p-2 px-3 rounded">{{ __(\App\Models\Invoice::$statues[$day1to15['status']]) }}</span>
+                                                                class="p-2 px-3 rounded status_badge badge bg-secondary">{{ __(\App\Models\Invoice::$statues[$day1to15['status']]) }}</span>
                                                         @elseif($day1to15['status'] == 1)
                                                             <span
-                                                                class="status_badge badge bg-warning p-2 px-3 rounded">{{ __(\App\Models\Invoice::$statues[$day1to15['status']]) }}</span>
+                                                                class="p-2 px-3 rounded status_badge badge bg-warning">{{ __(\App\Models\Invoice::$statues[$day1to15['status']]) }}</span>
                                                         @elseif($day1to15['status'] == 2)
                                                             <span
-                                                                class="status_badge badge bg-danger p-2 px-3 rounded">{{ __(\App\Models\Invoice::$statues[$day1to15['status']]) }}</span>
+                                                                class="p-2 px-3 rounded status_badge badge bg-danger">{{ __(\App\Models\Invoice::$statues[$day1to15['status']]) }}</span>
                                                         @elseif($day1to15['status'] == 3)
                                                             <span
-                                                                class="status_badge badge bg-info p-2 px-3 rounded">{{ __(\App\Models\Invoice::$statues[$day1to15['status']]) }}</span>
+                                                                class="p-2 px-3 rounded status_badge badge bg-info">{{ __(\App\Models\Invoice::$statues[$day1to15['status']]) }}</span>
                                                         @elseif($day1to15['status'] == 4)
                                                             <span
-                                                                class="status_badge badge bg-primary p-2 px-3 rounded">{{ __(\App\Models\Invoice::$statues[$day1to15['status']]) }}</span>
+                                                                class="p-2 px-3 rounded status_badge badge bg-primary">{{ __(\App\Models\Invoice::$statues[$day1to15['status']]) }}</span>
                                                         @endif
                                                     </td>
                                                     <td>{{ $day1to15['name'] }}</td>
@@ -785,19 +785,19 @@
                                                     <td>
                                                         @if ($current['status'] == 0)
                                                             <span
-                                                                class="status_badge badge bg-secondary p-2 px-3 rounded">{{ __(\App\Models\Invoice::$statues[$current['status']]) }}</span>
+                                                                class="p-2 px-3 rounded status_badge badge bg-secondary">{{ __(\App\Models\Invoice::$statues[$current['status']]) }}</span>
                                                         @elseif($current['status'] == 1)
                                                             <span
-                                                                class="status_badge badge bg-warning p-2 px-3 rounded">{{ __(\App\Models\Invoice::$statues[$current['status']]) }}</span>
+                                                                class="p-2 px-3 rounded status_badge badge bg-warning">{{ __(\App\Models\Invoice::$statues[$current['status']]) }}</span>
                                                         @elseif($current['status'] == 2)
                                                             <span
-                                                                class="status_badge badge bg-danger p-2 px-3 rounded">{{ __(\App\Models\Invoice::$statues[$current['status']]) }}</span>
+                                                                class="p-2 px-3 rounded status_badge badge bg-danger">{{ __(\App\Models\Invoice::$statues[$current['status']]) }}</span>
                                                         @elseif($current['status'] == 3)
                                                             <span
-                                                                class="status_badge badge bg-info p-2 px-3 rounded">{{ __(\App\Models\Invoice::$statues[$current['status']]) }}</span>
+                                                                class="p-2 px-3 rounded status_badge badge bg-info">{{ __(\App\Models\Invoice::$statues[$current['status']]) }}</span>
                                                         @elseif($current['status'] == 4)
                                                             <span
-                                                                class="status_badge badge bg-primary p-2 px-3 rounded">{{ __(\App\Models\Invoice::$statues[$current['status']]) }}</span>
+                                                                class="p-2 px-3 rounded status_badge badge bg-primary">{{ __(\App\Models\Invoice::$statues[$current['status']]) }}</span>
                                                         @endif
                                                     </td>
                                                     <td>{{ $current['name'] }}</td>

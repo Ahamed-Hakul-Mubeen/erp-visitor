@@ -540,7 +540,7 @@
 
         <div class="modal-footer">
             <input type="button" value="{{__('Cancel')}}" onclick="location.href = '{{route("purchase.index")}}';" class="btn btn-light">
-            <input type="submit" value="{{__('Create')}}" class="btn  btn-primary">
+            <button type="submit" class="btn btn-primary">{{__('Create')}}</button>
         </div>
     {{ Form::close() }}
     </div>

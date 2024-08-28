@@ -10,33 +10,36 @@
 @endsection
 
 @section('content')
-    <div class="col-sm-12 col-lg-12 col-xl-12 col-md-12 mt-4">
-        <div class="card">
-            <div class="card-body">
-                {{ Form::open(['route' => ['payslip.store'], 'method' => 'POST', 'id' => 'payslip_form']) }}
-                <div class="d-flex align-items-center justify-content-end">
-                    <div class="col-xl-2 col-lg-3 col-md-3">
-                        <div class="btn-box">
-                            {{ Form::label('month', __('Select Month'), ['class' => 'form-label']) }}
-                            {{ Form::select('month', $month, date('m'), ['class' => 'form-control select', 'id' => 'month']) }}
+    @if (\Auth::user()->type != 'Employee')
+        <div class="mt-4 col-sm-12 col-lg-12 col-xl-12 col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    {{ Form::open(['route' => ['payslip.store'], 'method' => 'POST', 'id' => 'payslip_form']) }}
+                    <div class="d-flex align-items-center justify-content-end">
+                        <div class="col-xl-2 col-lg-3 col-md-3">
+                            <div class="btn-box">
+                                {{ Form::label('month', __('Select Month'), ['class' => 'form-label']) }}
+                                {{ Form::select('month', $month, date('m'), ['class' => 'form-control select', 'id' => 'month']) }}
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-xl-2 col-lg-3 col-md-3">
-                        <div class="btn-box">
-                            {{ Form::label('year', __('Select Year'), ['class' => 'form-label']) }}
-                            {{ Form::select('year', $year, date('Y'), ['class' => 'form-control select']) }}
+                        <div class="col-xl-2 col-lg-3 col-md-3">
+                            <div class="btn-box">
+                                {{ Form::label('year', __('Select Year'), ['class' => 'form-label']) }}
+                                {{ Form::select('year', $year, date('Y'), ['class' => 'form-control select']) }}
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-auto float-end ms-2 mt-4">
-                        <a href="#" class="btn  btn-primary" onclick="document.getElementById('payslip_form').submit(); return false;"
+                        <div class="col-auto mt-4 float-end ms-2">
+                            <button type="submit" class="btn btn-primary">{{ __('Generate Payslip') }}</button>
+                            {{-- <a href="#" class="btn btn-primary" onclick="document.getElementById('payslip_form').submit(); return false;"
                            data-bs-toggle="tooltip" title="{{ __('payslip') }}" data-original-title="{{ __('payslip') }}">{{ __('Generate Payslip') }}
-                        </a>
+                        </a> --}}
+                        </div>
                     </div>
+                    {{ Form::close() }}
                 </div>
-                {{ Form::close() }}
             </div>
         </div>
-    </div>
+    @endif
 
 
     <div class="col-12">
@@ -44,7 +47,7 @@
             <div class="card-header">
                 <div class="row">
                     <div class="col-md-4">
-                        <div class="d-flex align-items-center justify-content-start mt-2">
+                        <div class="mt-2 d-flex align-items-center justify-content-start">
                             <h5>{{ __('Find Employee Payslip') }}</h5>
                         </div>
                     </div>
@@ -52,20 +55,22 @@
                         <div class="d-flex align-items-center justify-content-end ">
                             <div class="col-xl-2 col-lg-3 col-md-4">
                                 <div class="btn-box">
-                                    <select class="form-control month_date " name="year" tabindex="-1" aria-hidden="true">
+                                    <select class="form-control month_date " name="year" tabindex="-1"
+                                        aria-hidden="true">
                                         <option value="--">--</option>
-                                        @foreach($month as $k=>$mon)
+                                        @foreach ($month as $k => $mon)
                                             @php
-                                                $selected = ((date('m')) == $k) ? 'selected' :'';
+                                                $selected = date('m') == $k ? 'selected' : '';
                                             @endphp
-                                            <option value="{{$k}}" {{ $selected }} >{{$mon}}</option>
+                                            <option value="{{ $k }}" {{ $selected }}>{{ $mon }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
                             <div class="col-xl-2 col-lg-3 col-md-4">
                                 <div class="btn-box">
-                                    {{ Form::select('year', $year, date("Y"), ['class' => 'form-control year_date ']) }}
+                                    {{ Form::select('year', $year, date('Y'), ['class' => 'form-control year_date ']) }}
                                 </div>
                             </div>
                             <div class="col-auto float-end me-2">
@@ -77,7 +82,8 @@
                             </div>
                             <div class="col-auto float-end me-0">
                                 @can('create pay slip')
-                                    <input type="button" value="{{ __('Bulk Payment') }}" class="btn btn-primary" id="bulk_payment">
+                                    <input type="button" value="{{ __('Bulk Payment') }}" class="btn btn-primary"
+                                        id="bulk_payment">
                                 @endcan
                             </div>
                         </div>
@@ -88,15 +94,15 @@
                 <div class="table-responsive">
                     <table class="table" id="pc-dt-render-column-cells">
                         <thead>
-                        <tr>
-                            <th>{{ __('Employee Id') }}</th>
-                            <th>{{ __('Name') }}</th>
-                            <th>{{ __('Payroll Type') }}</th>
-                            <th>{{ __('Salary') }}</th>
-                            <th>{{ __('Net Salary') }}</th>
-                            <th>{{ __('Status') }}</th>
-                            <th>{{ __('Action') }}</th>
-                        </tr>
+                            <tr>
+                                <th>{{ __('Employee Id') }}</th>
+                                <th>{{ __('Name') }}</th>
+                                <th>{{ __('Payroll Type') }}</th>
+                                <th>{{ __('Salary') }}</th>
+                                <th>{{ __('Net Salary') }}</th>
+                                <th>{{ __('Status') }}</th>
+                                <th>{{ __('Action') }}</th>
+                            </tr>
                         </thead>
                         <tbody>
                         </tbody>
@@ -109,8 +115,9 @@
 
 @push('script-page')
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             callback();
+
             function callback() {
                 var month = $(".month_date").val();
                 var year = $(".year_date").val();
@@ -119,8 +126,8 @@
                 $('.filter_year').val(year);
 
                 if (month == '') {
-                    month = '{{date('m', strtotime('last month'))}}';
-                    year = '{{date('Y')}}';
+                    month = '{{ date('m', strtotime('last month')) }}';
+                    year = '{{ date('Y') }}';
 
                     $('.filter_month').val(month);
                     $('.filter_year').val(year);
@@ -135,17 +142,17 @@
                         "datePicker": datePicker,
                         "_token": "{{ csrf_token() }}",
                     },
-                    success: function (data) {
+                    success: function(data) {
                         var datatable_data = {
                             data: data
                         };
 
                         function renderstatus(data, cell, row) {
                             if (data == 'Paid')
-                                return '<div class="badge bg-success p-2 px-3 rounded"><a href="#" class="text-white">' +
+                                return '<div class="p-2 px-3 rounded badge bg-success"><a href="#" class="text-white">' +
                                     data + '</a></div>';
                             else
-                                return '<div class="badge bg-danger p-2 px-3 rounded"><a href="#" class="text-white">' +
+                                return '<div class="p-2 px-3 rounded badge bg-danger"><a href="#" class="text-white">' +
                                     data + '</a></div>';
                         }
 
@@ -202,14 +209,14 @@
                             url = url.replace(':id', payslip_id);
 
                             @if (\Auth::user()->type != 'Employee')
-                            if (data != 0) {
-                                deleted = '<a href="#"  data-url="' + url +
-                                    '" class="payslip_delete view-btn red-bg" >' +
-                                    '{{ __('Delete') }}' + '</a>';
-                            }
+                                if (data != 0) {
+                                    deleted = '<a href="#"  data-url="' + url +
+                                        '" class="payslip_delete view-btn red-bg" >' +
+                                        '{{ __('Delete') }}' + '</a>';
+                                }
                             @endif
 
-                                return view + payslip + clickToPaid + edit + deleted + form;
+                            return view + payslip + clickToPaid + edit + deleted + form;
                         }
 
                         console.clear();
@@ -217,13 +224,13 @@
                         // <tr><td class="dataTables-empty" colspan="1">No entries found</td></tr>
                         if (data.length > 0) {
                             console.log(data);
-                            $.each(data, function (indexInArray, valueOfElement) {
+                            $.each(data, function(indexInArray, valueOfElement) {
                                 var status =
-                                    '<div class="badge bg-danger p-2 px-3 rounded"><a href="#" class="text-white">' +
+                                    '<div class="p-2 px-3 rounded badge bg-danger"><a href="#" class="text-white">' +
                                     valueOfElement[6] + '</a></div>';
                                 if (valueOfElement[6] == 'Paid') {
                                     var status =
-                                        '<div class="badge bg-success p-2 px-3 rounded"><a href="#" class="text-white">' +
+                                        '<div class="p-2 px-3 rounded badge bg-success"><a href="#" class="text-white">' +
                                         valueOfElement[6] + '</a></div>';
                                 }
 
@@ -242,7 +249,8 @@
                                 if (valueOfElement[6] == "UnPaid" && valueOfElement[7] != 0) {
                                     var clickToPaid =
                                         '<a href="{{ url('payslip/paysalary/') }}/' + id +
-                                        '/' + datePicker + '"  class="btn-sm btn btn-primary">' +
+                                        '/' + datePicker +
+                                        '"  class="btn-sm btn btn-primary">' +
                                         '{{ __('Click To Paid') }}' + '</a>  ';
                                 } else {
                                     var clickToPaid = '';
@@ -263,21 +271,22 @@
                                 url = url.replace(':id', payslip_id);
 
                                 @if (\Auth::user()->type != 'Employee')
-                                if (valueOfElement[7] != 0) {
-                                    var deleted = '<a href="#"  data-url="' + url +
-                                        '" class="payslip_delete view-btn btn btn-danger ms-1 btn-sm"  >' +
-                                        '{{ __('Delete') }}' + '</a>';
-                                } else {
-                                    var deleted = '';
-                                }
+                                    if (valueOfElement[7] != 0) {
+                                        var deleted = '<a href="#"  data-url="' + url +
+                                            '" class="payslip_delete view-btn btn btn-danger ms-1 btn-sm"  >' +
+                                            '{{ __('Delete') }}' + '</a>';
+                                    } else {
+                                        var deleted = '';
+                                    }
                                 @else
-                                var deleted = '';
+                                    var deleted = '';
                                 @endif
                                 var url_employee = valueOfElement['url'];
 
                                 tr +=
                                     '<tr> ' +
-                                    '<td> <a class="btn btn-outline-primary" href="' + url_employee + '">' +
+                                    '<td> <a class="btn btn-outline-primary" href="' +
+                                    url_employee + '">' +
                                     valueOfElement[1] + '</a></td> ' +
                                     '<td>' + valueOfElement[2] + '</td> ' +
                                     '<td>' + valueOfElement[3] + '</td>' +
@@ -339,7 +348,7 @@
 
 
                     },
-                    error: function (data) {
+                    error: function(data) {
 
                     }
 
@@ -347,12 +356,12 @@
 
             }
 
-            $(document).on("change", ".month_date,.year_date", function () {
+            $(document).on("change", ".month_date,.year_date", function() {
                 callback();
             });
 
             //bulkpayment Click
-            $(document).on("click", "#bulk_payment", function () {
+            $(document).on("click", "#bulk_payment", function() {
                 var month = $(".month_date").val();
                 var year = $(".year_date").val();
                 var datePicker = year + '_' + month;
@@ -361,7 +370,7 @@
             });
             $(document).on('click', '#bulk_payment',
                 'a[data-ajax-popup="true"], button[data-ajax-popup="true"], div[data-ajax-popup="true"]',
-                function () {
+                function() {
                     var month = $(".month_date").val();
                     var year = $(".year_date").val();
                     var datePicker = year + '-' + month;
@@ -376,7 +385,7 @@
                     $("#commonModal .modal-dialog").addClass('modal-' + size);
                     $.ajax({
                         url: url,
-                        success: function (data) {
+                        success: function(data) {
                             console.log(data);
                             // alert(data);
                             // return false;
@@ -389,14 +398,14 @@
                                 $("#commonModal").modal('hide');
                             }
                         },
-                        error: function (data) {
+                        error: function(data) {
                             data = data.responseJSON;
                             show_toastr('error', data.error);
                         }
                     });
                 });
 
-            $(document).on("click", ".payslip_delete", function () {
+            $(document).on("click", ".payslip_delete", function() {
                 var confirmation = confirm("are you sure you want to delete this payslip?");
                 var url = $(this).data('url');
 
@@ -406,7 +415,7 @@
                         type: "GET",
                         url: url,
                         dataType: "JSON",
-                        success: function (data) {
+                        success: function(data) {
                             console.log(data);
 
 

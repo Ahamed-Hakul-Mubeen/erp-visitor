@@ -44,6 +44,13 @@
 
 <script src="{{ asset('js/popper.min.js') }}"></script>
 
+<script>
+
+    $(document).on("submit", "form", function(e) {
+        $(this).find(':submit').prop('disabled', true);
+        $(this).find(':submit').html("<i class='fa fa-spinner fa-spin'></i> Processing");
+    });
+</script>
 
 {{--<script src="{{ asset ('js/bootstrap.min.js') }}"></script>--}}
 

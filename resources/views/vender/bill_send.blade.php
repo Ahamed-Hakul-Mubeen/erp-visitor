@@ -11,8 +11,8 @@
             @enderror
         </div>
     </div>
-    <div class="col-md-12 px-0">
-        <input type="submit" value="{{__('Create')}}" class="btn-create badge-blue">
+    <div class="px-0 col-md-12">
+        <button type="submit" class="btn-create badge-blue">{{ __('Create') }}</button>
         <input type="button" value="{{__('Cancel')}}" class="btn-create bg-gray" data-dismiss="modal">
     </div>
     {{ Form::close() }}

@@ -13,8 +13,8 @@
 {{--    </div>--}}
 {{--</div>--}}
 {{--<div class="modal-footer">--}}
-{{--    <input type="button" value="{{__('Cancel')}}" class="btn  btn-light" data-bs-dismiss="modal">--}}
-{{--    <input type="submit" value="{{__('Create')}}" class="btn  btn-primary">--}}
+{{--    <input type="button" value="{{__('Cancel')}}" class="btn btn-light" data-bs-dismiss="modal">--}}
+{{--    <button type="submit" class="btn btn-primary">{{__('Create')}}</button>--}}
 {{--</div>--}}
 {{--{{ Form::close() }}--}}
 
@@ -40,7 +40,7 @@
     <div class="modal-footer">
 {{--        <label id="email_sending" style="display: none;"><i class="fas fa-clock"></i></label>--}}
         <input type="button" value="{{ __('Cancel') }}" class="btn btn-secondary btn-light" data-bs-dismiss="modal">
-        <input type="submit" value="{{ __('Send') }}" class="btn-create btn btn-primary">
+        <button type="submit" class="btn-create btn btn-primary">{{ __('Send') }}</button>
 
     </div>
 </form>

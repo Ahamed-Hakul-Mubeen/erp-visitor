@@ -14,18 +14,18 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                 <div class="icon-user avatar rounded-circle">
                     <img alt="" src="{{(!empty($userDetail->avatar))? $profile.'/'.$userDetail->avatar : $profile.'/avatar.png'}}" class="">
                 </div>
-                <h4 class="h4 mb-0 mt-2"> {{$userDetail->name}}</h4>
+                <h4 class="mt-2 mb-0 h4"> {{$userDetail->name}}</h4>
                 <div class="sal-right-card">
                     <span class="badge badge-pill badge-blue">{{$userDetail->type}}</span>
                 </div>
-                <h6 class="office-time mb-0 mt-4">{{$userDetail->email}}</h6>
+                <h6 class="mt-4 mb-0 office-time">{{$userDetail->email}}</h6>
             </div>
         </div>
         <div class="col-xl-9 col-lg-8 col-md-8 col-sm-12">
             <section class="col-lg-12 pricing-plan card">
-                <div class="our-system password-card p-3">
+                <div class="p-3 our-system password-card">
                     <div class="row">
-                        <ul class="nav nav-tabs my-4">
+                        <ul class="my-4 nav nav-tabs">
                             <li>
                                 <a data-toggle="tab" href="#personal-info" class="active">{{__('Personal Info')}}</a>
                             </li>
@@ -92,7 +92,7 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                                     </div>
 
                                     <div class="col-lg-12 text-end">
-                                        <input type="submit" value="{{__('Save Changes')}}" class="btn-create badge-blue">
+                                        <button type="submit" class="btn-create badge-blue">{{ __('Save Change') }}</button>
                                     </div>
                                 </div>
                                 {{Form::close()}}
@@ -180,7 +180,7 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                                     </div>
 
                                     <div class="col-lg-12 text-end">
-                                        <input type="submit" value="{{__('Save Changes')}}" class="btn-create badge-blue">
+                                        <button type="submit" class="btn-create badge-blue">{{ __('Save Change') }}</button>
                                     </div>
                                 </div>
                                 {{Form::close()}}
@@ -268,7 +268,7 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                                     </div>
 
                                     <div class="col-lg-12 text-end">
-                                        <input type="submit" value="{{__('Save Changes')}}" class="btn-create badge-blue">
+                                        <button type="submit" class="btn-create badge-blue">{{ __('Save Change') }}</button>
                                     </div>
                                 </div>
                                 {{Form::close()}}
@@ -310,7 +310,7 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                                         </div>
                                     </div>
                                     <div class="col-lg-12 text-end">
-                                        <input type="submit" value="{{__('Save Changes')}}" class="btn-create badge-blue">
+                                        <button type="submit" class="btn-create badge-blue">{{ __('Save Change') }}</button>
                                     </div>
                                 </div>
                                 {{Form::close()}}

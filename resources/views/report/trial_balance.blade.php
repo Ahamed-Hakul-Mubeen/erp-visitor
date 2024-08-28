@@ -59,7 +59,7 @@
                         <div class="col-xl-12">
 
                             <div class="row justify-content-between">
-                                <div class="col-xl-3 mt-4">
+                                <div class="mt-4 col-xl-3">
                                     <div class="btn-group btn-group-toggle" data-toggle="buttons"
                                         aria-label="Basic radio toggle button group">
                                         <label class="btn btn-primary month-label">
@@ -125,12 +125,12 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-body {{ $view == 'expand' ? 'collapse-view' : '' }}">
-                    <div class="account-main-title mb-5">
+                    <div class="mb-5 account-main-title">
                         <h5>{{ 'Trial Balance of ' . $user->name . ' as of ' . $filter['startDateRange'] . ' to ' . $filter['endDateRange'] }}
                             </h4>
                     </div>
                     <div
-                        class="aacount-title d-flex align-items-center justify-content-between border-top border-bottom py-2">
+                        class="py-2 aacount-title d-flex align-items-center justify-content-between border-top border-bottom">
                         <h6 class="mb-0">{{ __('Account') }}</h6>
                         <h6 class="mb-0 text-center">{{ _('Account Code') }}</h6>
                         <h6 class="mb-0 text-end me-5">{{ __('Debit') }}</h6>
@@ -142,8 +142,8 @@
                         $totalDebit = 0;
                     @endphp
                     @foreach ($totalAccounts as $type => $accounts)
-                        <div class="account-main-inner border-bottom py-2">
-                            <p class="fw-bold ps-2 mb-2">{{ $type }}</p>
+                        <div class="py-2 account-main-inner border-bottom">
+                            <p class="mb-2 fw-bold ps-2">{{ $type }}</p>
                             @if ($view == 'collapse')
                                 @foreach ($accounts as $key => $record)
                                     @if ($record['account'] == 'parentTotal')
@@ -156,9 +156,9 @@
                                             </div>
 
                                             <p class="mb-2 text-center">{{ $record['account_code'] }}</p>
-                                            <p class="text-primary  mb-2 text-end me-5">
+                                            <p class="mb-2 text-primary text-end me-5">
                                                 {{ \Auth::user()->priceFormat($record['totalDebit']) }}</p>
-                                            <p class="text-primary mb-2  float-end text-end">
+                                            <p class="mb-2 text-primary float-end text-end">
                                                 {{ \Auth::user()->priceFormat($record['totalCredit']) }}</p>
                                         </div>
                                     @elseif($record['account'] == 'parentTotal' || $record['account'] == '')
@@ -168,9 +168,9 @@
                                                     class="text-primary">{{ $record['account_name'] }}</a>
                                             </p>
                                             <p class="mb-2 text-center">{{ $record['account_code'] }}</p>
-                                            <p class="text-primary mb-2 text-end me-5">
+                                            <p class="mb-2 text-primary text-end me-5">
                                                 {{ \Auth::user()->priceFormat($record['totalDebit']) }}</p>
-                                            <p class="text-primary mb-2 float-end text-end">
+                                            <p class="mb-2 text-primary float-end text-end">
                                                 {{ \Auth::user()->priceFormat($record['totalCredit']) }}</p>
                                         </div>
                                     @endif
@@ -194,9 +194,9 @@
                                             </div>
 
                                             <p class="mb-2 text-center">{{ $record['account_code'] }}</p>
-                                            <p class="text-primary fw-bold mb-2 text-end me-5">
+                                            <p class="mb-2 text-primary fw-bold text-end me-5">
                                                 {{ \Auth::user()->priceFormat($record['totalDebit']) }}</p>
-                                            <p class="text-primary mb-2 fw-bold float-end text-end">
+                                            <p class="mb-2 text-primary fw-bold float-end text-end">
                                                 {{ \Auth::user()->priceFormat($record['totalCredit']) }}</p>
                                         </div>
                                     @elseif($record['account'] == 'parentTotal')
@@ -204,10 +204,10 @@
                                             <p class="mb-2"><a href="#"
                                                     class="text-dark fw-bold">{{ $record['account_name'] }}</a>
                                             </p>
-                                            <p class="mb-2 ms-3 text-center">{{ $record['account_code'] }}</p>
-                                            <p class="text-dark fw-bold mb-2 text-end me-5">
+                                            <p class="mb-2 text-center ms-3">{{ $record['account_code'] }}</p>
+                                            <p class="mb-2 text-dark fw-bold text-end me-5">
                                                 {{ \Auth::user()->priceFormat($record['totalDebit']) }}</p>
-                                            <p class="text-dark fw-bold mb-2 float-end text-end">
+                                            <p class="mb-2 text-dark fw-bold float-end text-end">
                                                 {{ \Auth::user()->priceFormat($record['totalCredit']) }}</p>
                                         </div>
                                     @else
@@ -217,9 +217,9 @@
                                                     class="text-primary">{{ $record['account_name'] }}</a>
                                             </p>
                                             <p class="mb-2 text-center">{{ $record['account_code'] }}</p>
-                                            <p class="text-primary mb-2 text-end me-5">
+                                            <p class="mb-2 text-primary text-end me-5">
                                                 {{ \Auth::user()->priceFormat($record['totalDebit']) }}</p>
-                                            <p class="text-primary mb-2 float-end text-end">
+                                            <p class="mb-2 text-primary float-end text-end">
                                                 {{ \Auth::user()->priceFormat($record['totalCredit']) }}</p>
                                         </div>
                                     @endif
@@ -238,11 +238,11 @@
 
                     @if ($totalAccounts != [])
                         <div
-                            class="aacount-title d-flex align-items-center justify-content-between border-top border-bottom py-2 px-2 pe-0">
-                            <h6 class="fw-bold mb-0">{{ 'Total' }}</h6>
-                            <h6 class="fw-bold mb-0">{{ '' }}</h6>
-                            <h6 class="fw-bold mb-0 text-end me-5">{{ \Auth::user()->priceFormat($totalDebit) }}</h6>
-                            <h6 class="fw-bold mb-0 text-end">{{ \Auth::user()->priceFormat($totalCredit) }}</h6>
+                            class="px-2 py-2 aacount-title d-flex align-items-center justify-content-between border-top border-bottom pe-0">
+                            <h6 class="mb-0 fw-bold">{{ 'Total' }}</h6>
+                            <h6 class="mb-0 fw-bold">{{ '' }}</h6>
+                            <h6 class="mb-0 fw-bold text-end me-5">{{ \Auth::user()->priceFormat($totalDebit) }}</h6>
+                            <h6 class="mb-0 fw-bold text-end">{{ \Auth::user()->priceFormat($totalCredit) }}</h6>
 
                         </div>
                     @endif
@@ -255,6 +255,7 @@
 
 
 @push('script-page')
+
     <script>
         $(document).ready(function() {
             callback();

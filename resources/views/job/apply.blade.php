@@ -89,8 +89,8 @@ else {
                 <img src="{{ url('storage/uploads/job/banner.png')}}" alt="">
             </div>
             <div class="container">
-                <div class="job-banner-content text-center text-white">
-                    <h1 class="text-white mb-3">
+                <div class="text-center text-white job-banner-content">
+                    <h1 class="mb-3 text-white">
                         {{__(' We help')}} <br> {{__('businesses grow')}}
                     </h1>
                     <p>{{ __('Work there. Find the dream job you’ve always wanted..') }}</p>
@@ -101,11 +101,11 @@ else {
         <section class="apply-job-section">
             <div class="container">
                 <div class="apply-job-wrapper bg-light">
-                    <div class="section-title text-center">
-                        <h2 class="h1 mb-3"> {{$job->title}}</h2>
-                        <div class="d-flex flex-wrap justify-content-center gap-1 mb-4">
+                    <div class="text-center section-title">
+                        <h2 class="mb-3 h1"> {{$job->title}}</h2>
+                        <div class="flex-wrap gap-1 mb-4 d-flex justify-content-center">
                             @foreach (explode(',', $job->skill) as $skill)
-                                <span class="badge rounded p-2 bg-primary">{{ $skill }}</span>
+                                <span class="p-2 rounded badge bg-primary">{{ $skill }}</span>
                             @endforeach
                         </div>
                         @if(!empty($job->branches)?$job->branches->name:'')
@@ -205,7 +205,7 @@ else {
                                 </div>
                             @endforeach
                             <div class="col-12">
-                                <div class="text-center mt-4">
+                                <div class="mt-4 text-center">
                                     <button type="submit" class="btn btn-primary">{{__('Submit your application')}}</button>
                                 </div>
                             </div>
@@ -217,11 +217,11 @@ else {
         </section>
     </div>
 </div>
-<div class="position-fixed top-0 end-0 p-3" style="z-index: 99999">
-    <div id="liveToast" class="toast text-white  fade" role="alert" aria-live="assertive" aria-atomic="true">
+<div class="top-0 p-3 position-fixed end-0" style="z-index: 99999">
+    <div id="liveToast" class="text-white toast fade" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="d-flex">
             <div class="toast-body"> </div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            <button type="button" class="m-auto btn-close btn-close-white me-2" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
     </div>
 </div>

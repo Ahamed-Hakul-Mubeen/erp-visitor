@@ -10,13 +10,13 @@
                     @endforeach
                 </select>
         </div>
-        <div class="form-group  col-md-6">
+        <div class="form-group col-md-6">
             {{ Form::label('amount', __('Amount'),['class'=>'form-label']) }}
 
                 {{ Form::number('amount', null, array('class' => 'form-control','required'=>'required','step'=>'0.01' , 'placeholder'=>__('Enter Amount'))) }}
 
         </div>
-        <div class="form-group  col-md-6">
+        <div class="form-group col-md-6">
             {{ Form::label('date', __('Date'),['class'=>'form-label']) }}
 
                 {{Form::date('date',null,array('class'=>'form-control','required'=>'required'))}}
@@ -33,7 +33,7 @@
 </div>
 
 <div class="modal-footer">
-    <input type="button" value="{{__('Cancel')}}" class="btn  btn-light" data-bs-dismiss="modal">
-    <input type="submit" value="{{__('Create')}}" class="btn  btn-primary">
+    <input type="button" value="{{__('Cancel')}}" class="btn btn-light" data-bs-dismiss="modal">
+    <button type="submit" class="btn btn-primary">{{__('Create')}}</button>
 </div>
 {{ Form::close() }}

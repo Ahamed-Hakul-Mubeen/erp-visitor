@@ -11,7 +11,7 @@
             <small class="small">{{ __('For chart representation') }}</small>
         </div>
         <div class="col-12 text-end">
-            <input type="submit" value="{{__('Create')}}" class="btn-create badge-blue">
+            <button type="submit" class="btn-create badge-blue">{{ __('Create') }}</button>
             <input type="button" value="{{__('Cancel')}}" class="btn-create bg-gray" data-dismiss="modal">
         </div>
     </div>

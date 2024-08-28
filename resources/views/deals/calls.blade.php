@@ -16,7 +16,7 @@
     @endphp
     @if($plan->chatgpt == 1)
     <div class="text-end">
-        <a href="#" data-size="md" class="btn  btn-primary btn-icon btn-sm" data-ajax-popup-over="true" data-url="{{ route('generate',['deal']) }}"
+        <a href="#" data-size="md" class="btn btn-primary btn-icon btn-sm" data-ajax-popup-over="true" data-url="{{ route('generate',['deal']) }}"
            data-bs-placement="top" data-title="{{ __('Generate content with AI') }}">
             <i class="fas fa-robot"></i> <span>{{__('Generate with AI')}}</span>
         </a>
@@ -58,11 +58,11 @@
     </div>
 </div>
 <div class="modal-footer">
-    <input type="button" value="{{__('Cancel')}}" class="btn  btn-light" data-bs-dismiss="modal">
+    <input type="button" value="{{__('Cancel')}}" class="btn btn-light" data-bs-dismiss="modal">
     @if(isset($call))
-        <input type="submit" value="{{__('Update')}}" class="btn  btn-primary">
+        <button type="submit" class="btn btn-primary">{{__('Update')}}</button>
     @else
-        <input type="submit" value="{{__('Create')}}" class="btn  btn-primary">
+        <button type="submit" class="btn btn-primary">{{__('Create')}}</button>
     @endif
 </div>
 

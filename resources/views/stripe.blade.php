@@ -292,11 +292,11 @@
                                                                       ">
                                 <div class="card-body">
                                     <span class="price-badge bg-primary">{{ $plan->name }}</span>
-                                    <h3 class="mb-4 f-w-600  ">
+                                    <h3 class="mb-4 f-w-600 ">
                                         {{(isset($admin_payment_setting['currency_symbol'])) ? $admin_payment_setting['currency_symbol'] : '$'}}{{ $plan->price . ' / ' . __(\App\Models\Plan::$arrDuration[$plan->duration]) }}</small>
                                         </small>
                                     </h3>
-                                    <ul class="list-unstyled my-5 mt-3">
+                                    <ul class="my-5 mt-3 list-unstyled">
                                         <li>
                                             <span class="theme-avtar"><i class="text-primary ti ti-circle-plus"></i></span>
                                             {{($plan->max_users==-1)?__('Unlimited'):$plan->max_users}} {{__('Users')}}
@@ -317,168 +317,168 @@
                             <div class="list-group list-group-flush" id="useradd-sidenav">
                                 @if($admin_payment_setting['is_manually_payment_enabled'] == 'on')
                                     <a href="#send_request"
-                                       class="list-group-item list-group-item-action border-0 active">{{ __('Manually') }}
+                                       class="border-0 list-group-item list-group-item-action active">{{ __('Manually') }}
                                         <div class="float-end"><i class="ti ti-chevron-right"></i></div>
                                     </a>
                                 @endif
                                 @if($admin_payment_setting['is_bank_transfer_enabled'] == 'on' && !empty($admin_payment_setting['bank_details']))
                                     <a href="#bank_payment"
-                                       class="list-group-item list-group-item-action border-0 ">{{ __('Bank Transfer') }}
+                                       class="border-0 list-group-item list-group-item-action ">{{ __('Bank Transfer') }}
                                         <div class="float-end"><i class="ti ti-chevron-right"></i></div>
                                     </a>
                                 @endif
                                 @if($admin_payment_setting['is_stripe_enabled'] == 'on' && !empty($admin_payment_setting['stripe_key']) && !empty($admin_payment_setting['stripe_secret']))
                                     <a href="#stripe_payment"
-                                       class="list-group-item list-group-item-action border-0 ">{{ __('Stripe') }}
+                                       class="border-0 list-group-item list-group-item-action ">{{ __('Stripe') }}
                                         <div class="float-end"><i class="ti ti-chevron-right"></i></div>
                                     </a>
                                 @endif
 
                                 @if($admin_payment_setting['is_paypal_enabled'] == 'on' && !empty($admin_payment_setting['paypal_client_id']) && !empty($admin_payment_setting['paypal_secret_key']))
                                     <a href="#paypal_payment"
-                                       class="list-group-item list-group-item-action border-0">{{ __('Paypal') }}
+                                       class="border-0 list-group-item list-group-item-action">{{ __('Paypal') }}
                                         <div class="float-end"><i class="ti ti-chevron-right"></i></div>
                                     </a>
                                 @endif
 
                                 @if($admin_payment_setting['is_paystack_enabled'] == 'on' && !empty($admin_payment_setting['paystack_public_key']) && !empty($admin_payment_setting['paystack_secret_key']))
                                     <a href="#paystack_payment"
-                                       class="list-group-item list-group-item-action border-0">{{ __('Paystack') }}
+                                       class="border-0 list-group-item list-group-item-action">{{ __('Paystack') }}
                                         <div class="float-end"><i class="ti ti-chevron-right"></i></div>
                                     </a>
                                 @endif
 
                                 @if(isset($admin_payment_setting['is_flutterwave_enabled']) && $admin_payment_setting['is_flutterwave_enabled'] == 'on')
                                     <a href="#flutterwave_payment"
-                                       class="list-group-item list-group-item-action border-0">{{ __('Flutterwave') }}
+                                       class="border-0 list-group-item list-group-item-action">{{ __('Flutterwave') }}
                                         <div class="float-end"><i class="ti ti-chevron-right"></i></div>
                                     </a>
                                 @endif
 
                                 @if(isset($admin_payment_setting['is_razorpay_enabled']) && $admin_payment_setting['is_razorpay_enabled'] == 'on')
                                     <a href="#razorpay_payment"
-                                       class="list-group-item list-group-item-action border-0">{{ __('Razorpay') }}
+                                       class="border-0 list-group-item list-group-item-action">{{ __('Razorpay') }}
                                         <div class="float-end"><i class="ti ti-chevron-right"></i></div>
                                     </a>
                                 @endif
 
                                 @if(isset($admin_payment_setting['is_mercado_enabled']) && $admin_payment_setting['is_mercado_enabled'] == 'on')
                                     <a href="#mercado_payment"
-                                       class="list-group-item list-group-item-action border-0">{{ __('Mercado Pago') }}
+                                       class="border-0 list-group-item list-group-item-action">{{ __('Mercado Pago') }}
                                         <div class="float-end"><i class="ti ti-chevron-right"></i></div>
                                     </a>
                                 @endif
 
                                 @if(isset($admin_payment_setting['is_paytm_enabled']) && $admin_payment_setting['is_paytm_enabled'] == 'on')
                                     <a href="#paytm_payment"
-                                       class="list-group-item list-group-item-action border-0">{{ __('Paytm') }}
+                                       class="border-0 list-group-item list-group-item-action">{{ __('Paytm') }}
                                         <div class="float-end"><i class="ti ti-chevron-right"></i></div>
                                     </a>
                                 @endif
 
                                 @if(isset($admin_payment_setting['is_mollie_enabled']) && $admin_payment_setting['is_mollie_enabled'] == 'on')
                                     <a href="#mollie_payment"
-                                       class="list-group-item list-group-item-action border-0">{{ __('Mollie') }}
+                                       class="border-0 list-group-item list-group-item-action">{{ __('Mollie') }}
                                         <div class="float-end"><i class="ti ti-chevron-right"></i></div>
                                     </a>
                                 @endif
 
                                 @if(isset($admin_payment_setting['is_skrill_enabled']) && $admin_payment_setting['is_skrill_enabled'] == 'on')
                                     <a href="#skrill_payment"
-                                       class="list-group-item list-group-item-action border-0">{{ __('Skrill') }}
+                                       class="border-0 list-group-item list-group-item-action">{{ __('Skrill') }}
                                         <div class="float-end"><i class="ti ti-chevron-right"></i></div>
                                     </a>
                                 @endif
 
                                 @if(isset($admin_payment_setting['is_coingate_enabled']) && $admin_payment_setting['is_coingate_enabled'] == 'on')
                                     <a href="#coingate_payment"
-                                       class="list-group-item list-group-item-action border-0">{{ __('Coingate') }}
+                                       class="border-0 list-group-item list-group-item-action">{{ __('Coingate') }}
                                         <div class="float-end"><i class="ti ti-chevron-right"></i></div>
                                     </a>
                                 @endif
 
                                 @if(isset($admin_payment_setting['is_paymentwall_enabled']) && $admin_payment_setting['is_paymentwall_enabled'] == 'on')
                                     <a href="#paymentwall_payment"
-                                       class="list-group-item list-group-item-action border-0">{{ __('Paymentwall') }}
+                                       class="border-0 list-group-item list-group-item-action">{{ __('Paymentwall') }}
                                         <div class="float-end"><i class="ti ti-chevron-right"></i></div>
                                     </a>
                                 @endif
                                     @if (isset($admin_payment_setting['is_toyyibpay_enabled']) && $admin_payment_setting['is_toyyibpay_enabled'] == 'on')
                                         <a href="#toyyibpay-payment"
-                                           class="list-group-item list-group-item-action border-0">{{ __('Toyyibpay') }}
+                                           class="border-0 list-group-item list-group-item-action">{{ __('Toyyibpay') }}
                                             <div class="float-end"><i class="ti ti-chevron-right"></i></div>
                                         </a>
                                     @endif
                                     @if (isset($admin_payment_setting['is_payfast_enabled']) && $admin_payment_setting['is_payfast_enabled'] == 'on')
                                         <a href="#payfast-payment"
-                                           class="list-group-item list-group-item-action border-0">{{ __('PayFast') }}
+                                           class="border-0 list-group-item list-group-item-action">{{ __('PayFast') }}
                                             <div class="float-end"><i class="ti ti-chevron-right"></i></div>
                                         </a>
                                     @endif
                                     @if (isset($admin_payment_setting['is_iyzipay_enabled']) && $admin_payment_setting['is_iyzipay_enabled'] == 'on')
                                         <a href="#iyzipay-payment"
-                                           class="list-group-item list-group-item-action border-0">{{ __('Iyzipay') }}
+                                           class="border-0 list-group-item list-group-item-action">{{ __('Iyzipay') }}
                                             <div class="float-end"><i class="ti ti-chevron-right"></i></div>
                                         </a>
                                     @endif
                                     @if (isset($admin_payment_setting['is_sspay_enabled']) && $admin_payment_setting['is_sspay_enabled'] == 'on')
                                         <a href="#sspay-payment"
-                                           class="list-group-item list-group-item-action border-0">{{ __('SSPay') }}
+                                           class="border-0 list-group-item list-group-item-action">{{ __('SSPay') }}
                                             <div class="float-end"><i class="ti ti-chevron-right"></i></div>
                                         </a>
                                     @endif
 
                                     @if (isset($admin_payment_setting['is_paytab_enabled']) && $admin_payment_setting['is_paytab_enabled'] == 'on')
                                         <a href="#paytab_payment"
-                                           class="list-group-item list-group-item-action border-0">{{ __('Paytab') }}
+                                           class="border-0 list-group-item list-group-item-action">{{ __('Paytab') }}
                                             <div class="float-end"><i class="ti ti-chevron-right"></i></div>
                                         </a>
                                     @endif
                                     @if (isset($admin_payment_setting['is_benefit_enabled']) && $admin_payment_setting['is_benefit_enabled'] == 'on')
                                         <a href="#benefit_payment"
-                                           class="list-group-item list-group-item-action border-0">{{ __('Benefit') }}
+                                           class="border-0 list-group-item list-group-item-action">{{ __('Benefit') }}
                                             <div class="float-end"><i class="ti ti-chevron-right"></i></div>
                                         </a>
                                     @endif
                                     @if (isset($admin_payment_setting['is_cashfree_enabled']) && $admin_payment_setting['is_cashfree_enabled'] == 'on')
                                         <a href="#cashfree_payment"
-                                           class="list-group-item list-group-item-action border-0">{{ __('Cashfree') }}
+                                           class="border-0 list-group-item list-group-item-action">{{ __('Cashfree') }}
                                             <div class="float-end"><i class="ti ti-chevron-right"></i></div>
                                         </a>
                                     @endif
                                     @if (isset($admin_payment_setting['is_aamarpay_enabled']) && $admin_payment_setting['is_aamarpay_enabled'] == 'on')
                                         <a href="#aamarpay_payment"
-                                           class="list-group-item list-group-item-action border-0">{{ __('AamarPay') }}
+                                           class="border-0 list-group-item list-group-item-action">{{ __('AamarPay') }}
                                             <div class="float-end"><i class="ti ti-chevron-right"></i></div>
                                         </a>
                                     @endif
                                     @if (isset($admin_payment_setting['is_paytr_enabled']) && $admin_payment_setting['is_paytr_enabled'] == 'on')
                                         <a href="#paytr_payment"
-                                           class="list-group-item list-group-item-action border-0">{{ __('PayTR') }}
+                                           class="border-0 list-group-item list-group-item-action">{{ __('PayTR') }}
                                             <div class="float-end"><i class="ti ti-chevron-right"></i></div>
                                         </a>
                                     @endif
                                     @if (isset($admin_payment_setting['is_yookassa_enabled']) && $admin_payment_setting['is_yookassa_enabled'] == 'on')
                                         <a href="#yookassa_payment"
-                                           class="list-group-item list-group-item-action border-0">{{ __('Yookassa') }}
+                                           class="border-0 list-group-item list-group-item-action">{{ __('Yookassa') }}
                                             <div class="float-end"><i class="ti ti-chevron-right"></i></div>
                                         </a>
                                     @endif
                                     @if (isset($admin_payment_setting['is_midtrans_enabled']) && $admin_payment_setting['is_midtrans_enabled'] == 'on')
                                     <a href="#midtrans_payment"
-                                       class="list-group-item list-group-item-action border-0">{{ __('Midtrans') }}
+                                       class="border-0 list-group-item list-group-item-action">{{ __('Midtrans') }}
                                         <div class="float-end"><i class="ti ti-chevron-right"></i></div>
                                     </a>    
                                     @endif
                                     @if (isset($admin_payment_setting['is_xendit_enabled']) && $admin_payment_setting['is_xendit_enabled'] == 'on')
                                     <a href="#xendit_payment"
-                                       class="list-group-item list-group-item-action border-0">{{ __('Xendit') }}
+                                       class="border-0 list-group-item list-group-item-action">{{ __('Xendit') }}
                                         <div class="float-end"><i class="ti ti-chevron-right"></i></div>
                                     </a>    
                                     @endif
                                     @if (isset($admin_payment_setting['is_nepalste_enabled']) && $admin_payment_setting['is_nepalste_enabled'] == 'on')
                                     <a href="#nepalste_payment"
-                                       class="list-group-item list-group-item-action border-0">{{ __('Nepalste') }}
+                                       class="border-0 list-group-item list-group-item-action">{{ __('Nepalste') }}
                                         <div class="float-end"><i class="ti ti-chevron-right"></i></div>
                                     </a>    
                                     @endif
@@ -494,21 +494,21 @@
                         <div id="send_request" class="card">
                             <div class="card-header"><h5>{{ __('Manually') }}</h5></div>
                             <div class="tab-pane {{ ($admin_payment_setting['is_manually_payment_enabled'] == 'on') == 'on'? 'active': '' }}" id="send_request">
-                                <div class="border p-3 rounded send-request-div">
+                                <div class="p-3 border rounded send-request-div">
                                     <p>{{__('Requesting manual payment for the planned amount for the subscriptions plan.')}}
                                     </p>
                                 </div>
 
-                                <div class="col-sm-12 my-2 px-2">
+                                <div class="px-2 my-2 col-sm-12">
                                     <div class="text-end">
                                         @if($plan->id != 1 && $plan->id != \Auth::user()->plan)
                                             @if(\Auth::user()->requested_plan != $plan->id)
                                                 <a href="{{ route('send.request',[\Illuminate\Support\Facades\Crypt::encrypt($plan->id)])}}"
-                                                   class="btn btn-primary mb-2 me-3" data-title="{{__('Send Request')}}" data-bs-toggle="tooltip" title="{{__('Send Request')}}">
+                                                   class="mb-2 btn btn-primary me-3" data-title="{{__('Send Request')}}" data-bs-toggle="tooltip" title="{{__('Send Request')}}">
                                                     <span class="btn-inner--icon">{{__('Send Request')}}</span>
                                                 </a>
                                             @else
-                                                <a href="{{ route('request.cancel',\Auth::user()->id) }}" class="btn btn-danger mb-2 me-3"
+                                                <a href="{{ route('request.cancel',\Auth::user()->id) }}" class="mb-2 btn btn-danger me-3"
                                                    data-title="{{__('Cancle Request')}}" data-bs-toggle="tooltip" title="{{__('Cancle Request')}}">
                                                     <span class="btn-inner--icon">{{__('Cancle Request')}}</span>
                                                 </a>
@@ -528,13 +528,13 @@
                             <div class="tab-pane {{ ($admin_payment_setting['is_bank_transfer_enabled'] == 'on' &&!empty($admin_payment_setting['bank_details'])) == 'on'? 'active': '' }}" id="bank_payment">
                                 <form role="form" action="{{ route('plan.pay.with.bank') }}" method="post" class="require-validation" id="bank-payment-form" enctype = "multipart/form-data">
                                     @csrf
-                                    <div class="border p-3 rounded bank-payment-div">
+                                    <div class="p-3 border rounded bank-payment-div">
                                         <div class="row">
                                             <div class="col-6 ">
                                                 <div class="custom-radio">
-                                                    <label class="font-16 font-bold">{{ __('Bank Details') }} :</label>
+                                                    <label class="font-bold font-16">{{ __('Bank Details') }} :</label>
                                                 </div>
-                                                <p class="mb-0 pt-1 text-sm">
+                                                <p class="pt-1 mb-0 text-sm">
                                                     {!! $admin_payment_setting['bank_details'] !!}
                                                 </p>
                                             </div>
@@ -547,14 +547,14 @@
                                             </div>
                                         </div>
 
-                                        <div class="row mt-2">
+                                        <div class="mt-2 row">
                                             <div class="col-md-12">
                                                 <div class="d-flex align-items-center">
                                                     <div class="form-group w-100">
                                                         <label for="bank_coupon" class="form-label">{{ __('Coupon') }}</label>
                                                         <input type="text" id="bank_coupon" name="coupon" class="form-control coupon" placeholder="{{ __('Enter Coupon Code') }}">
                                                     </div>
-                                                    <div class="form-group ms-3 mt-4">
+                                                    <div class="mt-4 form-group ms-3">
                                                         <a href="#" class="text-muted " data-bs-toggle="tooltip" title="{{ __('Apply') }}"><i class="ti ti-square-check btn-apply apply-coupon"></i>
                                                         </a>
                                                     </div>
@@ -564,14 +564,14 @@
                                         <div class="row">
                                             <div class="col-6 ">
                                                 <div class="custom-radio">
-                                                    <label class="font-16 font-bold">{{ __('Plan Price') }} :</label>
+                                                    <label class="font-bold font-16">{{ __('Plan Price') }} :</label>
                                                     {{(isset($admin_payment_setting['currency_symbol'])) ? $admin_payment_setting['currency_symbol'] : '$'}}{{ $plan->price}}</small>
                                                     </small>
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="custom-radio">
-                                                    <label class="font-16 font-bold">{{ __('Net Amount') }} : </label>
+                                                    <label class="font-bold font-16">{{ __('Net Amount') }} : </label>
                                                     <span class="final-price">{{(isset($admin_payment_setting['currency_symbol'])) ? $admin_payment_setting['currency_symbol'] : '$' }}{{ $plan->price }}</span>
                                                 </div>
                                                 (<small class="">{{__('After coupon apply')}}</small>)
@@ -579,10 +579,10 @@
 
                                         </div>
                                     </div>
-                                    <div class="col-sm-12 my-2 px-2">
+                                    <div class="px-2 my-2 col-sm-12">
                                         <div class="text-end">
                                             <input type="hidden" name="plan_id" value="{{ \Illuminate\Support\Facades\Crypt::encrypt($plan->id) }}">
-                                            <input type="submit" value="{{ __('Pay Now') }}" class="btn btn-primary mb-2 me-3">
+                                            <button type="submit" class="mb-2 btn btn-primary me-3">{{ __('Pay Now') }}</button>
                                         </div>
                                     </div>
                                 </form>
@@ -599,13 +599,13 @@
                                 <form role="form" action="{{ route('stripe.post') }}" method="post"
                                       class="require-validation" id="payment-form">
                                     @csrf
-                                    <div class="border p-3 rounded stripe-payment-div">
+                                    <div class="p-3 border rounded stripe-payment-div">
                                         <div class="row">
                                             <div class="col-sm-8">
                                                 <div class="custom-radio">
                                                     <label class="font-16 font-weight-bold">{{ __('Credit / Debit Card') }}</label>
                                                 </div>
-                                                <p class="mb-0 pt-1 text-sm">
+                                                <p class="pt-1 mb-0 text-sm">
                                                     {{ __('Safe money transfer using your bank account. We support Mastercard, Visa, Discover and American express.') }}
                                                 </p>
                                             </div>
@@ -622,13 +622,13 @@
                                                 <div id="card-element"></div>
                                                 <div id="card-errors" role="alert"></div>
                                             </div>
-                                            <div class="col-md-12 mt-4">
+                                            <div class="mt-4 col-md-12">
                                                 <div class="d-flex align-items-center">
                                                     <div class="form-group w-100">
                                                         <label for="stripe_coupon" class="form-label">{{ __('Coupon') }}</label>
                                                         <input type="text" id="stripe_coupon" name="coupon" class="form-control coupon" placeholder="{{ __('Enter Coupon Code') }}">
                                                     </div>
-                                                    <div class="form-group ms-3 mt-4">
+                                                    <div class="mt-4 form-group ms-3">
                                                         <a href="#" class="text-muted " data-bs-toggle="tooltip" title="{{ __('Apply') }}"><i class="ti ti-square-check btn-apply apply-coupon"></i>
                                                         </a>
                                                     </div>
@@ -645,10 +645,10 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-12 my-2 px-2">
+                                    <div class="px-2 my-2 col-sm-12">
                                         <div class="text-end">
                                             <input type="hidden" name="plan_id" value="{{ \Illuminate\Support\Facades\Crypt::encrypt($plan->id) }}">
-                                            <input type="submit" value="{{ __('Pay Now') }}" class="btn btn-primary mb-2 me-3">
+                                            <button type="submit" class="mb-2 btn btn-primary me-3">{{ __('Pay Now') }}</button>
                                         </div>
                                     </div>
                                 </form>
@@ -667,16 +667,16 @@
                                       action="{{ route('plan.pay.with.paypal') }}">
                                     @csrf
                                     <input type="hidden" name="plan_id" value="{{ \Illuminate\Support\Facades\Crypt::encrypt($plan->id) }}">
-                                        <div class="border p-3 mb-3 rounded">
+                                        <div class="p-3 mb-3 border rounded">
                                             <div class="row">
-                                                <div class="col-md-12 mt-4">
+                                                <div class="mt-4 col-md-12">
                                                     <div class="d-flex align-items-center">
                                                         <div class="form-group w-100">
                                                             <label for="paypal_coupon" class="form-label">{{ __('Coupon') }}</label>
                                                             <input type="text" id="paypal_coupon" name="coupon" class="form-control coupon"placeholder="{{ __('Enter Coupon Code') }}">
                                                         </div>
 
-                                                        <div class="form-group ms-3 mt-4">
+                                                        <div class="mt-4 form-group ms-3">
                                                             <a class="text-muted " data-bs-toggle="tooltip" title="{{ __('Apply') }}"><i class="ti ti-square-check btn-apply apply-coupon"></i>
                                                             </a>
                                                         </div>
@@ -684,10 +684,9 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-sm-12 my-2 px-2">
+                                        <div class="px-2 my-2 col-sm-12">
                                             <div class="text-end">
-                                                <input type="submit" value="{{ __('Pay Now') }}"
-                                                       class="btn btn-primary mb-2 me-3">
+                                                <button type="submit" class="mb-2 btn btn-primary me-3">{{ __('Pay Now') }}</button>
                                             </div>
                                         </div>
                                 </form>
@@ -708,31 +707,31 @@
                                         @csrf
                                         <input type="hidden" name="plan_id" value="{{ \Illuminate\Support\Facades\Crypt::encrypt($plan->id) }}">
 
-                                        <div class="border p-3 mb-3 rounded">
+                                        <div class="p-3 mb-3 border rounded">
                                             <div class="row">
-                                                <div class="col-md-12 mt-4">
+                                                <div class="mt-4 col-md-12">
                                                     <div class="d-flex align-items-center">
                                                         <div class="form-group w-100">
                                                             <label for="paystack_coupon" class="form-label">{{ __('Coupon') }}</label>
                                                             <input type="text" id="paystack_coupon" name="coupon" class="form-control coupon" placeholder="{{ __('Enter Coupon Code') }}">
                                                         </div>
 
-                                                        <div class="form-group ms-3 mt-4">
+                                                        <div class="mt-4 form-group ms-3">
                                                             <a  class="text-muted " data-bs-toggle="tooltip" title="{{ __('Apply') }}">
                                                                 <i class="ti ti-square-check btn-apply apply-coupon"></i>
                                                             </a>
                                                         </div>
                                                     </div>
-                                                    <div class="col-12 text-right paymentwall-coupon-tr" style="display: none">
+                                                    <div class="text-right col-12 paymentwall-coupon-tr" style="display: none">
                                                         <b>{{__('Coupon Discount')}}</b> : <b class="paymentwall-coupon-price"></b>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <div class="col-sm-12 my-2 px-2">
+                                        <div class="px-2 my-2 col-sm-12">
                                             <div class="text-end">
-                                                <input type="button"  id="pay_with_paystack" value="{{ __('Pay Now') }}" class="btn btn-primary mb-2 me-3">
+                                                <input type="button"  id="pay_with_paystack" value="{{ __('Pay Now') }}" class="mb-2 btn btn-primary me-3">
                                             </div>
                                         </div>
 
@@ -753,15 +752,15 @@
                                     @csrf
                                     <input type="hidden" name="plan_id" value="{{ \Illuminate\Support\Facades\Crypt::encrypt($plan->id) }}">
 
-                                    <div class="border p-3 mb-3 rounded">
+                                    <div class="p-3 mb-3 border rounded">
                                         <div class="row">
-                                            <div class="col-md-12 mt-4">
+                                            <div class="mt-4 col-md-12">
                                             <div class="d-flex align-items-center">
                                             <div class="form-group w-100">
                                                 <label for="flutterwave_coupon" class="form-label">{{ __('Coupon') }}</label>
                                                 <input type="text" id="flutterwave_coupon" name="coupon" class="form-control coupon" placeholder="{{ __('Enter Coupon Code') }}">
                                             </div>
-                                            <div class="form-group ms-3 mt-4">
+                                            <div class="mt-4 form-group ms-3">
                                                 <a class="text-muted " data-bs-toggle="tooltip" title="{{ __('Apply') }}"><i class="ti ti-square-check btn-apply apply-coupon"></i>
                                                 </a>
                                             </div>
@@ -770,9 +769,9 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-12 my-2 px-2">
+                                    <div class="px-2 my-2 col-sm-12">
                                         <div class="text-end">
-                                            <input id="pay_with_flaterwave" type="button" value="{{ __('Pay Now') }}" class="btn btn-primary mb-2 me-3">
+                                            <input id="pay_with_flaterwave" type="button" value="{{ __('Pay Now') }}" class="mb-2 btn btn-primary me-3">
                                         </div>
                                     </div>
                                 </form>
@@ -791,16 +790,16 @@
                                     @csrf
                                     <input type="hidden" name="plan_id" value="{{ \Illuminate\Support\Facades\Crypt::encrypt($plan->id) }}">
 
-                                    <div class="border p-3 mb-3 rounded">
+                                    <div class="p-3 mb-3 border rounded">
                                         <div class="row">
-                                            <div class="col-md-12 mt-4">
+                                            <div class="mt-4 col-md-12">
                                                 <div class="d-flex align-items-center">
                                                     <div class="form-group w-100">
                                                         <label for="razorpay_coupon" class="form-label">{{ __('Coupon') }}</label>
                                                         <input type="text" id="razorpay_coupon" name="coupon" class="form-control coupon" placeholder="{{ __('Enter Coupon Code') }}">
                                                     </div>
 
-                                                    <div class="form-group ms-3 mt-4">
+                                                    <div class="mt-4 form-group ms-3">
                                                         <a class="text-muted " data-bs-toggle="tooltip" title="{{ __('Apply') }}"><i class="ti ti-square-check btn-apply apply-coupon"></i>
                                                         </a>
                                                     </div>
@@ -809,9 +808,9 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-12 my-2 px-2">
+                                    <div class="px-2 my-2 col-sm-12">
                                         <div class="text-end">
-                                            <input type="button" id="pay_with_razorpay" value="{{__('Pay Now')}}" class="btn btn-primary mb-2 me-3">
+                                            <input type="button" id="pay_with_razorpay" value="{{__('Pay Now')}}" class="mb-2 btn btn-primary me-3">
                                         </div>
                                     </div>
                                 </form>
@@ -831,17 +830,17 @@
                                     @csrf
                                     <input type="hidden" name="plan_id" value="{{ \Illuminate\Support\Facades\Crypt::encrypt($plan->id) }}">
 
-                                    <div class="border p-3 mb-3 rounded">
+                                    <div class="p-3 mb-3 border rounded">
                                         <div class="row">
-                                            <div class="col-md-12 mt-4">
-                                                <div class="border p-3 mb-3 rounded payment-box">
+                                            <div class="mt-4 col-md-12">
+                                                <div class="p-3 mb-3 border rounded payment-box">
                                                     <div class="d-flex align-items-center">
                                                         <div class="form-group w-100">
                                                             <label for="mercado_coupon" class="form-label">{{ __('Coupon') }}</label>
                                                             <input type="text" id="mercado_coupon" name="coupon" class="form-control coupon" placeholder="{{ __('Enter Coupon Code') }}">
                                                         </div>
 
-                                                        <div class="form-group ms-3 mt-4">
+                                                        <div class="mt-4 form-group ms-3">
                                                             <a class="text-muted " data-bs-toggle="tooltip" title="{{ __('Apply') }}"><i class="ti ti-square-check btn-apply apply-coupon"></i>
                                                             </a>
                                                         </div>
@@ -851,9 +850,9 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-12 my-2 px-2">
+                                    <div class="px-2 my-2 col-sm-12">
                                         <div class="text-end">
-                                            <input type="submit" id="pay_with_mercado" value="{{__('Pay Now')}}" class="btn btn-primary mb-2 me-3">
+                                            <button type="submit" id="pay_with_mercado" class="mb-2 btn btn-primary me-3">{{ __('Pay Now') }}</button>
                                         </div>
                                     </div>
                                 </form>
@@ -874,7 +873,7 @@
                                     <input type="hidden" name="plan_id" value="{{ \Illuminate\Support\Facades\Crypt::encrypt($plan->id) }}">
                                     <input type="hidden" name="total_price" id="paytm_total_price" value="{{ $plan->price }}" class="form-control">
 
-                                    <div class="border p-3 mb-3 rounded">
+                                    <div class="p-3 mb-3 border rounded">
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="form-group">
@@ -888,7 +887,7 @@
                                                     <input type="text" id="paytm_coupon" name="coupon" class="form-control coupon" placeholder="{{ __('Enter Coupon Code') }}">
                                                 </div>
 
-                                                <div class="form-group ms-3 mt-4">
+                                                <div class="mt-4 form-group ms-3">
                                                     <a class="text-muted " data-bs-toggle="tooltip" title="{{ __('Apply') }}"><i class="ti ti-square-check btn-apply apply-coupon"></i>
                                                     </a>
                                                 </div>
@@ -896,9 +895,9 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-12 my-2 px-2">
+                                    <div class="px-2 my-2 col-sm-12">
                                         <div class="text-end">
-                                            <button class="btn btn-primary mb-2 me-3"  id="pay_with_paytm" type="submit">
+                                            <button class="mb-2 btn btn-primary me-3"  id="pay_with_paytm" type="submit">
                                                 {{ __('Pay Now') }}
                                             </button>
                                         </div>
@@ -921,15 +920,15 @@
                                     <input type="hidden" name="plan_id" value="{{ \Illuminate\Support\Facades\Crypt::encrypt($plan->id) }}">
                                     <input type="hidden" name="total_price" id="mollie_total_price" value="{{ $plan->price }}" class="form-control">
 
-                                    <div class="border p-3 mb-3 rounded">
+                                    <div class="p-3 mb-3 border rounded">
                                         <div class="row">
-                                            <div class="col-md-12 mt-4">
+                                            <div class="mt-4 col-md-12">
                                                 <div class="d-flex align-items-center">
                                                     <div class="form-group w-100">
                                                         <label for="mollie_coupon" class="form-label">{{ __('Coupon') }}</label>
                                                         <input type="text" id="mollie_coupon" name="coupon" class="form-control coupon" placeholder="{{ __('Enter Coupon Code') }}">
                                                     </div>
-                                                    <div class="form-group ms-3 mt-4">
+                                                    <div class="mt-4 form-group ms-3">
                                                         <a  class="text-muted " data-bs-toggle="tooltip" title="{{ __('Apply') }}"><i class="ti ti-square-check btn-apply apply-coupon"></i>
                                                         </a>
                                                     </div>
@@ -938,9 +937,9 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-12 my-2 px-2">
+                                    <div class="px-2 my-2 col-sm-12">
                                         <div class="text-end">
-                                            <button class="btn btn-primary mb-2 me-3" id="pay_with_mollie" type="submit">
+                                            <button class="mb-2 btn btn-primary me-3" id="pay_with_mollie" type="submit">
                                                 {{ __('Pay Now') }}
                                             </button>
                                         </div>
@@ -973,15 +972,15 @@
                                     <input type="hidden" name="plan_id" value="{{ \Illuminate\Support\Facades\Crypt::encrypt($plan->id) }}">
                                     <input type="hidden" name="total_price" id="skrill_total_price" value="{{ $plan->price }}" class="form-control">
 
-                                    <div class="border p-3 mb-3 rounded">
+                                    <div class="p-3 mb-3 border rounded">
                                         <div class="row">
-                                            <div class="col-md-12 mt-4">
+                                            <div class="mt-4 col-md-12">
                                                 <div class="d-flex align-items-center">
                                                     <div class="form-group w-100">
                                                         <label for="skrill_coupon" class="form-label">{{ __('Coupon') }}</label>
                                                         <input type="text" id="skrill_coupon" name="coupon" class="form-control coupon" placeholder="{{ __('Enter Coupon Code') }}">
                                                     </div>
-                                                    <div class="form-group ms-3 mt-4">
+                                                    <div class="mt-4 form-group ms-3">
                                                         <a class="text-muted " data-bs-toggle="tooltip" title="{{ __('Apply') }}"><i class="ti ti-square-check btn-apply apply-coupon"></i>
                                                         </a>
                                                     </div>
@@ -990,9 +989,9 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-12 my-2 px-2">
+                                    <div class="px-2 my-2 col-sm-12">
                                         <div class="text-end">
-                                            <button class="btn btn-primary mb-2 me-3" id="pay_with_skrill" type="submit">
+                                            <button class="mb-2 btn btn-primary me-3" id="pay_with_skrill" type="submit">
                                                 {{ __('Pay Now') }}
                                             </button>
                                         </div>
@@ -1015,15 +1014,15 @@
                                     <input type="hidden" name="counpon" id="coingate_coupon" value="">
                                     <input type="hidden" name="plan_id" value="{{ \Illuminate\Support\Facades\Crypt::encrypt($plan->id) }}">
                                     <input type="hidden" name="total_price" id="coingate_total_price" value="{{ $plan->price }}" class="form-control">
-                                    <div class="border p-3 mb-3 rounded">
+                                    <div class="p-3 mb-3 border rounded">
                                         <div class="row">
-                                            <div class="col-md-12 mt-4">
+                                            <div class="mt-4 col-md-12">
                                                 <div class="d-flex align-items-center">
                                                     <div class="form-group w-100">
                                                         <label for="coingate_coupon" class="form-label">{{ __('Coupon') }}</label>
                                                         <input type="text" id="coingate_coupon" name="coupon" class="form-control coupon" placeholder="{{ __('Enter Coupon Code') }}">
                                                     </div>
-                                                    <div class="form-group ms-3 mt-4">
+                                                    <div class="mt-4 form-group ms-3">
                                                         <a class="text-muted " data-bs-toggle="tooltip" title="{{ __('Apply') }}"><i class="ti ti-square-check btn-apply apply-coupon"></i>
                                                         </a>
                                                     </div>
@@ -1032,9 +1031,9 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-12 my-2 px-2">
+                                    <div class="px-2 my-2 col-sm-12">
                                         <div class="text-end">
-                                            <button class="btn btn-primary mb-2 me-3" id="pay_with_coingate" type="submit">
+                                            <button class="mb-2 btn btn-primary me-3" id="pay_with_coingate" type="submit">
                                                 {{ __('Pay Now') }}
                                             </button>
                                         </div>
@@ -1055,16 +1054,16 @@
                                 <form role="form" action="{{ route('plan.paymentwallpayment') }}" method="post" id="paymentwall-payment-form" class="w3-container w3-display-middle w3-card-4">
                                     @csrf
 
-                                    <div class="border p-3 mb-3 rounded">
+                                    <div class="p-3 mb-3 border rounded">
                                         <div class="row">
-                                            <div class="col-md-12 mt-4">
+                                            <div class="mt-4 col-md-12">
                                                 <div class="d-flex align-items-center">
                                                     <div class="form-group w-100">
                                                         <label for="paymentwall_coupon" class="form-label">{{ __('Coupon') }}</label>
                                                         <input type="text" id="paymentwall_coupon" name="coupon" class="form-control coupon" placeholder="{{ __('Enter Coupon Code') }}">
                                                     </div>
 
-                                                    <div class="form-group ms-3 mt-4">
+                                                    <div class="mt-4 form-group ms-3">
                                                         <a class="text-muted " data-bs-toggle="tooltip" title="{{ __('Apply') }}"><i class="ti ti-square-check btn-apply apply-coupon"></i>
                                                         </a>
                                                     </div>
@@ -1073,10 +1072,10 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-12 my-2 px-2">
+                                    <div class="px-2 my-2 col-sm-12">
                                         <div class="text-end">
                                             <input type="hidden" name="plan_id" value="{{ \Illuminate\Support\Facades\Crypt::encrypt($plan->id) }}">
-                                            <button class="btn btn-primary mb-2 me-3" type="submit" id="pay_with_paymentwall">
+                                            <button class="mb-2 btn btn-primary me-3" type="submit" id="pay_with_paymentwall">
                                                 {{ __('Pay Now') }}
                                             </button>
                                         </div>
@@ -1098,16 +1097,16 @@
                                       id="toyyibpay-payment-form" class="w3-container w3-display-middle w3-card-4">
                                     @csrf
 
-                                    <div class="border p-3 mb-3 rounded">
+                                    <div class="p-3 mb-3 border rounded">
                                         <div class="row">
-                                            <div class="col-md-12 mt-4">
+                                            <div class="mt-4 col-md-12">
                                                 <div class="d-flex align-items-center">
                                                     <div class="form-group w-100">
                                                         <label for="toyyibpay_coupon" class="form-label">{{ __('Coupon') }}</label>
                                                         <input type="text" id="toyyibpay_coupon" name="coupon" class="form-control coupon" placeholder="{{ __('Enter Coupon Code') }}">
                                                     </div>
 
-                                                    <div class="form-group ms-3 mt-4">
+                                                    <div class="mt-4 form-group ms-3">
                                                         <a class="text-muted " data-bs-toggle="tooltip" title="{{ __('Apply') }}"><i class="ti ti-square-check btn-apply apply-coupon"></i>
                                                         </a>
                                                     </div>
@@ -1116,11 +1115,11 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-12 my-2 px-2">
+                                    <div class="px-2 my-2 col-sm-12">
                                         <div class="text-end">
                                             <input type="hidden" name="plan_id"
                                                    value="{{ \Illuminate\Support\Facades\Crypt::encrypt($plan->id) }}">
-                                            <button class="btn btn-primary mb-2 me-3" type="submit" id="">
+                                            <button class="mb-2 btn btn-primary me-3" type="submit" id="">
                                                 {{ __('Pay Now') }}
                                             </button>
 
@@ -1147,15 +1146,15 @@
                                     <form role="form" action={{ 'https://' . $pfHost . '/eng/process' }} method="post"
                                           class="require-validation" id="payfast-form">
 
-                                        <div class="border p-3 mb-3 rounded">
+                                        <div class="p-3 mb-3 border rounded">
                                             <div class="row">
-                                                <div class="col-md-12 mt-4">
+                                                <div class="mt-4 col-md-12">
                                                     <div class="d-flex align-items-center">
                                                         <div class="form-group w-100">
                                                             <label for="payfast_coupon" class="form-label">{{ __('Coupon') }}</label>
                                                             <input type="text" id="payfast_coupon" name="coupon" class="form-control coupon" placeholder="{{ __('Enter Coupon Code') }}">
                                                         </div>
-                                                        <div class="form-group ms-3 mt-4">
+                                                        <div class="mt-4 form-group ms-3">
                                                             <a class="text-muted apply-coupon" data-bs-toggle="tooltip" title="{{ __('Apply') }}"><i class="ti ti-square-check btn-apply apply-coupon"></i>
                                                             </a>
                                                         </div>
@@ -1166,10 +1165,10 @@
 
 
                                         <div id="get-payfast-inputs"></div>
-                                        <div class="col-sm-12 my-2 px-2">
+                                        <div class="px-2 my-2 col-sm-12">
                                             <div class="text-end">
                                                 <input type="hidden" name="plan_id" id="plan_id" value="{{ \Illuminate\Support\Facades\Crypt::encrypt($plan->id) }}">
-                                                <input type="submit" value="{{ __('Pay Now') }}" id="payfast-get-status" class="btn btn-primary mb-2 me-3">
+                                                <button type="submit" id="payfast-get-status" class="mb-2 btn btn-primary me-3">{{ __('Pay Now') }}</button>
                                             </div>
                                         </div>
                                     </form>
@@ -1189,15 +1188,15 @@
                                 <form role="form" action="{{ route('iyzipay.payment.init') }}" method="post" class="require-validation" id="iyzipay-payment-form">
                                     @csrf
 
-                                    <div class="border p-3 mb-3 rounded">
+                                    <div class="p-3 mb-3 border rounded">
                                         <div class="row">
-                                            <div class="col-md-12 mt-4">
+                                            <div class="mt-4 col-md-12">
                                                 <div class="d-flex align-items-center">
                                                     <div class="form-group w-100">
                                                         <label for="iyzipay_coupon" class="form-label">{{ __('Coupon') }}</label>
                                                         <input type="text" id="iyzipay_coupon" name="coupon" class="form-control coupon" placeholder="{{ __('Enter Coupon Code') }}">
                                                     </div>
-                                                    <div class="form-group ms-3 mt-4">
+                                                    <div class="mt-4 form-group ms-3">
                                                         <a class="text-muted apply-coupon" data-bs-toggle="tooltip" title="{{ __('Apply') }}"><i class="ti ti-square-check btn-apply apply-coupon"></i>
                                                         </a>
                                                     </div>
@@ -1206,10 +1205,10 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-12 my-2 px-2">
+                                    <div class="px-2 my-2 col-sm-12">
                                         <div class="text-end">
                                             <input type="hidden" name="plan_id" id="plan_id" value="{{ \Illuminate\Support\Facades\Crypt::encrypt($plan->id) }}">
-                                            <input type="submit" value="{{ __('Pay Now') }}" id="payfast-get-status" class="btn btn-primary mb-2 me-3">
+                                            <button type="submit" id="payfast-get-status" class="mb-2 btn btn-primary me-3">{{ __('Pay Now') }}</button>
                                         </div>
                                     </div>
 
@@ -1230,16 +1229,16 @@
                                       id="sspay-payment-form" class="w3-container w3-display-middle w3-card-4">
                                     @csrf
 
-                                    <div class="border p-3 mb-3 rounded">
+                                    <div class="p-3 mb-3 border rounded">
                                         <div class="row">
-                                             <div class="col-md-12 mt-4">
+                                             <div class="mt-4 col-md-12">
                                                 <div class="d-flex align-items-center">
                                                     <div class="form-group w-100">
                                                         <label for="sspay_coupon" class="form-label">{{ __('Coupon') }}</label>
                                                         <input type="text" id="sspay_coupon" name="coupon" class="form-control coupon" placeholder="{{ __('Enter Coupon Code') }}">
                                                     </div>
 
-                                                    <div class="form-group ms-3 mt-4">
+                                                    <div class="mt-4 form-group ms-3">
                                                         <a class="text-muted " data-bs-toggle="tooltip" title="{{ __('Apply') }}"><i class="ti ti-square-check btn-apply apply-coupon"></i>
                                                         </a>
                                                     </div>
@@ -1248,11 +1247,11 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-12 my-2 px-2">
+                                    <div class="px-2 my-2 col-sm-12">
                                         <div class="text-end">
                                             <input type="hidden" name="plan_id"
                                                    value="{{ \Illuminate\Support\Facades\Crypt::encrypt($plan->id) }}">
-                                            <button class="btn btn-primary mb-2 me-3" type="submit" id="">
+                                            <button class="mb-2 btn btn-primary me-3" type="submit" id="">
                                                 {{ __('Pay Now') }}
                                             </button>
 
@@ -1275,16 +1274,16 @@
                                       id="paytab-payment-form" class="w3-container w3-display-middle w3-card-4">
                                     @csrf
 
-                                    <div class="border p-3 mb-3 rounded">
+                                    <div class="p-3 mb-3 border rounded">
                                         <div class="row">
-                                            <div class="col-md-12 mt-4">
+                                            <div class="mt-4 col-md-12">
                                                 <div class="d-flex align-items-center">
                                                     <div class="form-group w-100">
                                                         <label for="paytab_coupon" class="form-label">{{ __('Coupon') }}</label>
                                                         <input type="text" id="paytab_coupon" name="coupon" class="form-control coupon" placeholder="{{ __('Enter Coupon Code') }}">
                                                     </div>
 
-                                                    <div class="form-group ms-3 mt-4">
+                                                    <div class="mt-4 form-group ms-3">
                                                         <a class="text-muted" data-bs-toggle="tooltip" title="{{ __('Apply') }}"><i class="ti ti-square-check btn-apply apply-coupon"></i>
                                                         </a>
                                                     </div>
@@ -1293,11 +1292,11 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-12 my-2 px-2">
+                                    <div class="px-2 my-2 col-sm-12">
                                         <div class="text-end">
                                             <input type="hidden" name="plan_id"
                                                    value="{{ \Illuminate\Support\Facades\Crypt::encrypt($plan->id) }}">
-                                            <button class="btn btn-primary mb-2 me-3" type="submit" id="">
+                                            <button class="mb-2 btn btn-primary me-3" type="submit" id="">
                                                 {{ __('Pay Now') }}
                                             </button>
 
@@ -1320,16 +1319,16 @@
                                       id="benefit-payment-form" class="w3-container w3-display-middle w3-card-4">
                                     @csrf
 
-                                    <div class="border p-3 mb-3 rounded">
+                                    <div class="p-3 mb-3 border rounded">
                                         <div class="row">
-                                            <div class="col-md-12 mt-4">
+                                            <div class="mt-4 col-md-12">
                                                 <div class="d-flex align-items-center">
                                                     <div class="form-group w-100">
                                                         <label for="benefit_coupon" class="form-label">{{ __('Coupon') }}</label>
                                                         <input type="text" id="benefit_coupon" name="coupon" class="form-control coupon" placeholder="{{ __('Enter Coupon Code') }}">
                                                     </div>
 
-                                                    <div class="form-group ms-3 mt-4">
+                                                    <div class="mt-4 form-group ms-3">
                                                         <a class="text-muted" data-bs-toggle="tooltip" title="{{ __('Apply') }}"><i class="ti ti-square-check btn-apply apply-coupon"></i>
                                                         </a>
                                                     </div>
@@ -1338,11 +1337,11 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-12 my-2 px-2">
+                                    <div class="px-2 my-2 col-sm-12">
                                         <div class="text-end">
                                             <input type="hidden" name="plan_id"
                                                    value="{{ \Illuminate\Support\Facades\Crypt::encrypt($plan->id) }}">
-                                            <button class="btn btn-primary mb-2 me-3" type="submit" id="">
+                                            <button class="mb-2 btn btn-primary me-3" type="submit" id="">
                                                 {{ __('Pay Now') }}
                                             </button>
 
@@ -1365,16 +1364,16 @@
                                       id="cashfree-payment-form" class="w3-container w3-display-middle w3-card-4">
                                     @csrf
 
-                                    <div class="border p-3 mb-3 rounded">
+                                    <div class="p-3 mb-3 border rounded">
                                         <div class="row">
-                                            <div class="col-md-12 mt-4">
+                                            <div class="mt-4 col-md-12">
                                                 <div class="d-flex align-items-center">
                                                     <div class="form-group w-100">
                                                         <label for="cashfree_coupon" class="form-label">{{ __('Coupon') }}</label>
                                                         <input type="text" id="cashfree_coupon" name="coupon" class="form-control coupon" placeholder="{{ __('Enter Coupon Code') }}">
                                                     </div>
 
-                                                    <div class="form-group ms-3 mt-4">
+                                                    <div class="mt-4 form-group ms-3">
                                                         <a class="text-muted" data-bs-toggle="tooltip" title="{{ __('Apply') }}"><i class="ti ti-square-check btn-apply apply-coupon"></i>
                                                         </a>
                                                     </div>
@@ -1383,11 +1382,11 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-12 my-2 px-2">
+                                    <div class="px-2 my-2 col-sm-12">
                                         <div class="text-end">
                                             <input type="hidden" name="plan_id"
                                                    value="{{ \Illuminate\Support\Facades\Crypt::encrypt($plan->id) }}">
-                                            <button class="btn btn-primary mb-2 me-3" type="submit" id="">
+                                            <button class="mb-2 btn btn-primary me-3" type="submit" id="">
                                                 {{ __('Pay Now') }}
                                             </button>
 
@@ -1410,16 +1409,16 @@
                                       id="aamarpay-payment-form" class="w3-container w3-display-middle w3-card-4">
                                     @csrf
 
-                                    <div class="border p-3 mb-3 rounded">
+                                    <div class="p-3 mb-3 border rounded">
                                         <div class="row">
-                                            <div class="col-md-12 mt-4">
+                                            <div class="mt-4 col-md-12">
                                                 <div class="d-flex align-items-center">
                                                     <div class="form-group w-100">
                                                         <label for="aamarpay_coupon" class="form-label">{{ __('Coupon') }}</label>
                                                         <input type="text" id="aamarpay_coupon" name="coupon" class="form-control coupon" placeholder="{{ __('Enter Coupon Code') }}">
                                                     </div>
 
-                                                    <div class="form-group ms-3 mt-4">
+                                                    <div class="mt-4 form-group ms-3">
                                                         <a class="text-muted" data-bs-toggle="tooltip" title="{{ __('Apply') }}"><i class="ti ti-square-check btn-apply apply-coupon"></i>
                                                         </a>
                                                     </div>
@@ -1428,11 +1427,11 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-12 my-2 px-2">
+                                    <div class="px-2 my-2 col-sm-12">
                                         <div class="text-end">
                                             <input type="hidden" name="plan_id"
                                                    value="{{ \Illuminate\Support\Facades\Crypt::encrypt($plan->id) }}">
-                                            <button class="btn btn-primary mb-2 me-3" type="submit" id="">
+                                            <button class="mb-2 btn btn-primary me-3" type="submit" id="">
                                                 {{ __('Pay Now') }}
                                             </button>
 
@@ -1455,16 +1454,16 @@
                                       id="paytr-payment-form" class="w3-container w3-display-middle w3-card-4">
                                     @csrf
 
-                                    <div class="border p-3 mb-3 rounded">
+                                    <div class="p-3 mb-3 border rounded">
                                         <div class="row">
-                                            <div class="col-md-12 mt-4">
+                                            <div class="mt-4 col-md-12">
                                                 <div class="d-flex align-items-center">
                                                     <div class="form-group w-100">
                                                         <label for="paytr_coupon" class="form-label">{{ __('Coupon') }}</label>
                                                         <input type="text" id="paytr_coupon" name="coupon" class="form-control coupon" placeholder="{{ __('Enter Coupon Code') }}">
                                                     </div>
 
-                                                    <div class="form-group ms-3 mt-4">
+                                                    <div class="mt-4 form-group ms-3">
                                                         <a class="text-muted" data-bs-toggle="tooltip" title="{{ __('Apply') }}"><i class="ti ti-square-check btn-apply apply-coupon"></i>
                                                         </a>
                                                     </div>
@@ -1473,11 +1472,11 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-12 my-2 px-2">
+                                    <div class="px-2 my-2 col-sm-12">
                                         <div class="text-end">
                                             <input type="hidden" name="plan_id"
                                                    value="{{ \Illuminate\Support\Facades\Crypt::encrypt($plan->id) }}">
-                                            <button class="btn btn-primary mb-2 me-3" type="submit" id="">
+                                            <button class="mb-2 btn btn-primary me-3" type="submit" id="">
                                                 {{ __('Pay Now') }}
                                             </button>
 
@@ -1500,16 +1499,16 @@
                                       id="yookassa-payment-form" class="w3-container w3-display-middle w3-card-4">
                                     @csrf
 
-                                    <div class="border p-3 mb-3 rounded">
+                                    <div class="p-3 mb-3 border rounded">
                                         <div class="row">
-                                            <div class="col-md-12 mt-4">
+                                            <div class="mt-4 col-md-12">
                                                 <div class="d-flex align-items-center">
                                                     <div class="form-group w-100">
                                                         <label for="yookassa_coupon" class="form-label">{{ __('Coupon') }}</label>
                                                         <input type="text" id="yookassa_coupon" name="coupon" class="form-control coupon" placeholder="{{ __('Enter Coupon Code') }}">
                                                     </div>
 
-                                                    <div class="form-group ms-3 mt-4">
+                                                    <div class="mt-4 form-group ms-3">
                                                         <a class="text-muted" data-bs-toggle="tooltip" title="{{ __('Apply') }}"><i class="ti ti-square-check btn-apply apply-coupon"></i>
                                                         </a>
                                                     </div>
@@ -1518,11 +1517,11 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-12 my-2 px-2">
+                                    <div class="px-2 my-2 col-sm-12">
                                         <div class="text-end">
                                             <input type="hidden" name="plan_id"
                                                    value="{{ \Illuminate\Support\Facades\Crypt::encrypt($plan->id) }}">
-                                            <button class="btn btn-primary mb-2 me-3" type="submit" id="">
+                                            <button class="mb-2 btn btn-primary me-3" type="submit" id="">
                                                 {{ __('Pay Now') }}
                                             </button>
 
@@ -1545,16 +1544,16 @@
                                       id="midtrans-payment-form" class="w3-container w3-display-middle w3-card-4">
                                     @csrf
 
-                                    <div class="border p-3 mb-3 rounded">
+                                    <div class="p-3 mb-3 border rounded">
                                         <div class="row">
-                                            <div class="col-md-12 mt-4">
+                                            <div class="mt-4 col-md-12">
                                                 <div class="d-flex align-items-center">
                                                     <div class="form-group w-100">
                                                         <label for="midtrans_coupon" class="form-label">{{ __('Coupon') }}</label>
                                                         <input type="text" id="midtrans_coupon" name="coupon" class="form-control coupon" placeholder="{{ __('Enter Coupon Code') }}">
                                                     </div>
 
-                                                    <div class="form-group ms-3 mt-4">
+                                                    <div class="mt-4 form-group ms-3">
                                                         <a class="text-muted" data-bs-toggle="tooltip" title="{{ __('Apply') }}"><i class="ti ti-square-check btn-apply apply-coupon"></i>
                                                         </a>
                                                     </div>
@@ -1563,11 +1562,11 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-12 my-2 px-2">
+                                    <div class="px-2 my-2 col-sm-12">
                                         <div class="text-end">
                                             <input type="hidden" name="plan_id"
                                                    value="{{ \Illuminate\Support\Facades\Crypt::encrypt($plan->id) }}">
-                                            <button class="btn btn-primary mb-2 me-3" type="submit" id="">
+                                            <button class="mb-2 btn btn-primary me-3" type="submit" id="">
                                                 {{ __('Pay Now') }}
                                             </button>
 
@@ -1590,16 +1589,16 @@
                                    id="xendit-payment-form" class="w3-container w3-display-middle w3-card-4">
                                  @csrf
 
-                                 <div class="border p-3 mb-3 rounded">
+                                 <div class="p-3 mb-3 border rounded">
                                      <div class="row">
-                                         <div class="col-md-12 mt-4">
+                                         <div class="mt-4 col-md-12">
                                              <div class="d-flex align-items-center">
                                                  <div class="form-group w-100">
                                                      <label for="xendit_coupon" class="form-label">{{ __('Coupon') }}</label>
                                                      <input type="text" id="xendit_coupon" name="coupon" class="form-control coupon" placeholder="{{ __('Enter Coupon Code') }}">
                                                  </div>
 
-                                                 <div class="form-group ms-3 mt-4">
+                                                 <div class="mt-4 form-group ms-3">
                                                      <a class="text-muted" data-bs-toggle="tooltip" title="{{ __('Apply') }}"><i class="ti ti-square-check btn-apply apply-coupon"></i>
                                                      </a>
                                                  </div>
@@ -1608,11 +1607,11 @@
                                      </div>
                                  </div>
 
-                                 <div class="col-sm-12 my-2 px-2">
+                                 <div class="px-2 my-2 col-sm-12">
                                      <div class="text-end">
                                          <input type="hidden" name="plan_id"
                                                 value="{{ \Illuminate\Support\Facades\Crypt::encrypt($plan->id) }}">
-                                         <button class="btn btn-primary mb-2 me-3" type="submit" id="">
+                                         <button class="mb-2 btn btn-primary me-3" type="submit" id="">
                                              {{ __('Pay Now') }}
                                          </button>
 
@@ -1635,16 +1634,16 @@
                                id="nepalste-payment-form" class="w3-container w3-display-middle w3-card-4">
                              @csrf
 
-                             <div class="border p-3 mb-3 rounded">
+                             <div class="p-3 mb-3 border rounded">
                                  <div class="row">
-                                     <div class="col-md-12 mt-4">
+                                     <div class="mt-4 col-md-12">
                                          <div class="d-flex align-items-center">
                                              <div class="form-group w-100">
                                                  <label for="nepalste_coupon" class="form-label">{{ __('Coupon') }}</label>
                                                  <input type="text" id="nepalste_coupon" name="coupon" class="form-control coupon" placeholder="{{ __('Enter Coupon Code') }}">
                                              </div>
 
-                                             <div class="form-group ms-3 mt-4">
+                                             <div class="mt-4 form-group ms-3">
                                                  <a class="text-muted" data-bs-toggle="tooltip" title="{{ __('Apply') }}"><i class="ti ti-square-check btn-apply apply-coupon"></i>
                                                  </a>
                                              </div>
@@ -1653,11 +1652,11 @@
                                  </div>
                              </div>
 
-                             <div class="col-sm-12 my-2 px-2">
+                             <div class="px-2 my-2 col-sm-12">
                                  <div class="text-end">
                                      <input type="hidden" name="plan_id"
                                             value="{{ \Illuminate\Support\Facades\Crypt::encrypt($plan->id) }}">
-                                     <button class="btn btn-primary mb-2 me-3" type="submit" id="">
+                                     <button class="mb-2 btn btn-primary me-3" type="submit" id="">
                                          {{ __('Pay Now') }}
                                      </button>
 

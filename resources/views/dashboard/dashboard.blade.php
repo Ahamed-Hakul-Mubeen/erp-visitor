@@ -860,6 +860,7 @@
 
 @endsection
 @push('script-page')
+
 <script>
 $(document).ready(function() {
     let timerInterval;

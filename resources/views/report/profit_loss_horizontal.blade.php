@@ -66,7 +66,7 @@
                         <div class="col-xl-12">
 
                             <div class="row justify-content-between">
-                                <div class="col-xl-3 mt-4">
+                                <div class="mt-4 col-xl-3">
                                     <div class="btn-group btn-group-toggle" data-toggle="buttons"
                                         aria-label="Basic radio toggle button group">
                                         <label class="btn btn-primary month-label">
@@ -134,7 +134,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body {{ $collapseView == 'expand' ? 'collapse-view' : '' }}">
-                    <div class="account-main-title mb-5">
+                    <div class="mb-5 account-main-title">
                         <h5>{{ 'Profit & Loss ' . $user->name . ' as of ' . $filter['startDateRange'] . ' to ' . $filter['endDateRange'] }}
                             </h4>
                     </div>
@@ -148,14 +148,14 @@
 
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="aacount-title d-flex align-items-center justify-content-between border py-2">
+                            <div class="py-2 border aacount-title d-flex align-items-center justify-content-between">
                                 <h5 class="mb-0 ms-3">{{ __('Expenses') }}</h5>
                             </div>
                             <div class="border-start border-end">
                                 @foreach ($totalAccounts as $accounts)
                                     @if ($accounts['Type'] == 'Expenses' || $accounts['Type'] == 'Costs of Goods Sold')
-                                        <div class="account-main-inner border-bottom py-2">
-                                            <p class="fw-bold mb-2 ms-3">{{ $accounts['Type'] }}</p>
+                                        <div class="py-2 account-main-inner border-bottom">
+                                            <p class="mb-2 fw-bold ms-3">{{ $accounts['Type'] }}</p>
 
                                             @foreach ($accounts['account'] as $records)
                                                 @if ($collapseView == 'collapse')
@@ -179,10 +179,10 @@
                                                                     <a href="{{ route('report.ledger', $record['account_id']) }}?account={{ $record['account_id'] }}"
                                                                         class="text-primary">{{ str_replace('Total ', '', $record['account_name']) }}</a>
                                                                 </div>
-                                                                <p class="mb-2 ms-3 text-center">
+                                                                <p class="mb-2 text-center ms-3">
                                                                     {{ $record['account_code'] }}
                                                                 </p>
-                                                                <p class="text-primary mb-2 me-3 float-end text-end">
+                                                                <p class="mb-2 text-primary me-3 float-end text-end">
                                                                     {{ \Auth::user()->priceFormat($$netAmount) }}
                                                                 </p>
                                                             </div>
@@ -203,7 +203,7 @@
                                                                 </p>
 
                                                                 @if (!preg_match('/\btotal\b/i', $record['account_name']))
-                                                                    <p class="text-primary mb-2 float-end text-end me-3">
+                                                                    <p class="mb-2 text-primary float-end text-end me-3">
                                                                         {{ \Auth::user()->priceFormat($$netAmount) }}
                                                                     </p>
                                                                 @else
@@ -256,10 +256,10 @@
                                                                             class="text-dark fw-bold">{{ $record['account_name'] }}</a>
                                                                     </p>
                                                                 @endif
-                                                                <p class="mb-2 ms-3 text-center">
+                                                                <p class="mb-2 text-center ms-3">
                                                                     {{ $record['account_code'] }}
                                                                 </p>
-                                                                <p class="text-dark fw-bold mb-2 me-3 float-end text-end">
+                                                                <p class="mb-2 text-dark fw-bold me-3 float-end text-end">
                                                                     {{ \Auth::user()->priceFormat($netAmount) }}
                                                                 </p>
                                                             </div>
@@ -279,7 +279,7 @@
                                                                 </p>
 
                                                                 @if (!preg_match('/\btotal\b/i', $record['account_name']))
-                                                                    <p class="text-primary mb-2 float-end text-end me-3">
+                                                                    <p class="mb-2 text-primary float-end text-end me-3">
                                                                         {{ \Auth::user()->priceFormat($netAmount) }}
                                                                     </p>
                                                                 @else
@@ -319,10 +319,10 @@
                                                 @endif
                                             @endforeach
                                             <div class="account-inner d-flex align-items-center justify-content-between">
-                                                <p class="fw-bold mb-2 ms-3 ">
+                                                <p class="mb-2 fw-bold ms-3 ">
                                                     {{ $record['account_name'] ? $record['account_name'] : '' }}
                                                 </p>
-                                                <p class="fw-bold mb-2 text-end me-3">
+                                                <p class="mb-2 fw-bold text-end me-3">
                                                     {{ $record['netAmount'] ? \Auth::user()->priceFormat($netAmount) : \Auth::user()->priceFormat(0) }}
                                                 </p>
                                             </div>
@@ -332,14 +332,14 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="aacount-title d-flex align-items-center justify-content-between border py-2">
+                            <div class="py-2 border aacount-title d-flex align-items-center justify-content-between">
                                 <h5 class="mb-0 ms-3">{{ __('Income') }}</h5>
                             </div>
                             <div class="border-start border-end">
                                 @foreach ($totalAccounts as $accounts)
                                     @if ($accounts['Type'] == 'Income')
-                                        <div class="account-main-inner border-bottom py-2">
-                                            <p class="fw-bold mb-2 ms-3">{{ $accounts['Type'] }}</p>
+                                        <div class="py-2 account-main-inner border-bottom">
+                                            <p class="mb-2 fw-bold ms-3">{{ $accounts['Type'] }}</p>
 
                                             @foreach ($accounts['account'] as $records)
                                                 @if ($collapseView == 'collapse')
@@ -356,10 +356,10 @@
                                                                     <a href="{{ route('report.ledger', $record['account_id']) }}?account={{ $record['account_id'] }}"
                                                                         class="text-primary">{{ str_replace('Total ', '', $record['account_name']) }}</a>
                                                                 </div>
-                                                                <p class="mb-2 ms-3 text-center">
+                                                                <p class="mb-2 text-center ms-3">
                                                                     {{ $record['account_code'] }}
                                                                 </p>
-                                                                <p class="text-primary mb-2 me-3 float-end text-end">
+                                                                <p class="mb-2 text-primary me-3 float-end text-end">
                                                                     {{ \Auth::user()->priceFormat($record['netAmount']) }}
                                                                 </p>
                                                             </div>
@@ -380,7 +380,7 @@
                                                                 </p>
 
                                                                 @if (!preg_match('/\btotal\b/i', $record['account_name']))
-                                                                    <p class="text-primary mb-2 float-end text-end me-3">
+                                                                    <p class="mb-2 text-primary float-end text-end me-3">
                                                                         {{ \Auth::user()->priceFormat($record['netAmount']) }}
                                                                     </p>
                                                                 @else
@@ -429,10 +429,10 @@
                                                                             class="text-dark fw-bold">{{ $record['account_name'] }}</a>
                                                                     </p>
                                                                 @endif
-                                                                <p class="mb-2 ms-3 text-center">
+                                                                <p class="mb-2 text-center ms-3">
                                                                     {{ $record['account_code'] }}
                                                                 </p>
-                                                                <p class="text-dark fw-bold mb-2 me-3 float-end text-end">
+                                                                <p class="mb-2 text-dark fw-bold me-3 float-end text-end">
                                                                     {{ \Auth::user()->priceFormat($record['netAmount']) }}
                                                                 </p>
                                                             </div>
@@ -452,7 +452,7 @@
                                                                 </p>
 
                                                                 @if (!preg_match('/\btotal\b/i', $record['account_name']))
-                                                                    <p class="text-primary mb-2 float-end text-end me-3">
+                                                                    <p class="mb-2 text-primary float-end text-end me-3">
                                                                         {{ \Auth::user()->priceFormat($record['netAmount']) }}
                                                                     </p>
                                                                 @else
@@ -483,10 +483,10 @@
                                             @endforeach
 
                                             <div class="account-inner d-flex align-items-center justify-content-between">
-                                                <p class="fw-bold mb-2 ms-3">
+                                                <p class="mb-2 fw-bold ms-3">
                                                     {{ $record['account_name'] ? $record['account_name'] : '' }}
                                                 </p>
-                                                <p class="fw-bold mb-2 text-end me-3">
+                                                <p class="mb-2 fw-bold text-end me-3">
                                                     {{ $record['netAmount'] ? \Auth::user()->priceFormat($record['netAmount']) : \Auth::user()->priceFormat(0) }}
                                                 </p>
                                             </div>

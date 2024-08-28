@@ -65,7 +65,7 @@
 </div>
 
 <div class="modal-footer">
-  <input type="submit" value="{{ __('Update') }}" class="btn btn-primary">
+  <button type="submit" class="btn btn-primary">{{ __('Update') }}</button>
 </div>
 {{ Form::close() }}
 

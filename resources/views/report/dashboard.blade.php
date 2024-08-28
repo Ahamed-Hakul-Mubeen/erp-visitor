@@ -15,7 +15,7 @@
     @endif
 
     @if(\Auth::user()->type != 'client' && \Auth::user()->type != 'company')
-        <div class="row mt-5">
+        <div class="mt-5 row">
             <div class="col-lg-6">
                 <div class="card">
                     <div class="card-header">
@@ -33,9 +33,9 @@
                                             <i class="ti ti-angle-right"></i>
                                         </a>
                                     </div>
-                                    <h5 class="fullcalendar-title h4 d-inline-block font-weight-400 mb-0"></h5>
+                                    <h5 class="mb-0 fullcalendar-title h4 d-inline-block font-weight-400"></h5>
                                 </div>
-                                <div class="col-lg-6 mt-3 mt-lg-0 text-lg-right">
+                                <div class="mt-3 col-lg-6 mt-lg-0 text-lg-right">
                                     <div class="btn-group" role="group" aria-label="Basic example">
                                         <a href="#" class="btn btn-sm btn-neutral" data-calendar-view="month">{{__('Month')}}</a>
                                         <a href="#" class="btn btn-sm btn-neutral" data-calendar-view="basicWeek">{{__('Week')}}</a>
@@ -66,7 +66,7 @@
                         <p class="text-muted pb-0-5">{{__('My Office Time: '.$officeTime['startTime'].' to '.$officeTime['endTime'])}}</p>
                         <center>
                             <div class="row">
-                                <div class="col-md-6 float-right border-right">
+                                <div class="float-right col-md-6 border-right">
                                     {{Form::open(array('url'=>'attendanceemployee/attendance','method'=>'post'))}}
                                     @if(empty($employeeAttendance) || $employeeAttendance->clock_out != '00:00:00')
                                         <button type="submit" value="0" name="in" id="clock_in" class="btn-create badge-success">{{__('CLOCK IN')}}</button>
@@ -75,7 +75,7 @@
                                     @endif
                                     {{Form::close()}}
                                 </div>
-                                <div class="col-md-6 float-left">
+                                <div class="float-left col-md-6">
                                     @if(!empty($employeeAttendance) && $employeeAttendance->clock_out == '00:00:00')
                                         {{Form::model($employeeAttendance,array('route'=>array('attendanceemployee.update',$employeeAttendance->id),'method' => 'PUT')) }}
                                         <button type="submit" value="1" name="out" id="clock_out" class="btn-create badge-danger">{{__('CLOCK OUT')}}</button>
@@ -99,7 +99,7 @@
                     </div>
                     <div class="card-body dash-card-body">
                         <div class="table-responsive">
-                            <table class="table table-striped mb-0">
+                            <table class="table mb-0 table-striped">
                                 <thead>
                                 <tr>
                                     <th>{{__('Title')}}</th>
@@ -132,7 +132,7 @@
                       @if(count($meetings) > 0)
                         <div class="table-responsive">
 
-                            <table class="table table-striped mb-0">
+                            <table class="table mb-0 table-striped">
 
                                 <thead>
                                 <tr>
@@ -236,7 +236,7 @@
             </div>
             <div class="col-xl-9 col-lg-8 col-md-7">
                 <div class="">
-                    <h4 class="h4 font-weight-400 float-left">{{__('Announcement List')}}</h4>
+                    <h4 class="float-left h4 font-weight-400">{{__('Announcement List')}}</h4>
                 </div>
                 <div class="card card-fluid bg-none min-height-443">
                     <div class="table-responsive">
@@ -270,9 +270,9 @@
                 </div>
             </div>
         </div>
-        <div class="row mt-5">
+        <div class="mt-5 row">
             <div class="col-md-6">
-                <h4 class="h4 font-weight-400 float-left">{{__('Event View')}}</h4>
+                <h4 class="float-left h4 font-weight-400">{{__('Event View')}}</h4>
                 <div class="card card-fluid widget-calendar min-height-940">
                     <div class="card-header ">
                         <div class="row">
@@ -287,8 +287,8 @@
                                 </div>
 
                             </div>
-                            <div class="col-xl-5 col-lg-4 col-md-5 col-sm-6 text-center">
-                                <h5 class="fullcalendar-title h4 d-inline-block font-weight-600 mb-0">{{__('Calendar')}}</h5>
+                            <div class="text-center col-xl-5 col-lg-4 col-md-5 col-sm-6">
+                                <h5 class="mb-0 fullcalendar-title h4 d-inline-block font-weight-600">{{__('Calendar')}}</h5>
                             </div>
                             <div class="col-xl-5 col-lg-5 col-md-5 col-sm-4 text-lg-right">
                                 <div class="btn-group" role="group" aria-label="Basic example">
@@ -305,7 +305,7 @@
 
             <div class="col-md-6">
                 <div class="">
-                    <h4 class="h4 font-weight-400 float-left">{{__('Meeting schedule')}}</h4>
+                    <h4 class="float-left h4 font-weight-400">{{__('Meeting schedule')}}</h4>
                 </div>
                 <div class="card card-fluid bg-none min-height-940">
                     <div class="table-responsive">
@@ -345,6 +345,7 @@
     <script src="{{ asset('assets/libs/fullcalendar/dist/fullcalendar.min.js') }}"></script>
 @endpush
 @push('script-page')
+
     <script>
         // event_calendar (not working now)
         var e, t, a = $('[data-toggle="event_calendar"]');

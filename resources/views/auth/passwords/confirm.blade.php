@@ -19,7 +19,7 @@
     <form method="POST" action="{{ route('password.confirm') }}">
         @csrf
         <div class="">
-            <div class="form-group mb-3">
+            <div class="mb-3 form-group">
                 <label for="password" class="form-label">{{ __('Password') }}</label>
                 <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
                 @error('password')
@@ -29,7 +29,7 @@
                 @enderror
             </div>
             <div class="d-grid">
-                <button type="submit" class="btn-login btn btn-primary btn-block mt-2">{{ __('Confirm Password') }}</button>
+                <button type="submit" class="mt-2 btn-login btn btn-primary btn-block">{{ __('Confirm Password') }}</button>
             </div>
             @if (Route::has('password.request'))
                 <p class="my-4 text-center">{{__("OR")}} <a href="{{ route('password.request') }}" class="text-primary">{{__('Forgot Your Password?')}}</a></p>
