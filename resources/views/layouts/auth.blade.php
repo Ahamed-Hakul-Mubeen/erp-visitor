@@ -157,8 +157,8 @@
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <div class="collapse navbar-collapse" id="navbarlogin">
-                            <ul class="navbar-nav align-items-center ms-auto mb-2 mb-lg-0">
-                                @include('landingpage::layouts.buttons')
+                            <ul class="mb-2 navbar-nav align-items-center ms-auto mb-lg-0">
+                                
                                 @yield('language-bar')
                             </ul>
                         </div>
