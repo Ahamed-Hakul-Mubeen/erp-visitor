@@ -114,7 +114,6 @@ class AttendanceEmployeeController extends Controller
 
             }
 
-
             return view('attendance.index', compact('attendanceEmployee', 'branch', 'department'));
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
@@ -214,6 +213,15 @@ class AttendanceEmployeeController extends Controller
         if (\Auth::user()->can('edit attendance')) {
             $attendanceEmployee = AttendanceEmployee::where('id', $id)->first();
             $employees = Employee::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+            if($attendanceEmployee->total_break_duration != null)
+            {
+                $timeString = $attendanceEmployee->total_break_duration;
+                list($hours, $minutes, $seconds) = explode(':', $timeString);
+                $totalMinutes = ($hours * 60) + $minutes + ($seconds / 60);
+                $attendanceEmployee->total_break_duration = round($totalMinutes, 2);
+            }
+            else
+                $attendanceEmployee->total_break_duration = 0;
 
             return view('attendance.edit', compact('attendanceEmployee', 'employees'));
         } else {
@@ -234,6 +242,41 @@ class AttendanceEmployeeController extends Controller
 
             $clockIn = $request->clock_in;
             $clockOut = $request->clock_out;
+
+            $startTime1 = Carbon::parse(Utility::getValByName('company_start_time'));
+            $endTime1 = Carbon::parse(Utility::getValByName('company_end_time'));
+            $defaultBreakTimeInMinutes = Utility::getValByName('break_time');
+
+            if(!$request->total_break_duration)
+            $request->total_break_duration=0;
+
+            $punch_in = Carbon::parse($request->clock_in);
+            $punch_out = Carbon::parse($request->clock_out);
+
+            $totalScheduledMinutes = $endTime1->diffInMinutes($startTime1) - $defaultBreakTimeInMinutes;
+
+            $totalWorkedMinutes = $punch_out->diffInMinutes($punch_in) - $request->total_break_duration;
+
+            $earlyLeavingMinutes = 0;
+            if ($punch_out < $endTime1) {
+                $earlyLeavingMinutes = $endTime1->diffInMinutes($punch_out);
+            }
+
+            $overtimeMinutes = 0;
+            if ($totalWorkedMinutes > $totalScheduledMinutes) {
+                $overtimeMinutes = $totalWorkedMinutes - $totalScheduledMinutes;
+            }
+
+            $hours = floor($request->total_break_duration / 60); // 1 hour
+            $minutes = floor($request->total_break_duration - ($hours * 60)); // 20 minutes
+            $seconds = round(($request->total_break_duration - floor($request->total_break_duration)) * 60);
+
+            $total_break_time = sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds);
+
+            $earlyLeavingTime = gmdate('H:i:s', $earlyLeavingMinutes * 60);
+            $overtimeTime = gmdate('H:i:s', $overtimeMinutes * 60);
+
+
 
             if ($clockIn) {
                 $status = "present";
@@ -268,10 +311,11 @@ class AttendanceEmployeeController extends Controller
             if ($check->date == date('Y-m-d')) {
                 $check->update([
                     'late' => $late,
-                    'early_leaving' => ($earlyLeaving > 0) ? $earlyLeaving : '00:00:00',
-                    'overtime' => $overtime,
+                    'early_leaving' => ($earlyLeavingTime > 0) ? $earlyLeavingTime : '00:00:00',
+                    'overtime' => $overtimeTime,
                     'clock_in' => $clockIn,
                     'clock_out' => $clockOut,
+                    'total_break_duration' => $total_break_time,
                 ]);
 
                 return redirect()->route('attendanceemployee.index')->with('success', __('Employee attendance successfully updated.'));

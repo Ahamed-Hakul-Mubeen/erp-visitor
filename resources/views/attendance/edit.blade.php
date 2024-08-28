@@ -20,6 +20,12 @@
             {{Form::label('clock_out',__('Clock Out'), ['class' => 'form-label'])}}
             {{Form::time('clock_out',null,array('class'=>'form-control '))}}
         </div>
+
+        <div class="form-group col-lg-6">
+            {{ Form::label('total_break_duration', __('Break Time (In Minutes)'), ['class' => 'form-label']) }}
+            {{ Form::number('total_break_duration', null, array('class' => 'form-control', 'min' => '0' , 'pattern' => '[0-9]*', 'inputmode' => 'numeric')) }}
+        </div>
+
     </div>
 </div>
 <div class="modal-footer">
