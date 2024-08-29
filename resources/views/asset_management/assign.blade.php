@@ -25,5 +25,6 @@
             <input type="date" name="assigned_date" class="form-control" value="{{ isset($latestHistory) && $asset->status == 1 ? $latestHistory->action_date : '' }}" required>
         </div>
         <button type="submit" class="btn btn-primary">{{ __('Assign') }}</button>
+        
     </form>
 </div>
