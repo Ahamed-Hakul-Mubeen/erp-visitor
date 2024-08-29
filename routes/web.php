@@ -144,6 +144,8 @@ use App\Http\Controllers\MidtransPaymentController;
 use App\Http\Controllers\ProjectExpenseController;
 use App\Http\Controllers\NepalstePaymnetController;
 use App\Http\Controllers\QuotationController;
+use App\Http\Controllers\ProductTypeController;
+use App\Http\Controllers\AssetManagementController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -837,7 +839,7 @@ Route::group(['middleware' => ['verified']], function () {
     Route::resource('designation', DesignationController::class)->middleware(['auth', 'XSS']);
     Route::resource('document', DocumentController::class)->middleware(['auth', 'XSS']);
     Route::resource('branch', BranchController::class)->middleware(['auth', 'XSS']);
-
+    Route::resource('product_type', ProductTypeController::class)->middleware(['auth', 'XSS']);
     // Hrm EmployeeController
 
     Route::get('employee/salary/{eid}', [SetSalaryController::class, 'employeeBasicSalary'])->name('employee.basic.salary')->middleware(['auth', 'XSS']);
@@ -883,7 +885,17 @@ Route::group(['middleware' => ['verified']], function () {
     Route::resource('company-policy', CompanyPolicyController::class)->middleware(['auth', 'XSS']);
     Route::resource('indicator', IndicatorController::class)->middleware(['auth', 'XSS']);
     Route::resource('appraisal', AppraisalController::class)->middleware(['auth', 'XSS']);
-
+    Route::resource('asset_management', AssetManagementController::class)->middleware(['auth', 'XSS']);
+    Route::get('asset_management/{id}/assign', [AssetManagementController::class, 'showAssignForm'])->name('asset_management.showAssignForm');
+    Route::post('asset_management/{id}/assign', [AssetManagementController::class, 'assignAsset'])->name('asset_management.assignAsset');
+    Route::get('asset_management/{id}/transfer', [AssetManagementController::class, 'showtransfer'])->name('asset_management.showtransfer');
+    Route::post('asset_management/{id}/transfer', [AssetManagementController::class, 'transfer'])->name('asset_management.transfer');
+    Route::get('asset_management/{id}/unassign', [AssetManagementController::class, 'showUnassignForm'])->name('asset_management.showUnassignForm');
+    Route::post('asset_management/{id}/unassign', [AssetManagementController::class, 'unassignAsset'])->name('asset_management.unassignAsset');
+    Route::get('asset_management/{id}/history', [AssetManagementController::class, 'showHistory'])->name('asset_management.history');
+   
+    
+    
     Route::post('branch/employee/json', [EmployeeController::class, 'employeeJson'])->name('branch.employee.json')->middleware(['auth', 'XSS']);
 
     Route::resource('goaltype', GoalTypeController::class)->middleware(['auth', 'XSS']);
