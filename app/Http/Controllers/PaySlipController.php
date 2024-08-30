@@ -498,31 +498,27 @@ class PaySlipController extends Controller
             }
         }
 
+        $hours = $request->overtime_hours;
+        $minutes = $request->overtime_minutes;
+        $amount = $request->overtime_amount;
 
-        if(isset($request->rate) && !empty($request->rate))
-        {
-            $rates   = $request->rate;
-            $rateIds = $request->rate_id;
-            $hourses = $request->hours;
-
-            foreach($rates as $k => $rate)
-            {
-                $overtime        = Overtime::find($rateIds[$k]);
-                $overtime->rate  = $rate;
-                $overtime->hours = $hourses[$k];
-                $overtime->save();
-            }
-        }
-
+        $overtime_arr = array("hours" => $hours, "minutes" => $minutes, "amount" => $amount);
 
         $payslipEmployee                       = PaySlip::find($request->payslip_id);
+
+        $pay_arr = explode("-",$payslipEmployee->salary_month);
+
+        $year = $pay_arr[0];
+        $month = $pay_arr[1];
+
         $payslipEmployee->allowance            = Employee::allowance($payslipEmployee->employee_id);
         $payslipEmployee->commission           = Employee::commission($payslipEmployee->employee_id);
         $payslipEmployee->loan                 = Employee::loan($payslipEmployee->employee_id);
         $payslipEmployee->saturation_deduction = Employee::saturation_deduction($payslipEmployee->employee_id);
+        $payslipEmployee->leave_deductions     = $payslipEmployee->leave_deductions($year, $month);
         $payslipEmployee->other_payment        = Employee::other_payment($payslipEmployee->employee_id);
-        $payslipEmployee->overtime             = Employee::overtime($payslipEmployee->employee_id);
-        $payslipEmployee->net_payble           = Employee::find($payslipEmployee->employee_id)->get_net_salary();
+        $payslipEmployee->overtime             = json_encode($overtime_arr);
+        $payslipEmployee->net_payble           = Employee::find($payslipEmployee->employee_id)->get_net_salary($year, $month);
         $payslipEmployee->save();
 
         return redirect()->route('payslip.index')->with('success', __('Employee payroll successfully updated.'));

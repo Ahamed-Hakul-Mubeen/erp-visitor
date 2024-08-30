@@ -147,20 +147,20 @@
                                     <div class="row px-3">
                                         @php
                                             $overtimes = json_decode($payslip->overtime);
-
+                                            // dd($overtimes->hours , minutes, amount);
                                         @endphp
-                                        @foreach($overtimes as $overtime)
-
-                                            <div class="col-md-6 form-group">
-                                                {!! Form::label('rate', $overtime->title.' '.__('Rate'),['class'=>'col-form-label']) !!}
-                                                {!! Form::text('rate[]', $overtime->rate, ['class' => 'form-control']) !!}
-                                                {!! Form::hidden('rate_id[]', $overtime->id, ['class' => 'form-control']) !!}
-                                            </div>
-                                            <div class="col-md-6 form-group">
-                                                {!! Form::label('hours',$overtime->title.' '.__('Hours'),['class'=>'col-form-label']) !!}
-                                                {!! Form::text('hours[]', $overtime->hours, ['class' => 'form-control']) !!}
-                                            </div>
-                                        @endforeach
+                                        <div class="col-md-4 form-group">
+                                            {!! Form::label('hours', __('Hours'),['class'=>'col-form-label']) !!}
+                                            {!! Form::text('overtime_hours', $overtimes->hours, ['class' => 'form-control']) !!}
+                                        </div>
+                                        <div class="col-md-4 form-group">
+                                            {!! Form::label('minutes', __('Minutes'),['class'=>'col-form-label']) !!}
+                                            {!! Form::text('overtime_minutes', $overtimes->minutes, ['class' => 'form-control']) !!}
+                                        </div>
+                                        <div class="col-md-4 form-group">
+                                            {!! Form::label('amount', __('Amount'),['class'=>'col-form-label']) !!}
+                                            {!! Form::text('overtime_amount', $overtimes->amount, ['class' => 'form-control']) !!}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
