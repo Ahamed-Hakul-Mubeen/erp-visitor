@@ -712,7 +712,7 @@
                 </div>
                 <div class="tab-pane fade" id="hrmpermission" role="tabpanel" aria-labelledby="pills-contact-tab">
                     @php
-                        $modules=['hrm dashboard','employee','employee profile','department','designation','branch','document type','document','payslip type','allowance','commission','allowance option','loan option','deduction option','loan','saturation deduction','other payment','overtime','set salary','pay slip','company policy','appraisal','goal tracking','goal type','indicator','event','meeting','training','trainer','training type','award','award type','resignation','travel','promotion','complaint','warning','termination','termination type','job application','job application note','job onBoard','job category','job','job stage','custom question','interview schedule','estimation','holiday','transfer','announcement','leave','leave type','attendance'];
+                        $modules=['hrm dashboard','employee','employee profile','department','designation','branch','document type','document','payslip type','allowance','commission','allowance option','loan option','deduction option','loan','saturation deduction','other payment','overtime','set salary','pay slip','company policy','appraisal','goal tracking','goal type','indicator','event','meeting','training','trainer','training type','award','award type','resignation','travel','promotion','complaint','warning','termination','termination type','job application','job application note','job onBoard','job category','job','job stage','custom question','interview schedule','estimation','holiday','transfer','announcement','leave','leave type','attendance','assets type','assets management'];
                     @endphp
                     <div class="col-md-12">
                         <div class="form-group">
@@ -770,6 +770,38 @@
                                                                 {{Form::label('permission'.$key,'Manage',['class'=>'custom-control-label'])}}<br>
                                                             </div>
                                                         @endif
+                                                    @endif
+                                                    @if(in_array('assign '.$module,(array) $permissions))
+                                                    @if($key = array_search('assign '.$module,$permissions))
+                                                        <div class="col-md-3 custom-control custom-checkbox">
+                                                            {{Form::checkbox('permissions[]',$key,$role->permission, ['class'=>'form-check-input staff_checkall isscheck_'.str_replace(' ', '', str_replace('&', '', $module)),'id' =>'permission'.$key])}}
+                                                            {{Form::label('permission'.$key,'Assign',['class'=>'custom-control-label'])}}<br>
+                                                        </div>
+                                                    @endif
+                                                @endif
+                                                @if(in_array('unassign '.$module,(array) $permissions))
+                                                @if($key = array_search('unassign '.$module,$permissions))
+                                                    <div class="col-md-3 custom-control custom-checkbox">
+                                                        {{Form::checkbox('permissions[]',$key,$role->permission, ['class'=>'form-check-input staff_checkall isscheck_'.str_replace(' ', '', str_replace('&', '', $module)),'id' =>'permission'.$key])}}
+                                                        {{Form::label('permission'.$key,'Unassign',['class'=>'custom-control-label'])}}<br>
+                                                    </div>
+                                                @endif
+                                                @endif
+                                                    @if(in_array('transfer '.$module,(array) $permissions))
+                                                    @if($key = array_search('transfer '.$module,$permissions))
+                                                        <div class="col-md-3 custom-control custom-checkbox">
+                                                            {{Form::checkbox('permissions[]',$key,$role->permission, ['class'=>'form-check-input staff_checkall isscheck_'.str_replace(' ', '', str_replace('&', '', $module)),'id' =>'permission'.$key])}}
+                                                            {{Form::label('permission'.$key,'Transfer',['class'=>'custom-control-label'])}}<br>
+                                                        </div>
+                                                    @endif
+                                                    @endif
+                                                    @if(in_array('history '.$module,(array) $permissions))
+                                                    @if($key = array_search('history '.$module,$permissions))
+                                                        <div class="col-md-3 custom-control custom-checkbox">
+                                                            {{Form::checkbox('permissions[]',$key,$role->permission, ['class'=>'form-check-input staff_checkall isscheck_'.str_replace(' ', '', str_replace('&', '', $module)),'id' =>'permission'.$key])}}
+                                                            {{Form::label('permission'.$key,'History',['class'=>'custom-control-label'])}}<br>
+                                                        </div>
+                                                    @endif
                                                     @endif
                                                     @if(in_array('create '.$module,(array) $permissions))
                                                         @if($key = array_search('create '.$module,$permissions))
