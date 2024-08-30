@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BankAccount;
+use App\Models\ChartOfAccount;
 use App\Models\Employee;
 use App\Models\Resignation;
+use App\Models\TransactionLines;
 use App\Models\User;
 use App\Models\Utility;
 use Illuminate\Http\Request;
@@ -46,6 +49,7 @@ class ResignationController extends Controller
             {
                 $employees = Employee::where('user_id', \Auth::user()->id)->get()->pluck('name', 'id');
             }
+            $employees->prepend('Select Employees', '');
 
             return view('resignation.create', compact('employees'));
         }
@@ -62,10 +66,9 @@ class ResignationController extends Controller
 
             $validator = \Validator::make(
                 $request->all(), [
-
-                                   'notice_date' => 'required',
-                                   'resignation_date' => 'required',
-                               ]
+                        'notice_date' => 'required',
+                        'resignation_date' => 'required',
+                    ]
             );
 
             if($validator->fails())
@@ -88,10 +91,43 @@ class ResignationController extends Controller
             }
             $resignation->notice_date      = $request->notice_date;
             $resignation->resignation_date = $request->resignation_date;
+            $resignation->no_of_years      = $request->no_of_years;
+            $resignation->base_salary      = $request->base_salary;
+            $resignation->settlement       = $request->settlement;
             $resignation->description      = $request->description;
             $resignation->created_by       = \Auth::user()->creatorId();
 
             $resignation->save();
+
+            if($request->settlement != 0)
+            {
+                $account = Employee::find($request->employee_id);
+                Utility::bankAccountBalance($account->account, $request->settlement, 'debit');
+
+                $bank_acc = BankAccount::find($account->account);
+                $data = [
+                    'account_id' => $bank_acc->chart_account_id,
+                    'transaction_type' => 'Credit',
+                    'transaction_amount' => $request->settlement,
+                    'reference' => 'Settlement',
+                    'reference_id' => $resignation->id,
+                    'reference_sub_id' => $request->employee_id,
+                    'date' => date("Y-m-d"),
+                ];
+                Utility::addTransactionLines($data, "new");
+
+                $Salaries_co_acc = ChartOfAccount::where('code', 5450)->where('created_by', \Auth::user()->creatorId())->first();
+                $data = [
+                    'account_id' => $Salaries_co_acc->id,
+                    'transaction_type' => 'Debit',
+                    'transaction_amount' => $request->settlement,
+                    'reference' => 'Settlement',
+                    'reference_id' => $resignation->id,
+                    'reference_sub_id' => $request->employee_id,
+                    'date' => date("Y-m-d"),
+                ];
+                Utility::addTransactionLines($data, "new");
+            }
 
             $setings = Utility::settings();
             if($setings['resignation_sent'] == 1)
@@ -141,6 +177,7 @@ class ResignationController extends Controller
             {
                 $employees = Employee::where('user_id', \Auth::user()->id)->get()->pluck('name', 'id');
             }
+            $employees->prepend('Select Employees', '');
             if($resignation->created_by == \Auth::user()->creatorId())
             {
 
@@ -165,10 +202,9 @@ class ResignationController extends Controller
             {
                 $validator = \Validator::make(
                     $request->all(), [
-
-                                       'notice_date' => 'required',
-                                       'resignation_date' => 'required',
-                                   ]
+                            'notice_date' => 'required',
+                            'resignation_date' => 'required',
+                        ]
                 );
 
                 if($validator->fails())
@@ -183,10 +219,42 @@ class ResignationController extends Controller
                     $resignation->employee_id = $request->employee_id;
                 }
 
+                $account = Employee::find($request->employee_id);
+                Utility::bankAccountBalance($account->account, $resignation->settlement, 'credit');
+                TransactionLines::where('reference_id', $resignation->id)->where('reference', 'Settlement')->where('created_by', \Auth::user()->creatorId())->delete();
 
                 $resignation->notice_date      = $request->notice_date;
                 $resignation->resignation_date = $request->resignation_date;
+                $resignation->no_of_years      = $request->no_of_years;
+                $resignation->base_salary      = $request->base_salary;
+                $resignation->settlement       = $request->settlement;
                 $resignation->description      = $request->description;
+
+                Utility::bankAccountBalance($account->account, $request->settlement, 'debit');
+
+                $bank_acc = BankAccount::find($account->account);
+                $data = [
+                    'account_id' => $bank_acc->chart_account_id,
+                    'transaction_type' => 'Credit',
+                    'transaction_amount' => $request->settlement,
+                    'reference' => 'Settlement',
+                    'reference_id' => $resignation->id,
+                    'reference_sub_id' => $request->employee_id,
+                    'date' => date("Y-m-d"),
+                ];
+                Utility::addTransactionLines($data, "new");
+
+                $Salaries_co_acc = ChartOfAccount::where('code', 5450)->where('created_by', \Auth::user()->creatorId())->first();
+                $data = [
+                    'account_id' => $Salaries_co_acc->id,
+                    'transaction_type' => 'Debit',
+                    'transaction_amount' => $request->settlement,
+                    'reference' => 'Settlement',
+                    'reference_id' => $resignation->id,
+                    'reference_sub_id' => $request->employee_id,
+                    'date' => date("Y-m-d"),
+                ];
+                Utility::addTransactionLines($data, "new");
 
                 $resignation->save();
 
@@ -209,6 +277,10 @@ class ResignationController extends Controller
         {
             if($resignation->created_by == \Auth::user()->creatorId())
             {
+                $account = Employee::find($resignation->employee_id);
+                Utility::bankAccountBalance($account->account_id, $resignation->settlement, 'credit');
+                TransactionLines::where('reference_id', $resignation->id)->where('reference', 'Settlement')->where('created_by', \Auth::user()->creatorId())->delete();
+
                 $resignation->delete();
 
                 return redirect()->route('resignation.index')->with('success', __('Resignation successfully deleted.'));
@@ -222,5 +294,19 @@ class ResignationController extends Controller
         {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
+    }
+
+    public function fetch_employee(Request $request)
+    {
+        $employee_id = $request->employee_id;
+        $data = Employee::find($employee_id);
+        if($data && $data->company_doj)
+        {
+            $date1=date_create(date("Y-m-d", strtotime($data->company_doj)));
+            $date2=date_create();
+            $diff=date_diff($date1,$date2);
+            return array("status" => 1, "year" => $diff->y, "salary" => $data->salary);
+        }
+        return array("status" => 0);
     }
 }

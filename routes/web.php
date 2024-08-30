@@ -923,6 +923,7 @@ Route::group(['middleware' => ['verified']], function () {
     Route::resource('awardtype', AwardTypeController::class)->middleware(['auth', 'XSS']);
     Route::resource('award', AwardController::class)->middleware(['auth', 'XSS']);
     Route::resource('resignation', ResignationController::class)->middleware(['auth', 'XSS']);
+    Route::get('resignation/{id}/fetch_employee', [ResignationController::class, 'fetch_employee'])->name('resignation.fetch_employee')->middleware(['auth', 'XSS']);
     Route::resource('travel', TravelController::class)->middleware(['auth', 'XSS']);
     Route::resource('promotion', PromotionController::class)->middleware(['auth', 'XSS']);
     Route::resource('complaint', ComplaintController::class)->middleware(['auth', 'XSS']);

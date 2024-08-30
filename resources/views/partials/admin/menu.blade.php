@@ -468,13 +468,13 @@
                                                             <a class="dash-link"
                                                                 href="{{ route('attendanceemployee.index') }}">{{ __('Mark Attendance') }}</a>
                                                         </li>
-                                                        @can('create attendance')
+                                                        {{-- @can('create attendance')
                                                             <li
                                                                 class="dash-item {{ Request::route()->getName() == 'attendanceemployee.bulkattendance' ? 'active' : '' }}">
                                                                 <a class="dash-link"
                                                                     href="{{ route('attendanceemployee.bulkattendance') }}">{{ __('Bulk Attendance') }}</a>
                                                             </li>
-                                                        @endcan
+                                                        @endcan --}}
                                                     </ul>
                                                 </li>
                                             @endcan

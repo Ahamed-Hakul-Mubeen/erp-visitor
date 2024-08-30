@@ -18,6 +18,9 @@ class CreateResignationsTable extends Migration
             $table->integer('employee_id')->default(0);
             $table->date('notice_date');
             $table->date('resignation_date');
+            $table->integer('no_of_years')->nullable();
+            $table->float('base_salary', 8, 2)->nullable();
+            $table->float('settlement', 8, 2)->nullable();
             $table->string('description')->nullable();
             $table->integer('created_by');
             $table->timestamps();
