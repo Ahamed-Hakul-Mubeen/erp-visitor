@@ -2388,11 +2388,6 @@ class Utility extends Model
 
     public static function sendEmailTemplate($emailTemplate, $mailTo, $obj)
     {
-        return [
-            'is_success' => true,
-            'error' => false,
-        ];
-        exit();
         $usr = Auth::user();
         //Remove Current Login user Email don't send mail to them
         // unset($mailTo[$usr->id]);
