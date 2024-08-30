@@ -234,7 +234,7 @@ class EmployeeController extends Controller
         {
             $documents    = Document::where('created_by', \Auth::user()->creatorId())->get();
             $branches     = Branch::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
-            $branches->prepend('Select Branch','');
+            $branches->prepend('Select Company','');
             $departments  = Department::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             $designations = Designation::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             $employee     = Employee::find($id);

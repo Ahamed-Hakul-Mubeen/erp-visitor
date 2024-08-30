@@ -1,0 +1,296 @@
+<?php
+
+namespace App\Http\Controllers;
+use App\Models\AssetManagement;
+use App\Models\AssetAssignment;
+use App\Models\ProductType;
+use App\Models\Employee;
+use App\Models\AssetTransfer;
+use App\Models\AssetHistory;
+use Illuminate\Http\Request;
+
+
+class AssetManagementController extends Controller
+{
+    //
+    public function index()
+    {   
+        // if(\Auth::user()->can('manage assets'))
+        // {
+        $assets = AssetManagement::where('created_by', \Auth::user()->id)->get();
+        return view('asset_management.index', compact('assets'));
+        // else
+        // {
+        //     return redirect()->back()->with('error', __('Permission denied.'));
+        // }
+    }
+
+    public function create()
+    {   
+        // if(\Auth::user()->can('create assets'))
+        // {
+        $productTypes = ProductType::pluck('name', 'id');
+        return view('asset_management.create', compact('productTypes'));
+        // }else
+        // {
+        //     return redirect()->back()->with('error', __('Permission denied.'));
+        // }
+    }
+
+  
+    public function store(Request $request)
+    {   
+        
+        // if(\Auth::user()->can('create assets'))
+        // {
+        // Validate the incoming request data
+        $validator = \Validator::make($request->all(), [
+          
+            'product_description' => 'required',
+            'product_configuration' => 'required',
+        ]);
+
+        // If validation fails, redirect back with the first error message
+        if ($validator->fails()) {
+            $messages = $validator->getMessageBag();
+            return redirect()->back()->with('error', $messages->first());
+        }
+
+        // Create a new instance of AssetManagement and set its attributes
+        $assetManagement = new AssetManagement();
+        $assetManagement->product_type_id = $request->product_name;
+        $assetManagement->product_description = $request->product_description;
+        $assetManagement->product_configuration = $request->product_configuration;
+        $assetManagement->created_by = \Auth::user()->id;
+        $assetManagement->save();
+
+        // Redirect to the asset management index page with a success message
+        return redirect()->route('asset_management.index')->with('success', __('Asset added successfully.'));
+        // }else
+        // {
+        //     return redirect()->back()->with('error', __('Permission denied.'));
+        // }
+    }
+
+    public function edit($id)
+    {  
+        // if(\Auth::user()->can('edit assets'))
+        // {
+            $asset = AssetManagement::find($id);
+            $productTypes = ProductType::pluck('name', 'id');
+            return view('asset_management.edit', compact('asset','productTypes'));
+        // }
+        // else
+        // {
+        //     return redirect()->back()->with('error', __('Permission denied.'));
+        // }
+      
+    }
+    
+    public function update(Request $request,$id)
+{    
+
+    //  if(\Auth::user()->can('edit assets'))
+    // {
+    // Validate the request inputs
+    $validator = \Validator::make($request->all(), [
+        
+        'product_description' => 'required|string|max:255',
+        'product_configuration' => 'required|string|max:255',
+    ]);
+
+    // If validation fails, redirect back with the first error message
+    if ($validator->fails()) {
+        $messages = $validator->getMessageBag();
+        return redirect()->back()->with('error', $messages->first());
+    }
+
+    // Find the asset by ID
+    $asset = AssetManagement::find($id);
+    if (!$asset) {
+        return redirect()->route('asset_management.index')->with('error', __('Asset not found.'));
+    }
+
+ 
+    $asset->product_type_id = $request->product_name;
+    $asset->product_description = $request->product_description;
+    $asset->product_configuration = $request->product_configuration;
+    $asset->save();
+
+    
+    return redirect()->route('asset_management.index')->with('success', __('Asset successfully updated.'));
+//   }
+//   else{
+//     return redirect()->back()->with('error', __('Permission denied.'));
+//   }
+}
+
+    
+public function destroy($id)
+{
+    // if(\Auth::user()->can('delete assets'))
+    // {
+        $asset = AssetManagement::find($id);
+        if($asset->created_by == \Auth::user()->creatorId())
+        {
+            $asset->delete();
+
+            return redirect()->route('asset_management.index')->with('success', __('Assets successfully deleted.'));
+        }
+        else
+        {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
+    // }
+    // else
+    // {
+    //     return redirect()->back()->with('error', __('Permission denied.'));
+    // }
+}
+
+public function assignAsset(Request $request, $id) 
+{  
+    $asset = AssetManagement::find($id);
+    if (!$asset) {
+        return redirect()->back()->with('error', __('Asset not found.'));
+    }
+
+    if ($asset->status == 1) {
+        return redirect()->back()->with('error', __('This asset is already assigned to another employee. Please unassign it first.'));
+    }
+
+    $asset->status = 1;
+    $asset->save();
+    
+    $history = new AssetHistory();
+    $history->asset_id = $asset->id;    
+    $history->employee_id = $request->employee_id;
+    $history->action = 'assigned';
+    $history->assign_description = $request->assign_description;
+    $history->action_date = $request->assigned_date;
+    $history->created_by = auth()->user()->id;
+    $history->save();
+
+    return redirect()->back()->with('success', __('Asset assigned successfully.'));
+}
+    public function showAssignForm($id)
+    {   
+        $asset = AssetManagement::find($id);
+        $employees = Employee::all(); 
+        $latestHistory = AssetHistory::where('asset_id', $id)
+                                    ->whereIn('action', ['assigned', 'transferred'])
+                                    ->latest()->first();
+            
+        return view('asset_management.assign', compact('asset', 'employees', 'latestHistory'));
+    }
+    public function showTransfer($id)
+    {
+       
+        $latestHistory = AssetHistory::where('asset_id', $id)
+                                      ->whereIn('action', ['assigned', 'transferred'])
+                                      ->latest()->first();
+
+        
+        // if (!$latestHistory) {
+        // return redirect()->back()->with('error', __('No assignment history found for this asset.'));
+        // }                             
+        $employees = Employee::all();
+    
+        return view('asset_management.transfer', compact('latestHistory', 'employees'));
+    }
+    
+    public function transfer(Request $request, $id)
+    {
+        // Validate the input
+        $validator = \Validator::make($request->all(), [
+            'from_employee_id' => 'required',
+            'to_employee_id' => 'required|different:from_employee_id',
+            'transfer_description' => 'nullable|string',
+        ],[
+            'to_employee_id.different' => __('The "To Employee" must be different from the "From Employee".'), // Custom error message
+        ]);
+    
+       
+        if ($validator->fails()) {
+            return redirect()->back()->with('error', $validator->errors()->first());
+        }
+    
+       
+        $latestHistory = AssetHistory::where('asset_id', $id)
+                                     ->where(function($query) use ($request) {
+                                         $query->where('employee_id', $request->from_employee_id)
+                                     ->orWhere('to_employee_id', $request->from_employee_id);
+                                     })
+                                     ->latest()
+                                     ->first();
+    
+       
+        if (!$latestHistory || ($latestHistory->action !== 'assigned' && $latestHistory->action !== 'transferred')) {
+            return redirect()->back()->with('error', __('This asset is not assigned to the selected employee.'));
+        }
+    
+        // Log the transfer in the AssetHistory table
+        $history = new AssetHistory();
+        $history->asset_id = $id;
+        $history->employee_id = $request->to_employee_id; 
+        $history->from_employee_id = $request->from_employee_id;
+        $history->to_employee_id = $request->to_employee_id;
+        $history->action = 'transferred';
+        $history->transfer_description = $request->transfer_description;
+        $history->action_date = $request->transfer_date;
+        $history->created_by = \Auth::user()->id;
+        $history->save();
+    
+        return redirect()->route('asset_management.index')->with('success', __('Asset transferred successfully.'));
+    }
+
+
+        public function showUnassignForm($id)
+        {   
+            $asset = AssetManagement::find($id);
+            $latestHistory = AssetHistory::where('asset_id', $id)
+                                        ->whereIn('action', ['assigned', 'transferred'])
+                                        ->latest()->first();
+
+            // if (!$latestHistory) {
+            //     return redirect()->back()->with('error', __('No assigned asset found to unassign.'));
+            // }
+            $employees = Employee::all();
+            return view('asset_management.unassign', compact('asset', 'latestHistory','employees'));
+        }
+        public function unassignAsset(Request $request, $id)
+        {
+            $asset = AssetManagement::find($id);
+            if (!$asset) {
+                return redirect()->back()->with('error', __('Asset not found.'));
+            }
+
+            $asset->status = 0;
+            $asset->save();
+
+            
+            $history = new AssetHistory();
+            $history->asset_id = $asset->id;    
+            $history->employee_id = $request->employee_id;
+            $history->action = 'unassigned';
+            $history->unassign_description = $request->unassign_description;
+            $history->action_date = $request->assigned_date;
+            $history->created_by = auth()->user()->id;
+            $history->save();
+
+            return redirect()->back()->with('success', __('Asset Unassigned successfully.'));
+        }
+        public function showHistory($id)
+        {
+            // Fetch asset assignment history
+            $historyRecords = AssetHistory::with(['employee', 'fromEmployee', 'toEmployee', 'createdBy'])
+            ->where('asset_id', $id)
+            ->orderBy('action_date', 'desc')
+            ->get();
+        
+            return view('asset_management.history', compact('historyRecords'));
+        }
+
+       
+
+}

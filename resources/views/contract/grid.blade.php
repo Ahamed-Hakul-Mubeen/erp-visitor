@@ -58,7 +58,7 @@
                         </p>
                     </div>
                     <div class="card-footer py-0">
-                        <ul class="list-group list-group-flush">
+                        <ul class="">
                             <li class="list-group-item px-0">
                                 <div class="row align-items-center">
                                     <div class="col-6">
