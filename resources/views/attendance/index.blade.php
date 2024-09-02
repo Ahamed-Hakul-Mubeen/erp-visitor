@@ -110,8 +110,8 @@
                                         <a href="{{route('attendance.export', request()->query())}}" data-bs-toggle="tooltip" title="{{__('Export')}}" class="btn btn-sm btn-primary">
                                             <i class="ti ti-file-export"></i>
                                         </a>
-                                        <a href="{{ route('attendance.print', request()->query()) }}" target="_blank" class="btn btn-sm btn-primary">
-                                            <i class="ti ti-download"></i>
+                                        <a href="#" onclick="openPrintDialog('{{ route('attendance.print', request()->query()) }}'); return false;" class="btn btn-sm btn-primary">
+                                            <i class="ti ti-printer"></i>
                                         </a>
                                     </div>
 
@@ -216,5 +216,14 @@
                 locale: {format: 'YYYY-MM-DD'},
             });
         });
+        function openPrintDialog(url) {
+        // Create a new window with the URL for the print page
+        const printWindow = window.open(url, '_blank');
+
+        // Once the new window has loaded, trigger the print dialog
+        printWindow.onload = function() {
+            printWindow.print();
+        };
+    }
     </script>
 @endpush
