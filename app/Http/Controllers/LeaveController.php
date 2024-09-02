@@ -25,6 +25,7 @@ class LeaveController extends Controller
                 $project_id = ProjectUser::where('user_id', $user->id)->pluck('project_id')->toArray();
                 
                 $user_id_arr = ProjectUser::whereIn('project_id', $project_id)->pluck('user_id')->toArray();
+                $user_id_arr[] = $user->id;
                 $user_id_arr = array_unique($user_id_arr);
                 $employee_id_arr = [];
                 foreach($user_id_arr as $ua)
