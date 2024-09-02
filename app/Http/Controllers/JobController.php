@@ -187,7 +187,7 @@ class JobController extends Controller
     public function career($id, $lang)
     {
         //        dd($lang);
-        $jobs = Job::where('created_by', $id)->with(['branches', 'createdBy'])->get();
+        $jobs = Job::where('created_by', $id)->where('status', 'active')->with(['branches', 'createdBy'])->get();
 
         \Session::put('lang', $lang);
 
@@ -211,7 +211,7 @@ class JobController extends Controller
 
     public function jobRequirement($code, $lang)
     {
-        $job = Job::where('code', $code)->first();
+        $job = Job::where('code', $code)->where('status', 'active')->first();
         if ($job->status == 'in_active') {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
