@@ -646,7 +646,7 @@
                                         <div class="col-auto text-sm-end d-flex align-items-center">
                                             @can('download attachment')
                                                 <div class="action-btn bg-info ms-2">
-                                                    <a href="{{ asset('public/storage/project/uploads/' . $attachment->file) }}"
+                                                    <a href="{{ asset('storage/project/uploads/' . $attachment->file) }}"
                                                         data-bs-toggle="tooltip" title="{{ __('Download') }}"
                                                         class="btn btn-sm" download>
                                                         <i class="text-white ti ti-download"></i>
