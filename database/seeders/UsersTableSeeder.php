@@ -3901,6 +3901,10 @@ class UsersTableSeeder extends Seeder
             ['name' => 'transfer assets management'],
             ['name' => 'unassign assets management'],
             ['name' => 'history assets management'],
+            ['name' => 'manage advance'],
+            ['name' => 'create advance'],
+            ['name' => 'edit advance'],
+            ['name' => 'delete advance'],
             
         ];
 
