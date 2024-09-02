@@ -14,11 +14,11 @@
         {{--            <i class="ti ti-filter"></i>--}}
         {{--        </a>--}}
 
-        {{-- @can('create advance') --}}
+        @can('create advance')
             <a href="#" id="createAdvanceLink" data-url="{{ route('advance.create') }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Create New Advance')}}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="{{__('Create')}}">
                 <i class="ti ti-plus"></i>
             </a>
-        {{-- @endcan --}}
+        @endcan
 
     </div>
 @endsection
@@ -152,14 +152,14 @@
                                                     </a>
                                                 </div>
 
-                                            {{-- @can('edit advance') --}}
+                                            @can('edit advance')
                                                     <div class="action-btn bg-primary ms-2">
                                                         <a href="#" class="mx-3 btn btn-sm align-items-center" data-url="{{ route('advance.edit',$advance->id) }}" data-ajax-popup="true" data-size="lg" data-bs-toggle="tooltip" title="{{__('Edit')}}" title="{{__('Edit')}}" data-original-title="{{__('Edit')}}">
                                                             <i class="text-white ti ti-pencil"></i>
                                                         </a>
                                                     </div>
-                                                {{-- @endcan --}}
-                                                {{-- @can('delete advance') --}}
+                                                @endcan
+                                                @can('delete advance')
                                                     <div class="action-btn bg-danger ms-2">
                                                         {!! Form::open(['method' => 'DELETE', 'route' => ['advance.destroy', $advance->id],'class'=>'delete-form-btn','id'=>'delete-form-'.$advance->id]) !!}
 
@@ -168,7 +168,7 @@
                                                         </a>
                                                         {!! Form::close() !!}
                                                     </div>
-                                                {{-- @endcan --}}
+                                                @endcan
                                             </span>
                                         </td>
                                     {{-- @endif --}}

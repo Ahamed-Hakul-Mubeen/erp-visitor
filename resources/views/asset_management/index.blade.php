@@ -49,11 +49,13 @@
                                         @endif
                                     </td> 
                                         <td class="Action">
+                                            @if($asset->status == 0)
                                             @can('edit assets management')
                                             <div class="action-btn bg-primary ms-2">
                                                 <a href="#" data-url="{{ URL::to('asset_management/'.$asset->id.'/edit') }}" data-ajax-popup="true" data-title="{{__('Edit Asset')}}" class="mx-3 btn btn-sm align-items-center" data-bs-toggle="tooltip" title="{{__('Edit')}}" data-original-title="{{__('Edit')}}"><i class="ti ti-pencil text-white"></i></a>
                                             </div>
                                             @endcan
+                                            @endif
 
                                             @can('delete assets management')
                                             <div class="action-btn bg-danger ms-2">

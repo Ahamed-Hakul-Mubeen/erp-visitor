@@ -185,7 +185,11 @@ public function assignAsset(Request $request, $id)
         if(\Auth::user()->can('assign assets management'))
         {
             $asset = AssetManagement::find($id);
-            $employees = Employee::where('created_by', \Auth::user()->creatorId())->get(); 
+            $employees = Employee::where('created_by', \Auth::user()->creatorId())
+            ->whereHas('user', function ($query) {
+                $query->where('type', 'Employee');
+            })
+            ->get();
             $latestHistory = AssetHistory::where('asset_id', $id)
                                         ->whereIn('action', ['assigned', 'transferred'])
                                         ->latest()->first();
@@ -208,7 +212,11 @@ public function assignAsset(Request $request, $id)
         // if (!$latestHistory) {
         // return redirect()->back()->with('error', __('No assignment history found for this asset.'));
         // }                             
-        $employees = Employee::where('created_by', \Auth::user()->creatorId())->get();
+        $employees = Employee::where('created_by', \Auth::user()->creatorId())
+        ->whereHas('user', function ($query) {
+            $query->where('type', 'Employee');
+        })
+        ->get();
     
         return view('asset_management.transfer', compact('latestHistory', 'employees'));
     }else
@@ -281,7 +289,11 @@ public function assignAsset(Request $request, $id)
             // if (!$latestHistory) {
             //     return redirect()->back()->with('error', __('No assigned asset found to unassign.'));
             // }
-            $employees = Employee::where('created_by', \Auth::user()->creatorId())->get();
+            $employees = Employee::where('created_by', \Auth::user()->creatorId())
+            ->whereHas('user', function ($query) {
+                $query->where('type', 'Employee');
+            })
+            ->get();
             return view('asset_management.unassign', compact('asset', 'latestHistory','employees'));
             }else
             {
@@ -323,7 +335,6 @@ public function assignAsset(Request $request, $id)
             // Fetch asset assignment history
             $historyRecords = AssetHistory::with(['employee', 'fromEmployee', 'toEmployee', 'createdBy'])
             ->where('asset_id', $id)
-            ->orderBy('action_date', 'desc')
             ->get();
         
             return view('asset_management.history', compact('historyRecords'));
