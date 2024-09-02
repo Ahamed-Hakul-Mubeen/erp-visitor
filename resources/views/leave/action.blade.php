@@ -1,4 +1,4 @@
-{{Form::open(array('url'=>'leave/changeaction','method'=>'post'))}}
+{{Form::open(array('url'=>'leave/changeaction','method'=>'post', 'id' => 'changeaction_form'))}}
 <div class="modal-body">
     <div class="row">
         <div class="col-12">
@@ -39,8 +39,19 @@
 {{-- @if(\Auth::user()->type == 'company' || Auth::user()->type == 'HR' ) --}}
 @if(\Auth::user()->type == 'company' )
 <div class="modal-footer">
-    <input type="submit" value="Approval" class="btn btn-success" data-bs-dismiss="modal" name="status">
-    <input type="submit" value="Reject" class="btn btn-danger" name="status">
+    <input type="hidden" name="status" id="status_id">
+    <input type="button" id="approval_btn" class="btn btn-success" value="Approval">
+    <input type="button" id="reject_btn" class="btn btn-danger" value="Reject">
 </div>
 @endif
 {{Form::close()}}
+<script>
+$(document).on("click", "#approval_btn", function(e) {
+    $("#status_id").val("Approval");
+    $("#changeaction_form").submit();
+});
+$(document).on("click", "#reject_btn", function(e) {
+    $("#status_id").val("Reject");
+    $("#changeaction_form").submit();
+});
+</script>
