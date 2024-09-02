@@ -135,7 +135,7 @@
                 },
                 beforeSend: function() {
                     $('#project_users').html(
-                        '<tr><th colspan="2" class="h6 text-center pt-5">{{ __('Loading...') }}</th></tr>');
+                        '<tr><th colspan="2" class="pt-5 text-center h6">{{ __('Loading...') }}</th></tr>');
                 },
                 success: function(data) {
                     mainEle.html(data.html);
@@ -179,12 +179,12 @@
                 data-title="{{ __('Shared Project Settings') }}"
                 data-url="{{ route('projects.copylink.setting.create', [$project->id]) }}" data-toggle="tooltip"
                 title="{{ __('Shared project settings') }}">
-                <i class="ti ti-share text-white"></i>
+                <i class="text-white ti ti-share"></i>
             </a>
             {{--            @php $projectID= Crypt::encrypt($project->id); @endphp --}}
-            {{--            <a href="#" id="{{ route('projects.link', \Illuminate\Support\Facades\Crypt::encrypt($project->id)) }}" class="btn btn-sm btn-primary btn-icon m-1" --}}
+            {{--            <a href="#" id="{{ route('projects.link', \Illuminate\Support\Facades\Crypt::encrypt($project->id)) }}" class="m-1 btn btn-sm btn-primary btn-icon" --}}
             {{--               onclick="copyToClipboard(this)" data-bs-toggle="tooltip" title="{{__('Click to copy link')}}"> --}}
-            {{--                <i class="ti ti-link text-white"></i> --}}
+            {{--                <i class="text-white ti ti-link"></i> --}}
             {{--            </a> --}}
         @endcan
         @can('view grant chart')
@@ -310,7 +310,7 @@
                         <div class="avatar me-3">
                             <img {{ $project->img_image }} alt="" class="img-user wid-45 rounded-circle">
                         </div>
-                        <div class="d-block  align-items-center justify-content-between w-100">
+                        <div class="d-block align-items-center justify-content-between w-100">
                             <div class="mb-3 mb-sm-0">
                                 <h5 class="mb-1"> {{ $project->project_name }}</h5>
                                 <p class="mb-0 text-sm">
@@ -323,7 +323,7 @@
                                     <span class="progress-percentage"><small
                                             class="font-weight-bold">{{ __('Completed:') }} :
                                         </small>{{ $projectProgress }}</span>
-                                    <div class="progress progress-xs mt-2">
+                                    <div class="mt-2 progress progress-xs">
                                         <div class="progress-bar bg-info" role="progressbar"
                                             aria-valuenow="{{ $projectProgress }}" aria-valuemin="0" aria-valuemax="100"
                                             style="width: {{ $projectProgress }};"></div>
@@ -339,23 +339,23 @@
                             <p> {{ $project->description }}</p>
                         </div>
                     </div>
-                    <div class="card bg-primary mb-0">
+                    <div class="mb-0 card bg-primary">
                         <div class="card-body">
                             <div class="d-block d-sm-flex align-items-center justify-content-between">
                                 <div class="row align-items-center">
-                                    <span class="text-white text-sm">{{ __('Start Date') }}</span>
+                                    <span class="text-sm text-white">{{ __('Start Date') }}</span>
                                     <h5 class="text-white text-nowrap">
                                         {{ Utility::getDateFormated($project->start_date) }}</h5>
                                 </div>
                                 <div class="row align-items-center">
-                                    <span class="text-white text-sm">{{ __('End Date') }}</span>
+                                    <span class="text-sm text-white">{{ __('End Date') }}</span>
                                     <h5 class="text-white text-nowrap">{{ Utility::getDateFormated($project->end_date) }}
                                     </h5>
                                 </div>
 
                             </div>
                             <div class="row">
-                                <span class="text-white text-sm">{{ __('Client') }}</span>
+                                <span class="text-sm text-white">{{ __('Client') }}</span>
                                 <h5 class="text-white text-nowrap">
                                     {{ !empty($project->client) ? $project->client->name : '-' }}</h5>
                             </div>
@@ -372,7 +372,7 @@
                             <i class="ti ti-clipboard-list"></i>
                         </div>
                         <div class="ms-3">
-                            <p class="text-muted mb-0">{{ __('Last 7 days task done') }}</p>
+                            <p class="mb-0 text-muted">{{ __('Last 7 days task done') }}</p>
                             <h4 class="mb-0">{{ $project_data['task_chart']['total'] }}</h4>
 
                         </div>
@@ -381,34 +381,34 @@
                 </div>
 
                 <div class="card-body">
-                    <div class="d-flex align-items-center justify-content-between mb-2">
+                    <div class="mb-2 d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center">
                             <span class="text-muted">{{ __('Day Left') }}</span>
                         </div>
                         <span>{{ $project_data['day_left']['day'] }}</span>
                     </div>
-                    <div class="progress mb-3">
+                    <div class="mb-3 progress">
                         <div class="progress-bar bg-primary"
                             style="width: {{ $project_data['day_left']['percentage'] }}%"></div>
                     </div>
-                    <div class="d-flex align-items-center justify-content-between mb-2">
+                    <div class="mb-2 d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center">
 
                             <span class="text-muted">{{ __('Open Task') }}</span>
                         </div>
                         <span>{{ $project_data['open_task']['tasks'] }}</span>
                     </div>
-                    <div class="progress mb-3">
+                    <div class="mb-3 progress">
                         <div class="progress-bar bg-primary"
                             style="width: {{ $project_data['open_task']['percentage'] }}%"></div>
                     </div>
-                    <div class="d-flex align-items-center justify-content-between mb-2">
+                    <div class="mb-2 d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center">
                             <span class="text-muted">{{ __('Completed Milestone') }}</span>
                         </div>
                         <span>{{ $project_data['milestone']['total'] }}</span>
                     </div>
-                    <div class="progress mb-3">
+                    <div class="mb-3 progress">
                         <div class="progress-bar bg-primary"
                             style="width: {{ $project_data['milestone']['percentage'] }}%"></div>
                     </div>
@@ -424,7 +424,7 @@
                             <i class="ti ti-clipboard-list"></i>
                         </div>
                         <div class="ms-3">
-                            <p class="text-muted mb-0">{{ __('Last 7 days hours spent') }}</p>
+                            <p class="mb-0 text-muted">{{ __('Last 7 days hours spent') }}</p>
                             <h4 class="mb-0">{{ $project_data['timesheet_chart']['total'] }}</h4>
 
                         </div>
@@ -432,34 +432,34 @@
                     <div id="timesheet_chart"></div>
                 </div>
                 <div class="card-body">
-                    <div class="d-flex align-items-center justify-content-between mb-2">
+                    <div class="mb-2 d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center">
                             <span class="text-muted">{{ __('Total project time spent') }}</span>
                         </div>
                         <span>{{ $project_data['time_spent']['total'] }}</span>
                     </div>
-                    <div class="progress mb-3">
+                    <div class="mb-3 progress">
                         <div class="progress-bar bg-primary"
                             style="width: {{ $project_data['time_spent']['percentage'] }}%"></div>
                     </div>
-                    <div class="d-flex align-items-center justify-content-between mb-2">
+                    <div class="mb-2 d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center">
 
                             <span class="text-muted">{{ __('Allocated hours on task') }}</span>
                         </div>
                         <span>{{ $project_data['task_allocated_hrs']['hrs'] }}</span>
                     </div>
-                    <div class="progress mb-3">
+                    <div class="mb-3 progress">
                         <div class="progress-bar bg-primary"
                             style="width: {{ $project_data['task_allocated_hrs']['percentage'] }}%"></div>
                     </div>
-                    <div class="d-flex align-items-center justify-content-between mb-2">
+                    <div class="mb-2 d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center">
                             <span class="text-muted">{{ __('User Assigned') }}</span>
                         </div>
                         <span>{{ $project_data['user_assigned']['total'] }}</span>
                     </div>
-                    <div class="progress mb-3">
+                    <div class="mb-3 progress">
                         <div class="progress-bar bg-primary"
                             style="width: {{ $project_data['user_assigned']['percentage'] }}%"></div>
                     </div>
@@ -524,9 +524,9 @@
                     <ul class="list-group list-group-flush">
                         @if ($project->milestones->count() > 0)
                             @foreach ($project->milestones as $milestone)
-                                <li class="list-group-item px-0">
+                                <li class="px-0 list-group-item">
                                     <div class="row align-items-center justify-content-between">
-                                        <div class="col-sm-auto mb-3 mb-sm-0">
+                                        <div class="mb-3 col-sm-auto mb-sm-0">
                                             <div class="d-flex align-items-center">
                                                 <div class="div">
                                                     <h6 class="m-0">{{ $milestone->title }}
@@ -545,7 +545,7 @@
                                                         data-url="{{ route('project.milestone.show', $milestone->id) }}"
                                                         data-ajax-popup="true" data-bs-toggle="tooltip"
                                                         title="{{ __('View') }}" class="btn btn-sm">
-                                                        <i class="ti ti-eye text-white"></i>
+                                                        <i class="text-white ti ti-eye"></i>
                                                     </a>
                                                 </div>
                                             @endcan
@@ -556,16 +556,16 @@
                                                         data-ajax-popup="true" data-bs-toggle="tooltip"
                                                         title="{{ __('Edit') }}"
                                                         data-title="{{ __('Edit Milestone') }}"class="btn btn-sm">
-                                                        <i class="ti ti-pencil text-white"></i>
+                                                        <i class="text-white ti ti-pencil"></i>
                                                     </a>
                                                 </div>
                                             @endcan
                                             @can('delete milestone')
                                                 <div class="action-btn bg-danger ms-2">
                                                     {!! Form::open(['method' => 'DELETE', 'route' => ['project.milestone.destroy', $milestone->id]]) !!}
-                                                    <a href="#" class="mx-3 btn btn-sm  align-items-center bs-pass-para"
+                                                    <a href="#" class="mx-3 btn btn-sm align-items-center bs-pass-para"
                                                         data-bs-toggle="tooltip" title="{{ __('Delete') }}"><i
-                                                            class="ti ti-trash text-white"></i></a>
+                                                            class="text-white ti ti-trash"></i></a>
 
                                                     {!! Form::close() !!}
                                                 </div>
@@ -576,7 +576,7 @@
                             @endforeach
                         @else
                             <div class="py-5">
-                                <h6 class="h6 text-center">{{ __('No Milestone Found.') }}</h6>
+                                <h6 class="text-center h6">{{ __('No Milestone Found.') }}</h6>
                             </div>
                         @endif
                     </ul>
@@ -593,7 +593,7 @@
                     </div>
                     <div class="card-body vertical-scroll-cards">
                         @foreach ($project->activities as $activity)
-                            <div class="card p-2 mb-2">
+                            <div class="p-2 mb-2 card">
                                 <div class="d-flex align-items-center justify-content-between">
                                     <div class="d-flex align-items-center">
                                         <div class="theme-avtar bg-primary">
@@ -601,10 +601,10 @@
                                         </div>
                                         <div class="ms-3">
                                             <h6 class="mb-0">{{ __($activity->log_type) }}</h6>
-                                            <p class="text-muted text-sm mb-0">{!! $activity->getRemark() !!}</p>
+                                            <p class="mb-0 text-sm text-muted">{!! $activity->getRemark() !!}</p>
                                         </div>
                                     </div>
-                                    <p class="text-muted text-sm mb-0">{{ $activity->created_at->diffForHumans() }}</p>
+                                    <p class="mb-0 text-sm text-muted">{{ $activity->created_at->diffForHumans() }}</p>
                                 </div>
                             </div>
                         @endforeach
@@ -633,9 +633,9 @@
                     <ul class="list-group list-group-flush">
                         @if ($project->projectAttachments()->count() > 0)
                             @foreach ($project->projectAttachments() as $attachment)
-                                <li class="list-group-item px-0">
+                                <li class="px-0 list-group-item">
                                     <div class="row align-items-center justify-content-between">
-                                        <div class="col mb-3 mb-sm-0">
+                                        <div class="mb-3 col mb-sm-0">
                                             <div class="d-flex align-items-center">
                                                 <div class="div">
                                                     <h6 class="m-0">{{ $attachment->name }}</h6>
@@ -646,19 +646,19 @@
                                         <div class="col-auto text-sm-end d-flex align-items-center">
                                             @can('download attachment')
                                                 <div class="action-btn bg-info ms-2">
-                                                    <a href="{{ asset(Storage::url('project/uploads/' . $attachment->file)) }}"
+                                                    <a href="{{ asset('public/storage/project/uploads/' . $attachment->file) }}"
                                                         data-bs-toggle="tooltip" title="{{ __('Download') }}"
                                                         class="btn btn-sm" download>
-                                                        <i class="ti ti-download text-white"></i>
+                                                        <i class="text-white ti ti-download"></i>
                                                     </a>
                                                 </div>
                                             @endcan
                                             @can('delete attachment')
                                                 <div class="action-btn bg-danger ms-2">
                                                     {!! Form::open(['method' => 'DELETE', 'route' => ['project.attachment.destroy', $attachment->id]]) !!}
-                                                    <a href="#" class="mx-3 btn btn-sm  align-items-center bs-pass-para"
+                                                    <a href="#" class="mx-3 btn btn-sm align-items-center bs-pass-para"
                                                         data-bs-toggle="tooltip" title="{{ __('Delete') }}"><i
-                                                            class="ti ti-trash text-white"></i></a>
+                                                            class="text-white ti ti-trash"></i></a>
 
                                                     {!! Form::close() !!}
                                                 </div>
@@ -670,7 +670,7 @@
                             @endforeach
                         @else
                             <div class="py-5">
-                                <h6 class="h6 text-center">{{ __('No Attachments Found.') }}</h6>
+                                <h6 class="text-center h6">{{ __('No Attachments Found.') }}</h6>
                             </div>
                         @endif
                     </ul>
