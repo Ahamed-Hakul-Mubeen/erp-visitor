@@ -102,6 +102,12 @@ class ResignationController extends Controller
             if($request->settlement != 0)
             {
                 $account = Employee::find($request->employee_id);
+                $user_employee = User::find($account->user_id);
+                if($user_employee)
+                {
+                    $user_employee->is_enable_login = 0;
+                    $user_employee->save();
+                }
                 Utility::bankAccountBalance($account->account, $request->settlement, 'debit');
 
                 $bank_acc = BankAccount::find($account->account);
@@ -127,6 +133,16 @@ class ResignationController extends Controller
                     'date' => date("Y-m-d"),
                 ];
                 Utility::addTransactionLines($data, "new");
+            }
+            else
+            {
+                $account = Employee::find($request->employee_id);
+                $user_employee = User::find($account->user_id);
+                if($user_employee)
+                {
+                    $user_employee->is_enable_login = 0;
+                    $user_employee->save();
+                }
             }
 
             $setings = Utility::settings();
