@@ -740,6 +740,7 @@ class AttendanceEmployeeController extends Controller
 
                         $clockIn = $value[2];
                         $clockOut = $value[3];
+                        $break_hour = $value[4];
 
                         if ($clockIn) {
                             $status = "present";
@@ -771,12 +772,16 @@ class AttendanceEmployeeController extends Controller
                             $overtime = '00:00:00';
                         }
 
+                                                
+                        $total_break_duration = date('H:i', mktime(0,$break_hour));
+
                         $check = AttendanceEmployee::where('employee_id', $employeeId)->where('date', $value[1])->first();
                         if ($check) {
                             $check->update([
                                 'late' => $late,
                                 'early_leaving' => ($earlyLeaving > 0) ? $earlyLeaving : '00:00:00',
                                 'overtime' => $overtime,
+                                'total_break_duration' => $total_break_duration,
                                 'clock_in' => $value[2],
                                 'clock_out' => $value[3],
                             ]);
@@ -788,6 +793,7 @@ class AttendanceEmployeeController extends Controller
                                 'late' => $late,
                                 'early_leaving' => ($earlyLeaving > 0) ? $earlyLeaving : '00:00:00',
                                 'overtime' => $overtime,
+                                'total_break_duration' => $total_break_duration,
                                 'clock_in' => $value[2],
                                 'clock_out' => $value[3],
                                 'created_by' => \Auth::user()->id,
