@@ -14,6 +14,7 @@
         <div class="form-group">
             <label for="to_employee_id">{{ __('To Employee') }}</label>
             <select name="to_employee_id" class="form-control" required>
+                <option value="" disabled selected>{{ __('Select To Employee') }}</option>
                 @foreach ($employees as $employee)
                     <option value="{{ $employee->id }}">{{ $employee->name }}</option>
                 @endforeach
@@ -27,7 +28,7 @@
         </div>
         <div class="form-group">
             <label for="transfer_date">{{ __('Transfer Date') }}</label>
-            <input type="date" name="transfer_date" class="form-control" value="{{ \Carbon\Carbon::today()->format('Y-m-d') }}" required>
+            <input type="date" name="transfer_date" class="form-control"  min="{{ date('Y-m-d') }}"  value="{{ \Carbon\Carbon::today()->format('Y-m-d') }}" required>
         </div>
 
         <button type="submit" class="btn btn-primary">{{ __('Transfer') }}</button>

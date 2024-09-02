@@ -14,8 +14,8 @@ use Illuminate\Http\Request;
 class AdvanceController extends Controller
 {
     public function index(Request $request) {
-        // if(\Auth::user()->can('manage advance'))
-        // {
+        if(\Auth::user()->can('manage advance'))
+        {
             $customer = Customer::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             $customer->prepend('Select Customer', '');
 
@@ -53,23 +53,26 @@ class AdvanceController extends Controller
 
             return view('advance.index', compact('advances', 'customer', 'account'));
 
-        // }
+         }else
+        {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
     public function create()
     {
 
-        // if(\Auth::user()->can('create advance'))
-        // {
+        if(\Auth::user()->can('create advance'))
+        {
             $customers = Customer::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             $customers->prepend('--', 0);
             $accounts   = BankAccount::select('*', \DB::raw("CONCAT(bank_name,' ',holder_name) AS name"))->where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
 
             return view('advance.create', compact('customers', 'accounts'));
-        // }
-        // else
-        // {
-        //     return response()->json(['error' => __('Permission denied.')], 401);
-        // }
+        }
+        else
+        {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
 
     public function show($id) {
@@ -80,8 +83,8 @@ class AdvanceController extends Controller
     }
 
     public function store(Request $request) {
-        // if(\Auth::user()->can('create advance'))
-        // {
+        if(\Auth::user()->can('create advance'))
+        {
             $validator = \Validator::make(
                 $request->all(), [
                     'date' => 'required',
@@ -161,28 +164,31 @@ class AdvanceController extends Controller
 
             return redirect()->route('advance.index')->with('success', __('Advance successfully created'). ((isset($result) && $result!=1) ? '<br> <span class="text-danger">' . $result . '</span>' : ''));
 
-        // }
+        }else
+        {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
 
     public function edit(Advance $advance)
     {
-        // if(\Auth::user()->can('edit advance'))
-        // {
+        if(\Auth::user()->can('edit advance'))
+        {
             $customers = Customer::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             $customers->prepend('--', 0);
             $accounts   = BankAccount::select('*', \DB::raw("CONCAT(bank_name,' ',holder_name) AS name"))->where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
 
             return view('advance.edit', compact('customers', 'accounts', 'advance'));
-        // }
-        // else
-        // {
-        //     return response()->json(['error' => __('Permission denied.')], 401);
-        // }
+        }
+        else
+        {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
     public function update(Request $request, Advance $advance)
     {
-        // if(\Auth::user()->can('edit advance'))
-        // {
+        if(\Auth::user()->can('edit advance'))
+        {
             $validator = \Validator::make(
                 $request->all(), [
                         'date' => 'required',
@@ -282,16 +288,16 @@ class AdvanceController extends Controller
 
             return redirect()->route('advance.index')->with('success', __('Advance Updated Successfully'). ((isset($result) && $result!=1) ? '<br> <span class="text-danger">' . $result . '</span>' : ''));
 
-        // }
-        // else
-        // {
-        //     return redirect()->back()->with('error', __('Permission denied.'));
-        // }
+        }
+        else
+        {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
     public function destroy(Advance $advance)
     {
-        // if(\Auth::user()->can('delete advance'))
-        // {
+        if(\Auth::user()->can('delete advance'))
+        {
             if($advance->created_by == \Auth::user()->creatorId())
             {
                 if(!empty($advance->add_receipt))
@@ -317,11 +323,11 @@ class AdvanceController extends Controller
             {
                 return redirect()->back()->with('error', __('Permission denied.'));
             }
-        // }
-        // else
-        // {
-        //     return redirect()->back()->with('error', __('Permission denied.'));
-        // }
+        }
+        else
+        {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
     function advanceNumber()
     {
