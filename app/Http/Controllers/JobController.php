@@ -248,22 +248,26 @@ class JobController extends Controller
 
         \App::setLocale($lang);
 
-        $job                                = Job::where('code', $code)->first();
-        $companySettings['title_text']      = \DB::table('settings')->where('created_by', $job->created_by)->where('name', 'title_text')->first();
-        $companySettings['footer_text']     = \DB::table('settings')->where('created_by', $job->created_by)->where('name', 'footer_text')->first();
-        $companySettings['company_favicon'] = \DB::table('settings')->where('created_by', $job->created_by)->where('name', 'company_favicon')->first();
-        $companySettings['company_logo']    = \DB::table('settings')->where('created_by', $job->created_by)->where('name', 'company_logo')->first();
-
-        $customQuestionIds = explode(',', $job->custom_question);
-        $questions = CustomQuestion::whereIn('id', $customQuestionIds)->where('created_by', $job->created_by)->get();
-        $languages = Utility::languages();
-        $currantLang = \Session::get('lang');
-        if (empty($currantLang)) {
-            $currantLang = !empty($job->createdBy) ? $job->createdBy->lang : 'en';
+        $job                                = Job::where('code', $code)->where('status', 'active')->first();
+        if($job)
+        {
+            $companySettings['title_text']      = \DB::table('settings')->where('created_by', $job->created_by)->where('name', 'title_text')->first();
+            $companySettings['footer_text']     = \DB::table('settings')->where('created_by', $job->created_by)->where('name', 'footer_text')->first();
+            $companySettings['company_favicon'] = \DB::table('settings')->where('created_by', $job->created_by)->where('name', 'company_favicon')->first();
+            $companySettings['company_logo']    = \DB::table('settings')->where('created_by', $job->created_by)->where('name', 'company_logo')->first();
+            $customQuestionIds = explode(',', $job->custom_question);
+            $questions = CustomQuestion::whereIn('id', $customQuestionIds)->where('created_by', $job->created_by)->get();
+            $languages = Utility::languages();
+            $currantLang = \Session::get('lang');
+            if (empty($currantLang)) {
+                $currantLang = !empty($job->createdBy) ? $job->createdBy->lang : 'en';
+            }
+            return view('job.apply', compact('companySettings', 'job', 'questions', 'languages', 'currantLang'));
         }
-
-
-        return view('job.apply', compact('companySettings', 'job', 'questions', 'languages', 'currantLang'));
+        else
+        {
+            return redirect()->back()->with('error', __('Job Expired.'));
+        }
     }
 
     public function jobApplyData(Request $request, $code)
