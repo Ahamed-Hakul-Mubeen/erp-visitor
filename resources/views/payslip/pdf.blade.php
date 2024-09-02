@@ -248,7 +248,7 @@
                 </div>
                 <p class="mt-2 "> {{__('Paid By')}}</p>
                 @if(!empty($digitalSignature))
-                    <img src="{{('storage/uploads/payslip/digital_signatures/' . $digitalSignature) }}" alt="Digital Signature" height="200px">
+                    <img src="{{('storage/uploads/payslip/digital_signatures/' . $digitalSignature) }}" alt="Digital Signature" height="80px">
                 @else
                     <p>{{ __('No signature available') }}</p>
                 @endif
