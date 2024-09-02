@@ -16,8 +16,9 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call(NotificationSeeder::class);
-        Artisan::call('module:migrate LandingPage');
-        Artisan::call('module:seed LandingPage');
+        // Artisan::call('module:migrate LandingPage');
+        // Artisan::call('module:seed LandingPage');
+
 
         if(\Request::route()->getName()!='LaravelUpdater::database')
         {
