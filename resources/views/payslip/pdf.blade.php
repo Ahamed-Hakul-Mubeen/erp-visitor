@@ -21,7 +21,7 @@
                         <div class="invoice-title">
                         </div>
                         <hr>
-                        <div class="row text-sm">
+                        <div class="text-sm row">
                             <div class="col-md-6">
                                 <address>
                                     <strong>{{__('Name')}} :</strong> {{$employee->name}}<br>
@@ -41,7 +41,7 @@
                     </div>
                 </div>
 
-                <div class="row mt-2">
+                <div class="mt-2 row">
                     <div class="col-md-12">
                         <div class="card-body table-border-style">
 
@@ -218,22 +218,22 @@
                             </div>
                         </div>
 
-                        <div class="row mt-4">
+                        <div class="mt-4 row">
                             <div class="col-lg-8">
 
                             </div>
-                            <div class="col-lg-4 text-end text-sm">
-                                <div class="invoice-detail-item pb-2">
-                                    <div class="invoice-detail-name font-bold">{{__('Total Earning')}}</div>
+                            <div class="text-sm col-lg-4 text-end">
+                                <div class="pb-2 invoice-detail-item">
+                                    <div class="font-bold invoice-detail-name">{{__('Total Earning')}}</div>
                                     <div class="invoice-detail-value">{{ \Auth::user()->priceFormat($payslipDetail['totalEarning'])}}</div>
                                 </div>
                                 <div class="invoice-detail-item">
-                                    <div class="invoice-detail-name font-bold">{{__('Total Deduction')}}</div>
+                                    <div class="font-bold invoice-detail-name">{{__('Total Deduction')}}</div>
                                     <div class="invoice-detail-value">{{ \Auth::user()->priceFormat($payslipDetail['totalDeduction'])}}</div>
                                 </div>
                                 <hr class="mt-2 mb-2">
                                 <div class="invoice-detail-item">
-                                    <div class="invoice-detail-name font-bold">{{__('Net Salary')}}</div>
+                                    <div class="font-bold invoice-detail-name">{{__('Net Salary')}}</div>
                                     <div class="invoice-detail-value invoice-detail-value-lg">{{ \Auth::user()->priceFormat($payslip->net_payble)}}</div>
                                 </div>
                             </div>
@@ -242,13 +242,13 @@
                 </div>
             </div>
             <hr>
-            <div class="text-md-right pb-2 text-sm">
-                <div class="float-lg-left mb-lg-0 mb-3 ">
+            <div class="pb-2 text-sm text-md-right">
+                <div class="mb-3 float-lg-left mb-lg-0 ">
                     <p class="mt-2">{{__('Employee Signature')}}</p>
                 </div>
                 <p class="mt-2 "> {{__('Paid By')}}</p>
                 @if(!empty($digitalSignature))
-                    <img src="{{('storage/uploads/payslip/digital_signatures/' . $digitalSignature) }}" alt="Digital Signature" width="200px">
+                    <img src="{{('storage/uploads/payslip/digital_signatures/' . $digitalSignature) }}" alt="Digital Signature" height="200px">
                 @else
                     <p>{{ __('No signature available') }}</p>
                 @endif
