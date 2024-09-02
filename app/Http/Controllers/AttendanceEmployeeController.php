@@ -772,7 +772,6 @@ class AttendanceEmployeeController extends Controller
                             $overtime = '00:00:00';
                         }
 
-                                                
                         $total_break_duration = date('H:i', mktime(0,$break_hour));
 
                         $check = AttendanceEmployee::where('employee_id', $employeeId)->where('date', $value[1])->first();
