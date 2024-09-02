@@ -211,7 +211,7 @@ class JobController extends Controller
 
     public function jobRequirement($code, $lang)
     {
-        $job = Job::where('code', $code)->where('status', 'active')->first();
+        $job = Job::where('code', $code)->first();
         if($job)
         {
             if ($job->status == 'in_active') {
@@ -248,9 +248,12 @@ class JobController extends Controller
 
         \App::setLocale($lang);
 
-        $job                                = Job::where('code', $code)->where('status', 'active')->first();
+        $job                                = Job::where('code', $code)->first();
         if($job)
         {
+            if ($job->status == 'in_active') {
+                return redirect()->route('career', array("id" => $job->created_by,'lang' => 'en'));
+            }
             $companySettings['title_text']      = \DB::table('settings')->where('created_by', $job->created_by)->where('name', 'title_text')->first();
             $companySettings['footer_text']     = \DB::table('settings')->where('created_by', $job->created_by)->where('name', 'footer_text')->first();
             $companySettings['company_favicon'] = \DB::table('settings')->where('created_by', $job->created_by)->where('name', 'company_favicon')->first();
