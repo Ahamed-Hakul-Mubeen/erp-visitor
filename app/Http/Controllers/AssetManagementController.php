@@ -168,7 +168,7 @@ public function assignAsset(Request $request, $id)
         $history->asset_id = $asset->id;    
         $history->employee_id = $request->employee_id;
         $history->action = 'assigned';
-        $history->assign_description = $request->assign_description;
+        $history->description = $request->assign_description;
         $history->action_date = $request->assigned_date;
         $history->created_by = auth()->user()->id;
         $history->save();
@@ -264,7 +264,7 @@ public function assignAsset(Request $request, $id)
         $history->from_employee_id = $request->from_employee_id;
         $history->to_employee_id = $request->to_employee_id;
         $history->action = 'transferred';
-        $history->transfer_description = $request->transfer_description;
+        $history->description = $request->transfer_description;
         $history->action_date = $request->transfer_date;
         $history->created_by = \Auth::user()->id;
         $history->save();
@@ -317,7 +317,7 @@ public function assignAsset(Request $request, $id)
             $history->asset_id = $asset->id;    
             $history->employee_id = $request->employee_id;
             $history->action = 'unassigned';
-            $history->unassign_description = $request->unassign_description;
+            $history->description = $request->unassign_description;
             $history->action_date = $request->assigned_date;
             $history->created_by = auth()->user()->id;
             $history->save();

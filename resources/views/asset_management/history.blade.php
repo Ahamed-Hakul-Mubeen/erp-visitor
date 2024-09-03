@@ -5,7 +5,7 @@
                 <th>{{ __('Date') }}</th>
                 <th>{{ __('Status') }}</th>
                 <th>{{ __('Employee') }}</th>
-                <th>{{ __('By') }}</th>
+                <th>{{ __('Description') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -48,7 +48,9 @@
                             @endphp
                         @endif
                     </td>
-                    <td>{{ optional($record->createdBy)->name }}</td>
+                    <td>
+                       {{$record->description}}
+                    <td>
                 </tr>
             @endforeach
         </tbody>

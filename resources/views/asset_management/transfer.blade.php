@@ -24,7 +24,7 @@
         <!-- Automatically fill the transfer date -->
         <div class="form-group">
             <label for="transfer_description">{{ __('Transfer Description') }}</label>
-            <input type="text" name="transfer_description" class="form-control" required>
+            <textarea  name="transfer_description" class="form-control" required></textarea>
         </div>
         <div class="form-group">
             <label for="transfer_date">{{ __('Transfer Date') }}</label>

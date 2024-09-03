@@ -18,9 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('from_employee_id')->nullable(); 
             $table->unsignedBigInteger('to_employee_id')->nullable(); 
             $table->string('action'); 
-            $table->text('assign_description')->nullable(); 
-            $table->text('transfer_description')->nullable(); 
-            $table->text('unassign_description')->nullable(); 
+            $table->text('description')->nullable(); 
             $table->date('action_date');
             $table->unsignedBigInteger('created_by'); 
             $table->foreign('asset_id')->references('id')->on('asset_management')->onDelete('cascade');
