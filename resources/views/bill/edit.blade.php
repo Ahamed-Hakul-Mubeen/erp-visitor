@@ -702,7 +702,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         {{ Form::label('bill_number', __('Bill Number'),['class'=>'form-label']) }}
-                                        <input type="text" class="form-control" value="{{$bill_number}}" readonly>
+                                        <input type="text" name="bill_number" class="form-control" value="{{$bill_number}}">
                                     </div>
                                 </div>
                                 <div class="col-md-6">

@@ -17,6 +17,7 @@ class CreateBillsTable extends Migration
             'bills', function (Blueprint $table){
             $table->bigIncrements('id');
             $table->string('bill_id')->default('0');
+            $table->string('actual_bill_number')->nullable()->default(null);
             $table->integer('vender_id');
             $table->date('bill_date');
             $table->date('due_date');
