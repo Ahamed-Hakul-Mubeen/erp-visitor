@@ -175,12 +175,12 @@
 @section('action-btn')
     <div class="float-end">
         @can('share project')
-            <a href="#" class="btn btn-sm btn-primary" data-ajax-popup="true" data-size="md"
+            {{-- <a href="#" class="btn btn-sm btn-primary" data-ajax-popup="true" data-size="md"
                 data-title="{{ __('Shared Project Settings') }}"
                 data-url="{{ route('projects.copylink.setting.create', [$project->id]) }}" data-toggle="tooltip"
                 title="{{ __('Shared project settings') }}">
                 <i class="text-white ti ti-share"></i>
-            </a>
+            </a> --}}
             {{--            @php $projectID= Crypt::encrypt($project->id); @endphp --}}
             {{--            <a href="#" id="{{ route('projects.link', \Illuminate\Support\Facades\Crypt::encrypt($project->id)) }}" class="m-1 btn btn-sm btn-primary btn-icon" --}}
             {{--               onclick="copyToClipboard(this)" data-bs-toggle="tooltip" title="{{__('Click to copy link')}}"> --}}
