@@ -124,7 +124,8 @@ class BillController extends Controller
                 $request->all(), [
                     'vender_id' => 'required',
                     'bill_date' => 'required',
-                    'due_date' => 'required'
+                    'due_date' => 'required',
+                    'bill_number' => 'required',
                 ]
             );
             if ($validator->fails()) {
@@ -161,6 +162,7 @@ class BillController extends Controller
 
             $bill            = new Bill();
             $bill->bill_id   = $this->billNumber();
+            $bill->actual_bill_number = $request->bill_number;
             $bill->vender_id = $request->vender_id;;
             $bill->bill_date      = $request->bill_date;
             $bill->status         = 0;
@@ -455,6 +457,7 @@ class BillController extends Controller
                         'vender_id' => 'required',
                         'bill_date' => 'required',
                         'due_date' => 'required',
+                        'bill_number' =>'required',
                     ]
                 );
                 if ($validator->fails()) {
@@ -462,6 +465,7 @@ class BillController extends Controller
                     return redirect()->route('bill.index')->with('error', $messages->first());
                 }
                 $bill->vender_id      = $request->vender_id;
+                $bill->actual_bill_number = $request->bill_number;
                 $bill->bill_date      = $request->bill_date;
                 $bill->due_date       = $request->due_date;
                 $bill->user_type         =  'vendor';

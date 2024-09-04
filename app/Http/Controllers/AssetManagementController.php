@@ -13,17 +13,29 @@ use Illuminate\Http\Request;
 class AssetManagementController extends Controller
 {
     //
-    public function index()
-    {   
-        if(\Auth::user()->can('manage assets management'))
-        {
-            $assets = AssetManagement::where('created_by', \Auth::user()->id)->get();
-            return view('asset_management.index', compact('assets'));
-        }else
-        {
-            return redirect()->back()->with('error', __('Permission denied.'));
+    public function index(Request $request)
+{
+    if (\Auth::user()->can('manage assets management')) {
+        // Fetch all assets created by the authenticated user
+        $query = AssetManagement::where('created_by', \Auth::user()->id);
+
+        // Filter assets based on the status
+        if ($request->has('asset_status') && $request->asset_status !== '') {
+            if ($request->asset_status == 'available') {
+                $query->where('status', 0); // Assuming 0 means available
+            } elseif ($request->asset_status == 'unavailable') {
+                $query->where('status', 1); // Assuming 1 means unavailable
+            }
         }
+
+        // Get the filtered or full asset list
+        $assets = $query->get();
+
+        return view('asset_management.index', compact('assets'));
+    } else {
+        return redirect()->back()->with('error', __('Permission denied.'));
     }
+}
 
     public function create()
     {   
@@ -168,7 +180,7 @@ public function assignAsset(Request $request, $id)
         $history->asset_id = $asset->id;    
         $history->employee_id = $request->employee_id;
         $history->action = 'assigned';
-        $history->assign_description = $request->assign_description;
+        $history->description = $request->assign_description;
         $history->action_date = $request->assigned_date;
         $history->created_by = auth()->user()->id;
         $history->save();
@@ -264,7 +276,7 @@ public function assignAsset(Request $request, $id)
         $history->from_employee_id = $request->from_employee_id;
         $history->to_employee_id = $request->to_employee_id;
         $history->action = 'transferred';
-        $history->transfer_description = $request->transfer_description;
+        $history->description = $request->transfer_description;
         $history->action_date = $request->transfer_date;
         $history->created_by = \Auth::user()->id;
         $history->save();
@@ -317,7 +329,7 @@ public function assignAsset(Request $request, $id)
             $history->asset_id = $asset->id;    
             $history->employee_id = $request->employee_id;
             $history->action = 'unassigned';
-            $history->unassign_description = $request->unassign_description;
+            $history->description = $request->unassign_description;
             $history->action_date = $request->assigned_date;
             $history->created_by = auth()->user()->id;
             $history->save();

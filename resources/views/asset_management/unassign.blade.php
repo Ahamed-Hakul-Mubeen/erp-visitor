@@ -2,7 +2,7 @@
     <form action="{{ route('asset_management.unassignAsset', $asset->id) }}" method="POST">
         @csrf
         <div class="form-group">
-            <label for="employee_id">{{ __('Select Employee') }}</label>
+            <label for="employee_id">{{ __('Employee') }}</label>
             @if (isset($latestHistory))
                 @if ($latestHistory->action === 'assigned' || $latestHistory->action === 'transferred')
                     <input type="text" class="form-control" value="{{ $latestHistory->employee->name }}" readonly>

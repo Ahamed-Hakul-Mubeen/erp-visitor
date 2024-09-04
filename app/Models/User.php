@@ -192,10 +192,17 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     public function billNumberFormat($number)
-    {
+    {   
+        $bill = Bill::where("bill_id", $number)->where('created_by', \Auth::user()->creatorId())->first();
+        if($bill && $bill->actual_bill_number != null)
+        {
+            return $bill->actual_bill_number;
+        }else{
+        
         $settings = Utility::settings();
 
         return $settings["bill_prefix"] . sprintf("%05d", $number);
+        }
     }
     public function expenseNumberFormat($number)
     {
