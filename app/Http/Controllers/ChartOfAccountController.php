@@ -83,14 +83,13 @@ class ChartOfAccountController extends Controller
         {
             $validator = \Validator::make(
                 $request->all(), [
-                                   'name' => 'required',
-                                   'sub_type' => 'required',
-                               ]
+                        'name' => 'required',
+                        'sub_type' => 'required',
+                    ]
             );
             if($validator->fails())
             {
                 $messages = $validator->getMessageBag();
-
                 return redirect()->back()->with('error', $messages->first());
             }
 

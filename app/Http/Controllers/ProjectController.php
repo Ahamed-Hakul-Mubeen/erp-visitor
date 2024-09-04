@@ -787,7 +787,7 @@ class ProjectController extends Controller
             $validator = Validator::make(
                 $request->all(), [
                     'name' => 'required',
-                    'file' => 'required|file|mimes:jpg,jpeg,png,pdf,doc,docx,xls,xlsx|max:51200',
+                    'file' => 'required|file|mimes:jpg,jpeg,png,pdf,doc,docx,xls,xlsx,mp4,mp3|max:51200',
                 ]
             );
 

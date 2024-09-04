@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\BankAccount;
 use App\Models\BillPayment;
 use App\Models\ChartOfAccount;
+use App\Models\ChartOfAccountParent;
+use App\Models\ChartOfAccountSubType;
 use App\Models\ChartOfAccountType;
 use App\Models\CustomField;
 use App\Models\InvoicePayment;
@@ -36,9 +38,10 @@ class BankAccountController extends Controller
     {
         if(\Auth::user()->can('create bank account'))
         {
+            $eligble_code = array("1059");
             $chartAccounts = ChartOfAccount::select(\DB::raw('CONCAT(code, " - ", name) AS code_name, id'))
             ->where('parent', '=', 0)
-            ->where('code', 1059)
+            ->whereIn('code', $eligble_code)
             ->where('created_by', \Auth::user()->creatorId())->get()
             ->pluck('code_name', 'id');
             // $chartAccounts->prepend('Select Account', 0);
@@ -65,7 +68,6 @@ class BankAccountController extends Controller
     {
         if(\Auth::user()->can('create bank account'))
         {
-
             $rules = [
                 'holder_name' => 'required',
                 'bank_name' => 'required',
@@ -83,8 +85,39 @@ class BankAccountController extends Controller
                 return redirect()->route('bank-account.index')->with('error', $messages->first());
             }
 
+            $bank_cash = ChartOfAccount::find($request->chart_account_id);
+
+            $sub_type = ChartOfAccountSubType::where('name', 'Current Asset')->where('created_by', '=', \Auth::user()->creatorId())->first();
+            $existingparentAccount = ChartOfAccountParent::where('account', $bank_cash->id)->where('created_by',\Auth::user()->creatorId())->first();
+            if ($existingparentAccount) {
+                $parentAccount = $existingparentAccount;
+            } else {
+                $parentAccount              = new ChartOfAccountParent();
+                $parentAccount->name        = $bank_cash->name;
+                $parentAccount->sub_type    = $sub_type->type;
+                $parentAccount->type        = $sub_type->id;
+                $parentAccount->account     = $bank_cash->id;
+                $parentAccount->created_by  = \Auth::user()->creatorId();
+                $parentAccount->save();
+            }
+
+            $chart_account              = new ChartOfAccount();
+            $chart_account->name        = $request->holder_name." - ".$request->bank_name;
+            $chart_account->code        = $request->code;
+            $chart_account->type        = $sub_type->type;
+            $chart_account->sub_type    = $sub_type->id;
+
+            if($parentAccount)
+            {
+                $chart_account->parent      = $parentAccount->id;
+            }
+            $chart_account->description = "";
+            $chart_account->is_enabled  = 1;
+            $chart_account->created_by  = \Auth::user()->creatorId();
+            $chart_account->save();
+
             $account                  = new BankAccount();
-            $account->chart_account_id = $request->chart_account_id;
+            $account->chart_account_id = $chart_account->id;
             $account->holder_name     = $request->holder_name;
             $account->bank_name       = $request->bank_name;
             $account->account_number  = $request->account_number;

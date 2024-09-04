@@ -16,6 +16,10 @@
             </select>
         </div>
         <div class="form-group col-md-6">
+            {{ Form::label('code', __('Code'),['class'=>'form-label']) }}
+            {{ Form::text('code', '', array('class' => 'form-control','required'=>'required' , 'placeholder'=>__('Enter Code'))) }}
+        </div>
+        <div class="form-group col-md-6">
             {{ Form::label('holder_name', __('Bank Holder Name'),['class'=>'form-label']) }}
             {{ Form::text('holder_name', '', array('class' => 'form-control','required'=>'required' , 'placeholder'=>__('Enter Bank Holder Name'))) }}
         </div>
