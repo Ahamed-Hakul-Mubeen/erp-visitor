@@ -20,6 +20,38 @@
 @endsection
 
 @section('content')
+<div class="row">
+    <div class="col-sm-12">
+        @if (session('status'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {!! session('status') !!}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+        <div class="mt-2">
+            <div class="card">
+                <div class="card-body">
+                    {{ Form::open(array('route' => array('asset_management.index'),'method'=>'get','id'=>'asset_management_filter')) }}
+                    <div class="row justify-content-end">
+                        <!-- Status Filter -->
+                        <div class="col-xl-2 col-lg-3 col-md-6 col-sm-12 col-12 p-0">
+                            <div class="btn-box">
+                                {{ Form::label('asset_status', __('Status'),['class'=>'form-label'])}}
+                                {{ Form::select('asset_status', ['' => __('All Status'), 'available' => __('Available'), 'unavailable' => __('Unavailable')], request('asset_status'), array('class' => 'form-control select')) }}
+                            </div>
+                        </div>
+        
+                        <!-- Search Input -->
+                        <div class="col-auto d-flex align-items-end mb-1">
+                            <a href="#" class="btn btn-sm btn-primary" onclick="document.getElementById('asset_management_filter').submit(); return false;" data-bs-toggle="tooltip" title="{{__('Apply')}}" data-original-title="{{__('apply')}}">
+                                <span class="btn-inner--icon"><i class="ti ti-search"></i></span>
+                            </a>
+                        </div>
+                    </div>
+                    {{ Form::close() }}
+                </div>
+            </div>
+        </div>
     <div class="row">
         <div class="col-md-12">
             <div class="card">

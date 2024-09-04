@@ -13,17 +13,29 @@ use Illuminate\Http\Request;
 class AssetManagementController extends Controller
 {
     //
-    public function index()
-    {   
-        if(\Auth::user()->can('manage assets management'))
-        {
-            $assets = AssetManagement::where('created_by', \Auth::user()->id)->get();
-            return view('asset_management.index', compact('assets'));
-        }else
-        {
-            return redirect()->back()->with('error', __('Permission denied.'));
+    public function index(Request $request)
+{
+    if (\Auth::user()->can('manage assets management')) {
+        // Fetch all assets created by the authenticated user
+        $query = AssetManagement::where('created_by', \Auth::user()->id);
+
+        // Filter assets based on the status
+        if ($request->has('asset_status') && $request->asset_status !== '') {
+            if ($request->asset_status == 'available') {
+                $query->where('status', 0); // Assuming 0 means available
+            } elseif ($request->asset_status == 'unavailable') {
+                $query->where('status', 1); // Assuming 1 means unavailable
+            }
         }
+
+        // Get the filtered or full asset list
+        $assets = $query->get();
+
+        return view('asset_management.index', compact('assets'));
+    } else {
+        return redirect()->back()->with('error', __('Permission denied.'));
     }
+}
 
     public function create()
     {   
