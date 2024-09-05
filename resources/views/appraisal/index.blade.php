@@ -93,7 +93,12 @@
                                     if(!empty($appraisal->rating)&&($competencyCount!=0))
                                     {
                                         $rating = json_decode($appraisal->rating,true);
-                                        $starsum = array_sum($rating);
+                                        if($rating)
+                                        {
+                                            $starsum = array_sum($rating);
+                                        } else {
+                                            $starsum = 0;
+                                        }
                                         $overallrating = $starsum/$competencyCount;
                                     }
                                     else{
