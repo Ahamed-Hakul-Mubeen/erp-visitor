@@ -231,7 +231,6 @@ class AttendanceEmployeeController extends Controller
 
     public function update(Request $request, $id)
     {
-
         if (\Auth::user()->type == 'company' || \Auth::user()->type == 'HR') {
             $employeeId = AttendanceEmployee::where('employee_id', $request->employee_id)->first();
             $check = AttendanceEmployee::where('id',$id)->where('employee_id', '=', $request->employee_id)->where('date', $request->date)->first();
@@ -242,6 +241,7 @@ class AttendanceEmployeeController extends Controller
 
             $clockIn = $request->clock_in;
             $clockOut = $request->clock_out;
+            $work_from_home = $request->work_from_home;
 
             $startTime1 = Carbon::parse(Utility::getValByName('company_start_time'));
             $endTime1 = Carbon::parse(Utility::getValByName('company_end_time'));
@@ -308,7 +308,7 @@ class AttendanceEmployeeController extends Controller
                 $overtime = '00:00:00';
             }
             // dd($check->date == date('Y-m-d'));
-            if ($check->date == date('Y-m-d')) {
+            if (\Auth::user()->type == 'company' || $check->date == date('Y-m-d')) {
                 $check->update([
                     'late' => $late,
                     'early_leaving' => ($earlyLeavingTime > 0) ? $earlyLeavingTime : '00:00:00',
@@ -316,6 +316,7 @@ class AttendanceEmployeeController extends Controller
                     'clock_in' => $clockIn,
                     'clock_out' => $clockOut,
                     'total_break_duration' => $total_break_time,
+                    'work_from_home' => $work_from_home
                 ]);
 
                 return redirect()->route('attendanceemployee.index')->with('success', __('Employee attendance successfully updated.'));
@@ -741,6 +742,7 @@ class AttendanceEmployeeController extends Controller
                         $clockIn = $value[2];
                         $clockOut = $value[3];
                         $break_hour = $value[4];
+                        $is_wfh_data = $value[5];
 
                         if ($clockIn) {
                             $status = "present";
@@ -773,6 +775,12 @@ class AttendanceEmployeeController extends Controller
                         }
 
                         $total_break_duration = date('H:i', mktime(0,$break_hour));
+                        if($is_wfh_data == "Yes")
+                        {
+                            $is_wfh = 1;
+                        } else {
+                            $is_wfh = 0;
+                        }
 
                         $check = AttendanceEmployee::where('employee_id', $employeeId)->where('date', $value[1])->first();
                         if ($check) {
@@ -781,6 +789,7 @@ class AttendanceEmployeeController extends Controller
                                 'early_leaving' => ($earlyLeaving > 0) ? $earlyLeaving : '00:00:00',
                                 'overtime' => $overtime,
                                 'total_break_duration' => $total_break_duration,
+                                'work_from_home' => $is_wfh,
                                 'clock_in' => $value[2],
                                 'clock_out' => $value[3],
                             ]);
@@ -793,6 +802,7 @@ class AttendanceEmployeeController extends Controller
                                 'early_leaving' => ($earlyLeaving > 0) ? $earlyLeaving : '00:00:00',
                                 'overtime' => $overtime,
                                 'total_break_duration' => $total_break_duration,
+                                'work_from_home' => $is_wfh,
                                 'clock_in' => $value[2],
                                 'clock_out' => $value[3],
                                 'created_by' => \Auth::user()->id,
