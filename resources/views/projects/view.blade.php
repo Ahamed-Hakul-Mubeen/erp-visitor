@@ -192,11 +192,11 @@
                 {{ __('Gantt Chart') }}
             </a>
         @endcan
-        @if (\Auth::user()->type != 'client' || \Auth::user()->type == 'client')
+        {{-- @if (\Auth::user()->type != 'client' || \Auth::user()->type == 'client')
             <a href="{{ route('projecttime.tracker', $project->id) }}" class="btn btn-sm btn-primary">
                 {{ __('Tracker') }}
             </a>
-        @endif
+        @endif --}}
         @can('view expense')
             <a href="{{ route('projects.expenses.index', $project->id) }}" class="btn btn-sm btn-primary">
                 {{ __('Expense') }}
