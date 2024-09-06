@@ -102,8 +102,8 @@ class BankTransferController extends Controller
             $from_account_coa = BankAccount::where("id", $request->from_account)->where('created_by', \Auth::user()->creatorId())->first();
             $to_account_coa = BankAccount::where("id", $request->to_account)->where('created_by', \Auth::user()->creatorId())->first();
 
-            if($from_account_coa->holder_name == "cash" || $from_account_coa->holder_name == "Cash" || $to_account_coa->holder_name == "cash" || $to_account_coa->holder_name == "Cash")
-            {
+            // if($from_account_coa->holder_name == "cash" || $from_account_coa->holder_name == "Cash" || $to_account_coa->holder_name == "cash" || $to_account_coa->holder_name == "Cash")
+            // {
                 $data = [
                     'account_id' => $from_account_coa->chart_account_id,
                     'transaction_type' => 'Credit',
@@ -125,7 +125,7 @@ class BankTransferController extends Controller
                     'date' => $request->date,
                 ];
                 Utility::addTransactionLines($data, "new");
-            }
+            // }
 
             return redirect()->route('bank-transfer.index')->with('success', __('Amount successfully transfer.'));
         }
@@ -195,8 +195,8 @@ class BankTransferController extends Controller
             Utility::bankAccountBalance($request->from_account, $request->amount, 'debit');
             Utility::bankAccountBalance($request->to_account, $request->amount, 'credit');
 
-            if($from_account_coa->holder_name == "cash" || $from_account_coa->holder_name == "Cash" || $to_account_coa->holder_name == "cash" || $to_account_coa->holder_name == "Cash")
-            {
+            // if($from_account_coa->holder_name == "cash" || $from_account_coa->holder_name == "Cash" || $to_account_coa->holder_name == "cash" || $to_account_coa->holder_name == "Cash")
+            // {
                 $data = [
                     'account_id' => $from_account_coa->chart_account_id,
                     'transaction_type' => 'Credit',
@@ -218,7 +218,7 @@ class BankTransferController extends Controller
                     'date' => $request->date,
                 ];
                 Utility::addTransactionLines($data, "new");
-            }
+            // }
 
             return redirect()->route('bank-transfer.index')->with('success', __('Amount successfully transfer updated.'));
         }
