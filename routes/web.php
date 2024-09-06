@@ -172,7 +172,15 @@ require __DIR__ . '/auth.php';
 
 
 
-
+Route::group(
+    [
+        'middleware' => [
+            'auth',
+            'checkEmployeeStatus', // Check employee status middleware
+            'XSS',
+            'revalidate',
+        ],
+    ], function () {
 
 ///copy link
 Route::get('/customer/invoice/{id}/', [InvoiceController::class, 'invoiceLink'])->name('invoice.link.copy');
@@ -1711,3 +1719,4 @@ Route::group(['middleware' => ['verified']], function () {
 
 
 Route::any('/cookie-consent', [SystemController::class, 'CookieConsent'])->name('cookie-consent');
+});
