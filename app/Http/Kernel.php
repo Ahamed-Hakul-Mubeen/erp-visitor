@@ -66,5 +66,6 @@ class Kernel extends HttpKernel
         'XSS' => \App\Http\Middleware\XSS::class,
         'revalidate' => \App\Http\Middleware\RevalidateBackHistory::class,
         'pusher' => \App\Http\Middleware\pusherConfig::class,
+        'checkEmployeeStatus' => \App\Http\Middleware\CheckEmployeeStatus::class,
     ];
 }
