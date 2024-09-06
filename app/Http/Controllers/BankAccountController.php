@@ -120,6 +120,7 @@ class BankAccountController extends Controller
             $account->chart_account_id = $chart_account->id;
             $account->holder_name     = $request->holder_name;
             $account->bank_name       = $request->bank_name;
+            $account->code            = $request->code;
             $account->account_number  = $request->account_number;
             $account->opening_balance = $request->opening_balance ? $request->opening_balance : 0;
             $account->contact_number  = $request->contact_number ? $request->contact_number : '-';
@@ -223,9 +224,15 @@ class BankAccountController extends Controller
                 return redirect()->route('bank-account.index')->with('error', $messages->first());
             }
 
+            $chart_account              = ChartOfAccount::find($request->chart_account_id);
+            $chart_account->name        = $request->holder_name." - ".$request->bank_name;
+            $chart_account->code        = $request->code;
+            $chart_account->save();
+
             $bankAccount->chart_account_id = $request->chart_account_id;
             $bankAccount->holder_name     = $request->holder_name;
             $bankAccount->bank_name       = $request->bank_name;
+            $bankAccount->code            = $request->code;
             $bankAccount->account_number  = $request->account_number;
             $bankAccount->opening_balance = $request->opening_balance ? $request->opening_balance : 0;
             $bankAccount->contact_number  = $request->contact_number ? $request->contact_number : '-';

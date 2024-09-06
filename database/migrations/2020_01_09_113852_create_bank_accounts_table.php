@@ -23,6 +23,7 @@ class CreateBankAccountsTable extends Migration
             $table->float('opening_balance', 15, 2)->default('0.00');
             $table->string('contact_number');
             $table->text('bank_address');
+            $table->integer('code');
             $table->integer('created_by')->default('0');
             $table->timestamps();
         }
