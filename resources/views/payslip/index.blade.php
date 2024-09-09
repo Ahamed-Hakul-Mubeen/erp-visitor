@@ -216,7 +216,7 @@
                                 }
                             @endif
 
-                            return view + payslip + clickToPaid + deleted + form;
+                            return view + payslip + clickToPaid + edit + deleted + form;
                         }
 
                         console.clear();
@@ -293,7 +293,7 @@
                                     '<td>' + valueOfElement[4] + '</td>' +
                                     '<td>' + valueOfElement[5] + '</td>' +
                                     '<td>' + status + '</td>' +
-                                    '<td>' + payslip + clickToPaid + deleted + '</td>' +
+                                    '<td>' + payslip + clickToPaid + edit + deleted + '</td>' +
                                     '</tr>';
                             });
                         } else {
