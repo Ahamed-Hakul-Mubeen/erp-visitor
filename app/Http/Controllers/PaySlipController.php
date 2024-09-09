@@ -53,7 +53,7 @@ class PaySlipController extends Controller
             ];
 
             $year = [
-                date("Y", strtotime("+1 year")) => date("Y", strtotime("+1 year")),
+                // date("Y", strtotime("+1 year")) => date("Y", strtotime("+1 year")),
                 date("Y") => date("Y"),
                 date("Y", strtotime("-1 year")) => date("Y", strtotime("-1 year")),
                 date("Y", strtotime("-2 year")) => date("Y", strtotime("-2 year")),
@@ -511,11 +511,14 @@ class PaySlipController extends Controller
         $year = $pay_arr[0];
         $month = $pay_arr[1];
 
+        $employee = Employee::find($payslipEmployee->employee_id);
+
+        $payslipEmployee->net_payble           = $employee->get_net_salary($year, $month);
         $payslipEmployee->allowance            = Employee::allowance($payslipEmployee->employee_id);
         $payslipEmployee->commission           = Employee::commission($payslipEmployee->employee_id);
         $payslipEmployee->loan                 = Employee::loan($payslipEmployee->employee_id);
         $payslipEmployee->saturation_deduction = Employee::saturation_deduction($payslipEmployee->employee_id);
-        $payslipEmployee->leave_deductions     = $payslipEmployee->leave_deductions($year, $month);
+        $payslipEmployee->leave_deductions     = $employee->leave_deductions($year, $month);
         $payslipEmployee->other_payment        = Employee::other_payment($payslipEmployee->employee_id);
         $payslipEmployee->overtime             = json_encode($overtime_arr);
         $payslipEmployee->net_payble           = Employee::find($payslipEmployee->employee_id)->get_net_salary($year, $month);
