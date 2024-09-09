@@ -65,38 +65,53 @@
                                     <td>
                                       
                                         
-                                        @if(\Auth::user()->type == 'Employee' || \Auth::user()->type == 'company'  )
-                                            @if($leave->status == "Pending")
-                                                @can('edit leave')
-                                                    <div class="action-btn bg-primary ms-2">
-                                                        <a href="#" data-url="{{ URL::to('leave/'.$leave->id.'/edit') }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Edit Leave')}}" class="mx-3 btn btn-sm align-items-center" data-bs-toggle="tooltip" title="{{__('Edit')}}" data-original-title="{{__('Edit')}}">
-                                                            <i class="text-white ti ti-pencil"></i>
-                                                        </a>
-                                                    </div>
-                                                @endcan
-                                            @endif
-                                        @else
-                                            @can('edit leave')
-                                                <div class="action-btn bg-primary ms-2">
-                                                    <a href="#" data-url="{{ URL::to('leave/'.$leave->id.'/edit') }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Edit Leave')}}" class="mx-3 btn btn-sm align-items-center" data-bs-toggle="tooltip" title="{{__('Edit')}}" data-original-title="{{__('Edit')}}">
-                                                        <i class="text-white ti ti-pencil"></i>
-                                                    </a>
-                                                </div>
-                                            @endcan
+                                       @can('edit leave')
+                                            <div class="action-btn bg-primary ms-2">
+                                                <a href="#" 
+                                                data-url="{{ URL::to('leave/'.$leave->id.'/edit') }}" 
+                                                data-size="lg" 
+                                                data-ajax-popup="true" 
+                                                data-title="{{__('Edit Leave')}}" 
+                                                class="mx-3 btn btn-sm align-items-center" 
+                                                data-bs-toggle="tooltip" 
+                                                title="{{__('Edit')}}" 
+                                                data-original-title="{{__('Edit')}}">
+                                                    <i class="text-white ti ti-pencil"></i>
+                                                </a>
+                                            </div>
+                                        @endcan
+
+                                        @if($leave->status == "Pending")
+                                            <div class="action-btn bg-warning ms-2">
+                                                <a href="#" 
+                                                data-url="{{ URL::to('leave/'.$leave->id.'/action') }}" 
+                                                data-size="lg" 
+                                                data-ajax-popup="true" 
+                                                data-title="{{__('Leave Action')}}" 
+                                                class="mx-3 btn btn-sm align-items-center" 
+                                                data-bs-toggle="tooltip" 
+                                                title="{{__('Leave Action')}}" 
+                                                data-original-title="{{__('Leave Action')}}">
+                                                    <i class="text-white ti ti-caret-right"></i>
+                                                </a>
+                                            </div>
                                         @endif
-                                        <div class="action-btn bg-warning ms-2">
-                                            <a href="#" data-url="{{ URL::to('leave/'.$leave->id.'/action') }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Leave Action')}}" class="mx-3 btn btn-sm align-items-center" data-bs-toggle="tooltip" title="{{__('Leave Action')}}" data-original-title="{{__('Leave Action')}}">
-                                                <i class="text-white ti ti-caret-right"></i>
-                                            </a>
-                                        </div>
+
                                         @can('delete leave')
-                                        <div class="action-btn bg-danger ms-2">
-                                            {!! Form::open(['method' => 'DELETE', 'route' => ['leave.destroy', $leave->id],'id'=>'delete-form-'.$leave->id]) !!}
-                                            <a href="#" class="mx-3 btn btn-sm align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{__('Delete')}}" data-original-title="{{__('Delete')}}" data-confirm="{{__('Are You Sure?').'|'.__('This action can not be undone. Do you want to continue?')}}" data-confirm-yes="document.getElementById('delete-form-{{$leave->id}}').submit();">
-                                            <i class="text-white ti ti-trash"></i></a>
-                                            {!! Form::close() !!}
-                                        </div>
-                                        @endif
+                                            <div class="action-btn bg-danger ms-2">
+                                                {!! Form::open(['method' => 'DELETE', 'route' => ['leave.destroy', $leave->id],'id'=>'delete-form-'.$leave->id]) !!}
+                                                <a href="#" 
+                                                class="mx-3 btn btn-sm align-items-center bs-pass-para" 
+                                                data-bs-toggle="tooltip" 
+                                                title="{{__('Delete')}}" 
+                                                data-original-title="{{__('Delete')}}" 
+                                                data-confirm="{{__('Are You Sure?').'|'.__('This action can not be undone. Do you want to continue?')}}" 
+                                                data-confirm-yes="document.getElementById('delete-form-{{$leave->id}}').submit();">
+                                                    <i class="text-white ti ti-trash"></i>
+                                                </a>
+                                                {!! Form::close() !!}
+                                            </div>
+                                        @endcan
                                     </td>
                                 </tr>
                             @endforeach
