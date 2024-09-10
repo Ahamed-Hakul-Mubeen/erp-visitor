@@ -6,6 +6,7 @@ use App\Models\InterviewSchedule;
 use App\Models\JobApplication;
 use App\Models\JobStage;
 use App\Models\User;
+use App\Models\Employee;
 use App\Models\Utility;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -89,10 +90,34 @@ class InterviewScheduleController extends Controller
                 Utility::addCalendarData($request1 , $type);
 
             }
-            return redirect()->back()->with('success', __('Interview schedule successfully created.'));
+             // Fetch the candidate's email
+        $candidate = JobApplication::find($request->candidate);
+        $candidateEmail = $candidate ? $candidate->email : null;
+
+        // Fetch the employee's details
+        $employee = Employee::where('user_id', $request->employee)->first();
+        $employeeName = $employee ? $employee->name : 'Unknown Employee';
+        $interviewTime = Carbon::parse($request->time)->format('h:i A');
+
+        // Prepare email data
+        $emailData = [
+            'candidate_name' => $candidate->name,
+            'interviewer_name' => $employeeName,
+            'interview_date' => $request->date,
+            'interview_time' => $interviewTime,
+            'comment' => $request->comment,
+        ];
+
+        // Get email settings
+        $settings = Utility::settings();
+
+        // Send Email to Candidate
+        if ($settings['interview_schedule'] == 1 && $candidateEmail) {
+            Utility::sendEmailTemplate('Interview Scheduling', [$candidateEmail], $emailData);
         }
-        else
-        {
+        
+         return redirect()->back()->with('success', __('Interview schedule successfully created.'));
+        } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
     }
