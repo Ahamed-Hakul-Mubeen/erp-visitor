@@ -27,44 +27,47 @@
                     <table class="table datatable">
                             <thead>
                             <tr>
-                                {{-- @if(\Auth::user()->type!='Employee') --}}
-                                    <th>{{__('Employee')}}</th>
-                                {{-- @endif --}}
+                                <th>{{__('Employee')}}</th>
                                 <th>{{__('Leave Type')}}</th>
                                 <th>{{__('Applied On')}}</th>
                                 <th>{{__('Start Date')}}</th>
                                 <th>{{__('End Date')}}</th>
                                 <th>{{__('Total Days')}}</th>
                                 <th>{{__('Leave Reason')}}</th>
-                                <th>{{__('status')}}</th>
-                                    @can('edit leave')
-                                        <th width="200px">{{__('Action')}}</th>
-                                    @endcan
+                                <th>{{__('PM Approval')}}</th>
+                                <th>{{__('HR Approval')}}</th>
+                                <th width="200px">{{__('Action')}}</th>
                             </tr>
                             </thead>
                             <tbody>
                             @foreach ($leaves as $leave)
                                 <tr>
-                                    {{-- @if(\Auth::user()->type!='Employee') --}}
-                                        <td>{{ !empty($leave->employees) ? $leave->employees->name : '-'}}</td>
-                                    {{-- @endif --}}
+                                    <td>{{ !empty($leave->employees) ? $leave->employees->name : '-'}}</td>
                                     <td>{{ !empty($leave->leaveType) ? $leave->leaveType->title : '-'}}</td>
                                     <td>{{ \Auth::user()->dateFormat($leave->applied_on )}}</td>
                                     <td>{{ \Auth::user()->dateFormat($leave->start_date ) }}</td>
                                     <td>{{ \Auth::user()->dateFormat($leave->end_date )  }}</td>
-                                        <td>{{ $leave->total_leave_days }}</td>
+                                    <td>{{ $leave->total_leave_days }}</td>
                                     <td>{{ $leave->leave_reason }}</td>
                                     <td>
-                                        @if($leave->status=="Pending")<div class="p-2 px-3 rounded status_badge badge bg-warning">{{ $leave->status }}</div>
-                                        @elseif($leave->status=="Approved")
-                                            <div class="p-2 px-3 rounded status_badge badge bg-success">{{ $leave->status }}</div>
-                                        @else($leave->status=="Reject")
-                                            <div class="p-2 px-3 rounded status_badge badge bg-danger">{{ $leave->status }}</div>
+                                        @if($leave->pm_approval == 'Approved')
+                                            <span class="p-2 px-3 rounded status_badge badge bg-success">{{__('Approved')}}</span>
+                                        @elseif($leave->pm_approval == 'Rejected')
+                                            <span class="p-2 px-3 rounded status_badge badge bg-danger">{{__('Rejected')}}</span>
+                                        @else
+                                            <span class="p-2 px-3 rounded status_badge badge bg-warning">{{__('Pending')}}</span>
                                         @endif
                                     </td>
                                     <td>
-                                      
-                                        
+                                        @if($leave->hr_approval == 'Approved')
+                                            <span class="p-2 px-3 rounded status_badge badge bg-success">{{__('Approved')}}</span>
+                                        @elseif($leave->hr_approval == 'Rejected')
+                                            <span class="p-2 px-3 rounded status_badge badge bg-danger">{{__('Rejected')}}</span>
+                                        @else
+                                            <span class="p-2 px-3 rounded status_badge badge bg-warning">{{__('Pending')}}</span>
+                                        @endif
+                                    </td>
+                                    <td>
                                        @can('edit leave')
                                             <div class="action-btn bg-primary ms-2">
                                                 <a href="#" 
@@ -74,14 +77,13 @@
                                                 data-title="{{__('Edit Leave')}}" 
                                                 class="mx-3 btn btn-sm align-items-center" 
                                                 data-bs-toggle="tooltip" 
-                                                title="{{__('Edit')}}" 
-                                                data-original-title="{{__('Edit')}}">
+                                                title="{{__('Edit')}}">
                                                     <i class="text-white ti ti-pencil"></i>
                                                 </a>
                                             </div>
                                         @endcan
 
-                                        @if($leave->status == "Pending")
+                                        {{-- @if($leave->pm_approval == 'Pending' || $leave->hr_approval == 'Pending') --}}
                                             <div class="action-btn bg-warning ms-2">
                                                 <a href="#" 
                                                 data-url="{{ URL::to('leave/'.$leave->id.'/action') }}" 
@@ -90,12 +92,11 @@
                                                 data-title="{{__('Leave Action')}}" 
                                                 class="mx-3 btn btn-sm align-items-center" 
                                                 data-bs-toggle="tooltip" 
-                                                title="{{__('Leave Action')}}" 
-                                                data-original-title="{{__('Leave Action')}}">
+                                                title="{{__('Leave Action')}}">
                                                     <i class="text-white ti ti-caret-right"></i>
                                                 </a>
                                             </div>
-                                        @endif
+                                        {{-- @endif --}}
 
                                         @can('delete leave')
                                             <div class="action-btn bg-danger ms-2">
@@ -104,7 +105,6 @@
                                                 class="mx-3 btn btn-sm align-items-center bs-pass-para" 
                                                 data-bs-toggle="tooltip" 
                                                 title="{{__('Delete')}}" 
-                                                data-original-title="{{__('Delete')}}" 
                                                 data-confirm="{{__('Are You Sure?').'|'.__('This action can not be undone. Do you want to continue?')}}" 
                                                 data-confirm-yes="document.getElementById('delete-form-{{$leave->id}}').submit();">
                                                     <i class="text-white ti ti-trash"></i>

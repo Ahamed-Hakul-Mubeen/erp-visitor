@@ -185,7 +185,64 @@ class UserController extends Controller
 
                 $role->givePermissionTo($employeePermission);
 
-            } else {
+                
+                $role             = new Role();
+                $role->name       = 'Project Manager';
+                $role->created_by = $user->id;
+                $role->save();
+
+            $projectPermission =[
+                ['name' => 'show project dashboard'],
+                ['name' => 'manage project'],
+                ['name' => 'create project'],
+                ['name' => 'view project'],
+                ['name' => 'edit project'],
+                ['name' => 'delete project'],
+                ['name' => 'share project'],
+                ['name' => 'create milestone'],
+                ['name' => 'edit milestone'],
+                ['name' => 'delete milestone'],
+                ['name' => 'share milestone'],
+                ['name' => 'view milestone'],
+                ['name' => 'create attachment'],
+                ['name' => 'delete attachment'],
+                ['name' => 'download attachment'],
+                ['name' => 'view grant chart'],
+                ['name' => 'manage project stage'],
+                ['name' => 'create project stage'],
+                ['name' => 'edit project stage'],
+                ['name' => 'delete project stage'],
+                ['name' => 'view timesheet'],
+                ['name' => 'view expense'],
+                ['name' => 'manage project task'],
+                ['name' => 'create project task'],
+                ['name' => 'edit project task'],
+                ['name' => 'view project task'],
+                ['name' => 'delete project task'],
+                ['name' => 'view activity'],
+                ['name' => 'view CRM activity'],
+                ['name' => 'manage project task stage'],
+                ['name' => 'create project task stage'],
+                ['name' => 'edit project task stage'],
+                ['name' => 'delete project task stage'],
+                ['name' => 'manage timesheet'],
+                ['name' => 'create timesheet'],
+                ['name' => 'edit timesheet'],
+                ['name' => 'delete timesheet'],
+                ['name' => 'manage bug report'],
+                ['name' => 'create bug report'],
+                ['name' => 'edit bug report'],
+                ['name' => 'delete bug report'],
+                ['name' => 'move bug report'],
+                ['name' => 'manage bug status'],
+                ['name' => 'create bug status'],
+                ['name' => 'edit bug status'],
+                ['name' => 'delete bug status'],
+                ['name' => 'manage leave'],
+            ];
+                $role->givePermissionTo($projectPermission);
+           
+        } else {
                 $validator = \Validator::make(
                     $request->all(), [
                         'name' => 'required|max:120',
