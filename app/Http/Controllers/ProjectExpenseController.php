@@ -9,6 +9,7 @@ use App\Models\ActivityLog;
 use App\Models\BankAccount;
 use App\Models\ChartOfAccount;
 use App\Models\TransactionLines;
+use App\Models\Vender;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 class ProjectExpenseController extends Controller
@@ -40,6 +41,8 @@ class ProjectExpenseController extends Controller
         if(\Auth::user()->can('create project expense'))
         {
             $project = Project::find($project_id);
+            $vender = Vender::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+            $vender->prepend('Select Vendor', '');
             $accounts = BankAccount::select('*', \DB::raw("CONCAT(bank_name,' ',holder_name) AS name"))->where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             $chart_accounts = ChartOfAccount::select(\DB::raw('CONCAT(chart_of_accounts.code, " - ", chart_of_accounts.name) AS code_name, chart_of_accounts.id'))
                 ->leftjoin('chart_of_account_types', 'chart_of_account_types.id','chart_of_accounts.type')
@@ -47,7 +50,7 @@ class ProjectExpenseController extends Controller
                 ->where('chart_of_accounts.created_by', \Auth::user()->creatorId())->get()
                 ->pluck('code_name', 'id');
             $chart_accounts->prepend('Select Account', '');
-            return view('project_expense.create', compact('project', 'accounts', 'chart_accounts'));
+            return view('project_expense.create', compact('project', 'accounts', 'chart_accounts', 'vender'));
         }
         else
         {
@@ -81,7 +84,9 @@ class ProjectExpenseController extends Controller
             $post['created_by'] = $usr->id;
             $post['account_id'] = $request->account_id;
             $post['chart_accounts'] = $request->chart_accounts;
-            
+            $post['milestone_id'] = $request->milestone_id;
+            $post['vender_id'] = $request->vender_id;
+
             if($request->hasFile('attachment'))
             {
                 $fileNameToStore    = time() . '.' . $request->attachment->getClientOriginalExtension();
@@ -158,7 +163,9 @@ class ProjectExpenseController extends Controller
                 ->where('chart_of_accounts.created_by', \Auth::user()->creatorId())->get()
                 ->pluck('code_name', 'id');
             $chart_accounts->prepend('Select Account', '');
-            return view('project_expense.edit', compact('project', 'expense', 'accounts', 'chart_accounts'));
+            $vender = Vender::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+            $vender->prepend('Select Vendor', '');
+            return view('project_expense.edit', compact('project', 'expense', 'accounts', 'chart_accounts', 'vender'));
         }
         else
         {
@@ -196,6 +203,8 @@ class ProjectExpenseController extends Controller
             $expense->description = $request->description;
             $expense->account_id = $request->account_id;
             $expense->chart_accounts = $request->chart_accounts;
+            $expense->milestone_id = $request->milestone_id;
+            $expense->vender_id = $request->vender_id;
 
             if($request->hasFile('attachment'))
             {

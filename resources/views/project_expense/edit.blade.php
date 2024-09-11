@@ -25,14 +25,37 @@
         </div>
         <div class="col-12 col-md-6">
             <div class="form-group">
-                {{ Form::label('account_id', __('Account'),['class'=>'form-label']) }}
-                {{ Form::select('account_id',$accounts,null, array('class' => 'form-control select','required'=>'required')) }}
+                {{ Form::label('account_id', __('Account'), ['class' => 'form-label']) }}
+                {{ Form::select('account_id', $accounts, null, ['class' => 'form-control select', 'required' => 'required']) }}
             </div>
         </div>
         <div class="col-12 col-md-6">
             <div class="form-group">
-                {{ Form::label('chart_accounts', __('Chart Of Account'),['class'=>'form-label']) }}
-                {{ Form::select('chart_accounts',$chart_accounts,null, array('class' => 'form-control select','required'=>'required')) }}
+                {{ Form::label('chart_accounts', __('Chart Of Account'), ['class' => 'form-label']) }}
+                {{ Form::select('chart_accounts', $chart_accounts, null, ['class' => 'form-control select', 'required' => 'required']) }}
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6">
+            <div class="form-group">
+                {{ Form::label('milestone_id', __('Milestone'), ['class' => 'form-label']) }}
+                <select class="form-control select" name="milestone_id" id="milestone_id">
+                    <option value="0" class="text-muted">{{ __('Select Milestone') }}</option>
+                    @foreach ($project->milestones as $m_val)
+                        @if($expense->milestone_id == $m_val->id)
+                            <option selected value="{{ $m_val->id }}">{{ $m_val->title }}</option>
+                        @else
+                            <option value="{{ $m_val->id }}">{{ $m_val->title }}</option>
+                        @endif
+                    @endforeach
+                </select>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6">
+            <div class="form-group">
+                {{ Form::label('vender_id', __('Vendor'), ['class' => 'form-label']) }}
+                {{ Form::select('vender_id', $vender, null, ['class' => 'form-control select', 'required' => 'required']) }}
             </div>
         </div>
         <div class="col-12 col-md-12">

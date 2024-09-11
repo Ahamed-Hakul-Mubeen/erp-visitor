@@ -37,6 +37,25 @@
         </div>
     </div>
 
+    <div class="col-12 col-md-6">
+        <div class="form-group">
+            {{ Form::label('milestone_id', __('Milestone'),['class' => 'form-label']) }}
+            <select class="form-control select" name="milestone_id" id="milestone_id">
+                <option value="0" class="text-muted">{{__('Select Milestone')}}</option>
+                @foreach($project->milestones as $m_val)
+                    <option value="{{ $m_val->id }}">{{ $m_val->title }}</option>
+                @endforeach
+            </select>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-6">
+        <div class="form-group">
+            {{ Form::label('vender_id', __('Vendor'),['class'=>'form-label']) }}
+            {{ Form::select('vender_id', $vender,null, array('class' => 'form-control select','required'=>'required')) }}
+        </div>
+    </div>
+
     <div class="col-12 col-md-12">
         <div class="form-group">
             {{ Form::label('description', __('Description'),['class' => 'form-label']) }}
