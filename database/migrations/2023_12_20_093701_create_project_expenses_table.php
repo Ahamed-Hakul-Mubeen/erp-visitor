@@ -24,6 +24,8 @@ return new class extends Migration
             $table->integer('chart_accounts')->nullable();
             $table->integer('milestone_id')->nullable();
             $table->integer('vender_id')->nullable();
+            $table->string('reference_type')->nullable();
+            $table->integer('reference_id')->nullable();
             $table->integer('created_by');
             $table->timestamps();
         });

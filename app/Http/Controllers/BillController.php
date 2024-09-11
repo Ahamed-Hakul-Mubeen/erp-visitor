@@ -13,6 +13,8 @@ use App\Models\CustomField;
 use App\Models\DebitNote;
 use App\Models\ProductService;
 use App\Models\ProductServiceCategory;
+use App\Models\Project;
+use App\Models\ProjectExpense;
 use App\Models\StockReport;
 use App\Models\Transaction;
 use App\Models\User;
@@ -99,13 +101,16 @@ class BillController extends Controller
                 ->pluck('code_name', 'id');
             $chartAccounts->prepend('Select Account', '');
 
+            $project_list = Project::where('created_by', \Auth::user()->creatorId())->get()->pluck('project_name', 'id');
+            $project_list->prepend('No Project', '');
+
             $subAccounts = ChartOfAccount::select('chart_of_accounts.id', 'chart_of_accounts.code', 'chart_of_accounts.name' , 'chart_of_account_parents.account');
             $subAccounts->leftjoin('chart_of_account_parents', 'chart_of_accounts.parent', 'chart_of_account_parents.id');
             $subAccounts->where('chart_of_accounts.parent', '!=', 0);
             $subAccounts->where('chart_of_accounts.created_by', \Auth::user()->creatorId());
             $subAccounts = $subAccounts->get()->toArray();
 
-            return view('bill.create', compact('venders', 'bill_number', 'product_services', 'category', 'customFields', 'vendorId','chartAccounts' , 'subAccounts'));
+            return view('bill.create', compact('venders', 'bill_number', 'product_services', 'category', 'customFields', 'vendorId','chartAccounts' , 'subAccounts', 'project_list'));
         }
         else
         {
@@ -160,18 +165,19 @@ class BillController extends Controller
 
             }
 
-            $bill            = new Bill();
-            $bill->bill_id   = $this->billNumber();
+            $bill                   = new Bill();
+            $bill->bill_id          = $this->billNumber();
             $bill->actual_bill_number = $request->bill_number;
-            $bill->vender_id = $request->vender_id;;
-            $bill->bill_date      = $request->bill_date;
-            $bill->status         = 0;
-            $bill->type         =  'Bill';
-            $bill->user_type         =  'vendor';
-            $bill->due_date       = $request->due_date;
-            $bill->category_id    = !empty($request->category_id) ? $request->category_id :0;
-            $bill->order_number   = !empty($request->order_number) ? $request->order_number : 0;
-            $bill->created_by     = \Auth::user()->creatorId();
+            $bill->project_id       = $request->project_id;
+            $bill->vender_id        = $request->vender_id;;
+            $bill->bill_date        = $request->bill_date;
+            $bill->status           = 0;
+            $bill->type             = 'Bill';
+            $bill->user_type        = 'vendor';
+            $bill->due_date         = $request->due_date;
+            $bill->category_id      = !empty($request->category_id) ? $request->category_id :0;
+            $bill->order_number     = !empty($request->order_number) ? $request->order_number : 0;
+            $bill->created_by       = \Auth::user()->creatorId();
             $bill->save();
 
             CustomField::saveData($bill, $request->customField);
@@ -430,9 +436,12 @@ class BillController extends Controller
 
                     }
                 }
+                    
+                $project_list = Project::where('created_by', \Auth::user()->creatorId())->get()->pluck('project_name', 'id');
+                $project_list->prepend('No Project', '');
 
                 return view('bill.edit', compact('venders', 'product_services', 'bill', 'bill_number', 'category',
-                    'customFields','chartAccounts','items' , 'subAccounts'));
+                    'customFields','chartAccounts','items' , 'subAccounts', 'project_list'));
             }
             else{
                 return redirect()->back()->with('error', __('Bill Not Found.'));
@@ -471,6 +480,12 @@ class BillController extends Controller
                 $bill->user_type         =  'vendor';
                 $bill->order_number   = $request->order_number;
                 $bill->category_id    = $request->category_id;
+
+                if($bill->project_id) {
+                    ProjectExpense::where("reference_type", "Bill")->where("reference_id", $bill->id)->where("created_by", \Auth::user()->creatorId())->delete();
+                }
+
+                $bill->project_id    = $request->project_id;
                 $bill->save();
                 CustomField::saveData($bill, $request->customField);
                 $products = $request->items;
@@ -584,6 +599,22 @@ class BillController extends Controller
                     ];
                     Utility::addTransactionLines($data, "new");
 
+                    if($bill->project_id)
+                    {
+                        $expense = new ProjectExpense();
+                        $expense->name = $bill->actual_bill_number." Bill Generated";
+                        $expense->project_id = $bill->project_id;
+                        $expense->date = date("Y-m-d H:i:s", strtotime($bill->bill_date));
+                        $expense->amount = $itemAmount;
+                        $expense->description = $bill_product->description;
+                        $expense->chart_accounts = $product->expense_chartaccount_id;
+                        $expense->vender_id = $bill->vender_id;
+                        $expense->reference_type = "Bill";
+                        $expense->reference_id = $bill->id;
+                        $expense->created_by = \Auth::user()->creatorId();
+                        $expense->save();
+                    }
+
                     // Product Amount Store in Inventory
 
                     $chart_accounts = ChartOfAccount::where('code', 1510)->where('created_by', \Auth::user()->creatorId())->first();
@@ -640,6 +671,10 @@ class BillController extends Controller
 
                     $billpayment = BillPayment::find($value->id)->first();
                     $billpayment->delete();
+                }
+                if($bill->project_id)
+                {
+                    ProjectExpense::where("reference_type", "Bill")->where("reference_id", $bill->id)->where("created_by", \Auth::user()->creatorId())->delete();
                 }
                 $bill->delete();
 
@@ -804,7 +839,23 @@ class BillController extends Controller
                     ];
                     Utility::addTransactionLines($data, "new");
                 }
+            }
 
+            
+            if($bill->project_id)
+            {
+                $expense = new ProjectExpense();
+                $expense->name = $bill->actual_bill_number." Bill Generated";
+                $expense->project_id = $bill->project_id;
+                $expense->date = date("Y-m-d H:i:s", strtotime($bill->bill_date));
+                $expense->amount = $product_price;
+                $expense->description = $bill_product->description;
+                $expense->chart_accounts = $product->expense_chartaccount_id;
+                $expense->vender_id = $bill->vender_id;
+                $expense->reference_type = "Bill";
+                $expense->reference_id = $bill->id;
+                $expense->created_by = \Auth::user()->creatorId();
+                $expense->save();
             }
 
             // $bill_accounts = BillAccount::where('ref_id', $bill->id)->get();

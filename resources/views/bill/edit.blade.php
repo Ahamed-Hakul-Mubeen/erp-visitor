@@ -717,6 +717,12 @@
                                         {{ Form::number('order_number', null, array('class' => 'form-control')) }}
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ Form::label('project_id', __('Project'),['class'=>'form-label']) }}
+                                        {{ Form::select('project_id', $project_list,null, array('class' => 'form-control select')) }}
+                                    </div>
+                                </div>
 
                                 @if(!$customFields->isEmpty())
                                     <div class="col-md-6">
@@ -734,7 +740,7 @@
 
 
         <div class="col-12">
-            <h5 class="mb-4  d-inline-block">{{__('Product & Services')}}</h5>
+            <h5 class="mb-4 d-inline-block">{{__('Product & Services')}}</h5>
             <div class="card repeater" data-value='{!! json_encode($items) !!}'>
                 <div class="py-2 item-section">
                     <div class="row justify-content-between align-items-center">
@@ -810,8 +816,8 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="form-group">
-                                        {{-- {{ Form::select('chart_account_id', $chartAccounts,null, array('class' => 'form-control select js-searchBox')) }} --}}
+                                    {{-- <td class="form-group">
+                                        {{ Form::select('chart_account_id', $chartAccounts,null, array('class' => 'form-control select js-searchBox')) }}
                                         <select name="chart_account_id" class="form-control">
                                             @foreach ($chartAccounts as $key => $chartAccount)
                                                 <option value="{{ $key }}" class="subAccount">{{ $chartAccount}}</option>
@@ -828,11 +834,12 @@
                                             {{ Form::text('amount',null, array('class' => 'form-control accountAmount','placeholder'=>__('Amount'))) }}
                                             <span class="bg-transparent input-group-text">{{\Auth::user()->currencySymbol()}}</span>
                                         </div>
-                                    </td>
+                                    </td> --}}
 
-                                    <td colspan="2" class="form-group">
+                                    <td colspan="3" class="form-group">
                                             {{ Form::textarea('description', null, ['class'=>'form-control pro_description','rows'=>'1','placeholder'=>__('Description')]) }}
                                     </td>
+                                    <td></td>
                                     <td></td>
                                     <td class="text-end accountamount">
                                         0.00

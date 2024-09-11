@@ -626,6 +626,12 @@
                                         {{ Form::number('order_number', '', array('class' => 'form-control' , 'placeholder'=>__('Enter Order Number'))) }}
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ Form::label('project_id', __('Project'),['class'=>'form-label']) }}
+                                        {{ Form::select('project_id', $project_list,null, array('class' => 'form-control select')) }}
+                                    </div>
+                                </div>
                                 @if(!$customFields->isEmpty())
                                     <div class="col-md-6">
                                         <div class="tab-pane fade show" id="tab-2" role="tabpanel">
