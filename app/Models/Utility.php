@@ -4780,9 +4780,7 @@ class Utility extends Model
 
     public static function getChatGPTSettings()
     {
-        $user = User::find(\Auth::user()->creatorId());
-        $plan = \App\Models\Plan::find($user->plan);
-
+        $plan = new Plan();
         return $plan;
     }
     //start for chartOfAccount data show

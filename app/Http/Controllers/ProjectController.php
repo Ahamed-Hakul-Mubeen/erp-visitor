@@ -20,6 +20,7 @@ use Carbon\Carbon;
 use App\Models\ActivityLog;
 use App\Models\ProjectTask;
 use App\Models\ProjectUser;
+use App\Models\Vender;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -513,8 +514,9 @@ class ProjectController extends Controller
     {
         if (\Auth::user()->can('create milestone')) {
             $project = Project::find($project_id);
-
-            return view('projects.milestone', compact('project'));
+            $vender = Vender::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+            $vender->prepend('Select Vendor', '');
+            return view('projects.milestone', compact('project', 'vender'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
@@ -572,6 +574,7 @@ class ProjectController extends Controller
             $milestone->start_date    = $request->start_date;
             $milestone->due_date    = $request->due_date;
             $milestone->description = $request->description;
+            $milestone->vender_id   = $request->vender_id;
             $milestone->save();
 
             ActivityLog::create(
@@ -593,8 +596,9 @@ class ProjectController extends Controller
     {
         if (\Auth::user()->can('edit milestone')) {
             $milestone = Milestone::find($id);
-
-            return view('projects.milestoneEdit', compact('milestone'));
+            $vender = Vender::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+            $vender->prepend('Select Vendor', '');
+            return view('projects.milestoneEdit', compact('milestone', 'vender'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
@@ -623,9 +627,10 @@ class ProjectController extends Controller
             $milestone->status      = $request->status;
             $milestone->cost        = $request->cost;
             $milestone->progress    = $request->progress;
-            $milestone->due_date    = $request->duedate;
+            $milestone->due_date    = $request->due_date;
             $milestone->start_date  = $request->start_date;
             $milestone->description = $request->description;
+            $milestone->vender_id   = $request->vender_id;
             $milestone->save();
 
             return redirect()->back()->with('success', __('Milestone updated successfully.'));

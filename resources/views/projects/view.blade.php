@@ -505,7 +505,7 @@
                         <h5>{{ __('Milestones') }} ({{ count($project->milestones) }})</h5>
                         <div class="float-end">
                             @can('create milestone')
-                                <a href="#" data-size="md" data-url="{{ route('project.milestone', $project->id) }}"
+                                <a href="#" data-size="lg" data-url="{{ route('project.milestone', $project->id) }}"
                                     data-ajax-popup="true" data-bs-toggle="tooltip" title=""
                                     class="btn btn-sm btn-primary" data-bs-original-title="{{ __('Create Milestone') }}">
                                     <i class="ti ti-plus"></i>
@@ -531,10 +531,7 @@
                                         <div class="mb-3 col-sm-auto mb-sm-0">
                                             <div class="d-flex align-items-center">
                                                 <div class="div">
-                                                    <h6 class="m-0">{{ $milestone->title }}
-                                                        <span
-                                                            class="badge-xs badge bg-{{ \App\Models\Project::$status_color[$milestone->status] }} p-2 px-3 rounded">{{ __(\App\Models\Project::$project_status[$milestone->status]) }}</span>
-                                                    </h6>
+                                                    <h6 class="m-0">{{ $milestone->title }}</h6>
                                                     <small
                                                         class="text-muted">{{ $milestone->tasks->count() . ' ' . __('Tasks') }}</small>
                                                 </div>
@@ -553,7 +550,7 @@
                                             @endcan
                                             @can('edit milestone')
                                                 <div class="action-btn bg-info ms-2">
-                                                    <a href="#" data-size="md"
+                                                    <a href="#" data-size="lg"
                                                         data-url="{{ route('project.milestone.edit', $milestone->id) }}"
                                                         data-ajax-popup="true" data-bs-toggle="tooltip"
                                                         title="{{ __('Edit') }}"
@@ -572,6 +569,22 @@
                                                     {!! Form::close() !!}
                                                 </div>
                                             @endcan
+
+                                        </div>
+                                        <div class="mt-2">
+
+                                            <div class="mb-2 d-flex align-items-center justify-content-between">
+                                                <div class="d-flex align-items-center">
+                                                    <span class="text-muted">
+                                                        <span class="badge-xs badge bg-{{ \App\Models\Project::$status_color[$milestone->status] }} p-2 px-3 rounded">{{ __(\App\Models\Project::$project_status[$milestone->status]) }}</span>
+                                                    </span>
+                                                </div>
+                                                <span>{{ $milestone->progress }}%</span>
+                                            </div>
+
+                                            <div class="progress">
+                                                <div class="progress-bar bg-primary" style="width: {{ $milestone->progress }}%"></div>
+                                            </div>
                                         </div>
                                     </div>
                                 </li>
@@ -665,7 +678,8 @@
                                                 <div class="mb-3 col mb-sm-0">
                                                     <div class="d-flex align-items-center">
                                                         <div class="div">
-                                                            <p class="m-0"><i class="ti ti-file"></i> {{ $al }}</p>
+                                                            <p class="m-0"><i class="ti ti-file"></i>
+                                                                {{ $al }}</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -690,7 +704,10 @@
                                                     @endcan
                                                     @can('delete attachment')
                                                         <div class="action-btn bg-danger ms-2">
-                                                            {!! Form::open(['method' => 'DELETE', 'route' => ['project.attachment.attachmentDestroyFile', $attachment->id, $index]]) !!}
+                                                            {!! Form::open([
+                                                                'method' => 'DELETE',
+                                                                'route' => ['project.attachment.attachmentDestroyFile', $attachment->id, $index],
+                                                            ]) !!}
                                                             <a href="#"
                                                                 class="mx-3 btn btn-sm align-items-center bs-pass-para"
                                                                 data-bs-toggle="tooltip" title="{{ __('Delete') }}"><i
