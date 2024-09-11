@@ -714,9 +714,8 @@
                                 </td>
                             </tr>
                             <tr>
-
-                                <td  class="form-group">
-                                    {{-- {{ Form::select('chart_account_id', $chartAccounts,'', array('class' => 'form-control select2 js-searchBox')) }} --}}
+                                {{-- <td  class="form-group">
+                                    {{ Form::select('chart_account_id', $chartAccounts,'', array('class' => 'form-control select2 js-searchBox')) }}
                                     <select name="chart_account_id" class="form-control">
                                         @foreach ($chartAccounts as $key => $chartAccount)
                                             <option value="{{ $key }}" class="subAccount">{{ $chartAccount}}</option>
@@ -733,11 +732,12 @@
                                         {{ Form::text('amount','', array('class' => 'form-control accountAmount','placeholder'=>__('Amount'))) }}
                                         <span class="bg-transparent input-group-text">{{\Auth::user()->currencySymbol()}}</span>
                                     </div>
-                                </td>
+                                </td> --}}
 
-                                <td colspan="2" class="form-group">
+                                <td colspan="3" class="form-group">
                                     {{ Form::textarea('description', null, ['class'=>'form-control pro_description','rows'=>'1','placeholder'=>__('Description')]) }}
                                 </td>
+                                <td></td>
                                 <td></td>
 
 
