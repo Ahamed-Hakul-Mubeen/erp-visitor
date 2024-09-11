@@ -557,17 +557,35 @@
 
                                                                     if (!empty($iteam->tax)) {
                                                                         foreach (explode(',', $iteam->tax) as $tax) {
-                                                                            $taxPrice = \Utility::taxRate($getTaxData[$tax]['rate'], $iteam->price, $iteam->quantity);
+                                                                            $taxPrice = \Utility::taxRate(
+                                                                                $getTaxData[$tax]['rate'],
+                                                                                $iteam->price,
+                                                                                $iteam->quantity,
+                                                                            );
                                                                             $totalTaxPrice += $taxPrice;
-                                                                            $itemTax['name'] = $getTaxData[$tax]['name'];
-                                                                            $itemTax['rate'] = $getTaxData[$tax]['rate'] . '%';
-                                                                            $itemTax['price'] = \Auth::user()->priceFormat($taxPrice);
+                                                                            $itemTax['name'] =
+                                                                                $getTaxData[$tax]['name'];
+                                                                            $itemTax['rate'] =
+                                                                                $getTaxData[$tax]['rate'] . '%';
+                                                                            $itemTax[
+                                                                                'price'
+                                                                            ] = \Auth::user()->priceFormat($taxPrice);
 
                                                                             $itemTaxes[] = $itemTax;
-                                                                            if (array_key_exists($getTaxData[$tax]['name'], $taxesData)) {
-                                                                                $taxesData[$getTaxData[$tax]['name']] = $taxesData[$getTaxData[$tax]['name']] + $taxPrice;
+                                                                            if (
+                                                                                array_key_exists(
+                                                                                    $getTaxData[$tax]['name'],
+                                                                                    $taxesData,
+                                                                                )
+                                                                            ) {
+                                                                                $taxesData[$getTaxData[$tax]['name']] =
+                                                                                    $taxesData[
+                                                                                        $getTaxData[$tax]['name']
+                                                                                    ] + $taxPrice;
                                                                             } else {
-                                                                                $taxesData[$getTaxData[$tax]['name']] = $taxPrice;
+                                                                                $taxesData[
+                                                                                    $getTaxData[$tax]['name']
+                                                                                ] = $taxPrice;
                                                                             }
                                                                         }
                                                                         $iteam->itemTax = $itemTaxes;
@@ -576,11 +594,11 @@
                                                                     }
                                                                 @endphp
                                                                 @foreach ($iteam->itemTax as $tax)
-
-                                                                        <tr>
-                                                                            <td>{{$tax['name'] .' ('.$tax['rate'] .'%)'}}</td>
-                                                                            <td>{{ $tax['price']}}</td>
-                                                                        </tr>
+                                                                    <tr>
+                                                                        <td>{{ $tax['name'] . ' (' . $tax['rate'] . '%)' }}
+                                                                        </td>
+                                                                        <td>{{ $tax['price'] }}</td>
+                                                                    </tr>
                                                                 @endforeach
                                                             </table>
                                                         @else
@@ -708,6 +726,10 @@
                                                     download="" class="btn btn-sm btn-secondary btn-icon rounded-pill"
                                                     target="_blank"><span class="btn-inner--icon"><i
                                                             class="ti ti-download"></i></span></a>
+                                                <a href="{{ asset(Storage::url('uploads/payment')) . '/' . $payment->add_receipt }}"
+                                                    class="btn btn-sm btn-secondary btn-icon rounded-pill"
+                                                    target="_blank"><span class="btn-inner--icon"><i
+                                                            class="ti ti-eye"></i></span></a>
                                             @else
                                                 -
                                             @endif
