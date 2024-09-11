@@ -257,16 +257,35 @@ class LeaveController extends Controller
     {
         $leave = Leave::find($request->leave_id);
 
-        $leave->status = $request->status;
-        if($leave->status == 'Approval')
-        {
-            // $startDate               = new \DateTime($leave->start_date);
-            // $endDate                 = new \DateTime($leave->end_date);
-            // $total_leave_days        = $startDate->diff($endDate)->days;
-            // $leave->total_leave_days = $total_leave_days;
-            $leave->status           = 'Approved';
+        if ($request->approval_type == 'PM') {
+            $leave->pm_approval = $request->status;
+        } elseif ($request->approval_type == 'HR') {
+            $leave->hr_approval = $request->status;
         }
-
+    
+      
+        if ($leave->pm_approval == 'Approved' && $leave->hr_approval == 'Approved') {
+            $leave->status = 'Approved';
+        }
+    
+      
+        if ($leave->pm_approval == 'Rejected' || $leave->hr_approval == 'Rejected') {
+            $leave->status = 'Rejected';
+        }
+    
+        
+        if ($request->approval_type == 'Final') {
+            if ($request->status == 'Approved') {
+                $leave->pm_approval = 'Approved'; 
+                $leave->hr_approval = 'Approved'; 
+                $leave->status = 'Approved'; 
+            } elseif ($request->status == 'Rejected') {
+                $leave->pm_approval = 'Rejected'; 
+                $leave->hr_approval = 'Rejected'; 
+                $leave->status = 'Rejected'; 
+            }
+        }
+    
         $leave->save();
 
 

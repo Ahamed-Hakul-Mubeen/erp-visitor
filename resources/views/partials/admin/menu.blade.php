@@ -340,7 +340,7 @@
                 <!--------------------- Start HRM ----------------------------------->
 
                 @if (!empty($userPlan) && $userPlan->hrm == 1)
-                    @if (Gate::check('manage employee') || Gate::check('manage setsalary'))
+                    @if (Gate::check('manage employee') || Gate::check('manage setsalary') || Gate::check('show project dashboard'))
                         <li
                             class="dash-item dash-hasmenu {{ Request::segment(1) == 'holiday-calender' ||
                             Request::segment(1) == 'leavetype' ||
@@ -404,6 +404,7 @@
                                 </span>
                             </a>
                             <ul class="dash-submenu">
+                                @if(Gate::check('manage employee'))
                                 <li
                                     class="dash-item  {{ Request::segment(1) == 'employee' ? 'active dash-trigger' : '' }}   ">
                                     @if (\Auth::user()->type == 'Employee')
@@ -418,6 +419,7 @@
                                         </a>
                                     @endif
                                 </li>
+                                @endif
 
                                 @if (Gate::check('manage set salary') || Gate::check('manage pay slip'))
                                     <li
