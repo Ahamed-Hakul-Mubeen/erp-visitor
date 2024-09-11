@@ -216,4 +216,9 @@ class ProjectTask extends Model
     {
         return $this->hasMany('App\Models\Timesheet', 'task_id', 'id')->orderBy('id', 'desc');
     }
+
+    public function tasks()
+{
+    return $this->hasMany(ProjectTask::class, 'assign_to');
+}
 }
