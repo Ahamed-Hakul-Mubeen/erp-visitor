@@ -191,6 +191,7 @@ class Utility extends Model
             'lead_assigned' => '1',
             'deal_assigned' => '1',
             'new_award' => '1',
+            'interview_schedule' => '1',
             'customer_invoice_sent' => '1',
             'new_invoice_payment' => '1',
             'new_payment_reminder' => '1',
@@ -386,6 +387,7 @@ class Utility extends Model
             'lead_assigned' => '1',
             'deal_assigned' => '1',
             'new_award' => '1',
+            'interview_schedule' => '1',
             'customer_invoice_sent' => '1',
             'new_invoice_payment' => '1',
             'new_payment_reminder' => '1',
@@ -460,6 +462,7 @@ class Utility extends Model
         'lead_assigned' => 'Lead Assigned',
         'deal_assigned' => 'Deal Assigned',
         'new_award' => 'New Award',
+        'interview_schedule' => 'Interview Scheduling',
         'customer_invoice_sent' => 'Customer Invoice Sent',
         'new_invoice_payment' => 'New Invoice Payment',
         'new_payment_reminder' => 'New Payment Reminder',
@@ -2702,6 +2705,11 @@ class Utility extends Model
             '{payment_type}',
             '{bill_due_date}',
             '{bill_date}',
+            '{candidate_name}',
+            '{interviewer_name}',
+            '{interview_date}',
+            '{interview_time}' ,
+            '{comment}',
 
         ];
         $arrValue = [
@@ -2835,6 +2843,11 @@ class Utility extends Model
             'payment_type' => '-',
             'bill_due_date' => '-',
             'bill_date' => '-',
+            'candidate_name' =>'-',
+            'interviewer_name' =>'-',
+            'interview_date' =>'-',
+            'interview_time' => '-',
+            'comment' => '-',
         ];
 
         foreach ($obj as $key => $val) {
@@ -5611,6 +5624,12 @@ class Utility extends Model
                     'en' => '<p>Hi , <span style="font-family: var(--bs-body-font-family); font-size: var(--bs-body-font-size); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">{award_name}</span></p><p>I am much pleased to nominate .</p><p>I am satisfied that he/she is the best employee for the award. </p><p>I have realized  that he/she is a goal-oriented person, efficient and very punctual .</p><p>Feel free to reach out if you have any question.<br></p><p>Thank You, </p><p>{app_name}</p><p>{app_url}</p>',
                 ],
             ],
+            'interview_schedule' => [
+            'subject' => 'New Interview Schedule',
+            'lang' => [
+                'en' => '<p style="font-family: Arial, sans-serif; font-size: 14px; font-weight: normal;">Dear {candidate},</p><p style="font-family: Arial, sans-serif; font-size: 14px;">We are pleased to invite you for an interview for the position of <strong>{position}</strong> at <strong>{company_name}</strong>.</p> <p style="font-family: Arial, sans-serif; font-size: 14px;">The interview is scheduled for <strong>{interview_date}</strong> at <strong>{interview_time}</strong> via <strong>{interview_location}</strong>.</p><p style="font-family: Arial, sans-serif; font-size: 14px;">Please confirm your availability by replying to this email.</p><p style="font-family: Arial, sans-serif; font-size: 14px;">We look forward to meeting you!</p><p style="font-family: Arial, sans-serif; font-size: 14px;">Best regards,</p><p style="font-family: Arial, sans-serif; font-size: 14px;">{company_name} Recruitment Team</p>',
+             ],
+        ],
             'customer_invoice_sent' => [
                 'subject' => 'Customer Invoice Sent',
                 'lang' => [
