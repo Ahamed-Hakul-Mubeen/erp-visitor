@@ -102,7 +102,7 @@ class BillController extends Controller
             $chartAccounts->prepend('Select Account', '');
 
             $project_list = Project::where('created_by', \Auth::user()->creatorId())->get()->pluck('project_name', 'id');
-            $project_list->prepend('No Project', '');
+            $project_list->prepend('Not for Project', '');
 
             $subAccounts = ChartOfAccount::select('chart_of_accounts.id', 'chart_of_accounts.code', 'chart_of_accounts.name' , 'chart_of_account_parents.account');
             $subAccounts->leftjoin('chart_of_account_parents', 'chart_of_accounts.parent', 'chart_of_account_parents.id');
@@ -438,7 +438,7 @@ class BillController extends Controller
                 }
                     
                 $project_list = Project::where('created_by', \Auth::user()->creatorId())->get()->pluck('project_name', 'id');
-                $project_list->prepend('No Project', '');
+                $project_list->prepend('Not for Project', '');
 
                 return view('bill.edit', compact('venders', 'product_services', 'bill', 'bill_number', 'category',
                     'customFields','chartAccounts','items' , 'subAccounts', 'project_list'));

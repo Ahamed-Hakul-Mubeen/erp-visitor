@@ -8,6 +8,8 @@ use App\Models\BillPayment;
 use App\Models\ChartOfAccount;
 use App\Models\Payment;
 use App\Models\ProductServiceCategory;
+use App\Models\Project;
+use App\Models\ProjectExpense;
 use App\Models\Transaction;
 use App\Models\TransactionLines;
 use App\Models\Utility;
@@ -81,7 +83,10 @@ class PaymentController extends Controller
                 ->where('created_by', \Auth::user()->creatorId())->get()
                 ->pluck('code_name', 'id');
             $chartAccounts->prepend('Select Account', '');
-            return view('payment.create', compact('venders', 'categories', 'accounts', 'chartAccounts'));
+
+            $project_list = Project::where('created_by', \Auth::user()->creatorId())->get()->pluck('project_name', 'id');
+            $project_list->prepend('Not for Project', '');
+            return view('payment.create', compact('venders', 'categories', 'accounts', 'chartAccounts', 'project_list'));
         } else {
             return response()->json(['error' => __('Permission denied.')], 401);
         }
@@ -114,6 +119,8 @@ class PaymentController extends Controller
             $payment->category_id = $request->category_id;
             $payment->payment_method = 0;
             $payment->reference = $request->reference;
+            $payment->project_id = $request->project_id;
+
             if (!empty($request->add_receipt)) {
 
                 //storage limit
@@ -195,6 +202,22 @@ class PaymentController extends Controller
             ];
             Utility::addTransactionLines($data, "new");
 
+            if($request->project_id)
+            {
+                $expense = new ProjectExpense();
+                $expense->name = "Payment Paid";
+                $expense->project_id = $request->project_id;
+                $expense->date = date("Y-m-d H:i:s", strtotime($request->date));
+                $expense->amount = $request->amount;
+                $expense->description = $request->description;
+                $expense->chart_accounts = $category->chart_account_id;
+                $expense->vender_id = $request->vender_id;
+                $expense->reference_type = "Payment";
+                $expense->reference_id = $payment->id;
+                $expense->created_by = \Auth::user()->creatorId();
+                $expense->save();
+            }
+
             $vender = Vender::where('id', $request->vender_id)->first();
             $payment = new BillPayment();
             $payment->name = !empty($vender) ? $vender['name'] : '';
@@ -250,7 +273,9 @@ class PaymentController extends Controller
                 ->pluck('code_name', 'id');
             $chartAccounts->prepend('Select Account', '');
 
-            return view('payment.edit', compact('venders', 'categories', 'accounts', 'payment', 'chartAccounts'));
+            $project_list = Project::where('created_by', \Auth::user()->creatorId())->get()->pluck('project_name', 'id');
+            $project_list->prepend('Not for Project', '');
+            return view('payment.edit', compact('venders', 'categories', 'accounts', 'payment', 'chartAccounts', 'project_list'));
         } else {
             return response()->json(['error' => __('Permission denied.')], 401);
         }
@@ -279,6 +304,10 @@ class PaymentController extends Controller
                 Utility::userBalance('vendor', $vender->id, $payment->amount, 'credit');
             }
             Utility::bankAccountBalance($payment->account_id, $payment->amount, 'credit');
+            if($payment->project_id)
+            {
+                ProjectExpense::where("reference_type", "Payment")->where("reference_id", $payment->id)->where("created_by", \Auth::user()->creatorId())->delete();
+            }
 
             $payment->date = $request->date;
             $payment->amount = $request->amount;
@@ -288,6 +317,7 @@ class PaymentController extends Controller
             $payment->category_id = $request->category_id;
             $payment->payment_method = 0;
             $payment->reference = $request->reference;
+            $payment->project_id = $request->project_id;
 
             if (!empty($request->add_receipt)) {
                 //storage limit
@@ -349,6 +379,22 @@ class PaymentController extends Controller
             ];
             Utility::addTransactionLines($data, "new");
 
+            if($request->project_id)
+            {
+                $expense = new ProjectExpense();
+                $expense->name = "Payment Paid";
+                $expense->project_id = $request->project_id;
+                $expense->date = date("Y-m-d H:i:s", strtotime($request->date));
+                $expense->amount = $request->amount;
+                $expense->description = $request->description;
+                $expense->chart_accounts = $category->chart_account_id;
+                $expense->vender_id = $request->vender_id;
+                $expense->reference_type = "Payment";
+                $expense->reference_id = $payment->id;
+                $expense->created_by = \Auth::user()->creatorId();
+                $expense->save();
+            }
+
             if (!empty($vender)) {
                 Utility::userBalance('vendor', $vender->id, $request->amount, 'debit');
             }
@@ -371,6 +417,10 @@ class PaymentController extends Controller
                     $file_path = '/uploads/payment/' . $payment->add_receipt;
                     $result = Utility::changeStorageLimit(\Auth::user()->creatorId(), $file_path);
 
+                }
+                if($payment->project_id)
+                {
+                    ProjectExpense::where("reference_type", "Payment")->where("reference_id", $payment->id)->where("created_by", \Auth::user()->creatorId())->delete();
                 }
 
                 TransactionLines::where('reference_id', $payment->id)->where('reference', 'Payment')->delete();

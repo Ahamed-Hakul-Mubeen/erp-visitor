@@ -718,7 +718,7 @@ class ProjectController extends Controller
                 $request->all(),
                 [
                     'name' => 'required',
-                    'file.*' => 'required|file|mimes:jpg,jpeg,png,pdf,doc,docx,xls,xlsx,mp4,mp3|max:51200',
+                    'file.*' => 'required|file|mimes:jpg,gif,jpeg,png,pdf,doc,docx,xls,xlsx,mp4,mp3|max:51200',
                 ]
             );
 
