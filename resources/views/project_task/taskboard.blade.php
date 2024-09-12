@@ -49,6 +49,18 @@
             <a class="dropdown-item filter-action filter-other pl-4" href="#" data-val="starred">{{ __('Starred') }}</a>
         </div>
 
+       
+            <a href="#" class="btn btn-primary btn-sm" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="btn-inner--text">{{__('Member')}}</span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right task-filter-members dropdown-steady" id="task_member">
+                @foreach($project_members as $member)
+                    <a class="dropdown-item filter-member pl-4" href="#" data-member-id="{{ $member->id }}">{{ $member->name }}</a>
+                @endforeach
+            </div>
+        
+    
+
     @if($view == 'grid')
         <a href="{{ route('taskBoard.view', 'list') }}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" title="{{__('List View')}}">
             <span class="btn-inner--text"><i class="ti ti-list"></i>{{__('List View')}}</span>
@@ -68,73 +80,80 @@
 @endsection
 
 @push('script-page')
-    <script>
-        // ready
-        $(function () {
-            var sort = 'created_at-desc';
-            var status = '';
-            ajaxFilterTaskView('created_at-desc', '', ['see_my_tasks']);
+<script>
+    // ready
+    $(function () {
+        var sort = 'created_at-desc';
+        var status = '';
+        var memberId = '';
 
-            // when change status
-            $(".task-filter-actions").on('click', '.filter-action', function (e) {
-                if ($(this).hasClass('filter-show-all')) {
-                    $('.filter-action').removeClass('active');
-                    $(this).addClass('active');
-                } else {
+        ajaxFilterTaskView('created_at-desc', '', '', '');
 
-                    $('.filter-show-all').removeClass('active');
-                    if ($(this).hasClass('filter-other')) {
-                        $('.filter-other').removeClass('active');
-                    }
-                    if ($(this).hasClass('active')) {
-                        $(this).removeClass('active');
-                        $(this).blur();
-                    } else {
-                        $(this).addClass('active');
-                    }
-                }
-
-                var filterArray = [];
-                var url = $(this).parents('.task-filter-actions').attr('data-url');
-                $('div.task-filter-actions').find('.active').each(function () {
-                    filterArray.push($(this).attr('data-val'));
-                });
-                status = filterArray;
-                ajaxFilterTaskView(sort, $('#task_keyword').val(), status);
-            });
-
-            // when change sorting order
-            $('#task_sort').on('click', 'a', function () {
-                sort = $(this).attr('data-val');
-                ajaxFilterTaskView(sort, $('#task_keyword').val(), status);
-                $('#task_sort a').removeClass('active');
+        // when change status
+        $(".task-filter-actions").on('click', '.filter-action', function (e) {
+            if ($(this).hasClass('filter-show-all')) {
+                $('.filter-action').removeClass('active');
                 $(this).addClass('active');
-            });
-
-            // when searching by task name
-            $(document).on('keyup', '#task_keyword', function () {
-                ajaxFilterTaskView(sort, $(this).val(), status);
-            });
-        });
-
-        // For Filter
-        function ajaxFilterTaskView(task_sort, keyword = '', status = '') {
-            var mainEle = $('#taskboard_view');
-            var view = '{{$view}}';
-            var data = {
-                view: view,
-                sort: task_sort,
-                keyword: keyword,
-                status: status,
+            } else {
+                $('.filter-show-all').removeClass('active');
+                if ($(this).hasClass('filter-other')) {
+                    $('.filter-other').removeClass('active');
+                }
+                if ($(this).hasClass('active')) {
+                    $(this).removeClass('active');
+                    $(this).blur();
+                } else {
+                    $(this).addClass('active');
+                }
             }
 
-            $.ajax({
-                url: '{{ route('project.taskboard.view') }}',
-                data: data,
-                success: function (data) {
-                    mainEle.html(data.html);
-                }
+            var filterArray = [];
+            $('div.task-filter-actions').find('.active').each(function () {
+                filterArray.push($(this).attr('data-val'));
             });
+            status = filterArray;
+            ajaxFilterTaskView(sort, $('#task_keyword').val(), status, memberId);
+        });
+
+        // when change sorting order
+        $('#task_sort').on('click', 'a', function () {
+            sort = $(this).attr('data-val');
+            ajaxFilterTaskView(sort, $('#task_keyword').val(), status, memberId);
+            $('#task_sort a').removeClass('active');
+            $(this).addClass('active');
+        });
+
+        // when selecting project member
+        $('#task_member').on('click', '.filter-member', function () {
+            memberId = $(this).attr('data-member-id');
+            ajaxFilterTaskView(sort, $('#task_keyword').val(), status, memberId);
+        });
+
+        // when searching by task name
+        $(document).on('keyup', '#task_keyword', function () {
+            ajaxFilterTaskView(sort, $(this).val(), status, memberId);
+        });
+    });
+
+    // For Filter
+    function ajaxFilterTaskView(task_sort, keyword = '', status = '', memberId = '') {
+        var mainEle = $('#taskboard_view');
+        var view = '{{$view}}';
+        var data = {
+            view: view,
+            sort: task_sort,
+            keyword: keyword,
+            status: status,
+            member_id: memberId,
         }
-    </script>
+
+        $.ajax({
+            url: '{{ route('project.taskboard.view') }}',
+            data: data,
+            success: function (data) {
+                mainEle.html(data.html);
+            }
+        });
+    }
+</script>
 @endpush
