@@ -160,7 +160,7 @@ class ProjectTaskController extends Controller
     {
         $usr = Auth::user();
     $project_members = User::whereHas('projects', function ($query) use ($usr) {
-        $query->where('project_id', $usr->projects()->pluck('project_id'));
+        $query->whereIn('project_id', $usr->projects()->pluck('project_id')->toArray());
     })->where('type', '!=', 'company')
     ->get();
 
