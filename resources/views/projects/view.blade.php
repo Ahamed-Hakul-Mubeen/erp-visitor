@@ -652,8 +652,8 @@
                                     <div class="row align-items-center justify-content-between mb-1">
                                         <div class="mb-3 col mb-sm-0">
                                             <div class="d-flex align-items-center">
-                                                <div class="div">
-                                                    <h6 class="m-0">{{ $attachment->name }}</h6>
+                                                <div class="div w-100">
+                                                    <h6 class="m-0 d-flex justify-content-between"><span>{{ $attachment->name }}</span><span>{{ $attachment->created_at->format('Y-m-d') }}</span></h6>
                                                     <small class="text-muted"></small>
                                                 </div>
                                             </div>
