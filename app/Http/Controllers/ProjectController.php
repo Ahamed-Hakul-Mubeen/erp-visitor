@@ -78,6 +78,8 @@ class ProjectController extends Controller
                 [
                     'project_name' => 'required',
                     'project_image' => 'required',
+                    'start_date' => 'required|date', // Ensure start_date is a valid date
+                    'end_date' => 'required|date|after_or_equal:start_date', // Ensure due_date is not before start_date
                 ]
             );
             if ($validator->fails()) {
@@ -557,8 +559,8 @@ class ProjectController extends Controller
                     'title' => 'required',
                     'status' => 'required',
                     'cost' => 'required',
-                    'due_date' => 'required',
-                    'start_date' => 'required'
+                    'start_date' => 'required|date', // Ensure start_date is a valid date
+                    'due_date' => 'required|date|after_or_equal:start_date', // Ensure due_date is not before start_date
                 ]
             );
 

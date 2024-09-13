@@ -61,8 +61,8 @@ class JobController extends Controller
                     'category' => 'required',
                     'skill' => 'required',
                     'position' => 'required|integer',
-                    'start_date' => 'required',
-                    'end_date' => 'required',
+                    'start_date' => 'required|date|before_or_equal:end_date',  // Added date validation
+                    'end_date' => 'required|date|after_or_equal:start_date',    // Added date validation
                     'description' => 'required',
                     'requirement' => 'required',
                 ]
@@ -140,8 +140,8 @@ class JobController extends Controller
                     'category' => 'required',
                     'skill' => 'required',
                     'position' => 'required|integer',
-                    'start_date' => 'required',
-                    'end_date' => 'required',
+                    'start_date' => 'required|date|before_or_equal:end_date',  // Added date validation
+                    'end_date' => 'required|date|after_or_equal:start_date',    // Added date validation
                     'description' => 'required',
                     'requirement' => 'required',
                 ]

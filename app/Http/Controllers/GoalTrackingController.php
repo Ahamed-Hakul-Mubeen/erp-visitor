@@ -84,6 +84,8 @@ class GoalTrackingController extends Controller
             $goalTracking->subject            = $request->subject;
             $goalTracking->target_achievement = $request->target_achievement;
             $goalTracking->description        = $request->description;
+            $goalTracking->rating         = json_encode($request->rating, true);
+            $goalTracking->rating        = $request->rating;
             $goalTracking->created_by         = \Auth::user()->creatorId();
             $goalTracking->save();
 

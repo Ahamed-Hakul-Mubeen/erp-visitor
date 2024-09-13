@@ -92,6 +92,7 @@ class EmployeeController extends Controller
                                    'branch_id' => 'required',
                                    'department_id' => 'required',
                                    'designation_id' => 'required',
+                                   'document' => 'mimes:jpeg,png,jpg,gif,svg,pdf,docx,doc|max:20480',
                                ]
             );
             if($validator->fails())
@@ -264,7 +265,7 @@ class EmployeeController extends Controller
                                    'gender' => 'required',
                                    'phone' => 'required|numeric',
                                    'address' => 'required',
-//                                   'document.*' => 'mimes:jpeg,png,jpg,gif,svg,pdf,doc,zip|max:20480',
+                                   'document.*' => 'mimes:jpeg,png,jpg,gif,svg,pdf,docx,doc|max:20480',
                                ]
             );
             if($validator->fails())
