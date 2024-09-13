@@ -95,7 +95,7 @@ else {
             </nav>
             <section class="job-banner">
                 <div class="job-banner-bg">
-                    <img src="{{ asset('/storage/uploads/job/banner.png') }}" alt="">
+                    <img src="{{ url('/storage/uploads/job/banner.png') }}" alt="">
                 </div>
                 <div class="container">
                     <div class="text-center text-white job-banner-content">
