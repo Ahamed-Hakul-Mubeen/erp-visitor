@@ -659,6 +659,11 @@
                                             </div>
                                         </div>
                                         <div class="col-auto">
+                                            <div class="action-btn bg-warning ms-2">
+                                                <a href="#" class="mx-3 btn btn-sm align-items-center" data-bs-toggle="modal" data-bs-target="#attachmentModal_{{ $attachment->id }}"   data-bs-toggle="tooltip" title="{{ __('View') }}">
+                                                    <i class="text-white ti ti-eye"></i>
+                                                </a>
+                                            </div>
                                             @can('delete attachment')
                                                 <div class="action-btn bg-danger ms-2">
                                                     {!! Form::open(['method' => 'DELETE', 'route' => ['project.attachment.destroy', $attachment->id]]) !!}
@@ -671,54 +676,65 @@
                                         </div>
                                     </div>
 
-                                    <?php $attachment_list = json_decode($attachment->file); ?>
-                                    @if ($attachment_list)
-                                        @foreach ($attachment_list as $index => $al)
-                                            <div class="row align-items-center justify-content-between mb-1">
-                                                <div class="mb-3 col mb-sm-0">
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="div">
-                                                            <p class="m-0"><i class="ti ti-file"></i>
-                                                                {{ $al }}</p>
-                                                        </div>
-                                                    </div>
+                                    <div class="modal fade" id="attachmentModal_{{ $attachment->id }}" tabindex="-1" aria-labelledby="attachmentModalLabel_{{ $attachment->id }}" aria-hidden="true" style="z-index:1050">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="attachmentModalLabel_{{ $attachment->id }}">Attachment Details</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
-                                                <div class="col-auto">
-                                                    @can('download attachment')
-                                                        <div class="action-btn bg-warning ms-2">
-                                                            <a href="{{ asset('storage/project/uploads/' . $al) }}"
-                                                                data-bs-toggle="tooltip" title="{{ __('View') }}"
-                                                                class="btn btn-sm">
-                                                                <i class="text-white ti ti-eye"></i>
-                                                            </a>
-                                                        </div>
-                                                    @endcan
-                                                    @can('download attachment')
-                                                        <div class="action-btn bg-info ms-2">
-                                                            <a href="{{ asset('storage/project/uploads/' . $al) }}"
-                                                                data-bs-toggle="tooltip" title="{{ __('Download') }}"
-                                                                class="btn btn-sm" download>
-                                                                <i class="text-white ti ti-download"></i>
-                                                            </a>
-                                                        </div>
-                                                    @endcan
-                                                    @can('delete attachment')
-                                                        <div class="action-btn bg-danger ms-2">
-                                                            {!! Form::open([
-                                                                'method' => 'DELETE',
-                                                                'route' => ['project.attachment.attachmentDestroyFile', $attachment->id, $index],
-                                                            ]) !!}
-                                                            <a href="#"
-                                                                class="mx-3 btn btn-sm align-items-center bs-pass-para"
-                                                                data-bs-toggle="tooltip" title="{{ __('Delete') }}"><i
-                                                                    class="text-white ti ti-trash"></i></a>
-                                                            {!! Form::close() !!}
-                                                        </div>
-                                                    @endcan
+                                                <div class="modal-body">
+                                                    <!-- Attachment files -->
+                                                    <?php $attachment_list = json_decode($attachment->file); ?>
+                                                    @if ($attachment_list)
+                                                        @foreach ($attachment_list as $index => $al)
+                                                            <div class="row align-items-center justify-content-between mb-1">
+                                                                <div class="mb-3 col mb-sm-0">
+                                                                    <div class="d-flex align-items-center">
+                                                                        <div class="div">
+                                                                            <!-- Display the individual attachment file name -->
+                                                                            <p class="m-0"><i class="ti ti-file"></i> {{ $al }}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-auto">
+                                                                    @can('download attachment')
+                                                                        <!-- View attachment -->
+                                                                        <div class="action-btn bg-warning ms-2">
+                                                                            <a href="{{ asset('storage/project/uploads/' . $al) }}" target="_blank" data-bs-toggle="tooltip" title="{{ __('View') }}" class="btn btn-sm">
+                                                                                <i class="text-white ti ti-eye"></i>
+                                                                            </a>
+                                                                        </div>
+                                                                    @endcan
+                                                                    @can('download attachment')
+                                                                        <!-- Download attachment -->
+                                                                        <div class="action-btn bg-info ms-2">
+                                                                            <a href="{{ asset('storage/project/uploads/' . $al) }}" data-bs-toggle="tooltip" title="{{ __('Download') }}" class="btn btn-sm" download>
+                                                                                <i class="text-white ti ti-download"></i>
+                                                                            </a>
+                                                                        </div>
+                                                                    @endcan
+                                                                    @can('delete attachment')
+                                                                        <!-- Delete individual attachment file -->
+                                                                        <div class="action-btn bg-danger ms-2">
+                                                                            {!! Form::open(['method' => 'DELETE', 'route' => ['project.attachment.attachmentDestroyFile', $attachment->id, $index]]) !!}
+                                                                            <a href="#" class="mx-3 btn btn-sm align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{ __('Delete') }}">
+                                                                                <i class="text-white ti ti-trash"></i>
+                                                                            </a>
+                                                                            {!! Form::close() !!}
+                                                                        </div>
+                                                                    @endcan
+                                                                </div>
+                                                            </div>
+                                                        @endforeach
+                                                    @endif
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                                 </div>
                                             </div>
-                                        @endforeach
-                                    @endif
+                                        </div>
+                                    </div>
 
                                 </li>
                             @endforeach
