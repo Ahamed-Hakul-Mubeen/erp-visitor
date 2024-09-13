@@ -10,18 +10,26 @@
     <li class="breadcrumb-item"><a href="{{route('projects.show',$project->id)}}">{{ucwords($project->project_name)}}</a></li>
     <li class="breadcrumb-item">{{__('Bug Report')}}</li>
 @endsection
+
 @section('action-btn')
-    <div class="float-end">
-        @can('manage bug report')
-            <a href="{{ route('task.bug.kanban',$project->id) }}" data-bs-toggle="tooltip" title="{{__('Kanban')}}" class="btn btn-sm btn-primary">
-                <i class="ti ti-grid-dots"></i>
+    <div class="d-flex justify-content-end align-items-center">
+        <div class="me-3">
+            <a href="{{ url()->previous() }}" class="btn btn-primary add-small">
+                <i class="ti ti-arrow-left"></i> {{ __('Back') }}
             </a>
-        @endcan
-        @can('create bug report')
-            <a href="#" data-size="lg" data-url="{{ route('task.bug.create',$project->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create New Bug')}}" class="btn btn-sm btn-primary">
-                <i class="ti ti-plus"></i>
-            </a>
-        @endcan
+        </div>
+        <div class="d-flex">
+            @can('manage bug report')
+                <a href="{{ route('task.bug.kanban',$project->id) }}" data-bs-toggle="tooltip" title="{{__('Kanban')}}" class="btn btn-sm btn-primary me-2">
+                    <i class="ti ti-grid-dots"></i>
+                </a>
+            @endcan
+            @can('create bug report')
+                <a href="#" data-size="lg" data-url="{{ route('task.bug.create',$project->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create New Bug')}}" class="btn btn-sm btn-primary">
+                    <i class="ti ti-plus"></i>
+                </a>
+            @endcan
+        </div>
     </div>
 @endsection
 
