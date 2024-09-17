@@ -303,7 +303,7 @@ class UserController extends Controller
 
                 $userArr = [
                     'email' => $user->email,
-                    'password' => $user->password,
+                    'password' => $request->password,
                 ];
                 $resp = Utility::sendEmailTemplate('new_user', [$user->id => $user->email], $userArr);
 

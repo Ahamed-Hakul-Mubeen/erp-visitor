@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('product_type_id')->constrained('product_types');
             $table->text('product_description');
             $table->text('product_configuration');
+            $table->string('asset_properties_values')->nullable();
             $table->unsignedBigInteger('created_by');
             $table->unsignedTinyInteger('status')->default(0);
             $table->timestamps();
