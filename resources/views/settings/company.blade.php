@@ -842,6 +842,15 @@
                                     @enderror
                                 </div>
                                 <div class="form-group col-md-6">
+                                    {{ Form::label('pre_order_prefix', __('Pre Order Prefix'), ['class' => 'form-label']) }}
+                                    {{ Form::text('pre_order_prefix', null, ['class' => 'form-control']) }}
+                                    @error('pre_order_prefix')
+                                        <span class="invalid-pre_order_prefix" role="alert">
+                                            <strong class="text-danger">{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                                <div class="form-group col-md-6">
                                     {{ Form::label('invoice_prefix', __('Invoice Prefix'), ['class' => 'form-label']) }}
                                     {{ Form::text('invoice_prefix', null, ['class' => 'form-control']) }}
                                     @error('invoice_prefix')

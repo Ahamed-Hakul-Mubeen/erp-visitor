@@ -93,7 +93,9 @@ class Utility extends Model
             "journal_prefix" => "#JUR",
             "invoice_color" => "ffffff",
             "proposal_prefix" => "#PROP",
+            "pre_order_prefix" => "#PREORD",
             "proposal_color" => "ffffff",
+            "pre_order_color" => "ffffff",
             "bill_prefix" => "#BILL",
             "expense_prefix" => "#EXP",
             "bill_color" => "ffffff",
@@ -104,6 +106,7 @@ class Utility extends Model
             "invoice_template" => "template1",
             "bill_template" => "template1",
             "proposal_template" => "template1",
+            "pre_order_template" => "template1",
             "registration_number" => "",
             "vat_number" => "",
             "default_language" => "en",
@@ -176,6 +179,7 @@ class Utility extends Model
 
             "purchase_logo" => "",
             "proposal_logo" => "",
+            "pre_order_logo" => "",
             "invoice_logo" => "",
             "bill_logo" => "",
             "pos_logo" => "",
@@ -198,6 +202,7 @@ class Utility extends Model
             'new_bill_payment' => '1',
             'bill_resent' => '1',
             'proposal_sent' => '1',
+            'pre_order_sent' => '1',
             'complaint_resent' => '1',
             'leave_action_sent' => '1',
             'payslip_sent' => '1',
@@ -294,6 +299,8 @@ class Utility extends Model
             "invoice_color" => "ffffff",
             "proposal_prefix" => "#PROP",
             "proposal_color" => "ffffff",
+            "pre_order_prefix" => "#PREORD",
+            "pre_order_color" => "ffffff",
             "bill_prefix" => "#BILL",
             "expense_prefix" => "#EXP",
             "bill_color" => "ffffff",
@@ -304,6 +311,7 @@ class Utility extends Model
             "invoice_template" => "template1",
             "bill_template" => "template1",
             "proposal_template" => "template1",
+            "pre_order_template" => "template1",
             "registration_number" => "",
             "vat_number" => "",
             "default_language" => "en",
@@ -348,6 +356,7 @@ class Utility extends Model
             "purchase_color" => "ffffff",
             "purchase_template" => "template1",
             "proposal_logo" => "",
+            "pre_order_logo" => "",
             "purchase_logo" => "",
             "invoice_logo" => "",
             "bill_logo" => "",
@@ -394,6 +403,7 @@ class Utility extends Model
             'new_bill_payment' => '1',
             'bill_resent' => '1',
             'proposal_sent' => '1',
+            'pre_order_sent' => '1',
             'complaint_resent' => '1',
             'leave_action_sent' => '1',
             'payslip_sent' => '1',
@@ -469,6 +479,7 @@ class Utility extends Model
         'new_bill_payment' => 'New Bill Payment',
         'bill_resent' => 'Bill Resent',
         'proposal_sent' => 'Proposal Sent',
+        'pre_order_sent' => 'Pre Order Sent',
         'complaint_resent' => 'Complaint Resent',
         'leave_action_sent' => 'Leave Action Sent',
         'payslip_sent' => 'Payslip Sent',
@@ -655,12 +666,22 @@ class Utility extends Model
     {
         return $settings["proposal_prefix"] . sprintf("%05d", $number);
     }
+    public static function preOrderNumberFormat($settings, $number)
+    {
+        return $settings["pre_order_prefix"] . sprintf("%05d", $number);
+    }
 
     public static function customerProposalNumberFormat($number)
     {
         $settings = Utility::settings();
 
         return $settings["proposal_prefix"] . sprintf("%05d", $number);
+    }
+    public static function venderPreOrderNumberFormat($number)
+    {
+        $settings = Utility::settings();
+
+        return $settings["pre_order_prefix"] . sprintf("%05d", $number);
     }
 
     public static function customerInvoiceNumberFormat($number)
@@ -2626,6 +2647,9 @@ class Utility extends Model
             '{proposal_name}',
             '{proposal_number}',
             '{proposal_url}',
+            '{pre_order_name}',
+            '{pre_order_number}',
+            '{pre_order_url}',
             '{complaint_name}',
             '{complaint_title}',
             '{complaint_against}',
@@ -2764,6 +2788,9 @@ class Utility extends Model
             'proposal_name' => '-',
             'proposal_number' => '-',
             'proposal_url' => '-',
+            'pre_order_name' => '-',
+            'pre_order_number' => '-',
+            'pre_order_url' => '-',
             'complaint_name' => '-',
             'complaint_title' => '-',
             'complaint_against' => '-',
@@ -4115,6 +4142,8 @@ class Utility extends Model
             $data = DB::table('settings')->where('created_by', \Auth::user()->creatorId())->where('name', 'proposal_starting_number')->update(array('value' => $id));
         } elseif ($type == 'bill') {
             $data = DB::table('settings')->where('created_by', \Auth::user()->creatorId())->where('name', 'bill_starting_number')->update(array('value' => $id));
+        } elseif ($type == 'pre_order') {
+            $data = DB::table('settings')->where('created_by', \Auth::user()->creatorId())->where('name', 'pre_order_starting_number')->update(array('value' => $id));
         }
 
         return $data;
@@ -5688,6 +5717,21 @@ class Utility extends Model
                     <p>Hope this email ﬁnds you well! Please see attached proposal number {proposal_number} for product/service.</p>
                     <p>simply click on the button below</p>
                     <p>{proposal_url}</p>
+                    <p>Feel free to reach out if you have any questions.</p>
+                    <p>Thank you for your business!!</p>
+                    <p>&nbsp;</p>
+                    <p>Regards,</p>
+                    <p>{company_name}</p>
+                    <p>{app_url}</p>',
+                ],
+            ],
+            'pre_order_sent' => [
+                'subject' => 'Pre Order Sent',
+                'lang' => [
+                    'en' => '<p>Hi, {pre_order_name}</p>
+                    <p>Hope this email ﬁnds you well! Please see attached Pre Order number {pre_order_number} for product/service.</p>
+                    <p>simply click on the button below</p>
+                    <p>{pre_order_url}</p>
                     <p>Feel free to reach out if you have any questions.</p>
                     <p>Thank you for your business!!</p>
                     <p>&nbsp;</p>

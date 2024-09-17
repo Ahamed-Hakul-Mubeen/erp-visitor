@@ -183,6 +183,11 @@ class User extends Authenticatable implements MustVerifyEmail
 
         return $settings["proposal_prefix"] . sprintf("%05d", $number);
     }
+    public function preOrderNumberFormat($number)
+    {
+        $settings = Utility::settings();
+        return $settings["pre_order_prefix"] . sprintf("%05d", $number);
+    }
 
     public function contractNumberFormat($number)
     {

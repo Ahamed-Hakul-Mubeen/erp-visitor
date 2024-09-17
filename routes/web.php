@@ -146,6 +146,7 @@ use App\Http\Controllers\NepalstePaymnetController;
 use App\Http\Controllers\QuotationController;
 use App\Http\Controllers\ProductTypeController;
 use App\Http\Controllers\AssetManagementController;
+use App\Http\Controllers\PreOrderController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -187,7 +188,9 @@ Route::get('/customer/invoice/{id}/', [InvoiceController::class, 'invoiceLink'])
 Route::get('/vender/bill/{id}/', [BillController::class, 'invoiceLink'])->name('bill.link.copy');
 Route::get('/vendor/purchase/{id}/', [PurchaseController::class, 'purchaseLink'])->name('purchase.link.copy');
 Route::get('/customer/proposal/{id}/', [ProposalController::class, 'invoiceLink'])->name('proposal.link.copy');
+Route::get('/customer/pre_order/{id}/', [PreOrderController::class, 'invoiceLink'])->name('pre_order.link.copy');
 Route::get('proposal/pdf/{id}', [ProposalController::class, 'proposal'])->name('proposal.pdf')->middleware(['XSS', 'revalidate']);
+Route::get('pre_order/pdf/{id}', [PreOrderController::class, 'pre_order'])->name('pre_order.pdf')->middleware(['XSS', 'revalidate']);
 Route::get('projects/milestone-share/{id}', [ProjectController::class, 'milestoneShare'])->name('project.milestone.share');
 Route::get('projects/milestone/view/{id}', [ProjectController::class, 'milestoneView'])->name('project.milestone.view');
 
@@ -646,6 +649,18 @@ Route::group(['middleware' => ['verified']], function () {
             Route::get('proposal/{id}/resent', [ProposalController::class, 'resent'])->name('proposal.resent');
             Route::resource('proposal', ProposalController::class);
             Route::get('proposal/create/{cid}', [ProposalController::class, 'create'])->name('proposal.create');
+
+            Route::get('pre_order/{id}/status/change', [PreOrderController::class, 'statusChange'])->name('pre_order.status.change');
+            Route::get('pre_order/{id}/convert', [PreOrderController::class, 'convert'])->name('pre_order.convert');
+            Route::get('pre_order/{id}/duplicate', [PreOrderController::class, 'duplicate'])->name('pre_order.duplicate');
+            Route::post('pre_order/product/destroy', [PreOrderController::class, 'productDestroy'])->name('pre_order.product.destroy');
+            Route::post('pre_order/vender', [PreOrderController::class, 'vender'])->name('pre_order.vender');
+            Route::post('pre_order/product', [PreOrderController::class, 'product'])->name('pre_order.product');
+            Route::get('pre_order/items', [PreOrderController::class, 'items'])->name('pre_order.items');
+            Route::get('pre_order/{id}/sent', [PreOrderController::class, 'sent'])->name('pre_order.sent');
+            Route::get('pre_order/{id}/resent', [PreOrderController::class, 'resent'])->name('pre_order.resent');
+            Route::resource('pre_order', PreOrderController::class);
+            Route::get('pre_order/create/{cid}', [PreOrderController::class, 'create'])->name('pre_order.create');
 
             Route::resource('advance', AdvanceController::class);
         }
@@ -1465,6 +1480,7 @@ Route::group(['middleware' => ['verified']], function () {
     Route::post('import/vender', [VenderController::class, 'import'])->name('vender.import');
     Route::get('export/invoice', [InvoiceController::class, 'export'])->name('invoice.export');
     Route::get('export/proposal', [ProposalController::class, 'export'])->name('proposal.export');
+    Route::get('export/pre_order', [PreOrderController::class, 'export'])->name('pre_order.export');
     Route::get('export/bill', [BillController::class, 'export'])->name('bill.export');
 
     Route::get('export/employee', [EmployeeController::class, 'export'])->name('employee.export');

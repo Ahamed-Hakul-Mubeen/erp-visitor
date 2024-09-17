@@ -822,6 +822,7 @@
                                      Request::segment(2) == 'trial-balance' ||
                                      Request::segment(2) == 'profit-loss' ||
                                      Request::segment(1) == 'bill' ||
+                                     Request::segment(1) == 'pre_order' ||
                                      Request::segment(1) == 'expense' ||
                                      Request::segment(1) == 'payment' ||
                                      Request::segment(1) == 'debit-note'
@@ -907,7 +908,7 @@
                                     Gate::check('manage payment') ||
                                     Gate::check('manage debit note'))
                                 <li
-                                    class="dash-item dash-hasmenu {{ Request::segment(1) == 'bill' || Request::segment(1) == 'vender' || Request::segment(1) == 'expense' || Request::segment(1) == 'payment' || Request::segment(1) == 'debit-note' ? 'active dash-trigger' : '' }}">
+                                    class="dash-item dash-hasmenu {{ Request::segment(1) == 'bill' || Request::segment(1) == 'pre_order' || Request::segment(1) == 'vender' || Request::segment(1) == 'expense' || Request::segment(1) == 'payment' || Request::segment(1) == 'debit-note' ? 'active dash-trigger' : '' }}">
                                     <a class="dash-link" href="#">{{ __('Purchases') }}<span
                                             class="dash-arrow"><i data-feather="chevron-right"></i></span></a>
                                     <ul class="dash-submenu">
@@ -922,6 +923,11 @@
                                             class="dash-item {{ Request::route()->getName() == 'bill.index' || Request::route()->getName() == 'bill.create' || Request::route()->getName() == 'bill.edit' || Request::route()->getName() == 'bill.show' ? ' active' : '' }}">
                                             <a class="dash-link"
                                                 href="{{ route('bill.index') }}">{{ __('Bill') }}</a>
+                                        </li>
+                                        <li
+                                            class="dash-item {{ Request::route()->getName() == 'pre_order.index' || Request::route()->getName() == 'pre_order.create' || Request::route()->getName() == 'pre_order.edit' || Request::route()->getName() == 'pre_order.show' ? ' active' : '' }}">
+                                            <a class="dash-link"
+                                                href="{{ route('pre_order.index') }}">{{ __('Pre Order') }}</a>
                                         </li>
                                         {{-- <li
                                             class="dash-item {{ Request::route()->getName() == 'expense.index' || Request::route()->getName() == 'expense.create' || Request::route()->getName() == 'expense.edit' || Request::route()->getName() == 'expense.show' ? ' active' : '' }}">
