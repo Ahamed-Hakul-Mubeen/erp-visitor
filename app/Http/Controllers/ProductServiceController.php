@@ -67,7 +67,7 @@ class ProductServiceController extends Controller
                 // ->leftjoin('chart_of_account_types', 'chart_of_account_types.id','chart_of_accounts.type')
                 // ->where('chart_of_account_types.name' ,'income')
                 // ->where('parent', '=', 0)
-                ->where('code', 4010)
+                ->whereIn('code', [4010, 4020])
                 ->where('chart_of_accounts.created_by', \Auth::user()->creatorId())->get()
                 ->pluck('code_name', 'id');
             // $incomeChartAccounts->prepend('Select Account', 0);
@@ -206,21 +206,22 @@ class ProductServiceController extends Controller
                 $customFields                = CustomField::where('created_by', '=', \Auth::user()->creatorId())->where('module', '=', 'product')->get();
                 $productService->tax_id      = explode(',', $productService->tax_id);
                 $incomeChartAccounts = ChartOfAccount::select(\DB::raw('CONCAT(chart_of_accounts.code, " - ", chart_of_accounts.name) AS code_name, chart_of_accounts.id as id'))
-                ->leftjoin('chart_of_account_types', 'chart_of_account_types.id','chart_of_accounts.type')
-                ->where('chart_of_account_types.name' ,'income')
-                ->where('parent', '=', 0)
+                // ->leftjoin('chart_of_account_types', 'chart_of_account_types.id','chart_of_accounts.type')
+                // ->where('chart_of_account_types.name' ,'income')
+                // ->where('parent', '=', 0)
+                ->whereIn('code', [4010, 4020])
                 ->where('chart_of_accounts.created_by', \Auth::user()->creatorId())->get()
                 ->pluck('code_name', 'id');
-            $incomeChartAccounts->prepend('Select Account', 0);
+            // $incomeChartAccounts->prepend('Select Account', 0);
 
-            $incomeSubAccounts = ChartOfAccount::select('chart_of_accounts.id', 'chart_of_accounts.code', 'chart_of_accounts.name' , 'chart_of_account_parents.account');
-            $incomeSubAccounts->leftjoin('chart_of_account_parents', 'chart_of_accounts.parent', 'chart_of_account_parents.id');
-            $incomeSubAccounts->leftjoin('chart_of_account_types', 'chart_of_account_types.id','chart_of_accounts.type');
-            $incomeSubAccounts->where('chart_of_account_types.name' ,'income');
-            $incomeSubAccounts->where('chart_of_accounts.parent', '!=', 0);
-            $incomeSubAccounts->where('chart_of_accounts.created_by', \Auth::user()->creatorId());
-            $incomeSubAccounts = $incomeSubAccounts->get()->toArray();
-
+            $incomeSubAccounts = [];
+            // $incomeSubAccounts = ChartOfAccount::select('chart_of_accounts.id', 'chart_of_accounts.code', 'chart_of_accounts.name' , 'chart_of_account_parents.account');
+            // $incomeSubAccounts->leftjoin('chart_of_account_parents', 'chart_of_accounts.parent', 'chart_of_account_parents.id');
+            // $incomeSubAccounts->leftjoin('chart_of_account_types', 'chart_of_account_types.id','chart_of_accounts.type');
+            // $incomeSubAccounts->where('chart_of_account_types.name' ,'income');
+            // $incomeSubAccounts->where('chart_of_accounts.parent', '!=', 0);
+            // $incomeSubAccounts->where('chart_of_accounts.created_by', \Auth::user()->creatorId());
+            // $incomeSubAccounts = $incomeSubAccounts->get()->toArray();
 
             $expenseChartAccounts = ChartOfAccount::select(\DB::raw('CONCAT(chart_of_accounts.code, " - ", chart_of_accounts.name) AS code_name, chart_of_accounts.id as id'))
             ->leftjoin('chart_of_account_types', 'chart_of_account_types.id','chart_of_accounts.type')
