@@ -7,8 +7,9 @@ use App\Models\Invoice;
 use App\Models\ProductServiceCategory;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
-class InvoiceExport implements FromCollection, WithHeadings
+class InvoiceExport implements FromCollection, WithHeadings, ShouldAutoSize
 {
     /**
      * @return \Illuminate\Support\Collection

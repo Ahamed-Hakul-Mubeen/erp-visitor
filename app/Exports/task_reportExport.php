@@ -8,8 +8,9 @@ use App\Models\Milestone;
 use App\Models\ProjectTask;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
-class task_reportExport implements FromCollection,WithHeadings
+class task_reportExport implements FromCollection, WithHeadings, ShouldAutoSize
 {
 
 

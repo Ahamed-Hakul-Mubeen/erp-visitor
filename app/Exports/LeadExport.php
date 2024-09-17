@@ -11,8 +11,9 @@ use App\Models\Label;
 use App\Models\ProductService;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
-class LeadExport implements FromCollection, WithHeadings
+class LeadExport implements FromCollection, WithHeadings, ShouldAutoSize
 {
     /**
     * @return \Illuminate\Support\Collection

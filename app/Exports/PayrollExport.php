@@ -6,8 +6,9 @@ use App\Models\Employee;
 use App\Models\PaySlip;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
-class PayrollExport implements FromCollection, WithHeadings
+class PayrollExport implements FromCollection, WithHeadings, ShouldAutoSize
 {
     /**
      * @return \Illuminate\Support\Collection

@@ -5,8 +5,9 @@ namespace App\Exports;
 use App\Models\Customer;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
-class CustomerExport implements FromCollection, WithHeadings
+class CustomerExport implements FromCollection, WithHeadings, ShouldAutoSize
 {
     /**
      * @return \Illuminate\Support\Collection

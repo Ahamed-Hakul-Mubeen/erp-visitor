@@ -4,8 +4,9 @@ use App\Models\Employee;
 use App\Models\Leave;
 use App\Models\User;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
-class LeaveReportExport implements FromCollection, WithHeadings
+class LeaveReportExport implements FromCollection, WithHeadings, ShouldAutoSize
 {
     /**
      * @return \Illuminate\Support\Collection

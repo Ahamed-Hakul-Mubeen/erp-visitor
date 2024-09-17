@@ -5,8 +5,9 @@ namespace App\Exports;
 use App\Models\StockReport;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
-class ProductStockExport implements FromCollection, WithHeadings
+class ProductStockExport implements FromCollection, WithHeadings, ShouldAutoSize
 {
     /**
     * @return \Illuminate\Support\Collection
