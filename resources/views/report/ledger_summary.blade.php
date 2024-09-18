@@ -283,7 +283,7 @@
                                                 </tr>
                                             @endif
 
-                                             @if (
+                                            @if (
                                                 $account->reference == 'Bill' ||
                                                     $account->reference == 'Bill Account' ||
                                                     $account->reference == 'Expense' ||

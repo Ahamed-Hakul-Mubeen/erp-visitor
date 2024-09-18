@@ -3696,6 +3696,7 @@ class User extends Authenticatable implements MustVerifyEmail
         BankAccount::create(
             [
                 'holder_name' => 'cash',
+                'code' => 1058,
                 'bank_name' => '',
                 'account_number' => '-',
                 'opening_balance' => '0.00',
