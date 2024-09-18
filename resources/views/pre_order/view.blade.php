@@ -63,7 +63,7 @@
                                     </div>
                                     <h6 class="text-warning my-3">{{__('Send Pre Order')}}</h6>
                                     <p class="text-muted text-sm mb-3">
-                                        @if($pre_order->status!=0)
+                                        @if($pre_order->status!=0 && $pre_order->send_date)
                                             <i class="ti ti-clock mr-2"></i>{{__('Sent on')}} {{\Auth::user()->dateFormat($pre_order->send_date)}}
                                         @else
                                             @can('send proposal')
@@ -72,9 +72,9 @@
                                         @endif
                                     </p>
 
-                                    @if($pre_order->status==0)
+                                    @if($pre_order->status == 0 && (\Auth::user()->type == "company" || \Auth::user()->type == "Accountant"))
                                         @can('send proposal')
-                                            <a href="{{ route('pre_order.sent',$pre_order->id) }}" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" data-original-title="{{__('Mark Sent')}}"><i class="ti ti-send mr-2"></i>{{__('Send')}}</a>
+                                            <a id="send_btn" href="#" data-href="{{ route('pre_order.sent',$pre_order->id) }}" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" data-original-title="{{__('Mark Sent')}}"><i class="ti ti-send mr-2"></i>{{__('Send')}}</a>
                                         @endcan
                                     @endif
                                 </div>
@@ -387,3 +387,16 @@
     </div>
 
 @endsection
+
+@push('script-page')
+<script>
+    $(document).ready(function(){
+        $("#send_btn").click(function(event) {
+            event.preventDefault();
+            $(this).addClass("disabled").css("pointer-events", "none").attr("disabled", true);
+            $("#send_btn").html("<i class='fa fa-spinner fa-spin'></i> Processing");
+            window.location.href = $("#send_btn").data("href");
+        });
+    });
+</script>
+@endpush

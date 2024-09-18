@@ -58,7 +58,7 @@
                                 </div>
                                 <h6 class="my-3 text-warning">{{__('Send Bill')}}</h6>
                                 <p class="mb-3 text-sm text-muted">
-                                    @if($bill->status!=0)
+                                    @if($bill->status!=0 && $bill->send_date)
                                         <i class="mr-2 ti ti-clock"></i>{{__('Sent on')}} {{\Auth::user()->dateFormat($bill->send_date)}}
                                     @else
                                         @can('send bill')
@@ -67,9 +67,9 @@
                                     @endif
                                 </p>
 
-                                @if($bill->status==0)
+                                @if($bill->status ==0 && (\Auth::user()->type == "company" || \Auth::user()->type == "Accountant"))
                                     @can('send bill')
-                                            <a href="{{ route('bill.sent',$bill->id) }}" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" data-original-title="{{__('Mark Sent')}}"><i class="mr-2 ti ti-send"></i>{{__('Send')}}</a>
+                                            <a id="send_btn" href="#" data-href="{{ route('bill.sent',$bill->id) }}" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" data-original-title="{{__('Mark Sent')}}"><i class="mr-2 ti ti-send"></i>{{__('Send')}}</a>
                                     @endcan
                                 @endif
                             </div>
@@ -556,3 +556,16 @@
         </div>
     </div>
 @endsection
+
+@push('script-page')
+<script>
+    $(document).ready(function(){
+        $("#send_btn").click(function(event) {
+            event.preventDefault();
+            $(this).addClass("disabled").css("pointer-events", "none").attr("disabled", true);
+            $("#send_btn").html("<i class='fa fa-spinner fa-spin'></i> Processing");
+            window.location.href = $("#send_btn").data("href");
+        });
+    });
+</script>
+@endpush
