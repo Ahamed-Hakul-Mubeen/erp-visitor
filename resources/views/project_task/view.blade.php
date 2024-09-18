@@ -119,7 +119,7 @@
                         <div class="px-3 py-2 row align-items-center">
                             @csrf
                             <div class="col-10">
-                                <input type="file" name="task_attachment" id="task_attachment" onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])" required class="form-control"/>
+                                <input type="file" name="task_attachment" id="task_attachment" onchange="previewImage()" required class="form-control"/>
 
                             </div>
                             <div class="col-2 card-meta d-inline-flex align-items-center">
@@ -128,7 +128,7 @@
                                     <i class="ti ti-check"></i>
                                 </button>
                             </div>
-                            <img id="blah" src="" class="img_preview" />
+                            <img id="image_preview" class="img_preview" src="" style="display:none;" />
                         </div>
                     </div>
                 </form>
@@ -265,6 +265,21 @@
         </div>
     </div>
 </div>
+
+<script>
+    function previewImage() {
+        const file = document.getElementById('task_attachment').files[0];
+        const imagePreview = document.getElementById('image_preview');
+
+        if (file && file.type.startsWith('image/')) {
+            const fileURL = window.URL.createObjectURL(file);
+            imagePreview.src = fileURL;
+            imagePreview.style.display = 'block'; 
+        } else {
+            imagePreview.style.display = 'none'; 
+        }
+    }
+</script>
 @push('script-page')
     <script>
         $(document).ready(function () {
