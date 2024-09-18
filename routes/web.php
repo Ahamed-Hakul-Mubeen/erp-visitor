@@ -916,7 +916,7 @@ Route::group(['middleware' => ['verified']], function () {
     Route::get('asset_management/{id}/unassign', [AssetManagementController::class, 'showUnassignForm'])->name('asset_management.showUnassignForm');
     Route::post('asset_management/{id}/unassign', [AssetManagementController::class, 'unassignAsset'])->name('asset_management.unassignAsset');
     Route::get('asset_management/{id}/history', [AssetManagementController::class, 'showHistory'])->name('asset_management.history');
-   
+    Route::get('/get-asset-properties', [AssetManagementController::class,'getAssetProperties'])->name('get.asset.properties');
     
     
     Route::post('branch/employee/json', [EmployeeController::class, 'employeeJson'])->name('branch.employee.json')->middleware(['auth', 'XSS']);
@@ -1159,6 +1159,8 @@ Route::group(['middleware' => ['verified']], function () {
     Route::post('/projects/{id}/expense/{eid}', [ProjectExpenseController::class, 'update'])->name('projects.expenses.update')->middleware(['auth', 'XSS']);
     Route::delete('/projects/{eid}/expense/', [ProjectExpenseController::class, 'destroy'])->name('projects.expenses.destroy')->middleware(['auth', 'XSS']);
     Route::get('/expense-list', [ExpenseController::class, 'expenseList'])->name('expense.list')->middleware(['auth', 'XSS']);
+    Route::get('/tasks/milestone/{projectId}/{milestoneId}', [ProjectExpenseController::class, 'getTasksByMilestone'])->name('projects.gettask')->middleware(['auth', 'XSS']);;
+
 
     // contract type
     Route::group(

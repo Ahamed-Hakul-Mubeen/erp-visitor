@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('product_types', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('asset_properties');
             $table->unsignedBigInteger('created_by');
             $table->timestamps();
             $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');

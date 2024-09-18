@@ -21,6 +21,40 @@
         e.length && e.each(function () {
             $(this).tagsinput({tagClass: "badge badge-primary"})
         });
+        $(document).ready(function() {
+    // Clear previous errors on input focus
+    $('#start_date, #end_date').on('focus', function() {
+        $('#start_date_error').text(''); // Clear start date error
+        $('#end_date_error').text('');   // Clear end date error
+    });
+
+    $('#end_date').on('change', function() {
+        var startDate = new Date($('#start_date').val());
+        var endDate = new Date($(this).val());
+
+        // Check if start date and end date are set
+        if (!startDate || !endDate) {
+            return; // If either date is not selected, don't show an error
+        }
+
+        // Validate: End Date cannot be earlier than Start Date
+        if (endDate < startDate) {
+            $('#end_date_error').text("End Date cannot be earlier than Start Date.");
+        } else {
+            $('#end_date_error').text(''); // Clear the error if the end date is valid
+        }
+    });
+
+    $('#start_date').on('change', function() {
+        // When the start date changes, revalidate the end date in case it's now valid
+        var startDate = new Date($(this).val());
+        var endDate = new Date($('#end_date').val());
+
+        if (endDate >= startDate) {
+            $('#end_date_error').text(''); // Clear error if end date is valid
+        }
+    });
+});
     </script>
     <script src="{{asset('css/summernote/summernote-bs4.js')}}"></script>
 @endpush
@@ -69,13 +103,14 @@
                         </div>
                         <div class="form-group col-md-6">
                             {!! Form::label('start_date', __('Start Date'),['class'=>'form-label']) !!}
-                            {!! Form::date('start_date', null, ['class' => 'form-control ']) !!}
+                            {!! Form::date('start_date', old('start_date'), ['class' => 'form-control', 'id' => 'start_date', 'required' => 'required']) !!}
+                            <span class="text-danger" id="start_date_error"></span> <!-- Error message -->
                         </div>
                         <div class="form-group col-md-6">
                             {!! Form::label('end_date', __('End Date'),['class'=>'form-label']) !!}
-                            {!! Form::date('end_date', null, ['class' => 'form-control ']) !!}
+                            {!! Form::date('end_date', old('end_date'), ['class' => 'form-control', 'id' => 'end_date', 'required' => 'required']) !!}
+                            <span class="text-danger" id="end_date_error"></span> <!-- Error message -->
                         </div>
-
                         <div class="form-group col-md-12">
                             <input type="text" class="form-control" value="{{$job->skill}}" data-toggle="tags" name="skill" placeholder="Skill"/>
                         </div>

@@ -51,39 +51,41 @@ class AssetManagementController extends Controller
 
   
     public function store(Request $request)
-    {   
-        
-        if(\Auth::user()->can('create assets management'))
-        {
+{
+    if(\Auth::user()->can('create assets management'))
+    {
         // Validate the incoming request data
         $validator = \Validator::make($request->all(), [
-          
+            'product_name' => 'required',
             'product_description' => 'required',
             'product_configuration' => 'required',
+            'asset_property_values' => 'nullable|array', 
         ]);
 
-        // If validation fails, redirect back with the first error message
         if ($validator->fails()) {
             $messages = $validator->getMessageBag();
             return redirect()->back()->with('error', $messages->first());
         }
 
-        // Create a new instance of AssetManagement and set its attributes
+        // Create a new instance of AssetManagement
         $assetManagement = new AssetManagement();
         $assetManagement->product_type_id = $request->product_name;
         $assetManagement->product_description = $request->product_description;
         $assetManagement->product_configuration = $request->product_configuration;
         $assetManagement->created_by = \Auth::user()->id;
+
+        // Store asset properties values as JSON
+        if ($request->has('asset_property_values')) {
+            $assetManagement->asset_properties_values = json_encode($request->asset_property_values);
+        }
+
         $assetManagement->save();
 
-        // Redirect to the asset management index page with a success message
         return redirect()->route('asset_management.index')->with('success', __('Asset added successfully.'));
-        }else
-        {
-            return redirect()->back()->with('error', __('Permission denied.'));
-        }
+    } else {
+        return redirect()->back()->with('error', __('Permission denied.'));
     }
-
+}
     public function edit($id)
     {  
         if(\Auth::user()->can('edit assets management'))
@@ -102,37 +104,40 @@ class AssetManagementController extends Controller
     public function update(Request $request,$id)
 {    
 
-     if(\Auth::user()->can('edit assets management'))
-    {
-    // Validate the request inputs
-    $validator = \Validator::make($request->all(), [
-        
-        'product_description' => 'required|string|max:255',
-        'product_configuration' => 'required|string|max:255',
-    ]);
+    if (\Auth::user()->can('edit assets management')) {
+        // Validate the request inputs
+        $validator = \Validator::make($request->all(), [
+            'product_description' => 'required|string|max:255',
+            'product_configuration' => 'required|string|max:255',
+            'asset_property_values' => 'nullable|array', // Validate asset property values
+        ]);
 
-    // If validation fails, redirect back with the first error message
-    if ($validator->fails()) {
-        $messages = $validator->getMessageBag();
-        return redirect()->back()->with('error', $messages->first());
-    }
+        // If validation fails, redirect back with the first error message
+        if ($validator->fails()) {
+            $messages = $validator->getMessageBag();
+            return redirect()->back()->with('error', $messages->first());
+        }
 
-    // Find the asset by ID
-    $asset = AssetManagement::find($id);
-    if (!$asset) {
-        return redirect()->route('asset_management.index')->with('error', __('Asset not found.'));
-    }
+        // Find the asset by ID
+        $asset = AssetManagement::find($id);
+        if (!$asset) {
+            return redirect()->route('asset_management.index')->with('error', __('Asset not found.'));
+        }
 
- 
-    $asset->product_type_id = $request->product_name;
-    $asset->product_description = $request->product_description;
-    $asset->product_configuration = $request->product_configuration;
-    $asset->save();
+        // Update asset details
+        $asset->product_type_id = $request->product_name;
+        $asset->product_description = $request->product_description;
+        $asset->product_configuration = $request->product_configuration;
 
-    
-    return redirect()->route('asset_management.index')->with('success', __('Asset successfully updated.'));
-    }
-    else{
+        // Update asset property values as JSON
+        if ($request->has('asset_property_values')) {
+            $asset->asset_properties_values = json_encode($request->asset_property_values);
+        }
+
+        $asset->save();
+
+        return redirect()->route('asset_management.index')->with('success', __('Asset successfully updated.'));
+    } else {
         return redirect()->back()->with('error', __('Permission denied.'));
     }
 }
@@ -356,6 +361,12 @@ public function assignAsset(Request $request, $id)
         }
         }
 
-       
+        public function getAssetProperties(Request $request)
+        {
+            // Assuming you store asset properties in a JSON field in your ProductType model
+            $productType = ProductType::find($request->product_type_id);
+            $assetProperties = json_decode($productType->asset_properties, true); // Decode JSON asset properties
+            return response()->json($assetProperties);
+        }
 
 }
