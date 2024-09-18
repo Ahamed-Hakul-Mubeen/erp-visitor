@@ -210,9 +210,15 @@
 
 @endpush
 @section('action-btn')
-    <div class="float-end">
+    <div class="d-flex justify-content-end align-items-center">
+        <div class="me-3">
+            <a href="{{ route('projects.show',$project->id) }}" class="btn btn-primary add-small">
+                <i class="ti ti-arrow-left"></i> {{ __('Back') }}
+            </a>
+        </div>
+        <div class="d-flex">
         @can('manage bug report')
-            <a href="{{ route('task.bug',$project->id) }}" data-bs-toggle="tooltip" title="{{__('List')}}" class="btn btn-sm btn-primary">
+            <a href="{{ route('task.bug',$project->id) }}" data-bs-toggle="tooltip" title="{{__('List')}}" class="btn btn-sm btn-primary me-2">
                 <i class="ti ti-list"></i>
             </a>
         @endcan
@@ -221,6 +227,7 @@
                 <i class="ti ti-plus"></i>
             </a>
         @endcan
+        </div>
     </div>
 @endsection
 
