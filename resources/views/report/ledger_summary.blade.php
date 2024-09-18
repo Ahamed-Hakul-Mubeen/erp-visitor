@@ -235,14 +235,14 @@
                                                     </td>
                                                     <td>{{ \Auth::user()->invoiceNumberFormat($account->ids) }}</td>
                                                     <td>{{ $account->date }}</td>
-                                                    <td>{{ \Auth::user()->priceFormat($account->debit) }}</td>
+                                                    <td class="text-right">{{ \Auth::user()->priceFormat($account->debit) }}</td>
                                                     @php
                                                         $total = $account->debit + $account->credit;
                                                         $balance += $total;
                                                         $totalCredit += $total;
                                                     @endphp
-                                                    <td>{{ \Auth::user()->priceFormat($account->credit) }}</td>
-                                                    <td>{{ \Auth::user()->priceFormat($balance) }}</td>
+                                                    <td class="text-right">{{ \Auth::user()->priceFormat($account->credit) }}</td>
+                                                    <td class="text-right">{{ \Auth::user()->priceFormat($balance) }}</td>
                                                 </tr>
                                             @endif
 
@@ -255,13 +255,13 @@
                                                     <td>{{ \Auth::user()->invoiceNumberFormat($account->ids) }}{{ __(' Manually Payment') }}
                                                     </td>
                                                     <td>{{ $account->date }}</td>
-                                                    <td>{{ \Auth::user()->priceFormat($account->debit) }}</td>
+                                                    <td class="text-right">{{ \Auth::user()->priceFormat($account->debit) }}</td>
                                                     @php
                                                         $total = $account->debit + $account->credit;
                                                         $balance -= $total;
                                                     @endphp
-                                                    <td>{{ \Auth::user()->priceFormat($account->credit) }}</td>
-                                                    <td>{{ \Auth::user()->priceFormat($balance) }}</td>
+                                                    <td class="text-right">{{ \Auth::user()->priceFormat($account->credit) }}</td>
+                                                    <td class="text-right">{{ \Auth::user()->priceFormat($balance) }}</td>
                                                 </tr>
                                             @endif
 
@@ -273,13 +273,13 @@
                                                     <td>{{ __(' Revenue') }}
                                                     </td>
                                                     <td>{{ $account->date }}</td>
-                                                    <td>{{ \Auth::user()->priceFormat($account->debit) }}</td>
+                                                    <td class="text-right">{{ \Auth::user()->priceFormat($account->debit) }}</td>
                                                     @php
                                                         $total = $account->debit + $account->credit;
                                                         $balance += $total;
                                                     @endphp
-                                                    <td>{{ \Auth::user()->priceFormat($account->credit) }}</td>
-                                                    <td>{{ \Auth::user()->priceFormat($balance) }}</td>
+                                                    <td class="text-right">{{ \Auth::user()->priceFormat($account->credit) }}</td>
+                                                    <td class="text-right">{{ \Auth::user()->priceFormat($balance) }}</td>
                                                 </tr>
                                             @endif
 
@@ -297,13 +297,13 @@
                                                         <td>{{ \Auth::user()->expenseNumberFormat($account->ids) }}
                                                     @endif
                                                     <td>{{ $account->date }}</td>
-                                                    <td>{{ \Auth::user()->priceFormat($account->debit) }}</td>
+                                                    <td class="text-right">{{ \Auth::user()->priceFormat($account->debit) }}</td>
                                                     @php
                                                         $total = $account->debit + $account->credit;
                                                         $balance -= $total;
                                                     @endphp
-                                                    <td>{{ \Auth::user()->priceFormat($account->credit) }}</td>
-                                                    <td>{{ \Auth::user()->priceFormat($balance) }}</td>
+                                                    <td class="text-right">{{ \Auth::user()->priceFormat($account->credit) }}</td>
+                                                    <td class="text-right">{{ \Auth::user()->priceFormat($balance) }}</td>
                                                 </tr>
                                             @endif
 
@@ -319,13 +319,13 @@
                                                     @endif
                                                     </td>
                                                     <td>{{ $account->date }}</td>
-                                                    <td>{{ \Auth::user()->priceFormat($account->debit) }}</td>
+                                                    <td class="text-right">{{ \Auth::user()->priceFormat($account->debit) }}</td>
                                                     @php
                                                         $total = $account->debit + $account->credit;
                                                         $balance -= $total;
                                                     @endphp
-                                                    <td>{{ \Auth::user()->priceFormat($account->credit) }}</td>
-                                                    <td>{{ \Auth::user()->priceFormat($balance) }}</td>
+                                                    <td class="text-right">{{ \Auth::user()->priceFormat($account->credit) }}</td>
+                                                    <td class="text-right">{{ \Auth::user()->priceFormat($balance) }}</td>
                                                 </tr>
                                             @endif
 
@@ -337,13 +337,13 @@
                                                     <td>{{ __('Payment') }}
                                                     </td>
                                                     <td>{{ $account->date }}</td>
-                                                    <td>{{ \Auth::user()->priceFormat($account->debit) }}</td>
+                                                    <td class="text-right">{{ \Auth::user()->priceFormat($account->debit) }}</td>
                                                     @php
                                                         $total = $account->debit + $account->credit;
                                                         $balance -= $total;
                                                     @endphp
-                                                    <td>{{ \Auth::user()->priceFormat($account->credit) }}</td>
-                                                    <td>{{ \Auth::user()->priceFormat($balance) }}</td>
+                                                    <td class="text-right">{{ \Auth::user()->priceFormat($account->credit) }}</td>
+                                                    <td class="text-right">{{ \Auth::user()->priceFormat($balance) }}</td>
                                                 </tr>
                                             @endif
 
@@ -356,13 +356,13 @@
                                                     <td>{{ AUth::user()->journalNumberFormat($account->reference_id) }}
                                                     </td>
                                                     <td>{{ $account->date }}</td>
-                                                    <td>{{ \Auth::user()->priceFormat($account->debit) }}</td>
+                                                    <td class="text-right">{{ \Auth::user()->priceFormat($account->debit) }}</td>
                                                     @php
                                                         $total = $account->credit - $account->debit;
                                                         $balance += $total;
                                                     @endphp
-                                                    <td>{{ \Auth::user()->priceFormat($account->credit) }}</td>
-                                                    <td>{{ \Auth::user()->priceFormat($balance) }}</td>
+                                                    <td class="text-right">{{ \Auth::user()->priceFormat($account->credit) }}</td>
+                                                    <td class="text-right">{{ \Auth::user()->priceFormat($balance) }}</td>
                                                 </tr>
                                             @endif
                                             
@@ -375,13 +375,13 @@
                                                     <td>Opening Balance
                                                     </td>
                                                     <td>{{ $account->date }}</td>
-                                                    <td>{{ \Auth::user()->priceFormat($account->debit) }}</td>
+                                                    <td class="text-right">{{ \Auth::user()->priceFormat($account->debit) }}</td>
                                                     @php
                                                         $total = $account->credit - $account->debit;
                                                         $balance += $total;
                                                     @endphp
-                                                    <td>{{ \Auth::user()->priceFormat($account->credit) }}</td>
-                                                    <td>{{ \Auth::user()->priceFormat($balance) }}</td>
+                                                    <td class="text-right">{{ \Auth::user()->priceFormat($account->credit) }}</td>
+                                                    <td class="text-right">{{ \Auth::user()->priceFormat($balance) }}</td>
                                                 </tr>
                                             @endif
                                             @if ($account->reference == 'Bank Transaction')
@@ -393,13 +393,13 @@
                                                     <td>Bank Transaction
                                                     </td>
                                                     <td>{{ $account->date }}</td>
-                                                    <td>{{ \Auth::user()->priceFormat($account->debit) }}</td>
+                                                    <td class="text-right">{{ \Auth::user()->priceFormat($account->debit) }}</td>
                                                     @php
                                                         $total = $account->credit - $account->debit;
                                                         $balance += $total;
                                                     @endphp
-                                                    <td>{{ \Auth::user()->priceFormat($account->credit) }}</td>
-                                                    <td>{{ \Auth::user()->priceFormat($balance) }}</td>
+                                                    <td class="text-right">{{ \Auth::user()->priceFormat($account->credit) }}</td>
+                                                    <td class="text-right">{{ \Auth::user()->priceFormat($balance) }}</td>
                                                 </tr>
                                             @endif
                                             @if ($account->reference == 'Payslip')
@@ -411,13 +411,13 @@
                                                     <td>Payslip
                                                     </td>
                                                     <td>{{ $account->date }}</td>
-                                                    <td>{{ \Auth::user()->priceFormat($account->debit) }}</td>
+                                                    <td class="text-right">{{ \Auth::user()->priceFormat($account->debit) }}</td>
                                                     @php
                                                         $total = $account->credit - $account->debit;
                                                         $balance += $total;
                                                     @endphp
-                                                    <td>{{ \Auth::user()->priceFormat($account->credit) }}</td>
-                                                    <td>{{ \Auth::user()->priceFormat($balance) }}</td>
+                                                    <td class="text-right">{{ \Auth::user()->priceFormat($account->credit) }}</td>
+                                                    <td class="text-right">{{ \Auth::user()->priceFormat($balance) }}</td>
                                                 </tr>
                                             @endif
                                             @if ($account->reference == 'Advance')
@@ -429,13 +429,13 @@
                                                     <td>Advance Payment
                                                     </td>
                                                     <td>{{ $account->date }}</td>
-                                                    <td>{{ \Auth::user()->priceFormat($account->debit) }}</td>
+                                                    <td class="text-right">{{ \Auth::user()->priceFormat($account->debit) }}</td>
                                                     @php
                                                         $total = $account->credit - $account->debit;
                                                         $balance += $total;
                                                     @endphp
-                                                    <td>{{ \Auth::user()->priceFormat($account->credit) }}</td>
-                                                    <td>{{ \Auth::user()->priceFormat($balance) }}</td>
+                                                    <td class="text-right">{{ \Auth::user()->priceFormat($account->credit) }}</td>
+                                                    <td class="text-right">{{ \Auth::user()->priceFormat($balance) }}</td>
                                                 </tr>
                                             @endif
                                         @endforeach

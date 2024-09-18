@@ -5118,6 +5118,7 @@ class Utility extends Model
                 DB::raw("COALESCE(customers.name, venders.name , revenues_customers.name , payments_venders.name) as user_name"),
                 DB::raw("COALESCE(invoices.invoice_id, bills.bill_id) as ids"),
             )
+            ->orderBy('transaction_lines.date', "ASC")
             ->get();
 
         return $transactionData;
