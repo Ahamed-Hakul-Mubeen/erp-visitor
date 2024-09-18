@@ -314,7 +314,7 @@
         
                                                                             if (!empty($item->tax)) {
                                                                                 foreach (explode(',', $item->tax) as $tax) {
-                                                                                    $taxPrice = \Utility::taxRate($getTaxData[$tax]['rate'], $item->price, $item->quantity);
+                                                                                    $taxPrice = \Utility::taxRate($getTaxData[$tax]['rate'], $item->price, $item->quantity, $item->discount);
                                                                                     $totalTaxPrice += $taxPrice;
                                                                                     $itemTax['name'] = $getTaxData[$tax]['name'];
                                                                                     $itemTax['rate'] = $getTaxData[$tax]['rate'] . '%';
@@ -354,7 +354,7 @@
 
                                                             <td>{{!empty($item->description)?$item->description:'-'}}</td>
 
-                                                            <td class="text-end">{{\Auth::user()->priceFormat(($item->price * $item->quantity - $item->discount) + $totalTaxPrice)}}</td>
+                                                            <td class="text-end">{{\Auth::user()->priceFormat(($item->price * $item->quantity - $item->discount) + $taxPrice)}}</td>
                                                             <td></td>
                                                         </tr>
                                                     @else

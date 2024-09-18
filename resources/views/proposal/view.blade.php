@@ -291,15 +291,16 @@
                                                         @if (!empty($iteam->tax))
                                                             <table>
                                                                 @php
-                                                                    $itemTaxes = [];
+                                                                    $itemTaxes = [];                                                                    
+                                                                    $citem_tax = 0;
                                                                     $getTaxData = Utility::getTaxData();
 
                                                                     if (!empty($iteam->tax)) {
                                                                         foreach (explode(',', $iteam->tax) as $tax) {
-                                                                            $taxPrice = \Utility::taxRate($getTaxData[$tax]['rate'], $iteam->price, $iteam->quantity);
+                                                                            $taxPrice = \Utility::taxRate($getTaxData[$tax]['rate'], $iteam->price, $iteam->quantity, $iteam->discount);
                                                                             $totalTaxPrice += $taxPrice;
                                                                             $itemTax['name'] = $getTaxData[$tax]['name'];
-                                                                            $itemTax['rate'] = $getTaxData[$tax]['rate'] . '%';
+                                                                            $itemTax['rate'] = $getTaxData[$tax]['rate'];
                                                                             $itemTax['price'] = \Auth::user()->priceFormat($taxPrice);
 
                                                                             $itemTaxes[] = $itemTax;
@@ -328,7 +329,7 @@
                                                     </td>
 
                                                     <td>{{!empty($iteam->description)?$iteam->description:'-'}}</td>
-                                                    <td class="text-end">{{\Auth::user()->priceFormat(($iteam->price * $iteam->quantity - $iteam->discount) + $totalTaxPrice)}}</td>
+                                                    <td class="text-end">{{\Auth::user()->priceFormat(($iteam->price * $iteam->quantity - $iteam->discount) + $taxPrice)}}</td>
                                                 </tr>
                                             @endforeach
                                             <tfoot>

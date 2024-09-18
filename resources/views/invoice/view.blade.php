@@ -561,6 +561,7 @@
                                                                                 $getTaxData[$tax]['rate'],
                                                                                 $iteam->price,
                                                                                 $iteam->quantity,
+                                                                                $iteam->discount
                                                                             );
                                                                             $totalTaxPrice += $taxPrice;
                                                                             $itemTax['name'] =
@@ -595,7 +596,7 @@
                                                                 @endphp
                                                                 @foreach ($iteam->itemTax as $tax)
                                                                     <tr>
-                                                                        <td>{{ $tax['name'] . ' (' . $tax['rate'] . '%)' }}
+                                                                        <td>{{ $tax['name'] . ' (' . $tax['rate'] . ')' }}
                                                                         </td>
                                                                         <td>{{ $tax['price'] }}</td>
                                                                     </tr>
@@ -608,7 +609,7 @@
 
                                                     <td>{{ !empty($iteam->description) ? $iteam->description : '-' }}</td>
                                                     <td class="text-end">
-                                                        {{ \Auth::user()->priceFormat($iteam->price * $iteam->quantity - $iteam->discount + $totalTaxPrice) }}
+                                                        {{ \Auth::user()->priceFormat($iteam->price * $iteam->quantity - $iteam->discount + $taxPrice) }}
                                                     </td>
                                                 </tr>
                                             @endforeach

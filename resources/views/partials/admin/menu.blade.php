@@ -920,14 +920,14 @@
                                             </li>
                                         @endif
                                         <li
-                                            class="dash-item {{ Request::route()->getName() == 'bill.index' || Request::route()->getName() == 'bill.create' || Request::route()->getName() == 'bill.edit' || Request::route()->getName() == 'bill.show' ? ' active' : '' }}">
-                                            <a class="dash-link"
-                                                href="{{ route('bill.index') }}">{{ __('Bill') }}</a>
-                                        </li>
-                                        <li
                                             class="dash-item {{ Request::route()->getName() == 'pre_order.index' || Request::route()->getName() == 'pre_order.create' || Request::route()->getName() == 'pre_order.edit' || Request::route()->getName() == 'pre_order.show' ? ' active' : '' }}">
                                             <a class="dash-link"
                                                 href="{{ route('pre_order.index') }}">{{ __('Pre Order') }}</a>
+                                        </li>
+                                        <li
+                                            class="dash-item {{ Request::route()->getName() == 'bill.index' || Request::route()->getName() == 'bill.create' || Request::route()->getName() == 'bill.edit' || Request::route()->getName() == 'bill.show' ? ' active' : '' }}">
+                                            <a class="dash-link"
+                                                href="{{ route('bill.index') }}">{{ __('Bill') }}</a>
                                         </li>
                                         {{-- <li
                                             class="dash-item {{ Request::route()->getName() == 'expense.index' || Request::route()->getName() == 'expense.create' || Request::route()->getName() == 'expense.edit' || Request::route()->getName() == 'expense.show' ? ' active' : '' }}">

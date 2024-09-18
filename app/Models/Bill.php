@@ -111,7 +111,7 @@ class Bill extends Model
                 $taxes += !empty($taxData[$tax]['rate']) ? $taxData[$tax]['rate'] : 0;
             }
 
-            $totalTax += ($taxes / 100) * ($product->price * $product->quantity);
+            $totalTax += ($taxes / 100) * (($product->price * $product->quantity) - $product->discount);
         }
 
         return $totalTax;

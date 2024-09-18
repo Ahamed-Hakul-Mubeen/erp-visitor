@@ -567,7 +567,7 @@
                                     0.00
                                 </td>
                                 <td>
-                                    <a href="#" class="text-white ti ti-trash text-danger" data-repeater-delete></a>
+                                    <a href="#" class="text-white ti ti-trash repeater-action-btn bg-danger ms-2" data-repeater-delete></a>
                                 </td>
                             </tr>
                             <tr>

@@ -841,9 +841,7 @@
                                     </td>
                                     <td></td>
                                     <td></td>
-                                    <td class="text-end accountamount">
-                                        0.00
-                                    </td>
+                                    <td class="text-end accountamount"></td>
                                 </tr>
                             </tbody>
                             <tfoot>
