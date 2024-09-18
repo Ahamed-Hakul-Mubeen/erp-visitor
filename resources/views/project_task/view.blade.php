@@ -123,7 +123,7 @@
 
                             </div>
                             <div class="col-2 card-meta d-inline-flex align-items-center">
-                                <button class="btn btn-sm btn-primary" type="button" id="file_attachment_submit"
+                                <button class="btn btn-sm btn-primary active" type="button" id="file_attachment_submit"
                                         data-action="{{ route('comment.store.file',[$task->project_id,$task->id]) }}" data-bs-toggle="tooltip" title="{{__('Create')}}">
                                     <i class="ti ti-check"></i>
                                 </button>

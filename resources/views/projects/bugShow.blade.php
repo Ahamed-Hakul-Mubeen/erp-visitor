@@ -37,9 +37,9 @@
     <div class="row">
         <div class="col-12">
             <ul class="nav nav-tabs" id="myTab" role="tablist">
-                <li class="nav-item mb-2">
-                    <a class="btn btn-outline-primary btn-sm ml-1 active show" data-bs-toggle="tab"
-                       href="#profile" role="tab" aria-selected="false">{{__('Comments')}}</a>
+                <li class="nav-item mb-2 me-2">
+                    <a class="btn btn-outline-primary btn-sm ml-1 active" id="profile-tab" data-bs-toggle="tab"
+                       href="#profile" role="tab" aria-controls="profile" aria-selected="false">{{__('Comments')}}</a>
                 </li>
                 <li class="nav-item mb-2">
                     <a class="btn btn-outline-primary btn-sm ml-1" id="contact-tab" data-bs-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">{{__('Files')}}</a>
@@ -95,7 +95,7 @@
                                 </div>
                                 <div class="col-4">
                                     <div class="btn-group  ml-2 mt-4 d-none d-sm-inline-block">
-                                        <button type="submit" class="btn btn-primary btn-sm ml-1 text-white">{{ __('Upload')}}</button>
+                                        <button type="submit" id="submit_btn" class="btn btn-primary btn-sm ml-1 text-white">{{ __('Upload')}}</button>
                                     </div>
                                 </div>
                             </div>

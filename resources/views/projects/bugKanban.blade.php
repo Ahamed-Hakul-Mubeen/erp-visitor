@@ -171,6 +171,9 @@
                         '                                </div>';
 
                     $("#comments-file").prepend(html);
+                    $('#form-file')[0].reset(); 
+                    $('#submit_btn').prop('disabled', false);
+                    $('#submit_btn').html('{{ __("Upload") }}');   
                 },
                 error: function (data) {
                     data = data.responseJSON;
