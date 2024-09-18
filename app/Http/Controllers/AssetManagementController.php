@@ -41,7 +41,7 @@ class AssetManagementController extends Controller
     {   
         if(\Auth::user()->can('create assets management'))
         {
-            $productTypes = ProductType::pluck('name', 'id');
+            $productTypes = ProductType::where('created_by', \Auth::user()->creatorId())->pluck('name', 'id');
             return view('asset_management.create', compact('productTypes'));
         }else
         {
