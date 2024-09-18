@@ -32,8 +32,12 @@
             {{ Form::text('account_number',null, array('class' => 'form-control','required'=>'required')) }}
         </div>
         <div class="form-group col-md-6">
-            {{ Form::label('opening_balance', __('Opening Balance'),['class'=>'form-label']) }}
-            {{ Form::number('opening_balance',null, array('class' => 'form-control','step'=>'0.01')) }}
+            {{ Form::label('opening_balance', __('Current Balance'),['class'=>'form-label']) }}
+            @if($bankAccount->created_at == $bankAccount->updated_at)
+                {{ Form::number('opening_balance',null, array('class' => 'form-control','step'=>'0.01')) }}
+            @else
+                {{ Form::number('opening_balance',null, array('class' => 'form-control', 'readonly' => 'true' ,'step'=>'0.01')) }}
+            @endif
         </div>
         <div class="form-group col-md-6">
             {{ Form::label('contact_number', __('Contact Number'),['class'=>'form-label']) }}

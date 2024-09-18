@@ -52,14 +52,14 @@
                                     @if(Gate::check('edit bank account') || Gate::check('delete bank account'))
                                         <td class="Action">
                                             <span>
-                                                @if($account->holder_name!='Cash')
-                                                    @can('edit bank account')
-                                                        <div class="action-btn bg-primary ms-2">
-                                                            <a href="#" class="mx-3 btn btn-sm align-items-center" data-url="{{ route('bank-account.edit',$account->id) }}" data-ajax-popup="true" title="{{__('Edit')}}" data-title="{{__('Edit Bank Account')}}"data-bs-toggle="tooltip"  data-size="lg"  data-original-title="{{__('Edit')}}">
-                                                                <i class="ti ti-pencil text-white"></i>
-                                                            </a>
-                                                        </div>
-                                                    @endcan
+                                                @can('edit bank account')
+                                                <div class="action-btn bg-primary ms-2">
+                                                    <a href="#" class="mx-3 btn btn-sm align-items-center" data-url="{{ route('bank-account.edit',$account->id) }}" data-ajax-popup="true" title="{{__('Edit')}}" data-title="{{__('Edit Bank Account')}}"data-bs-toggle="tooltip"  data-size="lg"  data-original-title="{{__('Edit')}}">
+                                                        <i class="ti ti-pencil text-white"></i>
+                                                    </a>
+                                                </div>
+                                                @endcan
+                                                @if($account->holder_name!='cash')
                                                     @can('delete bank account')
                                                             <div class="action-btn bg-danger ms-2">
                                                                 {!! Form::open(['method' => 'DELETE', 'route' => ['bank-account.destroy', $account->id],'id'=>'delete-form-'.$account->id]) !!}
@@ -69,8 +69,6 @@
                                                                 {!! Form::close() !!}
                                                             </div>
                                                     @endcan
-                                                @else
-                                                    -
                                                 @endif
                                             </span>
                                         </td>
