@@ -100,3 +100,33 @@
 
 {{ Form::close() }}
 
+
+<script>
+$(document).ready(function() {
+    var projectId = '{{ $project->id }}'; 
+
+    $('#milestone_id').on('change', function() {
+        var milestoneId = $(this).val();
+        var taskSelect = $('#task_id');
+
+        taskSelect.empty().append('<option value="0">Choose Task</option>');
+
+       
+        var url = '{{ route('projects.gettask', ['projectId' => ':projectId', 'milestoneId' => ':milestoneId']) }}';
+        url = url.replace(':projectId', projectId).replace(':milestoneId', milestoneId);
+
+        $.ajax({
+            url: url, 
+            type: 'GET',
+            success: function(data) {
+                $.each(data, function(id, name) {
+                    taskSelect.append(new Option(name, id));
+                });
+            },
+            error: function() {
+                console.error('Error fetching tasks');
+            }
+        });
+    });
+});
+</script>

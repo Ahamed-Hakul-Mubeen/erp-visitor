@@ -10,6 +10,7 @@ use App\Models\BankAccount;
 use App\Models\ChartOfAccount;
 use App\Models\TransactionLines;
 use App\Models\Vender;
+use App\Models\ProjectTask;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 class ProjectExpenseController extends Controller
@@ -61,6 +62,18 @@ class ProjectExpenseController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+    public function getTasksByMilestone($projectId, $milestoneId)
+{
+    if ($milestoneId == 0) {
+        $tasks = ProjectTask::where('project_id', $projectId)->pluck('name', 'id');
+    } else {
+        $tasks = ProjectTask::where('milestone_id', $milestoneId)->pluck('name', 'id');
+    }
+    
+    return response()->json($tasks);
+}
+
+
     public function store(Request $request, $project_id)
     {
         if(\Auth::user()->can('create project expense'))

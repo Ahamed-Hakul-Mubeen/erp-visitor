@@ -1159,6 +1159,8 @@ Route::group(['middleware' => ['verified']], function () {
     Route::post('/projects/{id}/expense/{eid}', [ProjectExpenseController::class, 'update'])->name('projects.expenses.update')->middleware(['auth', 'XSS']);
     Route::delete('/projects/{eid}/expense/', [ProjectExpenseController::class, 'destroy'])->name('projects.expenses.destroy')->middleware(['auth', 'XSS']);
     Route::get('/expense-list', [ExpenseController::class, 'expenseList'])->name('expense.list')->middleware(['auth', 'XSS']);
+    Route::get('/tasks/milestone/{projectId}/{milestoneId}', [ProjectExpenseController::class, 'getTasksByMilestone'])->name('projects.gettask')->middleware(['auth', 'XSS']);;
+
 
     // contract type
     Route::group(
