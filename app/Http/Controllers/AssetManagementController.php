@@ -368,5 +368,34 @@ public function assignAsset(Request $request, $id)
             $assetProperties = json_decode($productType->asset_properties, true); // Decode JSON asset properties
             return response()->json($assetProperties);
         }
-
+        public function showProperties($id)
+        {
+            // Fetch the asset based on its ID
+            $asset = AssetManagement::findOrFail($id);
+            // Fetch the asset properties stored as JSON in the ProductType model
+            $properties = $asset->asset_properties_values;  // Adjust based on your actual data structure
+            
+            // Return the properties view with the asset and its properties
+            return view('asset_management.properties', compact('asset', 'properties'));
+        }
+        public function getAssetPropertiesForEdit($assetId = null, Request $request)
+        {
+            // Find the asset if editing
+            $asset = $assetId ? AssetManagement::find($assetId) : null;
+        
+            // Get the product type from the request or asset
+            $productType = ProductType::find($request->product_type_id ?? $asset->product_type_id);
+        
+            // Decode the asset properties stored in the ProductType
+            $assetProperties = json_decode($productType->asset_properties, true);
+        
+            // Get the existing values from the asset, only if the asset exists
+            $existingValues = $asset ? json_decode($asset->asset_properties_values, true) : [];
+        
+            // Return both properties and existing values
+            return response()->json([
+                'properties' => $assetProperties,
+                'existingValues' => $existingValues,
+            ]);
+        }
 }

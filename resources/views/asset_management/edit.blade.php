@@ -54,36 +54,57 @@
 {{ Form::close() }}
 
 <script type="text/javascript">
-    $(document).ready(function() {
-        var productTypeId = $('#product_name').val(); // Get the currently selected product type
-        var existingProperties = {!! $asset->asset_properties_values !!}; // Get existing asset property values
+  $(document).ready(function() {
+    // Function to fetch and display asset properties
+    function loadAssetProperties(productTypeId, assetId = null) {
+        $.ajax({
+            url: assetId ? '{{ route('get.asset.properties.edit', $asset->id) }}' : '{{ route('get.asset.properties') }}',
+            type: 'GET',
+            data: {
+                product_type_id: productTypeId,
+                asset_id: assetId // This will only be passed for editing
+            },
+            success: function(response) {
+                var propertiesHtml = '';
+                var properties = response.properties;
+                var existingValues = response.existingValues || {}; // Default to an empty object if null
 
-        if (productTypeId) {
-            $.ajax({
-                url: '{{ route('get.asset.properties') }}',
-                type: 'GET',
-                data: { product_type_id: productTypeId },
-                success: function(response) {
-                    var propertiesHtml = '';
-                    $.each(response, function(index, property) {
-                        var propertyValue = existingProperties[property] ? existingProperties[property] : ''; // Get existing value
-                        propertiesHtml += `<div class="form-group">
-                                                <div class="row">
-                                                    <div class="col-sm-6">
-                                                        <input type="text" class="form-control" value="${property}" readonly />
-                                                    </div>
-                                                    <div class="col-sm-6">
-                                                        <input type="text" class="form-control" name="asset_property_values[${property}]" value="${propertyValue}" placeholder="Enter The value" />
-                                                    </div>
+                $.each(properties, function(index, property) {
+                    var propertyValue = existingValues[property] || ''; // Get existing value or leave blank
+                    propertiesHtml += `<div class="form-group">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <input type="text" class="form-control" value="${property}" readonly />
                                                 </div>
-                                            </div>`;
-                    });
-                    $('#asset_properties_section').html(propertiesHtml);
-                },
-                error: function(error) {
-                    console.error(error);
-                }
-            });
+                                                <div class="col-sm-6">
+                                                    <input type="text" class="form-control" name="asset_property_values[${property}]" value="${propertyValue}" placeholder="Enter The value" />
+                                                </div>
+                                            </div>
+                                        </div>`;
+                });
+                $('#asset_properties_section').html(propertiesHtml);
+            },
+            error: function(error) {
+                console.error(error);
+            }
+        });
+    }
+
+    // Load properties when the form is loaded (initial load for editing)
+    var initialProductTypeId = $('#product_name').val(); // Get the initially selected product type
+    var assetId = '{{ $asset->id ?? null }}'; // The asset ID (if editing)
+    if (initialProductTypeId) {
+        loadAssetProperties(initialProductTypeId, assetId);
+    }
+
+    // Event listener for asset type change
+    $('#product_name').change(function() {
+        var selectedProductTypeId = $(this).val();
+        if (selectedProductTypeId) {
+            loadAssetProperties(selectedProductTypeId, assetId); // Pass assetId to get existing values when editing
+        } else {
+            $('#asset_properties_section').html(''); // Clear the properties if no type is selected
         }
     });
+});
 </script>
