@@ -95,6 +95,11 @@
                                         @endif
                                     </td>
                                     <td class="Action">
+                                        <div class="action-btn bg-info ms-2">
+                                            <a href="#" data-url="{{ route('asset_management.showProperties', $asset->id) }}" data-ajax-popup="true" data-title="{{__('View Properties')}}" class="mx-3 btn btn-sm align-items-center" data-bs-toggle="tooltip" title="{{__('View Properties')}}">
+                                                <i class="ti ti-eye text-white"></i>
+                                            </a>
+                                        </div>
                                         @if($asset->status == 0)
                                         @can('edit assets management')
                                         <div class="action-btn bg-primary ms-2">

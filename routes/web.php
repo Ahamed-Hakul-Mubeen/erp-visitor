@@ -917,8 +917,9 @@ Route::group(['middleware' => ['verified']], function () {
     Route::post('asset_management/{id}/unassign', [AssetManagementController::class, 'unassignAsset'])->name('asset_management.unassignAsset');
     Route::get('asset_management/{id}/history', [AssetManagementController::class, 'showHistory'])->name('asset_management.history');
     Route::get('/get-asset-properties', [AssetManagementController::class,'getAssetProperties'])->name('get.asset.properties');
-    
-    
+    Route::get('asset_management/{id}/properties', [AssetManagementController::class, 'showProperties'])->name('asset_management.showProperties');
+    Route::get('asset_management/{asset}/edit-asset-properties', [AssetManagementController::class, 'getAssetPropertiesForEdit'])->name('get.asset.properties.edit');
+
     Route::post('branch/employee/json', [EmployeeController::class, 'employeeJson'])->name('branch.employee.json')->middleware(['auth', 'XSS']);
 
     Route::resource('goaltype', GoalTypeController::class)->middleware(['auth', 'XSS']);
