@@ -293,8 +293,8 @@
                                                 </ul>
                                                 <div class="user-group">
 
-{{--                                                    <img @if($application->profile) src="{{asset('/storage/uploads/job/profile/'.$application->profile)}}" --}}
-{{--                                                         @else src="{{asset('/storage/uploads/avatar/avatar.png')}}" @endif class="hweb">--}}
+{{--                                                    <img @if($application->profile) src="{{ Storage::url('uploads/job/profile/'.$application->profile)}}" --}}
+{{--                                                         @else src="{{ Storage::url('uploads/avatar/avatar.png')}}" @endif class="hweb">--}}
 
                                                     <img src="{{ !empty($application->profile) ?$profile . ($application->profile) : $logo."avatar.png" }}"
                                                          class="hweb" >

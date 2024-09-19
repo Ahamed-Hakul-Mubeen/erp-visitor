@@ -147,7 +147,7 @@
                                                                 </a>
 
 
-                                                                
+
                                                                 <a href="#!" data-size="lg" data-url="{{ URL::to('leads/'.$lead->id.'/edit') }}" data-ajax-popup="true" class="dropdown-item" data-bs-original-title="{{__('Edit Lead')}}">
                                                                     <i class="ti ti-pencil"></i>
                                                                     <span>{{__('Edit')}}</span>
@@ -186,7 +186,7 @@
                                                 </ul>
                                                 <div class="user-group">
                                                     @foreach($lead->users as $user)
-                                                        <img src="@if($user->avatar) {{asset('/storage/uploads/avatar/'.$user->avatar)}} @else {{asset('storage/uploads/avatar/avatar.png')}} @endif" alt="image" data-bs-toggle="tooltip" title="{{$user->name}}">
+                                                        <img src="@if($user->avatar) {{ Storage::url('uploads/avatar/'.$user->avatar) }} @else {{asset('storage/uploads/avatar/avatar.png')}} @endif" alt="image" data-bs-toggle="tooltip" title="{{$user->name}}">
                                                     @endforeach
                                                 </div>
                                             </div>

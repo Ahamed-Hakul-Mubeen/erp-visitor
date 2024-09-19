@@ -120,7 +120,7 @@
                                                 @foreach($project->users as $key => $user)
                                                     @if($key < 3)
                                                         <a href="#" class="avatar rounded-circle">
-                                                            <img @if($user->avatar) src="{{asset('/storage/uploads/avatar/'.$user->avatar)}}" @else src="{{asset('/storage/uploads/avatar/avatar.png')}}" @endif
+                                                            <img @if($user->avatar) src="{{ Storage::url('uploads/avatar/'.$user->avatar) }}" @else src="{{ Storage::url('uploads/avatar/avatar.png') }}" @endif
                                                             title="{{ $user->name }}" style="height:36px;width:36px;">
                                                         </a>
                                                     @else
@@ -137,7 +137,7 @@
                                             @endif
                                         </div>
                                     </td>
-                                    <td class=""> 
+                                    <td class="">
                                         <h6 class="mb-0 text-success">{{ $project->project_progress($project,$last_task->id)['percentage'] }}</h6>
                                         <div class="progress mb-0"><div class="progress-bar bg-{{ $project->project_progress($project,$last_task->id)['color'] }}" style="width: {{ $project->project_progress($project,$last_task->id)['percentage'] }};"></div>
                                         </div>

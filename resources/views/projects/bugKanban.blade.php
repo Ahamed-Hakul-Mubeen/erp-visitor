@@ -171,9 +171,9 @@
                         '                                </div>';
 
                     $("#comments-file").prepend(html);
-                    $('#form-file')[0].reset(); 
+                    $('#form-file')[0].reset();
                     $('#submit_btn').prop('disabled', false);
-                    $('#submit_btn').html('{{ __("Upload") }}');   
+                    $('#submit_btn').html('{{ __("Upload") }}');
                 },
                 error: function (data) {
                     data = data.responseJSON;
@@ -317,7 +317,7 @@
                                                 @php $user = $bug->users(); @endphp
 
                                                 <div class="user-group">
-                                                    <img @if(isset($user[0]->avatar)) src="{{asset('/storage/uploads/avatar/'.$user[0]->avatar)}}" @else src="{{asset('/storage/uploads/avatar/avatar.png')}}" @endif alt="image" data-bs-toggle="tooltip" title="{{(!empty($user[0])?$user[0]->name:'')}}">
+                                                    <img @if(isset($user[0]->avatar)) src="{{ Storage::url('uploads/avatar/'.$user[0]->avatar)}}" @else src="{{ Storage::url('uploads/avatar/avatar.png')}}" @endif alt="image" data-bs-toggle="tooltip" title="{{(!empty($user[0])?$user[0]->name:'')}}">
                                                 </div>
                                             </div>
                                         </div>

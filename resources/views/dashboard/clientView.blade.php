@@ -456,7 +456,7 @@
                                                 @foreach($users as $key => $user)
                                                     @if($key<3)
                                                         <a href="#" class="avatar rounded-circle avatar-sm">
-                                                            <img data-original-title="{{(!empty($user)?$user->name:'')}}" @if($user->avatar) src="{{asset('/storage/uploads/avatar/'.$user->avatar)}}" @else src="{{asset('assets/img/avatar/avatar-1.png')}}" @endif title="{{ $user->name }}" class="hweb">
+                                                            <img data-original-title="{{(!empty($user)?$user->name:'')}}" @if($user->avatar) src="{{ Storage::url('uploads/avatar/'.$user->avatar) }}" @else src="{{asset('assets/img/avatar/avatar-1.png')}}" @endif title="{{ $user->name }}" class="hweb">
                                                         </a>
                                                     @else
                                                         @break
@@ -465,7 +465,7 @@
                                             @endif
                                             @if(count($users) > 3)
                                                 <a href="#" class="avatar rounded-circle avatar-sm">
-                                                    <img  data-original-title="{{(!empty($user)?$user->name:'')}}" @if($user->avatar) src="{{asset('/storage/uploads/avatar/'.$user->avatar)}}" @else src="{{asset('assets/img/avatar/avatar-1.png')}}" @endif class="hweb">
+                                                    <img  data-original-title="{{(!empty($user)?$user->name:'')}}" @if($user->avatar) src="{{ Storage::url('uploads/avatar/'.$user->avatar) }}" @else src="{{asset('assets/img/avatar/avatar-1.png')}}" @endif class="hweb">
                                                 </a>
                                             @endif
                                         @else

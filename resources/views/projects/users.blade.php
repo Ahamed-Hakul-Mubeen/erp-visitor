@@ -4,8 +4,8 @@
             <div class="col-sm-auto mb-3 mb-sm-0">
                 <div class="d-flex align-items-center">
                     <div class="avatar rounded-circle avatar-sm me-3">
-{{--                        <img src="@if($user->avatar) src="{{asset('/storage/uploads/avatar/'.$user->avatar)}}" @else src="{{asset('/storage/uploads/avatar/avatar.png')}}" @endif " alt="kal" class="img-user">--}}
-                        <img @if($user->avatar) src="{{asset('/storage/uploads/avatar/'.$user->avatar)}}" @else src="{{asset('/storage/uploads/avatar/avatar.png')}}" @endif  alt="image" >
+{{--                        <img src="@if($user->avatar) src="{{ Storage::url('uploads/avatar/'.$user->avatar) }}" @else src="{{ Storage::url('uploads/avatar/avatar.png') }}" @endif " alt="kal" class="img-user">--}}
+                        <img @if($user->avatar) src="{{ Storage::url('uploads/avatar/'.$user->avatar) }}" @else src="{{ Storage::url('uploads/avatar/avatar.png') }}" @endif  alt="image" >
 
                     </div>
                     <div class="div">
