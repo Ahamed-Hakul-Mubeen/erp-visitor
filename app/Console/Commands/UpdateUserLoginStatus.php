@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\Employee;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class UpdateUserLoginStatus extends Command
 {
@@ -27,7 +28,8 @@ class UpdateUserLoginStatus extends Command
      */
     public function handle()
     {
-        //
+        Log::info('user:update-user-login-status - cron is working');
+
         $employees = Employee::with(['user', 'termination'])
         ->whereHas('termination', function ($query) {
             $query->where('termination_date', '<=', Carbon::now());
