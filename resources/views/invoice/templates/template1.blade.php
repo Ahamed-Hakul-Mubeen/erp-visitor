@@ -355,3 +355,5 @@
 @if (!isset($preview))
     @include('invoice.script')
 @endif
+</body>
+</html>
