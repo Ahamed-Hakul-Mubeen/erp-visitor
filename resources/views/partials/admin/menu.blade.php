@@ -856,6 +856,25 @@
                                     </ul>
                                 </li>
                             @endif
+                            @if (Gate::check('manage bank account') || Gate::check('manage bank transfer'))
+                                <li
+                                    class="dash-item dash-hasmenu {{ Request::segment(1) == 'exchange_history' || Request::segment(1) == 'exchange_history' ? 'active dash-trigger' : '' }}">
+                                    <a class="dash-link" href="#">{{ __('Money Exchange') }}<span
+                                            class="dash-arrow"><i data-feather="chevron-right"></i></span></a>
+                                    <ul class="dash-submenu">
+                                        <li
+                                            class="dash-item {{ Request::route()->getName() == 'money_exchange.index' || Request::route()->getName() == 'money_exchange.create' || Request::route()->getName() == 'money_exchange.edit' ? ' active' : '' }}">
+                                            <a class="dash-link"
+                                                href="{{ route('money_exchange.index') }}">{{ __('Money Exchange') }}</a>
+                                        </li>
+                                        <li
+                                            class="dash-item {{ Request::route()->getName() == 'exchange_history.index' || Request::route()->getName() == 'exchange_history.create' || Request::route()->getName() == 'exchange_history.edit' ? ' active' : '' }}">
+                                            <a class="dash-link"
+                                                href="{{ route('exchange_history.index') }}">{{ __('Exchange History') }}</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            @endif
                             @if (Gate::check('manage customer') ||
                                     Gate::check('manage proposal') ||
                                     Gate::check('manage invoice') ||

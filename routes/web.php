@@ -466,10 +466,10 @@ Route::group(['middleware' => ['verified']], function () {
     );
 
     Route::resource('taxes', TaxController::class)->middleware(['auth', 'XSS', 'revalidate']);
-
     Route::resource('currency', CurrencyController::class)->middleware(['auth', 'XSS', 'revalidate']);
-
     Route::resource('exchange_rate', ExchangeRateController::class)->middleware(['auth', 'XSS', 'revalidate']);
+    Route::resource('money_exchange', TaxController::class)->middleware(['auth', 'XSS', 'revalidate']);
+    Route::resource('exchange_history', TaxController::class)->middleware(['auth', 'XSS', 'revalidate']);
 
     Route::resource('product-category', ProductServiceCategoryController::class)->middleware(['auth', 'XSS', 'revalidate']);
 
