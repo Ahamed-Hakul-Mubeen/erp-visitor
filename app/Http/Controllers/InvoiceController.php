@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
+use PDF;
 
 class InvoiceController extends Controller
 {
@@ -1167,6 +1168,116 @@ class InvoiceController extends Controller
         }
 
         return view('invoice.templates.' . $template, compact('invoice', 'preview', 'color', 'img', 'settings', 'customer', 'font_color', 'customFields'));
+    }
+
+    public function new_invoice($invoice_id)
+    {
+        $settings = Utility::settings();
+
+        $invoiceId = Crypt::decrypt($invoice_id);
+        $invoice = Invoice::where('id', $invoiceId)->first();
+
+        $data = DB::table('settings');
+        $data = $data->where('created_by', '=', $invoice->created_by);
+        $data1 = $data->get();
+
+        foreach ($data1 as $row) {
+            $settings[$row->name] = $row->value;
+        }
+
+        $customer = $invoice->customer;
+        $items = [];
+        $totalTaxPrice = 0;
+        $totalQuantity = 0;
+        $totalRate = 0;
+        $totalDiscount = 0;
+        $taxesData = [];
+        foreach ($invoice->items as $product) {
+            $item = new \stdClass();
+            $item->name = !empty($product->product) ? $product->product->name : '';
+            $item->quantity = $product->quantity;
+            $item->tax = $product->tax;
+            $item->unit = !empty($product->product) ? $product->product->unit_id : '';
+            $item->discount = $product->discount;
+            $item->price = $product->price;
+            $item->description = $product->description;
+
+            $totalQuantity += $item->quantity;
+            $totalRate += $item->price;
+            $totalDiscount += $item->discount;
+
+            $taxes = Utility::tax($product->tax);
+
+            $itemTaxes = [];
+            if (!empty($item->tax)) {
+                foreach ($taxes as $tax) {
+                    $taxPrice = Utility::taxRate($tax->rate, $item->price, $item->quantity, $item->discount);
+                    $totalTaxPrice += $taxPrice;
+
+                    $itemTax['name'] = $tax->name;
+                    $itemTax['rate'] = $tax->rate . '%';
+                    $itemTax['price'] = Utility::priceFormat($settings, $taxPrice);
+                    $itemTax['tax_price'] = $taxPrice;
+                    $itemTaxes[] = $itemTax;
+
+                    if (array_key_exists($tax->name, $taxesData)) {
+                        $taxesData[$tax->name] = $taxesData[$tax->name] + $taxPrice;
+                    } else {
+                        $taxesData[$tax->name] = $taxPrice;
+                    }
+
+                }
+                $item->itemTax = $itemTaxes;
+            } else {
+                $item->itemTax = [];
+            }
+            $items[] = $item;
+        }
+
+        $invoice->itemData = $items;
+        $invoice->totalTaxPrice = $totalTaxPrice;
+        $invoice->totalQuantity = $totalQuantity;
+        $invoice->totalRate = $totalRate;
+        $invoice->totalDiscount = $totalDiscount;
+        $invoice->taxesData = $taxesData;
+        $invoice->customField = CustomField::getData($invoice, 'invoice');
+        $customFields = [];
+        if (!empty(\Auth::user())) {
+            $customFields = CustomField::where('created_by', '=', \Auth::user()->creatorId())->where('module', '=', 'invoice')->get();
+        }
+
+        $logo = asset(Storage::url('uploads/logo/'));
+        $company_logo = Utility::getValByName('company_logo_dark');
+        $settings_data = \App\Models\Utility::settingsById($invoice->created_by);
+        $invoice_logo = $settings_data['invoice_logo'];
+        if (isset($invoice_logo) && !empty($invoice_logo)) {
+            $img = Utility::get_file('invoice_logo/') . $invoice_logo;
+        } else {
+            $img = asset($logo . '/' . (isset($company_logo) && !empty($company_logo) ? $company_logo : 'logo-dark.png'));
+        }
+
+        if ($invoice) {
+            $color = '#' . $settings['invoice_color'];
+            $font_color = Utility::getFontColor($color);
+
+            $data = [];
+
+            $data['invoice'] = $invoice;
+            $data['color'] = $color;
+            $data['settings'] = $settings;
+            $data['customer'] = $customer;
+            $data['img'] = $img;
+            $data['font_color'] = $font_color;
+            $data['customFields'] = $customFields;
+
+            $pdf = PDF::loadView('invoice.templates.' . $settings['invoice_template'], $data);
+            return $pdf->download('laravel.pdf');
+
+            return view('invoice.templates.' . $settings['invoice_template'], compact('invoice', 'color', 'settings', 'customer', 'img', 'font_color', 'customFields'));
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
+
     }
 
     public function invoice($invoice_id)
