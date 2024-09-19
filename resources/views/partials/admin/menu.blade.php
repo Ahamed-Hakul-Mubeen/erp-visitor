@@ -808,6 +808,8 @@
                                      Request::segment(1) == 'product-unit' ||
                                      Request::segment(1) == 'payment-method' ||
                                      Request::segment(1) == 'custom-field' ||
+                                     Request::segment(1) == 'currency' ||
+                                     Request::segment(1) == 'exchange_rate' ||
                                      Request::segment(1) == 'chart-of-account-type' ||
                                      (Request::segment(1) == 'transaction' &&
                                          Request::segment(2) != 'ledger' &&
@@ -1021,7 +1023,7 @@
                                     Gate::check('manage constant payment method') ||
                                     Gate::check('manage constant custom field'))
                                 <li
-                                    class="dash-item {{ Request::segment(1) == 'taxes' || Request::segment(1) == 'product-category' || Request::segment(1) == 'product-unit' || Request::segment(1) == 'payment-method' || Request::segment(1) == 'custom-field' || Request::segment(1) == 'chart-of-account-type' ? 'active dash-trigger' : '' }}">
+                                    class="dash-item {{ Request::segment(1) == 'taxes' || Request::segment(1) == 'product-category' || Request::segment(1) == 'product-unit' || Request::segment(1) == 'payment-method' || Request::segment(1) == 'custom-field' || Request::segment(1) == 'currency' || Request::segment(1) == 'exchange_rate' || Request::segment(1) == 'chart-of-account-type' ? 'active dash-trigger' : '' }}">
                                     <a class="dash-link"
                                         href="{{ route('taxes.index') }}">{{ __('Accounting Setup') }}</a>
                                 </li>

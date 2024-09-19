@@ -146,6 +146,8 @@ use App\Http\Controllers\NepalstePaymnetController;
 use App\Http\Controllers\QuotationController;
 use App\Http\Controllers\ProductTypeController;
 use App\Http\Controllers\AssetManagementController;
+use App\Http\Controllers\CurrencyController;
+use App\Http\Controllers\ExchangeRateController;
 use App\Http\Controllers\PreOrderController;
 use Illuminate\Support\Facades\Route;
 
@@ -464,6 +466,10 @@ Route::group(['middleware' => ['verified']], function () {
     );
 
     Route::resource('taxes', TaxController::class)->middleware(['auth', 'XSS', 'revalidate']);
+
+    Route::resource('currency', CurrencyController::class)->middleware(['auth', 'XSS', 'revalidate']);
+
+    Route::resource('exchange_rate', ExchangeRateController::class)->middleware(['auth', 'XSS', 'revalidate']);
 
     Route::resource('product-category', ProductServiceCategoryController::class)->middleware(['auth', 'XSS', 'revalidate']);
 
