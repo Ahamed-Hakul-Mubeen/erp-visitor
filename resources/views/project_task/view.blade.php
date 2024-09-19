@@ -182,7 +182,7 @@
                         <div class="row align-items-center">
                             <div class="col-auto">
                                 <a href="#" class="avatar avatar-sm ms-2">
-                                    <img data-toggle="tooltip" data-original-title="{{(!empty($user)?$user->name:'')}}" @if($user->avatar) src="{{asset('/storage/uploads/avatar/'.$user->avatar)}}" @else src="{{asset('/storage/uploads/avatar/avatar.png')}}" @endif title="{{ $user->name }}" class="wid-40 rounded-circle ml-3">
+                                    <img data-toggle="tooltip" data-original-title="{{(!empty($user)?$user->name:'')}}" @if($user->avatar) src="{{ Storage::url('uploads/avatar/'.$user->avatar) }}" @else src="{{ Storage::url('uploads/avatar/avatar.png') }}" @endif title="{{ $user->name }}" class="wid-40 rounded-circle ml-3">
                                 </a>
                             </div>
                             <div class="col ml-n2">
@@ -227,7 +227,7 @@
                         <div class="row align-items-center">
                             <div class="col-auto">
                                 <a href="#" class="avatar avatar-sm rounded-circle ms-2">
-                                    <img data-original-title="{{(!empty($user)?$user->name:'')}}" @if($user->avatar) src="{{asset('/storage/uploads/avatar/'.$user->avatar)}}" @else src="{{asset('/storage/uploads/avatar/avatar.png')}}" @endif title="{{ $comment->user->name }}" class="wid-40 rounded-circle ml-3">
+                                    <img data-original-title="{{(!empty($user)?$user->name:'')}}" @if($user->avatar) src="{{ Storage::url('uploads/avatar/'.$user->avatar) }}" @else src="{{ Storage::url('uploads/avatar/avatar.png') }}" @endif title="{{ $comment->user->name }}" class="wid-40 rounded-circle ml-3">
                                 </a>
                             </div>
                             <div class="col ml-n2">
@@ -250,7 +250,7 @@
 
             <div class="col-12 d-flex">
                 <div class="avatar me-3">
-                    <img data-original-title="{{(!empty(\Auth::user()) ? \Auth::user()->name:'')}}" @if(\Auth::user()->avatar) src="{{asset('/storage/uploads/avatar/'.\Auth::user()->avatar)}}" @else src="{{asset('/storage/uploads/avatar/avatar.png')}}" @endif title="{{ Auth::user()->name }}" class="wid-40 rounded-circle ml-3">
+                    <img data-original-title="{{(!empty(\Auth::user()) ? \Auth::user()->name:'')}}" @if(\Auth::user()->avatar) src="{{ Storage::url('uploads/avatar/'.\Auth::user()->avatar)}}" @else src="{{ Storage::url('uploads/avatar/avatar.png')}}" @endif title="{{ Auth::user()->name }}" class="wid-40 rounded-circle ml-3">
                 </div>
                 <div class="form-group mb-0 form-send w-100">
                     <form method="post" class="card-comment-box" id="form-comment" data-action="{{route('task.comment.store',[$task->project_id,$task->id])}}">
@@ -274,9 +274,9 @@
         if (file && file.type.startsWith('image/')) {
             const fileURL = window.URL.createObjectURL(file);
             imagePreview.src = fileURL;
-            imagePreview.style.display = 'block'; 
+            imagePreview.style.display = 'block';
         } else {
-            imagePreview.style.display = 'none'; 
+            imagePreview.style.display = 'none';
         }
     }
 </script>

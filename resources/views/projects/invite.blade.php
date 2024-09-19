@@ -9,9 +9,9 @@
                             <div class="row ">
                                 <div class="col-auto">
                                     <img @if($user->avatar)
-                                         src="{{asset('/storage/uploads/avatar/'.$user->avatar)}}"
+                                         src="{{ Storage::url('uploads/avatar/'.$user->avatar) }}"
                                          @else
-                                         src="{{asset('/storage/uploads/avatar/avatar.png')}}"
+                                         src="{{ Storage::url('uploads/avatar/avatar.png') }}"
                                          @endif
                                          class="wid-40 rounded-circle ml-3" >
                                 </div>
