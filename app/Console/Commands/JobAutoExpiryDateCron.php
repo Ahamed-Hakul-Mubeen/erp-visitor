@@ -28,8 +28,8 @@ class JobAutoExpiryDateCron extends Command
      */
     public function handle()
     {
-        // Log::info('cron is working');
-        
+        Log::info('jobs:job-auto-expiry-date - cron is working');
+
         $yesterdayEnd = Carbon::yesterday()->endOfDay();
         $jobs = Job::select('id', 'end_date')->where('status', 'active')->get();
     
