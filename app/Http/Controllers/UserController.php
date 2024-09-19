@@ -185,7 +185,7 @@ class UserController extends Controller
 
                 $role->givePermissionTo($employeePermission);
 
-                
+
                 $role             = new Role();
                 $role->name       = 'Project Manager';
                 $role->created_by = $user->id;
@@ -476,7 +476,7 @@ class UserController extends Controller
                 ];
                 $role->givePermissionTo($HRPermission);
 
-              
+
 
                 $role             = new Role();
                 $role->name       = 'accountant';
@@ -614,12 +614,12 @@ class UserController extends Controller
                     ['name' => 'create advance'],
                     ['name' => 'edit advance'],
                     ['name' => 'delete advance'],
-        
+
                 ];
-        
-        
+
+
                 $role->givePermissionTo($accountantPermission);
-           
+
         } else {
                 $validator = \Validator::make(
                     $request->all(), [
@@ -681,7 +681,7 @@ class UserController extends Controller
 
                 $userArr = [
                     'email' => $user->email,
-                    'password' => $request->password,
+                    'password' => $psw,
                 ];
                 $resp = Utility::sendEmailTemplate('new_user', [$user->id => $user->email], $userArr);
 
