@@ -21,6 +21,8 @@ use App\Models\User;
 use App\Models\Utility;
 use App\Models\TransactionLines;
 use App\Models\ChartOfAccount;
+use App\Models\Currency;
+use App\Models\ExchangeRate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
@@ -31,9 +33,7 @@ use PDF;
 
 class InvoiceController extends Controller
 {
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function index(Request $request)
     {
@@ -76,7 +76,8 @@ class InvoiceController extends Controller
             $product_services = ProductService::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             $product_services->prepend('--', '');
 
-            return view('invoice.create', compact('customers', 'invoice_number', 'product_services', 'category', 'customFields', 'customerId'));
+            $currency = Currency::select('currency_code', 'currency_symbol')->where('created_by', \Auth::user()->creatorId())->get();
+            return view('invoice.create', compact('customers', 'invoice_number', 'product_services', 'category', 'customFields', 'customerId', 'currency'));
         } else {
             return response()->json(['error' => __('Permission denied.')], 401);
         }
@@ -90,7 +91,21 @@ class InvoiceController extends Controller
 
     public function product(Request $request)
     {
-        $data['product'] = $product = ProductService::find($request->product_id);
+        $currency_code = $request->currency_code;
+
+        if ($currency_code != \Auth::user()->currencyCode()) {
+            $exchange_rate = ExchangeRate::where("from_currency", $currency_code)->where("to_currency", \Auth::user()->currencyCode())->first();
+            if (!$exchange_rate) {
+                return json_encode(array("status" => 0, "message" => __("No conversion rate found")));
+            }
+            $product = ProductService::find($request->product_id);
+            $product->sale_price = number_format($product->sale_price / $exchange_rate->exchange_rate, 2, ".", "");
+            $data['exchange_rate'] = $exchange_rate->exchange_rate;
+            $data['product'] = $product;
+        } else {
+            $data['exchange_rate'] = 1;
+            $data['product'] = $product = ProductService::find($request->product_id);
+        }
         $data['unit'] = (!empty($product->unit)) ? $product->unit->name : '';
         $data['taxRate'] = $taxRate = !empty($product->tax_id) ? $product->taxRate($product->tax_id) : 0;
         $data['taxes'] = !empty($product->tax_id) ? $product->tax($product->tax_id) : 0;
@@ -104,16 +119,18 @@ class InvoiceController extends Controller
 
     public function store(Request $request)
     {
-    //    dd($request->all());
+        //    dd($request->all());
         if (\Auth::user()->can('create invoice')) {
             $validator = \Validator::make(
-                $request->all(), [
+                $request->all(),
+                [
                     'customer_id' => 'required',
                     'invoice_number' => 'required',
                     'issue_date' => 'required',
                     'due_date' => 'required',
                     'category_id' => 'required',
                     'items' => 'required',
+                    'currency_code' => 'required'
                 ]
             );
             if ($validator->fails()) {
@@ -130,7 +147,10 @@ class InvoiceController extends Controller
             $invoice->due_date = $request->due_date;
             $invoice->category_id = $request->category_id;
             $invoice->ref_number = $request->ref_number;
-//            $invoice->discount_apply = isset($request->discount_apply) ? 1 : 0;
+            $invoice->currency_code = $request->currency_code;
+            $invoice->currency_symbol = $request->currency_symbol;
+            $invoice->exchange_rate = $request->exchange_rate;
+            //            $invoice->discount_apply = isset($request->discount_apply) ? 1 : 0;
             $invoice->created_by = \Auth::user()->creatorId();
             $invoice->save();
             CustomField::saveData($invoice, $request->customField);
@@ -143,7 +163,7 @@ class InvoiceController extends Controller
                 $invoiceProduct->product_id = $products[$i]['item'];
                 $invoiceProduct->quantity = $products[$i]['quantity'];
                 $invoiceProduct->tax = $products[$i]['tax'];
-//                $invoiceProduct->discount    = isset($products[$i]['discount']) ? $products[$i]['discount'] : 0;
+                //                $invoiceProduct->discount    = isset($products[$i]['discount']) ? $products[$i]['discount'] : 0;
                 $invoiceProduct->discount = $products[$i]['discount'];
                 $invoiceProduct->price = $products[$i]['price'];
                 $invoiceProduct->description = $products[$i]['description'];
@@ -174,7 +194,6 @@ class InvoiceController extends Controller
                 if (isset($setting['twilio_invoice_notification']) && $setting['twilio_invoice_notification'] == 1) {
                     Utility::send_twilio_msg($customer->contact, 'new_invoice', $invoiceNotificationArr);
                 }
-
             }
 
             //Product Stock Report
@@ -248,7 +267,7 @@ class InvoiceController extends Controller
                 $invoice->due_date = $request->due_date;
                 $invoice->ref_number = $request->ref_number;
                 $invoice->actual_invoice_number = $request->invoice_number;
-//                $invoice->discount_apply = isset($request->discount_apply) ? 1 : 0;
+                //                $invoice->discount_apply = isset($request->discount_apply) ? 1 : 0;
                 $invoice->category_id = $request->category_id;
                 $invoice->save();
 
@@ -269,7 +288,6 @@ class InvoiceController extends Controller
                         Utility::updateUserBalance('customer', $request->customer_id, $updatePrice, 'credit');
                     } else {
                         Utility::total_quantity('plus', $invoiceProduct->quantity, $invoiceProduct->product_id);
-
                     }
 
                     if (isset($products[$i]['item'])) {
@@ -295,16 +313,15 @@ class InvoiceController extends Controller
                     if (empty($products[$i]['id'])) {
                         Utility::addProductStock($products[$i]['item'], $products[$i]['quantity'], $type, $description, $type_id);
                     }
-
                 }
 
-                TransactionLines::where('reference_id',$invoice->id)->where('reference','Invoice')->delete();
+                TransactionLines::where('reference_id', $invoice->id)->where('reference', 'Invoice')->delete();
 
                 $invoice_products = InvoiceProduct::where('invoice_id', $invoice->id)->get();
                 foreach ($invoice_products as $invoice_product) {
                     $product = ProductService::find($invoice_product->product_id);
                     $totalTaxPrice = 0;
-                    if($invoice_product->tax != null){
+                    if ($invoice_product->tax != null) {
                         $taxes = \App\Models\Utility::tax($invoice_product->tax);
                         foreach ($taxes as $tax) {
                             $taxPrice = \App\Models\Utility::taxRate($tax->rate, $invoice_product->price, $invoice_product->quantity, $invoice_product->discount);
@@ -380,7 +397,6 @@ class InvoiceController extends Controller
                         'date' => $invoice->issue_date,
                     ];
                     Utility::addTransactionLines($data, "new");
-
                 }
 
                 return redirect()->route('invoice.index')->with('success', __('Invoice successfully updated.'));
@@ -411,7 +427,7 @@ class InvoiceController extends Controller
                 return redirect()->back()->with('error', __('Invoice Not Found.'));
             }
             $id = Crypt::decrypt($ids);
-            $invoice = Invoice::with(['creditNote','payments.bankAccount','items.product.unit'])->find($id);
+            $invoice = Invoice::with(['creditNote', 'payments.bankAccount', 'items.product.unit'])->find($id);
 
             if (!empty($invoice->created_by) == \Auth::user()->creatorId()) {
                 $invoicePayment = InvoicePayment::where('invoice_id', $invoice->id)->first();
@@ -428,9 +444,9 @@ class InvoiceController extends Controller
                 $invoice->customField = CustomField::getData($invoice, 'invoice');
                 $customFields = CustomField::where('created_by', '=', \Auth::user()->creatorId())->where('module', '=', 'invoice')->get();
 
-                $creditnote = CreditNote::where('invoice',$invoice->id)->first();
+                $creditnote = CreditNote::where('invoice', $invoice->id)->first();
 
-                return view('invoice.view', compact('invoice', 'customer', 'iteams', 'invoicePayment', 'customFields', 'user', 'invoice_user', 'user_plan' , 'creditnote'));
+                return view('invoice.view', compact('invoice', 'customer', 'iteams', 'invoicePayment', 'customFields', 'user', 'invoice_user', 'user_plan', 'creditnote'));
             } else {
                 return redirect()->back()->with('error', __('Permission denied.'));
             }
@@ -449,7 +465,6 @@ class InvoiceController extends Controller
                     $invoicepayment = InvoicePayment::find($invoices->id);
                     $invoices->delete();
                     $invoicepayment->delete();
-
                 }
 
                 if ($invoice->customer_id != 0 && $invoice->status != 0) {
@@ -457,8 +472,8 @@ class InvoiceController extends Controller
                 }
 
 
-                TransactionLines::where('reference_id',$invoice->id)->where('reference','Invoice')->delete();
-                TransactionLines::where('reference_id',$invoice->id)->Where('reference','Invoice Payment')->delete();
+                TransactionLines::where('reference_id', $invoice->id)->where('reference', 'Invoice')->delete();
+                TransactionLines::where('reference_id', $invoice->id)->Where('reference', 'Invoice Payment')->delete();
 
                 CreditNote::where('invoice', '=', $invoice->id)->delete();
 
@@ -479,14 +494,13 @@ class InvoiceController extends Controller
         if (\Auth::user()->can('delete invoice product')) {
             $invoiceProduct = InvoiceProduct::find($request->id);
 
-            if($invoiceProduct)
-            {
+            if ($invoiceProduct) {
                 $invoice = Invoice::find($invoiceProduct->invoice_id);
                 $productService = ProductService::find($invoiceProduct->product_id);
 
                 Utility::updateUserBalance('customer', $invoice->customer_id, $request->amount, 'debit');
 
-                TransactionLines::where('reference_sub_id',$productService->id)->where('reference','Invoice')->delete();
+                TransactionLines::where('reference_sub_id', $productService->id)->where('reference', 'Invoice')->delete();
 
                 InvoiceProduct::where('id', '=', $request->id)->delete();
             }
@@ -561,14 +575,13 @@ class InvoiceController extends Controller
                 $invoiceId = Crypt::encrypt($invoice->id);
                 $invoice->url = route('invoice.pdf', $invoiceId);
 
-                Utility::updateUserBalance('customer', $customer->id, $invoice->getTotal(), 'credit');
+                Utility::updateUserBalance('customer', $customer->id, $invoice->getTotal() * $invoice->exchange_rate, 'credit');
 
                 $invoice_products = InvoiceProduct::where('invoice_id', $invoice->id)->get();
                 foreach ($invoice_products as $invoice_product) {
                     $product = ProductService::find($invoice_product->product_id);
                     $totalTaxPrice = 0;
-                    if($invoice_product->tax != null)
-                    {
+                    if ($invoice_product->tax != null) {
                         $taxes = \App\Models\Utility::tax($invoice_product->tax);
                         foreach ($taxes as $tax) {
                             $taxPrice = \App\Models\Utility::taxRate($tax->rate, $invoice_product->price, $invoice_product->quantity, $invoice_product->discount);
@@ -583,7 +596,7 @@ class InvoiceController extends Controller
                     $data = [
                         'account_id' => $product->sale_chartaccount_id,
                         'transaction_type' => 'Credit',
-                        'transaction_amount' => $product_price,
+                        'transaction_amount' => $product_price * $invoice->exchange_rate,
                         'reference' => 'Invoice',
                         'reference_id' => $invoice->id,
                         'reference_sub_id' => $product->id,
@@ -595,7 +608,7 @@ class InvoiceController extends Controller
                     $data = [
                         'account_id' => $chart_accounts->id,
                         'transaction_type' => 'Credit',
-                        'transaction_amount' => $totalTaxPrice,
+                        'transaction_amount' => $totalTaxPrice * $invoice->exchange_rate,
                         'reference' => 'Invoice',
                         'reference_id' => $invoice->id,
                         'reference_sub_id' => $product->id,
@@ -608,7 +621,7 @@ class InvoiceController extends Controller
                     $data2 = [
                         'account_id' => $account_recivable->id,
                         'transaction_type' => 'Debit',
-                        'transaction_amount' => $itemAmount,
+                        'transaction_amount' => $itemAmount * $invoice->exchange_rate,
                         'reference' => 'Invoice',
                         'reference_id' => $invoice->id,
                         'reference_sub_id' => $product->id,
@@ -625,7 +638,7 @@ class InvoiceController extends Controller
                     $data = [
                         'account_id' => $cof_sale->id,
                         'transaction_type' => 'Debit',
-                        'transaction_amount' => $purchase_price,
+                        'transaction_amount' => $purchase_price * $invoice->exchange_rate,
                         'reference' => 'Invoice',
                         'reference_id' => $invoice->id,
                         'reference_sub_id' => $product->id,
@@ -639,7 +652,7 @@ class InvoiceController extends Controller
                     $data = [
                         'account_id' => $inventory->id,
                         'transaction_type' => 'Credit',
-                        'transaction_amount' => $purchase_price,
+                        'transaction_amount' => $purchase_price * $invoice->exchange_rate,
                         'reference' => 'Invoice',
                         'reference_id' => $invoice->id,
                         'reference_sub_id' => $product->id,
@@ -647,8 +660,6 @@ class InvoiceController extends Controller
                     ];
                     // dd($data);
                     Utility::addTransactionLines($data, "new");
-
-
                 }
 
                 $customerArr = [
@@ -663,9 +674,7 @@ class InvoiceController extends Controller
                 $resp = Utility::sendEmailTemplate('customer_invoice_sent', [$customer->id => $customer->email], $customerArr);
 
                 return redirect()->back()->with('success', __('Invoice successfully sent.') . (($resp['is_success'] == false && !empty($resp['error'])) ? '<br> <span class="text-danger">' . $resp['error'] . '</span>' : ''));
-
             }
-
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
@@ -694,7 +703,6 @@ class InvoiceController extends Controller
             $resp = Utility::sendEmailTemplate('customer_invoice_sent', [$customer->id => $customer->email], $customerArr);
 
             return redirect()->back()->with('success', __('Invoice successfully sent.') . (($resp['is_success'] == false && !empty($resp['error'])) ? '<br> <span class="text-danger">' . $resp['error'] . '</span>' : ''));
-
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
@@ -722,7 +730,8 @@ class InvoiceController extends Controller
 
         if (\Auth::user()->can('create payment invoice')) {
             $validator = \Validator::make(
-                $request->all(), [
+                $request->all(),
+                [
                     'date' => 'required',
                     'amount' => 'required',
                     'account_id' => 'required',
@@ -751,7 +760,6 @@ class InvoiceController extends Controller
                     $request->add_receipt->storeAs('uploads/payment', $fileName);
                     $invoicePayment->add_receipt = $fileName;
                 }
-
             }
 
             $invoicePayment->save();
@@ -789,8 +797,7 @@ class InvoiceController extends Controller
             $payment->invoice = 'invoice ' . \Auth::user()->invoiceNumberFormat($invoice->invoice_id);
             $payment->dueAmount = \Auth::user()->priceFormat($invoice->getDue());
 
-            if(!($request->advance_id))
-            {
+            if (!($request->advance_id)) {
                 Utility::updateUserBalance('customer', $invoice->customer_id, $request->amount, 'debit');
                 Utility::bankAccountBalance($request->account_id, $request->amount, 'credit');
 
@@ -798,7 +805,7 @@ class InvoiceController extends Controller
                 $data = [
                     'account_id' => $accountId->chart_account_id,
                     'transaction_type' => 'Debit',
-                    'transaction_amount' => $request->amount,
+                    'transaction_amount' => $request->amount * $invoice->exchange_rate,
                     'reference' => 'Invoice Payment',
                     'reference_id' => $invoice_id,
                     'reference_sub_id' => $invoicePayment->id,
@@ -812,7 +819,7 @@ class InvoiceController extends Controller
             $data = [
                 'account_id' => $account_recivable->id,
                 'transaction_type' => 'Credit',
-                'transaction_amount' => $request->amount,
+                'transaction_amount' => $request->amount * $invoice->exchange_rate,
                 'reference' => 'Invoice Payment',
                 'reference_id' => $invoice_id,
                 'reference_sub_id' => $invoicePayment->id,
@@ -820,13 +827,12 @@ class InvoiceController extends Controller
             ];
             Utility::addTransactionLines($data, "new");
 
-            if($request->advance_id)
-            {
+            if ($request->advance_id) {
                 $unearned_revenue = ChartOfAccount::where('code', 2040)->where('created_by', \Auth::user()->creatorId())->first();
                 $data = [
                     'account_id' => $unearned_revenue->id,
                     'transaction_type' => 'Debit',
-                    'transaction_amount' => $request->amount,
+                    'transaction_amount' => $request->amount * $invoice->exchange_rate,
                     'reference' => 'Invoice Payment',
                     'reference_id' => $invoice_id,
                     'reference_sub_id' => $invoicePayment->id,
@@ -836,8 +842,7 @@ class InvoiceController extends Controller
 
                 $advance = Advance::find($request->advance_id);
                 $advance->balance = $advance->balance - $request->amount;
-                if($advance->balance == 0)
-                {
+                if ($advance->balance == 0) {
                     $advance->status = 1;
                 }
                 $advance->save();
@@ -871,26 +876,22 @@ class InvoiceController extends Controller
                 $status = Utility::WebhookCall($webhook['url'], $parameter, $webhook['method']);
                 if ($status == true) {
                     return redirect()->back()->with('success', __('Payment successfully added.') . ((isset($result) && $result != 1) ? '<br> <span class="text-danger">' . $result . '</span>' : '') . (($resp['is_success'] == false && !empty($resp['error'])) ? '<br> <span class="text-danger">' . $resp['error'] . '</span>' : ''));
-
                 } else {
                     return redirect()->back()->with('error', __('Webhook call failed.'));
                 }
             }
             return redirect()->back()->with('success', __('Payment successfully added.') . ((isset($result) && $result != 1) ? '<br> <span class="text-danger">' . $result . '</span>' : '') . (($resp['is_success'] == false && !empty($resp['error'])) ? '<br> <span class="text-danger">' . $resp['error'] . '</span>' : ''));
-
         }
-
     }
 
     public function paymentDestroy(Request $request, $invoice_id, $payment_id)
     {
-//        dd($invoice_id,$payment_id);
+        //        dd($invoice_id,$payment_id);
 
         if (\Auth::user()->can('delete payment invoice')) {
             $payment = InvoicePayment::find($payment_id);
 
-            if($payment->advance_id && $payment->advance_amount)
-            {
+            if ($payment->advance_id && $payment->advance_amount) {
                 $advance = Advance::find($payment->advance_id);
                 $advance->balance += $payment->advance_amount;
                 $advance->status = 0;
@@ -900,7 +901,7 @@ class InvoiceController extends Controller
 
             InvoiceBankTransfer::where('id', '=', $payment_id)->delete();
 
-            TransactionLines::where('reference_sub_id',$payment_id)->where('reference','Invoice Payment')->delete();
+            TransactionLines::where('reference_sub_id', $payment_id)->where('reference', 'Invoice Payment')->delete();
 
             $invoice = Invoice::where('id', $invoice_id)->first();
             $due = $invoice->getDue();
@@ -908,7 +909,6 @@ class InvoiceController extends Controller
 
             if ($due > 0 && $total != $due) {
                 $invoice->status = 3;
-
             } else {
                 $invoice->status = 2;
             }
@@ -917,7 +917,6 @@ class InvoiceController extends Controller
                 //storage limit
                 $file_path = '/uploads/payment/' . $payment->add_receipt;
                 $result = Utility::changeStorageLimit(\Auth::user()->creatorId(), $file_path);
-
             }
 
             $invoice->save();
@@ -938,7 +937,7 @@ class InvoiceController extends Controller
     public function paymentReminder($invoice_id)
     {
 
-//        dd($invoice_id);
+        //        dd($invoice_id);
         $invoice = Invoice::find($invoice_id);
         $customer = Customer::where('id', $invoice->customer_id)->first();
         $invoice->dueAmount = \Auth::user()->priceFormat($invoice->getDue());
@@ -980,7 +979,6 @@ class InvoiceController extends Controller
             ];
 
             $resp = Utility::sendEmailTemplate('new_payment_reminder', [$customer->id => $customer->email], $reminderArr);
-
         }
 
         return redirect()->back()->with('success', __('Payment reminder successfully send.') . (($resp['is_success'] == false && !empty($resp['error'])) ? '<br> <span class="text-danger">' . $resp['error'] . '</span>' : ''));
@@ -994,7 +992,8 @@ class InvoiceController extends Controller
     public function customerInvoiceSendMail(Request $request, $invoice_id)
     {
         $validator = \Validator::make(
-            $request->all(), [
+            $request->all(),
+            [
                 'email' => 'required|email',
             ]
         );
@@ -1014,15 +1013,13 @@ class InvoiceController extends Controller
         $invoiceId = Crypt::encrypt($invoice->id);
         $invoice->url = route('invoice.pdf', $invoiceId);
 
-        try
-        {
+        try {
             Mail::to($email)->send(new CustomerInvoiceSend($invoice));
         } catch (\Exception $e) {
             $smtp_error = __('E-Mail has been not sent due to SMTP configuration');
         }
 
         return redirect()->back()->with('success', __('Invoice successfully sent.') . ((isset($smtp_error)) ? '<br> <span class="text-danger">' . $smtp_error . '</span>' : ''));
-
     }
 
     public function shippingDisplay(Request $request, $id)
@@ -1225,7 +1222,6 @@ class InvoiceController extends Controller
                     } else {
                         $taxesData[$tax->name] = $taxPrice;
                     }
-
                 }
                 $item->itemTax = $itemTaxes;
             } else {
@@ -1277,7 +1273,6 @@ class InvoiceController extends Controller
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
-
     }
 
     public function old_invoice($invoice_id)
@@ -1335,7 +1330,6 @@ class InvoiceController extends Controller
                     } else {
                         $taxesData[$tax->name] = $taxPrice;
                     }
-
                 }
                 $item->itemTax = $itemTaxes;
             } else {
@@ -1374,7 +1368,6 @@ class InvoiceController extends Controller
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
-
     }
 
     public function saveTemplateSettings(Request $request)
@@ -1404,7 +1397,8 @@ class InvoiceController extends Controller
 
         foreach ($post as $key => $data) {
             \DB::insert(
-                'insert into settings (`value`, `name`,`created_by`) values (?, ?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`) ', [
+                'insert into settings (`value`, `name`,`created_by`) values (?, ?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`) ',
+                [
                     $data,
                     $key,
                     \Auth::user()->creatorId(),
@@ -1431,7 +1425,7 @@ class InvoiceController extends Controller
         }
 
         $id = Crypt::decrypt($invoiceId);
-        $invoice = Invoice::with(['creditNote','payments.bankAccount','items.product.unit'])->find($id);
+        $invoice = Invoice::with(['creditNote', 'payments.bankAccount', 'items.product.unit'])->find($id);
 
         $settings = Utility::settingsById($invoice->created_by);
 
@@ -1454,7 +1448,6 @@ class InvoiceController extends Controller
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
-
     }
 
     public function export()
@@ -1465,5 +1458,4 @@ class InvoiceController extends Controller
 
         return $data;
     }
-
 }

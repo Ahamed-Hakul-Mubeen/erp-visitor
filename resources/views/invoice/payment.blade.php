@@ -17,9 +17,12 @@
             {{ Form::label('date', __('Date'), ['class' => 'form-label']) }}
             {{ Form::date('date', '', ['id' => 'date', 'class' => 'form-control ', 'required' => 'required']) }}
         </div>
-        <div class="form-group col-md-6">
+        <div class="col-md-6">
             {{ Form::label('amount', __('Amount'), ['class' => 'form-label']) }}
-            {{ Form::number('amount', $invoice->getDue(), ['id' => 'amount', 'class' => 'form-control', 'required' => 'required', 'step' => '0.01', 'placeholder' => __('Enter Amount')]) }}
+            <div class="form-group input-group">
+                {{ Form::number('amount', $invoice->getDue(), ['id' => 'amount', 'class' => 'form-control', 'required' => 'required', 'step' => '0.01', 'placeholder' => __('Enter Amount')]) }}
+                <span class="bg-transparent input-group-text">{{ $invoice->currency_code }}</span>
+            </div>
         </div>
         <div class="form-group col-md-6">
             {{ Form::label('account_id', __('Account'), ['class' => 'form-label']) }}

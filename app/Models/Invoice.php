@@ -50,7 +50,7 @@ class Invoice extends Model
     }
 
 
-   
+
 
     // private static $getTotal = NULL;
     // public static function getTotal(){

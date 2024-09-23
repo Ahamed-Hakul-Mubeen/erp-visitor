@@ -98,7 +98,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->lang;
     }
 
-    public function priceFormat($price, $no = null)
+    public function priceFormat($price, $no = null, $currency_symbol = null)
     {
         if($no == 'no' && $price < 0)
         {
@@ -107,8 +107,12 @@ class User extends Authenticatable implements MustVerifyEmail
 
         $settings = Utility::settings();
         $decimal_number = Utility::getValByName('decimal_number') ? Utility::getValByName('decimal_number') : 0;
+        if($currency_symbol == null)
+        {
+            $currency_symbol = $settings['site_currency_symbol'];
+        }
 
-        return (($settings['site_currency_symbol_position'] == "pre") ? $settings['site_currency_symbol'] : '') . number_format($price, $decimal_number) . (($settings['site_currency_symbol_position'] == "post") ? $settings['site_currency_symbol'] : '');
+        return (($settings['site_currency_symbol_position'] == "pre") ? $currency_symbol : '') . number_format($price, $decimal_number) . (($settings['site_currency_symbol_position'] == "post") ? $currency_symbol : '');
 
     }
 
@@ -125,6 +129,12 @@ class User extends Authenticatable implements MustVerifyEmail
         $settings = Utility::settings();
 
         return $settings['site_currency_symbol'];
+    }
+    public function currencyCode()
+    {
+        $settings = Utility::settings();
+
+        return $settings['site_currency'];
     }
 
     public function dateFormat($date)
@@ -197,13 +207,13 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     public function billNumberFormat($number)
-    {   
+    {
         $bill = Bill::where("bill_id", $number)->where('created_by', \Auth::user()->creatorId())->first();
         if($bill && $bill->actual_bill_number != null)
         {
             return $bill->actual_bill_number;
         }else{
-        
+
         $settings = Utility::settings();
 
         return $settings["bill_prefix"] . sprintf("%05d", $number);
@@ -1576,7 +1586,7 @@ class User extends Authenticatable implements MustVerifyEmail
                     'pt-br' => '<p>Olá {candidate_name},<br>Você está agendado para uma entrevista com {interviewer_name} no dia {interview_date} às {interview_time}.</p><p>Se tiver dúvidas, entre em contato conosco.</p><p>Obrigado, <br>{app_name}</p><p>{app_url}</p>',
                 ],
             ],
-            
+
             'customer_invoice_sent' => [
                 'subject' => 'Customer Invoice Sent',
                 'lang' => [
