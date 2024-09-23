@@ -756,6 +756,52 @@ class ProjectController extends Controller
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
     }
+    public function attachmentAdd(Request $request, $attachment_id)
+    {
+        if (\Auth::user()->can('create attachment')) {
+            $attachment = TaskFile::find($attachment_id);
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    'file.*' => 'required|file|mimes:jpg,gif,jpeg,png,pdf,doc,docx,xls,xlsx,mp4,mp3|max:51200',
+                ]
+            );
+
+            if ($validator->fails()) {
+                return redirect()->back()->with('error', Utility::errorFormat($validator->getMessageBag()));
+            }
+
+            $file_path_arr = [];
+            if ($request->hasfile('file')) {
+                foreach ($request->file('file') as $file) {
+                    if ($file) {
+                        $extension = $file->getClientOriginalExtension();
+                        $filename = time() . '_' . uniqid() . '.' . $extension;
+                        $filePath = $file->storeAs('project/uploads', $filename, 'public');
+                        $file_path_arr[] = str_replace('project/uploads/', '', $filePath);
+                    }
+                }
+            }
+
+            if ($attachment) {
+                $existing_files = json_decode($attachment->file, true) ?? [];
+                $file_path_arr = array_merge($existing_files, $file_path_arr);
+            }
+
+            if (!$attachment) {
+                return redirect()->back()->with('error', __('Attachment not stored'));
+            }
+
+            $attachment->file = json_encode($file_path_arr);
+            $attachment->extension = $file->getClientOriginalExtension();
+            $attachment->file_size = $file->getSize();
+            $attachment->save();
+
+            return redirect()->back()->with('success', __('Attachment successfully Added.'));
+        } else {
+            return redirect()->back()->with('error', __('Permission Denied.'));
+        }
+    }
 
 
     public function attachmentDestroy($id)

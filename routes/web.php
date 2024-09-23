@@ -1095,6 +1095,7 @@ Route::group(['middleware' => ['verified']], function () {
 
     Route::get('projects/{id}/attachment', [ProjectController::class, 'attachment'])->name('project.attachment')->middleware(['auth', 'XSS']);
     Route::post('projects/{id}/attachment', [ProjectController::class, 'attachmentStore'])->name('project.attachment.store')->middleware(['auth', 'XSS']);
+    Route::post('projects/{id}/add-attachment', [ProjectController::class, 'attachmentAdd'])->name('project.attachment.add')->middleware(['auth', 'XSS']);
     Route::delete('projects/attachment/{id}', [ProjectController::class, 'attachmentDestroy'])->name('project.attachment.destroy')->middleware(['auth', 'XSS']);
     Route::delete('projects/attachment/{id}/{index}', [ProjectController::class, 'attachmentDestroyFile'])->name('project.attachment.attachmentDestroyFile')->middleware(['auth', 'XSS']);
 

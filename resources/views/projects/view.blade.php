@@ -167,6 +167,33 @@
             show_toastr('success', 'Url copied to clipboard', 'success');
         }
     </script>
+
+    <script type="text/javascript">
+        var attachment_file_count = 0;
+        $(document).ready(function() {
+            $('#add_file_btn_1').click(function() {
+                attachment_file_count++;
+                console.log(attachment_file_count);
+
+                var add = `<div class="row" id="attachment_div${attachment_file_count}">
+                                <div class="col-sm-10">
+                                    <div class="form-group">
+                                        <input type="file" class="form-control" name="file[]">
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <button type="button" onclick=remove_attachment(${attachment_file_count}) class="btn btn-danger btn-sm mt-1"> <i class="text-white ti ti-trash"></i> </button>
+                                </div>
+                            </div>`;
+                $("#attachment_list_div").append(add);
+            });
+        });
+
+        function remove_attachment(file_index)
+        {
+            $(`#attachment_div${file_index}`).remove();
+        }
+    </script>
 @endpush
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a></li>
@@ -683,7 +710,7 @@
                                                     <h5 class="modal-title" id="attachmentModalLabel_{{ $attachment->id }}">Attachment Details</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
-                                                <div class="modal-body">
+                                                <div class="modal-body pb-0">
                                                     <!-- Attachment files -->
                                                     <?php $attachment_list = json_decode($attachment->file); ?>
                                                     @if ($attachment_list)
@@ -728,6 +755,30 @@
                                                             </div>
                                                         @endforeach
                                                     @endif
+                                                    <div class="form-group pt-5">
+                                                        {{ Form::open(['route' => ['project.attachment.add', $attachment->id], 'files' => true]) }}
+                                                        <div class="row">
+                                                            <div class="col-sm-12">
+                                                                {{ Form::label('file', __('Upload Files'), ['class' => 'form-label']) }}
+                                                            </div>
+                                                            <div class="col-sm-10">
+                                                                <div class="form-group">
+                                                                    <input type="file" class="form-control" name="file[]" required>
+                                                                </div>
+                                                                @error('file')
+                                                                    <span class="invalid-file" role="alert">
+                                                                        <strong class="text-danger">{{ $message }}</strong>
+                                                                    </span>
+                                                                @enderror
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                <button type="button" id="add_file_btn_1" class="btn btn-info btn-sm mt-1"> <i class="ti ti-plus"></i></button>
+                                                            </div>
+                                                        </div>
+                                                        <div id="attachment_list_div"></div>
+                                                        <button type="submit" class="btn btn-primary">{{ __('Add') }}</button>
+                                                        {{ Form::close() }}
+                                                    </div>
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
