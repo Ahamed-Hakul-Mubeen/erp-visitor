@@ -1170,7 +1170,7 @@ class InvoiceController extends Controller
         return view('invoice.templates.' . $template, compact('invoice', 'preview', 'color', 'img', 'settings', 'customer', 'font_color', 'customFields'));
     }
 
-    public function new_invoice($invoice_id)
+    public function invoice($invoice_id)
     {
         $settings = Utility::settings();
 
@@ -1280,7 +1280,7 @@ class InvoiceController extends Controller
 
     }
 
-    public function invoice($invoice_id)
+    public function old_invoice($invoice_id)
     {
         $settings = Utility::settings();
 

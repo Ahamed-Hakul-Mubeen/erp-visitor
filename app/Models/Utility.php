@@ -715,7 +715,7 @@ class Utility extends Model
 
     public static function vendorBillNumberFormat($number)
     {
-        $bill = Invoice::where("bill_id", $number)->where('created_by', \Auth::user()->creatorId())->first();
+        $bill = Bill::where("bill_id", $number)->where('created_by', \Auth::user()->creatorId())->first();
         if($bill && $bill->actual_bill_number != null)
         {
             return $bill->actual_bill_number;

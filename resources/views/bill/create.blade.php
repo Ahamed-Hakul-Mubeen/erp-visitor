@@ -569,6 +569,28 @@
             $(".price").change();
             $(".discount").change();
         });
+    $(document).ready(function() {
+        $('#bill_date').on('change', function() {
+            const billDate = new Date($(this).val());
+            const dueDateInput = $('#due_date');
+            
+        
+            if ($(this).val()) {
+                dueDateInput.attr('min', billDate.toISOString().split('T')[0]);
+            } else {
+            
+                dueDateInput.removeAttr('min');
+            }
+        });
+        
+        // Event listener for clicking due date
+        $(document).on('click', '#due_date', function () {
+            const billDate = new Date($('#bill_date').val());
+            if (billDate) {
+                $(this).attr('min', billDate.toISOString().split('T')[0]);
+            }
+        });
+    });
     </script>
 @endpush
 @section('content')
@@ -599,13 +621,13 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         {{ Form::label('bill_date', __('Bill Date'),['class'=>'form-label']) }}
-                                        {{Form::date('bill_date',null,array('class'=>'form-control','required'=>'required'))}}
+                                        {{Form::date('bill_date',null,array('class'=>'form-control','required'=>'required', 'id' => 'bill_date'))}}
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         {{ Form::label('due_date', __('Due Date'),['class'=>'form-label']) }}
-                                        {{Form::date('due_date',null,array('class'=>'form-control','required'=>'required'))}}
+                                        {{Form::date('due_date',null,array('class'=>'form-control','required'=>'required','id' => 'due_date'))}}
                                     </div>
                                 </div>
                                 <div class="col-md-6">

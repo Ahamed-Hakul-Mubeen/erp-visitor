@@ -426,6 +426,30 @@
             $(".price").change();
             $(".discount").change();
         });
+        
+        $(document).ready(function() {
+    $('#due_date').attr('min', new Date().toISOString().split('T')[0]);
+
+    // Event listener for issue date change
+    $('#issue_date').on('change', function() {
+        const issueDate = new Date($(this).val());
+        const dueDateInput = $('#due_date');
+        
+        if ($(this).val()) {
+            dueDateInput.attr('min', issueDate.toISOString().split('T')[0]);
+        } else {
+            dueDateInput.attr('min', new Date().toISOString().split('T')[0]);
+        }
+    });
+    
+    // Event listener for clicking due date
+    $(document).on('click', '#due_date', function () {
+        const issueDate = new Date($('#issue_date').val());
+        if (issueDate) {
+            $(this).attr('min', issueDate.toISOString().split('T')[0]);
+        }
+    });
+});
     </script>
 @endpush
 @section('content')

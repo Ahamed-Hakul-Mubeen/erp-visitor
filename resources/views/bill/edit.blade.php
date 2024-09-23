@@ -667,6 +667,29 @@
             $(".price").change();
             $(".discount").change();
         });
+
+        $(document).ready(function() {
+        $('#bill_date').on('change', function() {
+            const billDate = new Date($(this).val());
+            const dueDateInput = $('#due_date');
+            
+        
+            if ($(this).val()) {
+                dueDateInput.attr('min', billDate.toISOString().split('T')[0]);
+            } else {
+            
+                dueDateInput.removeAttr('min');
+            }
+        });
+        
+        // Event listener for clicking due date
+        $(document).on('click', '#due_date', function () {
+            const billDate = new Date($('#bill_date').val());
+            if (billDate) {
+                $(this).attr('min', billDate.toISOString().split('T')[0]);
+            }
+        });
+    });
     </script>
 @endpush
 @section('content')
