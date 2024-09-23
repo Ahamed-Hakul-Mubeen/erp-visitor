@@ -537,7 +537,7 @@ class CustomerController extends Controller
             $customerData->shipping_phone   = $customer[15];
             $customerData->shipping_zip     = $customer[16];
             $customerData->shipping_address = $customer[17];
-            $customerData->balance          = $customer[18];
+            //$customerData->balance          = $customer[18];
             $customerData->created_by       = \Auth::user()->creatorId();
 
             if(empty($customerData))
