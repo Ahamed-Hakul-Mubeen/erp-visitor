@@ -2,7 +2,6 @@
 @section('page-title')
     {{__('Invoice Create')}}
 @endsection
-
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{route('dashboard')}}">{{__('Dashboard')}}</a></li>
     <li class="breadcrumb-item"><a href="{{route('invoice.index')}}">{{__('Invoice')}}</a></li>
@@ -23,6 +22,10 @@
                     'status': 1
                 },
                 show: function () {
+                    var my_currency_symbol = $('#currency_code').find(':selected').data("symbol");
+                    $(".my_currency_symbol").html(my_currency_symbol);
+                    $("#currency_symbol").val(my_currency_symbol);
+
                     $(this).slideDown();
                     var file_uploads = $(this).find('input.multi');
                     if (file_uploads.length) {
@@ -132,7 +135,7 @@
             var itemTaxPrice = parseFloat((totalItemTaxRate / 100) * (totalItemPrice));
             $(el.find('.itemTaxPrice')).val(itemTaxPrice.toFixed(2));
 
-            $(el.find('.amount')).html(parseFloat(itemTaxPrice)+parseFloat(amount));
+            $(el.find('.amount')).html((parseFloat(itemTaxPrice)+parseFloat(amount)).toFixed(2));
 
             var totalItemTaxPrice = 0;
             var itemTaxPriceInput = $('.itemTaxPrice');
@@ -166,6 +169,7 @@
             var iteams_id = $(this).val();
             var url = $(this).data('url');
             var el = $(this);
+            var currency_code = $("#currency_code").val();
 
             $.ajax({
                 url: url,
@@ -174,11 +178,17 @@
                     'X-CSRF-TOKEN': jQuery('#token').val()
                 },
                 data: {
-                    'product_id': iteams_id
+                    'product_id': iteams_id,
+                    'currency_code': currency_code
                 },
                 cache: false,
                 success: function (data) {
                     var item = JSON.parse(data);
+                    if (item.hasOwnProperty('status') && item.status == 0) {
+                        show_toastr('danger', item.message);
+                    } else {
+
+                    $("#exchange_rate").val(item.exchange_rate);
                     console.log(el.parent().parent().find('.quantity'))
                     $(el.parent().parent().find('.quantity')).val(1);
                     $(el.parent().parent().find('.price')).val(item.product.sale_price);
@@ -226,7 +236,7 @@
                     var itemTaxPriceInput = $('.itemTaxPrice');
                     for (var j = 0; j < itemTaxPriceInput.length; j++) {
                         totalItemTaxPrice += parseFloat(itemTaxPriceInput[j].value);
-                        $(el.parent().parent().find('.amount')).html(parseFloat(item.totalAmount)+parseFloat(itemTaxPriceInput[j].value));
+                        $(el.parent().parent().find('.amount')).html((parseFloat(item.totalAmount)+parseFloat(itemTaxPriceInput[j].value)).toFixed(2));
                     }
 
                     var totalItemDiscountPrice = 0;
@@ -241,6 +251,7 @@
                     $('.totalTax').html(totalItemTaxPrice.toFixed(2));
                     $('.totalAmount').html((parseFloat(totalItemPrice) - parseFloat(totalItemDiscountPrice) + parseFloat(totalItemTaxPrice)).toFixed(2));
 
+                }
 
                 },
             });
@@ -268,7 +279,7 @@
             var itemTaxPrice = parseFloat((totalItemTaxRate / 100) * (totalItemPrice));
             $(el.find('.itemTaxPrice')).val(itemTaxPrice.toFixed(2));
 
-            $(el.find('.amount')).html(parseFloat(itemTaxPrice)+parseFloat(amount));
+            $(el.find('.amount')).html((parseFloat(itemTaxPrice)+parseFloat(amount)).toFixed(2));
 
             var totalItemTaxPrice = 0;
             var itemTaxPriceInput = $('.itemTaxPrice');
@@ -318,7 +329,7 @@
             var itemTaxPrice = parseFloat((totalItemTaxRate / 100) * (totalItemPrice));
             $(el.find('.itemTaxPrice')).val(itemTaxPrice.toFixed(2));
 
-            $(el.find('.amount')).html(parseFloat(itemTaxPrice)+parseFloat(amount));
+            $(el.find('.amount')).html((parseFloat(itemTaxPrice)+parseFloat(amount)).toFixed(2));
 
             var totalItemTaxPrice = 0;
             var itemTaxPriceInput = $('.itemTaxPrice');
@@ -370,7 +381,7 @@
             var itemTaxPrice = parseFloat((totalItemTaxRate / 100) * (totalItemPrice));
             $(el.find('.itemTaxPrice')).val(itemTaxPrice.toFixed(2));
 
-            $(el.find('.amount')).html(parseFloat(itemTaxPrice)+parseFloat(amount));
+            $(el.find('.amount')).html((parseFloat(itemTaxPrice)+parseFloat(amount)).toFixed(2));
 
             var totalItemTaxPrice = 0;
             var itemTaxPriceInput = $('.itemTaxPrice');
@@ -426,6 +437,11 @@
             $(".price").change();
             $(".discount").change();
         });
+        $(document).on('change', '#currency_code', function() {
+            var my_currency_symbol = $(this).find(':selected').data("symbol");
+            $(".my_currency_symbol").html(my_currency_symbol);
+            $("#currency_symbol").val(my_currency_symbol);
+        });
     </script>
 @endpush
 @section('content')
@@ -444,7 +460,7 @@
                                         <i class="ti ti-plus"></i>{{__('Add Customer')}}
                                     </a>
                                 </div>
-                                {{ Form::select('customer_id', $customers,$customerId, array('class' => 'form-control select','id'=>'customer','data-url'=>route('invoice.customer'),'required'=>'required')) }}
+                                {{ Form::select('customer_id', $customers,$customerId, array('class' => 'form-control select2','id'=>'customer','data-url'=>route('invoice.customer'),'required'=>'required')) }}
 
                             </div>
 
@@ -494,6 +510,26 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ Form::label('currency_code', __('Currency'),['class'=>'form-label']) }}
+                                        <select class="form-control" name="currency_code" id="currency_code" required>
+                                            {{-- <option value="">Select Currency</option> --}}
+                                            @php $currency_code = \Auth::user()->currencyCode() @endphp
+                                            @foreach($currency as $curr)
+                                                @if($currency_code == $curr->currency_code)
+                                                    <option selected value="{{ $curr->currency_code }}" data-symbol="{{ $curr->currency_symbol }}">{{ $curr->currency_code }}</option>
+                                                @else
+                                                    <option value="{{ $curr->currency_code }}" data-symbol="{{ $curr->currency_symbol }}">{{ $curr->currency_code }}</option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                        <input type="hidden" name="currency_symbol" id="currency_symbol" value="{{ \Auth::user()->currencySymbol() }}">
+                                        <input type="hidden" name="exchange_rate" id="exchange_rate" value="1">
+                                        {{-- {{ Form::select('currency', $currency, null, array('class' => 'form-control select','id'=>'currency', 'required'=>'required')) }} --}}
+                                    </div>
+                                </div>
+
 {{--                                <div class="col-md-6">--}}
 {{--                                    <div class="mt-4 form-check custom-checkbox">--}}
 {{--                                        <input class="form-check-input" type="checkbox" name="discount_apply" id="discount_apply">--}}
@@ -535,7 +571,7 @@
                 </div>
                 <div class="mt-2 card-body table-border-style">
                     <div class="table-responsive">
-                        <table class="table mb-0 datatable table-custom-style" data-repeater-list="items" id="sortable-table">
+                        <table class="table mb-0" data-repeater-list="items">
                             <thead>
                             <tr>
                                 <th>{{__('Items')}}</th>
@@ -565,13 +601,13 @@
                                 <td>
                                     <div class="form-group price-input input-group search-form">
                                         {{ Form::text('price','', array('class' => 'form-control price','required'=>'required','placeholder'=>__('Price'),'required'=>'required')) }}
-                                        <span class="bg-transparent input-group-text">{{\Auth::user()->currencySymbol()}}</span>
+                                        <span class="bg-transparent input-group-text"><span class="my_currency_symbol">{{\Auth::user()->currencySymbol()}}</span></span>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="form-group price-input input-group search-form">
                                         {{ Form::text('discount','', array('class' => 'form-control discount','required'=>'required','placeholder'=>__('Discount'))) }}
-                                        <span class="bg-transparent input-group-text">{{\Auth::user()->currencySymbol()}}</span>
+                                        <span class="bg-transparent input-group-text"><span class="my_currency_symbol">{{\Auth::user()->currencySymbol()}}</span></span>
                                     </div>
                                 </td>
 
@@ -608,7 +644,7 @@
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
                                 <td></td>
-                                <td><strong>{{__('Sub Total')}} ({{\Auth::user()->currencySymbol()}})</strong></td>
+                                <td><strong>{{__('Sub Total')}} (<span class="my_currency_symbol">{{\Auth::user()->currencySymbol()}}</span>)</strong></td>
                                 <td class="text-end subTotal">0.00</td>
                                 <td></td>
                             </tr>
@@ -617,7 +653,7 @@
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
                                 <td></td>
-                                <td><strong>{{__('Discount')}} ({{\Auth::user()->currencySymbol()}})</strong></td>
+                                <td><strong>{{__('Discount')}} (<span class="my_currency_symbol">{{\Auth::user()->currencySymbol()}}</span>)</strong></td>
                                 <td class="text-end totalDiscount">0.00</td>
                                 <td></td>
                             </tr>
@@ -626,7 +662,7 @@
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
                                 <td></td>
-                                <td><strong>{{__('Tax')}} ({{\Auth::user()->currencySymbol()}})</strong></td>
+                                <td><strong>{{__('Tax')}} (<span class="my_currency_symbol">{{\Auth::user()->currencySymbol()}}</span>)</strong></td>
                                 <td class="text-end totalTax">0.00</td>
                                 <td></td>
                             </tr>
@@ -635,7 +671,7 @@
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
-                                <td class="blue-text"><strong>{{__('Total Amount')}} ({{\Auth::user()->currencySymbol()}})</strong></td>
+                                <td class="blue-text"><strong>{{__('Total Amount')}} (<span class="my_currency_symbol">{{\Auth::user()->currencySymbol()}}</span>)</strong></td>
                                 <td class="text-end totalAmount blue-text"></td>
                                 <td></td>
                             </tr>

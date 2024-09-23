@@ -523,8 +523,8 @@
                                                     @endphp
                                                     <td>{{ !empty($productName) ? $productName->name : '' }}</td>
                                                     <td>{{ $iteam->quantity . ' (' . $productName->unit->name . ')' }}</td>
-                                                    <td>{{ \Auth::user()->priceFormat($iteam->price) }}</td>
-                                                    <td>{{ \Auth::user()->priceFormat($iteam->discount) }}</td>
+                                                    <td>{{ \Auth::user()->priceFormat($iteam->price, null, $invoice->currency_symbol) }}</td>
+                                                    <td>{{ \Auth::user()->priceFormat($iteam->discount, null, $invoice->currency_symbol) }}</td>
 
                                                     {{-- <td>
                                                         @if (!empty($iteam->tax))
@@ -570,7 +570,7 @@
                                                                                 $getTaxData[$tax]['rate'] . '%';
                                                                             $itemTax[
                                                                                 'price'
-                                                                            ] = \Auth::user()->priceFormat($taxPrice);
+                                                                            ] = \Auth::user()->priceFormat($taxPrice, null, $invoice->currency_symbol);
 
                                                                             $itemTaxes[] = $itemTax;
                                                                             if (
@@ -609,7 +609,7 @@
 
                                                     <td>{{ !empty($iteam->description) ? $iteam->description : '-' }}</td>
                                                     <td class="text-end">
-                                                        {{ \Auth::user()->priceFormat($iteam->price * $iteam->quantity - $iteam->discount + $taxPrice) }}
+                                                        {{ \Auth::user()->priceFormat($iteam->price * $iteam->quantity - $iteam->discount + $taxPrice, null, $invoice->currency_symbol) }}
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -618,23 +618,23 @@
                                                     <td></td>
                                                     <td><b>{{ __('Total') }}</b></td>
                                                     <td><b>{{ $totalQuantity }}</b></td>
-                                                    <td><b>{{ \Auth::user()->priceFormat($totalRate) }}</b></td>
-                                                    <td><b>{{ \Auth::user()->priceFormat($totalDiscount) }}</b></td>
-                                                    <td><b>{{ \Auth::user()->priceFormat($totalTaxPrice) }}</b></td>
+                                                    <td><b>{{ \Auth::user()->priceFormat($totalRate, null, $invoice->currency_symbol) }}</b></td>
+                                                    <td><b>{{ \Auth::user()->priceFormat($totalDiscount, null, $invoice->currency_symbol) }}</b></td>
+                                                    <td><b>{{ \Auth::user()->priceFormat($totalTaxPrice, null, $invoice->currency_symbol) }}</b></td>
                                                     <td></td>
                                                 </tr>
                                                 <tr>
                                                     <td colspan="6"></td>
                                                     <td class="text-end"><b>{{ __('Sub Total') }}</b></td>
                                                     <td class="text-end">
-                                                        {{ \Auth::user()->priceFormat($invoice->getSubTotal()) }}</td>
+                                                        {{ \Auth::user()->priceFormat($invoice->getSubTotal(), null, $invoice->currency_symbol) }}</td>
                                                 </tr>
 
                                                 <tr>
                                                     <td colspan="6"></td>
                                                     <td class="text-end"><b>{{ __('Discount') }}</b></td>
                                                     <td class="text-end">
-                                                        {{ \Auth::user()->priceFormat($invoice->getTotalDiscount()) }}
+                                                        {{ \Auth::user()->priceFormat($invoice->getTotalDiscount(), null, $invoice->currency_symbol) }}
                                                     </td>
                                                 </tr>
 
@@ -644,7 +644,7 @@
                                                             <td colspan="6"></td>
                                                             <td class="text-end"><b>{{ $taxName }}</b></td>
                                                             <td class="text-end">
-                                                                {{ \Auth::user()->priceFormat($taxPrice) }}</td>
+                                                                {{ \Auth::user()->priceFormat($taxPrice, null, $invoice->currency_symbol) }}</td>
                                                         </tr>
                                                     @endforeach
                                                 @endif
@@ -652,27 +652,27 @@
                                                     <td colspan="6"></td>
                                                     <td class="blue-text text-end"><b>{{ __('Total') }}</b></td>
                                                     <td class="blue-text text-end">
-                                                        {{ \Auth::user()->priceFormat($invoice->getTotal()) }}</td>
+                                                        {{ \Auth::user()->priceFormat($invoice->getTotal(), null, $invoice->currency_symbol) }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td colspan="6"></td>
                                                     <td class="text-end"><b>{{ __('Paid') }}</b></td>
                                                     <td class="text-end">
-                                                        {{ \Auth::user()->priceFormat($invoice->getTotal() - $invoice->getDue() - $invoice->invoiceTotalCreditNote()) }}
+                                                        {{ \Auth::user()->priceFormat($invoice->getTotal() - $invoice->getDue() - $invoice->invoiceTotalCreditNote(), null, $invoice->currency_symbol) }}
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td colspan="6"></td>
                                                     <td class="text-end"><b>{{ __('Credit Note') }}</b></td>
                                                     <td class="text-end">
-                                                        {{ \Auth::user()->priceFormat($invoice->invoiceTotalCreditNote()) }}
+                                                        {{ \Auth::user()->priceFormat($invoice->invoiceTotalCreditNote(), null, $invoice->currency_symbol) }}
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td colspan="6"></td>
                                                     <td class="text-end"><b>{{ __('Due') }}</b></td>
                                                     <td class="text-end">
-                                                        {{ \Auth::user()->priceFormat($invoice->getDue()) }}</td>
+                                                        {{ \Auth::user()->priceFormat($invoice->getDue(), null, $invoice->currency_symbol) }}</td>
                                                 </tr>
                                             </tfoot>
                                         </table>
@@ -736,7 +736,7 @@
                                             @endif
                                         </td>
                                         <td>{{ \Auth::user()->dateFormat($payment->date) }}</td>
-                                        <td>{{ \Auth::user()->priceFormat($payment->amount) }}</td>
+                                        <td>{{ \Auth::user()->priceFormat($payment->amount, null, $invoice->currency_symbol) }}</td>
                                         <td>{{ $payment->payment_type }}</td>
                                         <td>{{ !empty($payment->bankAccount) ? $payment->bankAccount->bank_name . ' ' . $payment->bankAccount->holder_name : '--' }}
                                         </td>
@@ -788,7 +788,7 @@
                                     <tr>
                                         <td>-</td>
                                         <td>{{ \Auth::user()->dateFormat($bankPayment->date) }}</td>
-                                        <td>{{ \Auth::user()->priceFormat($bankPayment->amount) }}</td>
+                                        <td>{{ \Auth::user()->priceFormat($bankPayment->amount, null, $invoice->currency_symbol) }}</td>
                                         <td>{{ __('Bank Transfer') }}<br>
                                         </td>
                                         <td>-</td>
@@ -880,7 +880,7 @@
                             @forelse($invoice->creditNote as $key =>$creditNote)
                                 <tr>
                                     <td>{{ \Auth::user()->dateFormat($creditNote->date) }}</td>
-                                    <td class="">{{ \Auth::user()->priceFormat($creditNote->amount) }}</td>
+                                    <td class="">{{ \Auth::user()->priceFormat($creditNote->amount, null, $invoice->currency_symbol) }}</td>
                                     <td class="">{{ $creditNote->description }}</td>
                                     <td>
                                         @can('edit credit note')
