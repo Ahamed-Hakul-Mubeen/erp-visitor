@@ -222,10 +222,25 @@
                     <tr>
                         <td>{{ $item->name ?? 'Item Name' }}<br>{{ $item->description ?? '' }}</td>
                         <td>{{ $item->quantity ?? '1' }}</td>
-                        <td>{{ Utility::priceFormat($settings, $item->price ?? 0) }}</td>
+                        <td><span style="font-family: DejaVu Sans; sans-serif;">{{ Utility::priceFormat($settings, $item->price ?? 0, $invoice->currency_symbol) }}</span></td>
                         <td>{{ $item->discount ?? '0%' }}</td>
-                        <td>{{ $item->tax ?? '5%' }}</td>
-                        <td>{{ Utility::priceFormat($settings, $itemTotal ?? 0) }}</td>
+                        @php
+                            $itemtax = 0;
+                        @endphp
+                        <td>
+                            @if(!empty($item->itemTax))
+
+                                @foreach($item->itemTax as $taxes)
+                                    @php
+                                        $itemtax += $taxes['tax_price'];
+                                    @endphp
+                                    <p><span style="font-family: DejaVu Sans; sans-serif;">{{$taxes['name']}} ({{$taxes['rate']}}) {{Utility::priceFormat($settings, $taxes['tax_price'], $invoice->currency_symbol)}}</span></p>
+                                @endforeach
+                            @else
+                                <span>-</span>
+                            @endif
+                        </td>
+                        <td><span style="font-family: DejaVu Sans; sans-serif;">{{ Utility::priceFormat($settings, $itemTotal ?? 0, $invoice->currency_symbol) }}</span></td>
                     </tr>
                 @endforeach
             </tbody>
@@ -237,19 +252,19 @@
         <table>
             <tr>
                 <th>{{ __('Subtotal') }}</th>
-                <td>{{ Utility::priceFormat($settings, $subtotal ?? 0) }}</td>
+                <td><span style="font-family: DejaVu Sans; sans-serif;">{{ Utility::priceFormat($settings, $subtotal ?? 0, $invoice->currency_symbol) }}</span></td>
             </tr>
             <tr>
                 <th>{{ __('VAT') }} {{ $invoice->vat_name ?? '5%' }}</th> <!-- Use dynamic VAT name if available -->
-                <td>{{ Utility::priceFormat($settings, $totalTax ?? 0) }}</td>
+                <td><span style="font-family: DejaVu Sans; sans-serif;">{{ Utility::priceFormat($settings, $totalTax ?? 0, $invoice->currency_symbol) }}</span></td>
             </tr>
             <tr>
                 <th>{{ __('Total') }}</th>
-                <td>{{ Utility::priceFormat($settings, $subtotal - $totalDiscount + $totalTax) }}</td>
+                <td><span style="font-family: DejaVu Sans; sans-serif;">{{ Utility::priceFormat($settings, $subtotal - $totalDiscount + $totalTax, $invoice->currency_symbol) }}</span></td>
             </tr>
             <tr>
                 <th>{{ __('Paid') }}</th>
-                <td>{{ Utility::priceFormat($settings, $totalDiscount ?? 0) }}</td>
+                <td><span style="font-family: DejaVu Sans; sans-serif;">{{ Utility::priceFormat($settings, $totalDiscount ?? 0, $invoice->currency_symbol) }}</span></td>
             </tr>
             <tr>
                 <th>{{ __('Due Date') }}</th>

@@ -602,10 +602,15 @@ class Utility extends Model
         return $arr;
     }
 
-    public static function priceFormat($settings, $price)
+    public static function priceFormat($settings, $price, $currency_symbol = null)
     {
+        if($currency_symbol == null)
+        {
+            $currency_symbol = $settings['site_currency_symbol'];
+        }
+        return (($settings['site_currency_symbol_position'] == "pre") ? $currency_symbol : '') . number_format($price, $settings['decimal_number']) . (($settings['site_currency_symbol_position'] == "post") ? $currency_symbol : '');
 
-        return (($settings['site_currency_symbol_position'] == "pre") ? $settings['site_currency_symbol'] : '') . number_format($price, $settings['decimal_number']) . (($settings['site_currency_symbol_position'] == "post") ? $settings['site_currency_symbol'] : '');
+        // return (($settings['site_currency_symbol_position'] == "pre") ? $settings['site_currency_symbol'] : '') . number_format($price, $settings['decimal_number']) . (($settings['site_currency_symbol_position'] == "post") ? $settings['site_currency_symbol'] : '');
     }
 
     public static function currencySymbol($settings)

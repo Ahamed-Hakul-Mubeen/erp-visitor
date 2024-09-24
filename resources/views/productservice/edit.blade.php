@@ -30,7 +30,10 @@
         <div class="col-md-6">
             <div class="form-group">
                 {{ Form::label('sale_price', __('Sale Price'),['class'=>'form-label']) }}<span class="text-danger">*</span>
-                {{ Form::number('sale_price', null, array('class' => 'form-control','required'=>'required','step'=>'0.01')) }}
+                <div class="input-group search-form">
+                    {{ Form::number('sale_price', null, array('class' => 'form-control','required'=>'required','step'=>'0.01')) }}
+                    <span class="bg-transparent unit input-group-text">{{\Auth::user()->currencySymbol()}}</span>
+                </div>
             </div>
         </div>
         <div class="form-group col-md-6">
@@ -50,7 +53,10 @@
         <div class="col-md-6">
             <div class="form-group">
                 {{ Form::label('purchase_price', __('Purchase Price'),['class'=>'form-label']) }}<span class="text-danger">*</span>
-                {{ Form::number('purchase_price', null, array('class' => 'form-control','required'=>'required','step'=>'0.01')) }}
+                <div class="input-group search-form">
+                    {{ Form::number('purchase_price', null, array('class' => 'form-control','required'=>'required','step'=>'0.01')) }}
+                    <span class="bg-transparent unit input-group-text">{{\Auth::user()->currencySymbol()}}</span>
+                </div>
             </div>
         </div>
         <div class="form-group col-md-6">

@@ -20,7 +20,7 @@
         <div class="col-md-6">
             {{ Form::label('amount', __('Amount'), ['class' => 'form-label']) }}
             <div class="form-group input-group">
-                {{ Form::number('amount', $invoice->getDue(), ['id' => 'amount', 'class' => 'form-control', 'required' => 'required', 'step' => '0.01', 'placeholder' => __('Enter Amount')]) }}
+                {{ Form::number('amount', number_format($invoice->getDue(),2,'.', ''), ['id' => 'amount', 'class' => 'form-control', 'required' => 'required', 'step' => '0.01', 'placeholder' => __('Enter Amount')]) }}
                 <span class="bg-transparent input-group-text">{{ $invoice->currency_code }}</span>
             </div>
         </div>

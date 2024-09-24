@@ -26,6 +26,8 @@
                     $(".my_currency_symbol").html(my_currency_symbol);
                     $("#currency_symbol").val(my_currency_symbol);
 
+                    $(".item").trigger("change");
+
                     $(this).slideDown();
                     var file_uploads = $(this).find('input.multi');
                     if (file_uploads.length) {
@@ -187,7 +189,12 @@
                     if (item.hasOwnProperty('status') && item.status == 0) {
                         show_toastr('danger', item.message);
                     } else {
-
+                        if(item.exchange_rate != 1)
+                        {
+                            $("#conversion_rate_span").html(` (1 {{ \Auth::user()->currencyCode() }} = ${ item.exchange_rate } ${ $("#currency_code").val() }  )`);
+                        } else {
+                            $("#conversion_rate_span").html(``);
+                        }
                     $("#exchange_rate").val(item.exchange_rate);
                     console.log(el.parent().parent().find('.quantity'))
                     $(el.parent().parent().find('.quantity')).val(1);
@@ -465,6 +472,8 @@
             var my_currency_symbol = $(this).find(':selected').data("symbol");
             $(".my_currency_symbol").html(my_currency_symbol);
             $("#currency_symbol").val(my_currency_symbol);
+            
+            $(".item").trigger("change");
         });
     </script>
 @endpush
@@ -536,7 +545,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        {{ Form::label('currency_code', __('Currency'),['class'=>'form-label']) }}
+                                        {{ Form::label('currency_code', __('Currency'),['class'=>'form-label']) }} <span id="conversion_rate_span"></span>
                                         <select class="form-control" name="currency_code" id="currency_code" required>
                                             {{-- <option value="">Select Currency</option> --}}
                                             @php $currency_code = \Auth::user()->currencyCode() @endphp

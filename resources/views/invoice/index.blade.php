@@ -134,7 +134,7 @@
                                             {{ \Auth::user()->dateFormat($invoice->due_date) }}
                                         @endif
                                     </td>
-                                    <td>{{ \Auth::user()->priceFormat($invoice->getDue()) }}</td>
+                                    <td>{{ \Auth::user()->priceFormat($invoice->getDue(), null, $invoice->currency_symbol) }}</td>
                                     <td>
                                         @if ($invoice->status == 0)
                                             <span
