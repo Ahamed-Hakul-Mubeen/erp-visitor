@@ -2,7 +2,7 @@
 <div class="modal-body">
     <div class="row">
         <div class="form-group col-12">
-            {{ Form::label('name', __('Pipeline Name'),['class'=>'form-label']) }}
+            {{ Form::label('name', __('Pipeline Name'),['class'=>'form-label']) }}<span class="text-danger">*</span>
             {{ Form::text('name', null, array('class' => 'form-control','required'=>'required')) }}
         </div>
     </div>
