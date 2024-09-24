@@ -126,7 +126,7 @@
 </head>
 
 <body class="{{ $themeColor }}">
-    <div class="custom-login" style="background-image: linear-gradient(to top, #d5dee7 0%, #ffafbd 0%, #c9ffbf 100%);">
+    <div class="custom-login" style="background-image: linear-gradient(135deg, #e7eaeb 0%, #b1b5b8 100%)">
         <div class="login-bg-img">
             {{-- <img src="{{ isset($setting['color_flag']) && $setting['color_flag'] == 'false' ? asset('assets/images/auth/'.$color.'.svg') : asset('assets/images/auth/theme-3.svg') }}" class="login-bg-1"> --}}
             {{-- <img src="{{ asset('assets/images/auth/common.svg') }}" class="login-bg-2"> --}}
