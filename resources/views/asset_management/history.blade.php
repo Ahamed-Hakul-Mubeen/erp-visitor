@@ -5,10 +5,14 @@
                 <th>{{ __('Date') }}</th>
                 <th>{{ __('Status') }}</th>
                 <th>{{ __('Employee') }}</th>
-                <th>{{ __('By') }}</th>
+                <th>{{ __('Description') }}</th>
             </tr>
         </thead>
         <tbody>
+            @php 
+                $previousEmployeeName = null; 
+                $wasLastActionTransfer = false;
+            @endphp
             @foreach($historyRecords as $record)
                 <tr>
                     <td>{{ \Carbon\Carbon::parse($record->action_date)->format('d M Y') }}</td>
@@ -22,13 +26,31 @@
                         @endif
                     </td>
                     <td>
-                        @if($record->action == 'assigned' || $record->action == 'unassigned')
+                        @if($record->action == 'assigned')
                             {{ optional($record->employee)->name }}
-                        @elseif($record->action== 'transferred')
+                            @php 
+                                // Reset the tracking variables when a normal assignment happens
+                                $previousEmployeeName = null;
+                                $wasLastActionTransfer = false;
+                            @endphp
+                        @elseif($record->action == 'unassigned')
+                            @if($wasLastActionTransfer)
+                                {{ $previousEmployeeName }}
+                            @else
+                                {{ optional($record->employee)->name }}
+                            @endif
+                        @elseif($record->action == 'transferred')
                             {{ optional($record->fromEmployee)->name }} to {{ optional($record->toEmployee)->name }}
+                            @php 
+                                // Store the toEmployee name for the next unassignment
+                                $previousEmployeeName = optional($record->toEmployee)->name;
+                                $wasLastActionTransfer = true;
+                            @endphp
                         @endif
                     </td>
-                    <td>{{ optional($record->createdBy)->name }}</td>
+                    <td>
+                       {{$record->description}}
+                    <td>
                 </tr>
             @endforeach
         </tbody>

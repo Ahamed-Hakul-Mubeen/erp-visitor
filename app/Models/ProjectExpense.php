@@ -17,6 +17,8 @@ class ProjectExpense extends Model
         'task_id',
         'account_id',
         'chart_accounts',
+        'milestone_id',
+        'vender_id',
         'created_by',
     ];
 

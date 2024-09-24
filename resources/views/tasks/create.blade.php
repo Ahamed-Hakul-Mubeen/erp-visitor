@@ -68,7 +68,12 @@
                     <div class="row align-items-center">
                         <div class="col-auto ml-3">
                             <a href="#" class="avatar avatar-sm rounded-circle">
-                                <img {{$user->img_avatar}} />
+                                <img 
+                                    src="{{ $user->avatar ? url('storage/uploads/avatar/'.$user->avatar) : url('storage/uploads/avatar/avatar.png') }}" 
+                                    alt="image" 
+                                    data-bs-toggle="tooltip" 
+                                    title="{{ !empty($user) ? $user->name : '' }}"
+                                >
                             </a>
                         </div>
                         <div class="col ml-n2">

@@ -76,10 +76,11 @@
             <div class="form-group col-md-12  question question_{{$question->id}} d-none">
                 {{Form::label($question->question,$question->question,['class'=>'form-label'])}}
                 <input type="text" class="form-control" name="question[{{$question->question}}]" {{($question->is_required=='yes')? '':''}}>
-            </div
+            </div>
         @endforeach
 
     </div>
+  
 </div>
 <div class="modal-footer">
     <input type="button" value="{{__('Cancel')}}" class="btn  btn-light" data-bs-dismiss="modal">

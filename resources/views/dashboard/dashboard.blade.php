@@ -953,6 +953,7 @@ $(document).ready(function() {
 
         // Clear local storage
         localStorage.removeItem('breakStartTime');
+        location.reload();
     });
 
     $('#clock_out').click(function(event) {

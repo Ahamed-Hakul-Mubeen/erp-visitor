@@ -48,7 +48,7 @@
                                             @foreach($asset->users($asset->employee_id) as $user)
                                                 <a href="#" class="avatar rounded-circle avatar-sm avatar-group">
                                                     <img alt="" @if(!empty($user->avatar)) src="{{$profile.'/'.$user->avatar}}"
-                                                         @else src="{{asset('/storage/uploads/avatar/avatar.png')}}"
+                                                         @else src="{{ Storage::url('uploads/avatar/avatar.png')}}"
                                                          @endif data-original-title="{{(!empty($user)?$user->name:'')}}"
                                                          data-bs-toggle="tooltip" data-original-title="{{(!empty($user)?$user->name:'')}}" class="">
                                                 </a>

@@ -59,7 +59,7 @@
                                         <a href="#" class="btn btn-sm btn-primary" onclick="document.getElementById('payment_form').submit(); return false;" data-toggle="tooltip" title="{{__('Apply')}}" data-original-title="{{__('apply')}}">
                                             <span class="btn-inner--icon"><i class="ti ti-search"></i></span>
                                         </a>
-                                        <a href="{{ route('productservice.index') }}" class="btn btn-sm btn-danger" data-bs-toggle="tooltip"
+                                        <a href="{{ route('payment.index') }}" class="btn btn-sm btn-danger" data-bs-toggle="tooltip"
                                            title="{{ __('Reset') }}">
                                             <span class="btn-inner--icon"><i class="ti ti-trash-off text-white-off "></i></span>
                                         </a>
@@ -113,10 +113,10 @@
                                     <td>{{  !empty($payment->description)?$payment->description:'-'}}</td>
                                     <td>
                                         @if(!empty($payment->add_receipt))
-                                            <a class="action-btn bg-primary ms-2 btn btn-sm align-items-center" href="{{ $paymentpath . '/' . $payment->add_receipt }}" download="">
+                                            <a class="action-btn bg-primary ms-2 btn btn-sm align-items-center" href="{{ $paymentpath . '/' . $payment->add_receipt }}" data-bs-toggle="tooltip" title="{{__('Download')}}" download="">
                                                 <i class="ti ti-download text-white"></i>
                                             </a>
-                                            <a href="{{ $paymentpath . '/' . $payment->add_receipt }}"  class="action-btn bg-secondary ms-2 mx-3 btn btn-sm align-items-center" data-bs-toggle="tooltip" title="{{__('Download')}}" target="_blank"><span class="btn-inner--icon"><i class="ti ti-crosshair text-white" ></i></span></a>
+                                            <a href="{{ $paymentpath . '/' . $payment->add_receipt }}"  class="action-btn bg-secondary ms-2 mx-3 btn btn-sm align-items-center" data-bs-toggle="tooltip" title="{{__('View')}}" target="_blank"><span class="btn-inner--icon"><i class="ti ti-crosshair text-white" ></i></span></a>
                                         @else
                                             -
                                         @endif

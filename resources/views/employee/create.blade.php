@@ -44,7 +44,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         {!! Form::label('dob', __('Date of Birth'), ['class' => 'form-label']) !!}<span class="pl-1 text-danger">*</span>
-                                        {{ Form::date('dob', null, ['class' => 'form-control ', 'required' => 'required', 'autocomplete' => 'off', 'placeholder' => 'Select Date of Birth']) }}
+                                        {{ Form::date('dob', null, ['class' => 'form-control ', 'required' => 'required', 'autocomplete' => 'off', 'placeholder' => 'Select Date of Birth', 'max' => \Carbon\Carbon::now()->toDateString()]) }}
                                     </div>
                                 </div>
                                 <div class="col-md-6">

@@ -80,8 +80,15 @@ class TerminationController extends Controller
             $termination->description      = $request->description;
             $termination->created_by       = \Auth::user()->creatorId();
             $termination->save();
-            
-            
+
+            $account = Employee::find($request->employee_id);
+            $user_employee = User::find($account->user_id);
+            if($user_employee)
+            {
+                $user_employee->is_enable_login = 0;
+                $user_employee->save();
+            }
+        
             $setings = Utility::settings();
             if($setings['termination_sent'] == 1)
             {

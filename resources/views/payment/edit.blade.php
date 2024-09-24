@@ -34,7 +34,11 @@
             {{Form::file('add_receipt',array('class'=>'form-control', 'id'=>'files'))}}
             <img id="image" class="mt-2" src="{{asset(Storage::url('uploads/payment')).'/'.$payment->add_receipt}}" style="width:25%;"/>
         </div>
-        <div class="form-group  col-md-12">
+        <div class="form-group col-md-6">
+            {{ Form::label('project_id', __('Project'),['class'=>'form-label']) }}
+            {{ Form::select('project_id', $project_list,null, array('class' => 'form-control select')) }}
+        </div>
+        <div class="form-group col-md-12">
             {{ Form::label('description', __('Description'),['class'=>'form-label']) }}
             {{ Form::textarea('description', null, array('class' => 'form-control','rows'=>3)) }}
         </div>

@@ -92,6 +92,7 @@ class EmployeeController extends Controller
                                    'branch_id' => 'required',
                                    'department_id' => 'required',
                                    'designation_id' => 'required',
+                                   'document.*' => 'mimes:jpeg,png,jpg,gif,svg,pdf,docx,doc|max:20480',
                                ]
             );
             if($validator->fails())
@@ -210,7 +211,7 @@ class EmployeeController extends Controller
             {
                 $userArr = [
                     'email' => $user->email,
-                    'password' => $user->password,
+                    'password' => $request->password,
                 ];
 
                 $resp = Utility::sendEmailTemplate('new_user', [$user->id => $user->email], $userArr);
@@ -264,7 +265,7 @@ class EmployeeController extends Controller
                                    'gender' => 'required',
                                    'phone' => 'required|numeric',
                                    'address' => 'required',
-//                                   'document.*' => 'mimes:jpeg,png,jpg,gif,svg,pdf,doc,zip|max:20480',
+                                   'document.*' => 'mimes:jpeg,png,jpg,gif,svg,pdf,docx,doc|max:20480',
                                ]
             );
             if($validator->fails())
@@ -802,7 +803,7 @@ class EmployeeController extends Controller
 
                     $employeeData->save();
                 }
-            
+
 
             $errorRecord = [];
 

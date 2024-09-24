@@ -93,7 +93,9 @@ class Utility extends Model
             "journal_prefix" => "#JUR",
             "invoice_color" => "ffffff",
             "proposal_prefix" => "#PROP",
+            "pre_order_prefix" => "#PREORD",
             "proposal_color" => "ffffff",
+            "pre_order_color" => "ffffff",
             "bill_prefix" => "#BILL",
             "expense_prefix" => "#EXP",
             "bill_color" => "ffffff",
@@ -104,6 +106,7 @@ class Utility extends Model
             "invoice_template" => "template1",
             "bill_template" => "template1",
             "proposal_template" => "template1",
+            "pre_order_template" => "template1",
             "registration_number" => "",
             "vat_number" => "",
             "default_language" => "en",
@@ -176,6 +179,7 @@ class Utility extends Model
 
             "purchase_logo" => "",
             "proposal_logo" => "",
+            "pre_order_logo" => "",
             "invoice_logo" => "",
             "bill_logo" => "",
             "pos_logo" => "",
@@ -191,12 +195,14 @@ class Utility extends Model
             'lead_assigned' => '1',
             'deal_assigned' => '1',
             'new_award' => '1',
+            'interview_schedule' => '1',
             'customer_invoice_sent' => '1',
             'new_invoice_payment' => '1',
             'new_payment_reminder' => '1',
             'new_bill_payment' => '1',
             'bill_resent' => '1',
             'proposal_sent' => '1',
+            'pre_order_sent' => '1',
             'complaint_resent' => '1',
             'leave_action_sent' => '1',
             'payslip_sent' => '1',
@@ -293,6 +299,8 @@ class Utility extends Model
             "invoice_color" => "ffffff",
             "proposal_prefix" => "#PROP",
             "proposal_color" => "ffffff",
+            "pre_order_prefix" => "#PREORD",
+            "pre_order_color" => "ffffff",
             "bill_prefix" => "#BILL",
             "expense_prefix" => "#EXP",
             "bill_color" => "ffffff",
@@ -303,6 +311,7 @@ class Utility extends Model
             "invoice_template" => "template1",
             "bill_template" => "template1",
             "proposal_template" => "template1",
+            "pre_order_template" => "template1",
             "registration_number" => "",
             "vat_number" => "",
             "default_language" => "en",
@@ -347,6 +356,7 @@ class Utility extends Model
             "purchase_color" => "ffffff",
             "purchase_template" => "template1",
             "proposal_logo" => "",
+            "pre_order_logo" => "",
             "purchase_logo" => "",
             "invoice_logo" => "",
             "bill_logo" => "",
@@ -386,12 +396,14 @@ class Utility extends Model
             'lead_assigned' => '1',
             'deal_assigned' => '1',
             'new_award' => '1',
+            'interview_schedule' => '1',
             'customer_invoice_sent' => '1',
             'new_invoice_payment' => '1',
             'new_payment_reminder' => '1',
             'new_bill_payment' => '1',
             'bill_resent' => '1',
             'proposal_sent' => '1',
+            'pre_order_sent' => '1',
             'complaint_resent' => '1',
             'leave_action_sent' => '1',
             'payslip_sent' => '1',
@@ -460,12 +472,14 @@ class Utility extends Model
         'lead_assigned' => 'Lead Assigned',
         'deal_assigned' => 'Deal Assigned',
         'new_award' => 'New Award',
+        'interview_schedule' => 'Interview Scheduling',
         'customer_invoice_sent' => 'Customer Invoice Sent',
         'new_invoice_payment' => 'New Invoice Payment',
         'new_payment_reminder' => 'New Payment Reminder',
         'new_bill_payment' => 'New Bill Payment',
         'bill_resent' => 'Bill Resent',
         'proposal_sent' => 'Proposal Sent',
+        'pre_order_sent' => 'Pre Order Sent',
         'complaint_resent' => 'Complaint Resent',
         'leave_action_sent' => 'Leave Action Sent',
         'payslip_sent' => 'Payslip Sent',
@@ -652,12 +666,22 @@ class Utility extends Model
     {
         return $settings["proposal_prefix"] . sprintf("%05d", $number);
     }
+    public static function preOrderNumberFormat($settings, $number)
+    {
+        return $settings["pre_order_prefix"] . sprintf("%05d", $number);
+    }
 
     public static function customerProposalNumberFormat($number)
     {
         $settings = Utility::settings();
 
         return $settings["proposal_prefix"] . sprintf("%05d", $number);
+    }
+    public static function venderPreOrderNumberFormat($number)
+    {
+        $settings = Utility::settings();
+
+        return $settings["pre_order_prefix"] . sprintf("%05d", $number);
     }
 
     public static function customerInvoiceNumberFormat($number)
@@ -680,17 +704,27 @@ class Utility extends Model
     }
 
     public static function billNumberFormat($settings, $number)
-    {
+    {   $bill = Bill::where("bill_id", $number)->where('created_by', \Auth::user()->creatorId())->first();
+        if($bill && $bill->actual_bill_number != null)
+        {
+            return $bill->actual_bill_number;
+        } else {
         return $settings["bill_prefix"] . sprintf("%05d", $number);
+        }
     }
 
     public static function vendorBillNumberFormat($number)
     {
+        $bill = Bill::where("bill_id", $number)->where('created_by', \Auth::user()->creatorId())->first();
+        if($bill && $bill->actual_bill_number != null)
+        {
+            return $bill->actual_bill_number;
+        } else {
         $settings = Utility::settings();
 
         return $settings["bill_prefix"] . sprintf("%05d", $number);
+        }
     }
-
     public static function getTax($tax)
     {
         if (self::$taxes == null) {
@@ -2613,6 +2647,9 @@ class Utility extends Model
             '{proposal_name}',
             '{proposal_number}',
             '{proposal_url}',
+            '{pre_order_name}',
+            '{pre_order_number}',
+            '{pre_order_url}',
             '{complaint_name}',
             '{complaint_title}',
             '{complaint_against}',
@@ -2692,6 +2729,11 @@ class Utility extends Model
             '{payment_type}',
             '{bill_due_date}',
             '{bill_date}',
+            '{candidate_name}',
+            '{interviewer_name}',
+            '{interview_date}',
+            '{interview_time}' ,
+            '{comment}',
 
         ];
         $arrValue = [
@@ -2746,6 +2788,9 @@ class Utility extends Model
             'proposal_name' => '-',
             'proposal_number' => '-',
             'proposal_url' => '-',
+            'pre_order_name' => '-',
+            'pre_order_number' => '-',
+            'pre_order_url' => '-',
             'complaint_name' => '-',
             'complaint_title' => '-',
             'complaint_against' => '-',
@@ -2825,6 +2870,11 @@ class Utility extends Model
             'payment_type' => '-',
             'bill_due_date' => '-',
             'bill_date' => '-',
+            'candidate_name' =>'-',
+            'interviewer_name' =>'-',
+            'interview_date' =>'-',
+            'interview_time' => '-',
+            'comment' => '-',
         ];
 
         foreach ($obj as $key => $val) {
@@ -4092,6 +4142,8 @@ class Utility extends Model
             $data = DB::table('settings')->where('created_by', \Auth::user()->creatorId())->where('name', 'proposal_starting_number')->update(array('value' => $id));
         } elseif ($type == 'bill') {
             $data = DB::table('settings')->where('created_by', \Auth::user()->creatorId())->where('name', 'bill_starting_number')->update(array('value' => $id));
+        } elseif ($type == 'pre_order') {
+            $data = DB::table('settings')->where('created_by', \Auth::user()->creatorId())->where('name', 'pre_order_starting_number')->update(array('value' => $id));
         }
 
         return $data;
@@ -4425,7 +4477,12 @@ class Utility extends Model
 
             if (!empty($indicator->rating) && ($competencyCount != 0)) {
                 $rating = json_decode($indicator->rating, true);
-                $starsum = array_sum($rating);
+                if($rating)
+                {
+                    $starsum = array_sum($rating);
+                } else {
+                    $starsum = 0;
+                }
 
                 $overallrating = $starsum / $competencyCount;
             } else {
@@ -4765,9 +4822,7 @@ class Utility extends Model
 
     public static function getChatGPTSettings()
     {
-        $user = User::find(\Auth::user()->creatorId());
-        $plan = \App\Models\Plan::find($user->plan);
-
+        $plan = new Plan();
         return $plan;
     }
     //start for chartOfAccount data show
@@ -5063,6 +5118,7 @@ class Utility extends Model
                 DB::raw("COALESCE(customers.name, venders.name , revenues_customers.name , payments_venders.name) as user_name"),
                 DB::raw("COALESCE(invoices.invoice_id, bills.bill_id) as ids"),
             )
+            ->orderBy('transaction_lines.date', "ASC")
             ->get();
 
         return $transactionData;
@@ -5598,6 +5654,12 @@ class Utility extends Model
                     'en' => '<p>Hi , <span style="font-family: var(--bs-body-font-family); font-size: var(--bs-body-font-size); font-weight: var(--bs-body-font-weight); text-align: var(--bs-body-text-align);">{award_name}</span></p><p>I am much pleased to nominate .</p><p>I am satisfied that he/she is the best employee for the award. </p><p>I have realized  that he/she is a goal-oriented person, efficient and very punctual .</p><p>Feel free to reach out if you have any question.<br></p><p>Thank You, </p><p>{app_name}</p><p>{app_url}</p>',
                 ],
             ],
+            'interview_schedule' => [
+            'subject' => 'New Interview Schedule',
+            'lang' => [
+                'en' => '<p style="font-family: Arial, sans-serif; font-size: 14px; font-weight: normal;">Dear {candidate},</p><p style="font-family: Arial, sans-serif; font-size: 14px;">We are pleased to invite you for an interview for the position of <strong>{position}</strong> at <strong>{company_name}</strong>.</p> <p style="font-family: Arial, sans-serif; font-size: 14px;">The interview is scheduled for <strong>{interview_date}</strong> at <strong>{interview_time}</strong> via <strong>{interview_location}</strong>.</p><p style="font-family: Arial, sans-serif; font-size: 14px;">Please confirm your availability by replying to this email.</p><p style="font-family: Arial, sans-serif; font-size: 14px;">We look forward to meeting you!</p><p style="font-family: Arial, sans-serif; font-size: 14px;">Best regards,</p><p style="font-family: Arial, sans-serif; font-size: 14px;">{company_name} Recruitment Team</p>',
+             ],
+        ],
             'customer_invoice_sent' => [
                 'subject' => 'Customer Invoice Sent',
                 'lang' => [
@@ -5656,6 +5718,21 @@ class Utility extends Model
                     <p>Hope this email ﬁnds you well! Please see attached proposal number {proposal_number} for product/service.</p>
                     <p>simply click on the button below</p>
                     <p>{proposal_url}</p>
+                    <p>Feel free to reach out if you have any questions.</p>
+                    <p>Thank you for your business!!</p>
+                    <p>&nbsp;</p>
+                    <p>Regards,</p>
+                    <p>{company_name}</p>
+                    <p>{app_url}</p>',
+                ],
+            ],
+            'pre_order_sent' => [
+                'subject' => 'Pre Order Sent',
+                'lang' => [
+                    'en' => '<p>Hi, {pre_order_name}</p>
+                    <p>Hope this email ﬁnds you well! Please see attached Pre Order number {pre_order_number} for product/service.</p>
+                    <p>simply click on the button below</p>
+                    <p>{pre_order_url}</p>
                     <p>Feel free to reach out if you have any questions.</p>
                     <p>Thank you for your business!!</p>
                     <p>&nbsp;</p>

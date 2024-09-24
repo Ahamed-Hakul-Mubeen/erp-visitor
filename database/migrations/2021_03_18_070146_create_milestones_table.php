@@ -24,6 +24,7 @@ class CreateMilestonesTable extends Migration
                 $table->date('start_date')->nullable();
                 $table->date('due_date')->nullable();
                 $table->text('description')->nullable();
+                $table->integer('vender_id')->nullable();
                 $table->timestamps();
             });
         }

@@ -25,9 +25,9 @@
                                             $checkProject = \Auth::user()->checkProject($task->project_id);
                                         @endphp
                                         <td>
-                                            <span class="h6 text-sm font-weight-bold mb-0"><a
+                                            <span class="mb-0 text-sm h6 font-weight-bold"><a
                                                     href="{{ route('projects.tasks.index', $task->project->id) }}">{{ $task->name }}</a></span>
-                                            <span class="d-flex text-sm text-muted justify-content-between">
+                                            <span class="text-sm d-flex text-muted justify-content-between">
                                                 <p class="m-0">{{ $task->project->project_name }}</p>
                                                 <span
                                                     class="me-5 badge p-2 px-3 rounded bg-{{ $checkProject == 'Owner' ? 'success' : 'warning' }}">
@@ -49,10 +49,12 @@
                                                     $getUsers = App\Models\ProjectTask::getusers();
                                                     if (!empty($task->assign_to)) {
                                                         foreach (explode(',', $task->assign_to) as $key_user) {
-                                                            $user['name'] = $getUsers[$key_user]['name'];
-                                                            $user['avatar'] = $getUsers[$key_user]['avatar'];
-
-                                                            $users[] = $user;
+                                                            if(isset([$key_user]['name']))
+                                                            {
+                                                                $user['name'] = $getUsers[$key_user]['name'];
+                                                                $user['avatar'] = $getUsers[$key_user]['avatar'];
+                                                                $users[] = $user;
+                                                            }
                                                         }
                                                         $taskuser = $users;
                                                     } else {
@@ -117,22 +119,22 @@
                                         </td>
                                         <td class="text-end w-15">
                                             <div class="actions">
-                                                <a class="action-item px-1" data-bs-toggle="tooltip"
+                                                <a class="px-1 action-item" data-bs-toggle="tooltip"
                                                     title="{{ __('Attachment') }}"
                                                     data-original-title="{{ __('Attachment') }}">
-                                                    <i class="ti ti-paperclip mr-2"></i>{{ count($task->taskFiles) }}
+                                                    <i class="mr-2 ti ti-paperclip"></i>{{ count($task->taskFiles) }}
                                                 </a>
-                                                <a class="action-item px-1" data-bs-toggle="tooltip"
+                                                <a class="px-1 action-item" data-bs-toggle="tooltip"
                                                     title="{{ __('Comment') }}"
                                                     data-original-title="{{ __('Comment') }}">
                                                     <i
-                                                        class="ti ti-brand-hipchat mr-2"></i>{{ count($task->comments) }}
+                                                        class="mr-2 ti ti-brand-hipchat"></i>{{ count($task->comments) }}
                                                 </a>
-                                                <a class="action-item px-1" data-bs-toggle="tooltip"
+                                                <a class="px-1 action-item" data-bs-toggle="tooltip"
                                                     title="{{ __('Checklist') }}"
                                                     data-original-title="{{ __('Checklist') }}">
                                                     <i
-                                                        class="ti ti-list-check mr-2"></i>{{ $task->countTaskChecklist() }}
+                                                        class="mr-2 ti ti-list-check"></i>{{ $task->countTaskChecklist() }}
                                                 </a>
                                             </div>
                                         </td>

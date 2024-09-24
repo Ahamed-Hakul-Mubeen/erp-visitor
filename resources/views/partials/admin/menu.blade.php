@@ -340,7 +340,7 @@
                 <!--------------------- Start HRM ----------------------------------->
 
                 @if (!empty($userPlan) && $userPlan->hrm == 1)
-                    @if (Gate::check('manage employee') || Gate::check('manage setsalary'))
+                    @if (Gate::check('manage employee') || Gate::check('manage setsalary') || Gate::check('show project dashboard'))
                         <li
                             class="dash-item dash-hasmenu {{ Request::segment(1) == 'holiday-calender' ||
                             Request::segment(1) == 'leavetype' ||
@@ -404,6 +404,7 @@
                                 </span>
                             </a>
                             <ul class="dash-submenu">
+                                @if(Gate::check('manage employee'))
                                 <li
                                     class="dash-item  {{ Request::segment(1) == 'employee' ? 'active dash-trigger' : '' }}   ">
                                     @if (\Auth::user()->type == 'Employee')
@@ -418,6 +419,7 @@
                                         </a>
                                     @endif
                                 </li>
+                                @endif
 
                                 @if (Gate::check('manage set salary') || Gate::check('manage pay slip'))
                                     <li
@@ -806,6 +808,8 @@
                                      Request::segment(1) == 'product-unit' ||
                                      Request::segment(1) == 'payment-method' ||
                                      Request::segment(1) == 'custom-field' ||
+                                     Request::segment(1) == 'currency' ||
+                                     Request::segment(1) == 'exchange_rate' ||
                                      Request::segment(1) == 'chart-of-account-type' ||
                                      (Request::segment(1) == 'transaction' &&
                                          Request::segment(2) != 'ledger' &&
@@ -820,6 +824,7 @@
                                      Request::segment(2) == 'trial-balance' ||
                                      Request::segment(2) == 'profit-loss' ||
                                      Request::segment(1) == 'bill' ||
+                                     Request::segment(1) == 'pre_order' ||
                                      Request::segment(1) == 'expense' ||
                                      Request::segment(1) == 'payment' ||
                                      Request::segment(1) == 'debit-note'
@@ -847,6 +852,25 @@
                                             class="dash-item {{ Request::route()->getName() == 'bank-transfer.index' || Request::route()->getName() == 'bank-transfer.create' || Request::route()->getName() == 'bank-transfer.edit' ? ' active' : '' }}">
                                             <a class="dash-link"
                                                 href="{{ route('bank-transfer.index') }}">{{ __('Transfer') }}</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            @endif
+                            @if (Gate::check('manage bank account') || Gate::check('manage bank transfer'))
+                                <li
+                                    class="dash-item dash-hasmenu {{ Request::segment(1) == 'exchange_history' || Request::segment(1) == 'exchange_history' ? 'active dash-trigger' : '' }}">
+                                    <a class="dash-link" href="#">{{ __('Money Exchange') }}<span
+                                            class="dash-arrow"><i data-feather="chevron-right"></i></span></a>
+                                    <ul class="dash-submenu">
+                                        <li
+                                            class="dash-item {{ Request::route()->getName() == 'money_exchange.index' || Request::route()->getName() == 'money_exchange.create' || Request::route()->getName() == 'money_exchange.edit' ? ' active' : '' }}">
+                                            <a class="dash-link"
+                                                href="{{ route('money_exchange.index') }}">{{ __('Money Exchange') }}</a>
+                                        </li>
+                                        <li
+                                            class="dash-item {{ Request::route()->getName() == 'exchange_history.index' || Request::route()->getName() == 'exchange_history.create' || Request::route()->getName() == 'exchange_history.edit' ? ' active' : '' }}">
+                                            <a class="dash-link"
+                                                href="{{ route('exchange_history.index') }}">{{ __('Exchange History') }}</a>
                                         </li>
                                     </ul>
                                 </li>
@@ -905,7 +929,7 @@
                                     Gate::check('manage payment') ||
                                     Gate::check('manage debit note'))
                                 <li
-                                    class="dash-item dash-hasmenu {{ Request::segment(1) == 'bill' || Request::segment(1) == 'vender' || Request::segment(1) == 'expense' || Request::segment(1) == 'payment' || Request::segment(1) == 'debit-note' ? 'active dash-trigger' : '' }}">
+                                    class="dash-item dash-hasmenu {{ Request::segment(1) == 'bill' || Request::segment(1) == 'pre_order' || Request::segment(1) == 'vender' || Request::segment(1) == 'expense' || Request::segment(1) == 'payment' || Request::segment(1) == 'debit-note' ? 'active dash-trigger' : '' }}">
                                     <a class="dash-link" href="#">{{ __('Purchases') }}<span
                                             class="dash-arrow"><i data-feather="chevron-right"></i></span></a>
                                     <ul class="dash-submenu">
@@ -916,6 +940,11 @@
                                                     href="{{ route('vender.index') }}">{{ __('Suppiler') }}</a>
                                             </li>
                                         @endif
+                                        <li
+                                            class="dash-item {{ Request::route()->getName() == 'pre_order.index' || Request::route()->getName() == 'pre_order.create' || Request::route()->getName() == 'pre_order.edit' || Request::route()->getName() == 'pre_order.show' ? ' active' : '' }}">
+                                            <a class="dash-link"
+                                                href="{{ route('pre_order.index') }}">{{ __('Pre Order') }}</a>
+                                        </li>
                                         <li
                                             class="dash-item {{ Request::route()->getName() == 'bill.index' || Request::route()->getName() == 'bill.create' || Request::route()->getName() == 'bill.edit' || Request::route()->getName() == 'bill.show' ? ' active' : '' }}">
                                             <a class="dash-link"
@@ -1013,7 +1042,7 @@
                                     Gate::check('manage constant payment method') ||
                                     Gate::check('manage constant custom field'))
                                 <li
-                                    class="dash-item {{ Request::segment(1) == 'taxes' || Request::segment(1) == 'product-category' || Request::segment(1) == 'product-unit' || Request::segment(1) == 'payment-method' || Request::segment(1) == 'custom-field' || Request::segment(1) == 'chart-of-account-type' ? 'active dash-trigger' : '' }}">
+                                    class="dash-item {{ Request::segment(1) == 'taxes' || Request::segment(1) == 'product-category' || Request::segment(1) == 'product-unit' || Request::segment(1) == 'payment-method' || Request::segment(1) == 'custom-field' || Request::segment(1) == 'currency' || Request::segment(1) == 'exchange_rate' || Request::segment(1) == 'chart-of-account-type' ? 'active dash-trigger' : '' }}">
                                     <a class="dash-link"
                                         href="{{ route('taxes.index') }}">{{ __('Accounting Setup') }}</a>
                                 </li>

@@ -485,7 +485,7 @@
                                                         <td>
                                                             <div class="d-flex align-items-center">
                                                                 <div>
-                                                                    <img @if($user->avatar) src="{{asset('/storage/uploads/avatar/'.$user->avatar)}}" @else src="{{asset('/storage/uploads/avatar/avatar.png')}}" @endif class="wid-30 rounded-circle me-3" >
+                                                                    <img @if($user->avatar) src="{{ Storage::url('uploads/avatar/'.$user->avatar) }}" @else src="{{ Storage::url('uploads/avatar/avatar.png') }}" @endif class="wid-30 rounded-circle me-3" >
                                                                 </div>
                                                                 <p class="mb-0">{{$user->name}}</p>
                                                             </div>
@@ -629,7 +629,7 @@
                                                 @foreach($emails as $email)
                                                     <li class="list-group-item px-0">
                                                         <div class="d-block d-sm-flex align-items-start">
-                                                            <img src="{{asset('/storage/uploads/avatar/avatar.png')}}"
+                                                            <img src="{{ Storage::url('uploads/avatar/avatar.png')}}"
                                                                  class="img-fluid wid-40 me-3 mb-2 mb-sm-0" alt="image">
                                                             <div class="w-100">
                                                                 <div class="d-flex align-items-center justify-content-between">
@@ -677,7 +677,7 @@
                                                 @foreach($deal->discussions as $discussion)
                                                     <li class="list-group-item px-0">
                                                         <div class="d-block d-sm-flex align-items-start">
-                                                            <img src="@if($discussion->user->avatar) {{asset('/storage/uploads/avatar/'.$discussion->user->avatar)}} @else {{asset('/storage/uploads/avatar/avatar.png')}} @endif"
+                                                            <img src="@if($discussion->user->avatar) {{ Storage::url('uploads/avatar/'.$discussion->user->avatar)}} @else {{ Storage::url('uploads/avatar/avatar.png')}} @endif"
                                                                  class="img-fluid wid-40 me-3 mb-2 mb-sm-0" alt="image">
                                                             <div class="w-100">
                                                                 <div class="d-flex align-items-center justify-content-between">

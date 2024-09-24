@@ -66,13 +66,14 @@
                                         @if(Gate::check('edit project expense') || Gate::check('delete project expense'))
                                             <td class="text-end">
                                                 <div class="actions">
-                                                    @can('edit project expense')
-
-                                                    <div class="action-btn bg-primary ms-2">
-                                                        <a href="#" data-url="{{ route('projects.expenses.edit',[$project->id,$expense->id]) }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Edit project Expense')}}" data-bs-toggle="tooltip" title="{{__('Edit')}}" data-original-title="{{__('Edit')}}" class="mx-3 btn btn-sm align-items-center">
-                                                            <i class="text-white ti ti-pencil"></i>
-                                                        </a>
-                                                    </div>
+                                                @can('edit project expense')
+                                                    @if($expense->reference_type != 'Payment' && $expense->reference_type != 'Bill')
+                                                        <div class="action-btn bg-primary ms-2">
+                                                            <a href="#" data-url="{{ route('projects.expenses.edit',[$project->id,$expense->id]) }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Edit project Expense')}}" data-bs-toggle="tooltip" title="{{__('Edit')}}" data-original-title="{{__('Edit')}}" class="mx-3 btn btn-sm align-items-center">
+                                                                <i class="text-white ti ti-pencil"></i>
+                                                            </a>
+                                                        </div>
+                                                    @endif
                                                 @endcan
                                                 @can('delete project expense')
                                                     <div class="action-btn bg-danger ms-2">

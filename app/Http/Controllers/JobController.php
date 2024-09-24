@@ -61,8 +61,8 @@ class JobController extends Controller
                     'category' => 'required',
                     'skill' => 'required',
                     'position' => 'required|integer',
-                    'start_date' => 'required',
-                    'end_date' => 'required',
+                    'start_date' => 'required|date|before_or_equal:end_date',  // Added date validation
+                    'end_date' => 'required|date|after_or_equal:start_date',    // Added date validation
                     'description' => 'required',
                     'requirement' => 'required',
                 ]
@@ -140,8 +140,8 @@ class JobController extends Controller
                     'category' => 'required',
                     'skill' => 'required',
                     'position' => 'required|integer',
-                    'start_date' => 'required',
-                    'end_date' => 'required',
+                    'start_date' => 'required|date|before_or_equal:end_date',  // Added date validation
+                    'end_date' => 'required|date|after_or_equal:start_date',    // Added date validation
                     'description' => 'required',
                     'requirement' => 'required',
                 ]
@@ -187,7 +187,7 @@ class JobController extends Controller
     public function career($id, $lang)
     {
         //        dd($lang);
-        $jobs = Job::where('created_by', $id)->with(['branches', 'createdBy'])->get();
+        $jobs = Job::where('created_by', $id)->where('status', 'active')->with(['branches', 'createdBy'])->get();
 
         \Session::put('lang', $lang);
 
@@ -212,27 +212,34 @@ class JobController extends Controller
     public function jobRequirement($code, $lang)
     {
         $job = Job::where('code', $code)->first();
-        if ($job->status == 'in_active') {
-            return redirect()->back()->with('error', __('Permission Denied.'));
+        if($job)
+        {
+            if ($job->status == 'in_active') {
+                return redirect()->back()->with('error', __('Job Expired.'));
+            }
+
+            \Session::put('lang', $lang);
+
+            \App::setLocale($lang);
+
+            $companySettings['title_text']      = \DB::table('settings')->where('created_by', $job->created_by)->where('name', 'title_text')->first();
+            $companySettings['footer_text']     = \DB::table('settings')->where('created_by', $job->created_by)->where('name', 'footer_text')->first();
+            $companySettings['company_favicon'] = \DB::table('settings')->where('created_by', $job->created_by)->where('name', 'company_favicon')->first();
+            $companySettings['company_logo']    = \DB::table('settings')->where('created_by', $job->created_by)->where('name', 'company_logo')->first();
+            $languages                          = Utility::languages();
+
+            $currantLang = \Session::get('lang');
+            if (empty($currantLang)) {
+                $currantLang = !empty($job->createdBy) ? $job->createdBy->lang : 'en';
+            }
+
+
+            return view('job.requirement', compact('companySettings', 'job', 'languages', 'currantLang'));
         }
-
-        \Session::put('lang', $lang);
-
-        \App::setLocale($lang);
-
-        $companySettings['title_text']      = \DB::table('settings')->where('created_by', $job->created_by)->where('name', 'title_text')->first();
-        $companySettings['footer_text']     = \DB::table('settings')->where('created_by', $job->created_by)->where('name', 'footer_text')->first();
-        $companySettings['company_favicon'] = \DB::table('settings')->where('created_by', $job->created_by)->where('name', 'company_favicon')->first();
-        $companySettings['company_logo']    = \DB::table('settings')->where('created_by', $job->created_by)->where('name', 'company_logo')->first();
-        $languages                          = Utility::languages();
-
-        $currantLang = \Session::get('lang');
-        if (empty($currantLang)) {
-            $currantLang = !empty($job->createdBy) ? $job->createdBy->lang : 'en';
+        else
+        {
+            return redirect()->back()->with('error', __('Job Not Found.'));
         }
-
-
-        return view('job.requirement', compact('companySettings', 'job', 'languages', 'currantLang'));
     }
 
     public function jobApply($code, $lang)
@@ -242,21 +249,28 @@ class JobController extends Controller
         \App::setLocale($lang);
 
         $job                                = Job::where('code', $code)->first();
-        $companySettings['title_text']      = \DB::table('settings')->where('created_by', $job->created_by)->where('name', 'title_text')->first();
-        $companySettings['footer_text']     = \DB::table('settings')->where('created_by', $job->created_by)->where('name', 'footer_text')->first();
-        $companySettings['company_favicon'] = \DB::table('settings')->where('created_by', $job->created_by)->where('name', 'company_favicon')->first();
-        $companySettings['company_logo']    = \DB::table('settings')->where('created_by', $job->created_by)->where('name', 'company_logo')->first();
-
-        $customQuestionIds = explode(',', $job->custom_question);
-        $questions = CustomQuestion::whereIn('id', $customQuestionIds)->where('created_by', $job->created_by)->get();
-        $languages = Utility::languages();
-        $currantLang = \Session::get('lang');
-        if (empty($currantLang)) {
-            $currantLang = !empty($job->createdBy) ? $job->createdBy->lang : 'en';
+        if($job)
+        {
+            if ($job->status == 'in_active') {
+                return redirect()->route('career', array("id" => $job->created_by,'lang' => 'en'));
+            }
+            $companySettings['title_text']      = \DB::table('settings')->where('created_by', $job->created_by)->where('name', 'title_text')->first();
+            $companySettings['footer_text']     = \DB::table('settings')->where('created_by', $job->created_by)->where('name', 'footer_text')->first();
+            $companySettings['company_favicon'] = \DB::table('settings')->where('created_by', $job->created_by)->where('name', 'company_favicon')->first();
+            $companySettings['company_logo']    = \DB::table('settings')->where('created_by', $job->created_by)->where('name', 'company_logo')->first();
+            $customQuestionIds = explode(',', $job->custom_question);
+            $questions = CustomQuestion::whereIn('id', $customQuestionIds)->where('created_by', $job->created_by)->get();
+            $languages = Utility::languages();
+            $currantLang = \Session::get('lang');
+            if (empty($currantLang)) {
+                $currantLang = !empty($job->createdBy) ? $job->createdBy->lang : 'en';
+            }
+            return view('job.apply', compact('companySettings', 'job', 'questions', 'languages', 'currantLang'));
         }
-
-
-        return view('job.apply', compact('companySettings', 'job', 'questions', 'languages', 'currantLang'));
+        else
+        {
+            return redirect()->back()->with('error', __('Job Expired.'));
+        }
     }
 
     public function jobApplyData(Request $request, $code)

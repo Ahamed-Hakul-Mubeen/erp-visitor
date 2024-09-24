@@ -43,26 +43,27 @@ class ProductTypeController extends Controller
     }
     public function store(Request $request)
     {
-        if(\Auth::user()->can('create assets type'))
-        {
-            $validator = \Validator::make($request->all(), ['name' => 'required']);
-            if($validator->fails())
-            {
-                $messages = $validator->getMessageBag();
-                return redirect()->back()->with('error', $messages->first());
+        if(\Auth::user()->can('create assets type')) {
+            $validator = \Validator::make($request->all(), [
+                'name' => 'required',
+                'asset_property.*' => 'nullable|string', // Validation for dynamic text areas
+            ]);
+    
+            if($validator->fails()) {
+                return redirect()->back()->with('error', $validator->getMessageBag()->first());
             }
-
+    
             $productType = new ProductType();
             $productType->name = $request->name;
+            $productType->asset_properties = json_encode($request->asset_property); // Encode asset_properties to store in DB
             $productType->created_by = \Auth::user()->creatorId();
             $productType->save();
-
+    
             return redirect()->route('product_type.index')->with('success', __('Assets Type successfully created.'));
-        }else{
+        } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
     }
-   
     public function edit(ProductType $productType)
     {   
         if(\Auth::user()->can('edit assets type'))
@@ -84,38 +85,39 @@ class ProductTypeController extends Controller
       
     }
     public function update(Request $request, ProductType $productType)
+{
+    if(\Auth::user()->can('edit assets type'))
     {
-        if(\Auth::user()->can('edit assets type'))
+        if($productType->created_by == \Auth::user()->creatorId())
         {
-            if($productType->created_by == \Auth::user()->creatorId())
+            $validator = \Validator::make($request->all(), [
+                'name' => 'required',
+                'asset_property.*' => 'nullable|string', // Add validation for asset properties
+            ]);
+
+            if($validator->fails())
             {
-                $validator = \Validator::make(
-                    $request->all(), [
-                        'name' => 'required',
-                    ]
-                );
-
-                if($validator->fails())
-                {
-                    $messages = $validator->getMessageBag();
-                    return redirect()->back()->with('error', $messages->first());
-                }
-
-                $productType->name = $request->name;
-                $productType->save();
-
-                return redirect()->route('product_type.index')->with('success', __('Assets Type successfully updated.'));
+                $messages = $validator->getMessageBag();
+                return redirect()->back()->with('error', $messages->first());
             }
-            else
-            {
-                return redirect()->back()->with('error', __('Permission denied.'));
-            }
-        }else
-        {
-            return redirect()->back()->with(['error' => __('Permission denied.')], 401);
+
+            // Update asset properties
+            $productType->name = $request->name;
+            $productType->asset_properties = json_encode($request->asset_property); // Encode updated asset properties as JSON
+            $productType->save();
+
+            return redirect()->route('product_type.index')->with('success', __('Assets Type successfully updated.'));
         }
-        
+        else
+        {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
+    else
+    {
+        return redirect()->back()->with(['error' => __('Permission denied.')], 401);
+    }
+}
 
     public function destroy(ProductType $productType)
     {

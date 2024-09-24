@@ -3252,6 +3252,30 @@ class UsersTableSeeder extends Seeder
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ],
+            [
+                'name' => 'manage advance',
+                'guard_name' => 'web',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ],
+            [
+                'name' => 'create advance',
+                'guard_name' => 'web',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ],
+            [
+                'name' => 'edit advance',
+                'guard_name' => 'web',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ],
+            [
+                'name' => 'delete advance',
+                'guard_name' => 'web',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ],
 
         ];
 
@@ -3877,6 +3901,10 @@ class UsersTableSeeder extends Seeder
             ['name' => 'transfer assets management'],
             ['name' => 'unassign assets management'],
             ['name' => 'history assets management'],
+            ['name' => 'manage advance'],
+            ['name' => 'create advance'],
+            ['name' => 'edit advance'],
+            ['name' => 'delete advance'],
             
         ];
 
@@ -4032,6 +4060,11 @@ class UsersTableSeeder extends Seeder
             ['name' => 'create webhook'],
             ['name' => 'edit webhook'],
             ['name' => 'delete webhook'],
+            ['name' => 'manage advance'],
+            ['name' => 'create advance'],
+            ['name' => 'edit advance'],
+            ['name' => 'delete advance'],
+
         ];
 
 
@@ -4194,7 +4227,19 @@ class UsersTableSeeder extends Seeder
             ['name'=>'s3_storage_validation', 'value'=> 'jpg,jpeg,png,xlsx,xls,csv,pdf', 'created_by'=> 1, 'created_at'=> now(), 'updated_at'=> now()],
             ['name'=>'local_storage_max_upload_size', 'value'=> 2048000, 'created_by'=> 1, 'created_at'=> now(), 'updated_at'=> now()],
             ['name'=>'wasabi_max_upload_size', 'value'=> 2048000, 'created_by'=> 1, 'created_at'=> now(), 'updated_at'=> now()],
-            ['name'=>'s3_max_upload_size', 'value'=> 2048000, 'created_by'=> 1, 'created_at'=> now(), 'updated_at'=> now()]
+            ['name'=>'s3_max_upload_size', 'value'=> 2048000, 'created_by'=> 1, 'created_at'=> now(), 'updated_at'=> now()],
+            ['name'=>'color', 'value'=> "#f16570", 'created_by'=> 1, 'created_at'=> now(), 'updated_at'=> now()],
+            ['name'=>'title_text', 'value' => env("APP_NAME"), 'created_by'=> 1, 'created_at'=> now(), 'updated_at'=> now()],
+            ['name'=>'footer_text', 'value' => env("APP_NAME"), 'created_by'=> 1, 'created_at'=> now(), 'updated_at'=> now()],
+            ['name'=>'default_language', 'value' => 'en', 'created_by'=> 1, 'created_at'=> now(), 'updated_at'=> now()],
+            ['name'=>'color_flag', 'value' => 'true', 'created_by'=> 1, 'created_at'=> now(), 'updated_at'=> now()],
+            ['name'=>'cust_theme_bg', 'value' => 'on', 'created_by'=> 1, 'created_at'=> now(), 'updated_at'=> now()],
+            ['name'=>'SITE_RTL', 'value' => 'off', 'created_by'=> 1, 'created_at'=> now(), 'updated_at'=> now()],
+            ['name'=>'display_landing_page', 'value' => 'off', 'created_by'=> 1, 'created_at'=> now(), 'updated_at'=> now()],
+            ['name'=>'gdpr_cookie', 'value' => 'off', 'created_by'=> 1, 'created_at'=> now(), 'updated_at'=> now()],
+            ['name'=>'enable_signup', 'value' => 'off', 'created_by'=> 1, 'created_at'=> now(), 'updated_at'=> now()],
+            ['name'=>'email_verification', 'value' => 'off', 'created_by'=> 1, 'created_at'=> now(), 'updated_at'=> now()],
+            ['name'=>'cust_darklayout', 'value' => 'off', 'created_by'=> 1, 'created_at'=> now(), 'updated_at'=> now()],
         ];
         DB::table('settings')->insert($data);
 

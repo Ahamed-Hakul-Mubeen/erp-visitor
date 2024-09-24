@@ -667,6 +667,29 @@
             $(".price").change();
             $(".discount").change();
         });
+
+        $(document).ready(function() {
+        $('#bill_date').on('change', function() {
+            const billDate = new Date($(this).val());
+            const dueDateInput = $('#due_date');
+            
+        
+            if ($(this).val()) {
+                dueDateInput.attr('min', billDate.toISOString().split('T')[0]);
+            } else {
+            
+                dueDateInput.removeAttr('min');
+            }
+        });
+        
+        // Event listener for clicking due date
+        $(document).on('click', '#due_date', function () {
+            const billDate = new Date($('#bill_date').val());
+            if (billDate) {
+                $(this).attr('min', billDate.toISOString().split('T')[0]);
+            }
+        });
+    });
     </script>
 @endpush
 @section('content')
@@ -702,7 +725,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         {{ Form::label('bill_number', __('Bill Number'),['class'=>'form-label']) }}
-                                        <input type="text" class="form-control" value="{{$bill_number}}" readonly>
+                                        <input type="text" name="bill_number" class="form-control" value="{{$bill_number}}">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -715,6 +738,12 @@
                                     <div class="form-group">
                                         {{ Form::label('order_number', __('Order Number'),['class'=>'form-label']) }}
                                         {{ Form::number('order_number', null, array('class' => 'form-control')) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ Form::label('project_id', __('Project'),['class'=>'form-label']) }}
+                                        {{ Form::select('project_id', $project_list,null, array('class' => 'form-control select')) }}
                                     </div>
                                 </div>
 
@@ -734,7 +763,7 @@
 
 
         <div class="col-12">
-            <h5 class="mb-4  d-inline-block">{{__('Product & Services')}}</h5>
+            <h5 class="mb-4 d-inline-block">{{__('Product & Services')}}</h5>
             <div class="card repeater" data-value='{!! json_encode($items) !!}'>
                 <div class="py-2 item-section">
                     <div class="row justify-content-between align-items-center">
@@ -810,8 +839,8 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="form-group">
-                                        {{-- {{ Form::select('chart_account_id', $chartAccounts,null, array('class' => 'form-control select js-searchBox')) }} --}}
+                                    {{-- <td class="form-group">
+                                        {{ Form::select('chart_account_id', $chartAccounts,null, array('class' => 'form-control select js-searchBox')) }}
                                         <select name="chart_account_id" class="form-control">
                                             @foreach ($chartAccounts as $key => $chartAccount)
                                                 <option value="{{ $key }}" class="subAccount">{{ $chartAccount}}</option>
@@ -828,15 +857,14 @@
                                             {{ Form::text('amount',null, array('class' => 'form-control accountAmount','placeholder'=>__('Amount'))) }}
                                             <span class="bg-transparent input-group-text">{{\Auth::user()->currencySymbol()}}</span>
                                         </div>
-                                    </td>
+                                    </td> --}}
 
-                                    <td colspan="2" class="form-group">
+                                    <td colspan="3" class="form-group">
                                             {{ Form::textarea('description', null, ['class'=>'form-control pro_description','rows'=>'1','placeholder'=>__('Description')]) }}
                                     </td>
                                     <td></td>
-                                    <td class="text-end accountamount">
-                                        0.00
-                                    </td>
+                                    <td></td>
+                                    <td class="text-end accountamount"></td>
                                 </tr>
                             </tbody>
                             <tfoot>

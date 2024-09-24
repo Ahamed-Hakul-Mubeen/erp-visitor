@@ -5,8 +5,9 @@ namespace App\Exports;
 use App\Models\Vender;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
-class VenderExport implements FromCollection, WithHeadings
+class VenderExport implements FromCollection, WithHeadings, ShouldAutoSize
 {
     /**
      * @return \Illuminate\Support\Collection

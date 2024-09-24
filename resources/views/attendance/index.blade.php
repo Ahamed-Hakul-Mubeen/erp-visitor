@@ -47,12 +47,12 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
                     @endif
-            <div class=" mt-2 " id="multiCollapseExample1">
+            <div class="mt-2 " id="multiCollapseExample1">
                 <div class="card">
                     <div class="card-body">
                         {{ Form::open(array('route' => array('attendanceemployee.index'),'method'=>'get','id'=>'attendanceemployee_filter')) }}
                         <div class="row align-items-center">
-                            <div class="col-xl-9 mt-2">
+                            <div class="mt-2 col-xl-9">
                                 <div class="row">
                                     <div class="col-3">
                                         <label class="form-label">{{__('Type')}}</label> <br>
@@ -110,8 +110,8 @@
                                         <a href="{{route('attendance.export', request()->query())}}" data-bs-toggle="tooltip" title="{{__('Export')}}" class="btn btn-sm btn-primary">
                                             <i class="ti ti-file-export"></i>
                                         </a>
-                                        <a href="{{ route('attendance.print', request()->query()) }}" target="_blank" class="btn btn-sm btn-primary">
-                                            <i class="ti ti-download"></i>
+                                        <a href="#" onclick="openPrintDialog('{{ route('attendance.print', request()->query()) }}'); return false;" class="btn btn-sm btn-primary">
+                                            <i class="ti ti-printer"></i>
                                         </a>
                                     </div>
 
@@ -161,36 +161,39 @@
                                     <td>{{ \Auth::user()->dateFormat($attendance->date) }}</td>
                                     <td>{{ $attendance->status }}</td>
                                     <td>
-                                        
-                                        {{ ($attendance->clock_in !='00:00:00') ?\Auth::user()->timeFormat( $attendance->clock_in):'00:00' }} 
-                                        @if($attendance->work_from_home == 1)
-                                        <div>
-                                            <span class="badge mt-1 d-inline-block" style="background-color: grey; color: white; border-radius: 12px; padding: 5px 10px;">{{ __('Home') }}</span>
-                                        </div>
-                                        @endif
-                                        
+                                        {{ ($attendance->clock_in !='00:00:00') ?\Auth::user()->timeFormat( $attendance->clock_in):'00:00' }}
                                     </td>
                                     <td>{{ ($attendance->clock_out !='00:00:00') ?\Auth::user()->timeFormat( $attendance->clock_out):'00:00' }}</td>
                                     <td>{{ $attendance->late }}</td>
                                     <td>{{ $attendance->early_leaving }}</td>
                                     <td>{{ $attendance->overtime }}</td>
                                     <td>{{ $attendance->total_break_duration }}</td>
-                                    <td>{{ $attendance->work_from_home == 1 ? 'Yes' : 'No' }}</td>
+                                    <td>
+                                        @if($attendance->work_from_home == 1)
+                                        <div>
+                                            <span class="p-2 px-3 rounded badge bg-danger">{{ __('Yes') }}</span>
+                                        </div>
+                                        @else
+                                        <div>
+                                            <span class="p-2 px-3 rounded badge bg-primary">{{ __('No') }}</span>
+                                        </div>
+                                        @endif
+                                    </td>
                                     @if(Gate::check('edit attendance') || Gate::check('delete attendance'))
                                         <td>
                                             @can('edit attendance')
                                                 <div class="action-btn bg-primary ms-2">
                                                     <a href="#" data-url="{{ URL::to('attendanceemployee/'.$attendance->id.'/edit') }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Edit Attendance')}}" class="mx-3 btn btn-sm align-items-center" data-bs-toggle="tooltip" title="{{__('Edit')}}" data-original-title="{{__('Edit')}}">
-                                                        <i class="ti ti-pencil text-white"></i></a>
+                                                        <i class="text-white ti ti-pencil"></i></a>
                                                 </div>
                                             @endcan
                                             @can('delete attendance')
                                                 <div class="action-btn bg-danger ms-2">
                                                     {!! Form::open(['method' => 'DELETE', 'route' => ['attendanceemployee.destroy', $attendance->id],'id'=>'delete-form-'.$attendance->id]) !!}
 
-                                                    <a href="#" class="mx-3 btn btn-sm  align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{__('Delete')}}"
+                                                    <a href="#" class="mx-3 btn btn-sm align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{__('Delete')}}"
                                                        data-original-title="{{__('Delete')}}" data-confirm="{{__('Are You Sure?').'|'.__('This action can not be undone. Do you want to continue?')}}" data-confirm-yes="document.getElementById('delete-form-{{$attendance->id}}').submit();">
-                                                        <i class="ti ti-trash text-white"></i></a>
+                                                        <i class="text-white ti ti-trash"></i></a>
                                                     {!! Form::close() !!}
                                                 </div>
                                             @endif
@@ -216,5 +219,14 @@
                 locale: {format: 'YYYY-MM-DD'},
             });
         });
+        function openPrintDialog(url) {
+        // Create a new window with the URL for the print page
+        const printWindow = window.open(url, '_blank');
+
+        // Once the new window has loaded, trigger the print dialog
+        printWindow.onload = function() {
+            printWindow.print();
+        };
+    }
     </script>
 @endpush

@@ -31,7 +31,7 @@
                                             @foreach($project->users as $key => $user)
                                                 @if($key < 3)
                                                     <a href="#" class="avatar rounded-circle">
-                                                        <img @if($user->avatar) src="{{asset('/storage/uploads/avatar/'.$user->avatar)}}" @else src="{{asset('/storage/uploads/avatar/avatar.png')}}" @endif title="{{ $user->name }}" style="height:36px;width:36px;">
+                                                        <img @if($user->avatar) src="{{ Storage::url('uploads/avatar/'.$user->avatar) }}" @else src="{{ Storage::url('uploads/avatar/avatar.png') }}" @endif title="{{ $user->name }}" style="height:36px;width:36px;">
                                                     </a>
                                                 @else
                                                     @break

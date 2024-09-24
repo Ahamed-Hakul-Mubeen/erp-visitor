@@ -21,8 +21,12 @@
             </select>
         </div>
         <div class="form-group">
+            <label for="assign_description">{{ __('Assign Description') }}</label>
+            <textarea name="assign_description" class="form-control" required>{{ isset($latestHistory) && $asset->status == 1 ? $latestHistory->description : '' }}</textarea>
+        </div>
+        <div class="form-group">
             <label for="assigned_date">{{ __('Assigned Date') }}</label>
-            <input type="date" name="assigned_date" class="form-control" value="{{ isset($latestHistory) && $asset->status == 1 ? $latestHistory->action_date : '' }}" required>
+            <input type="date" name="assigned_date" class="form-control"  min="{{ date('Y-m-d') }}"  value="{{ isset($latestHistory) && $asset->status == 1 ? $latestHistory->action_date : '' }}" required>
         </div>
         <button type="submit" class="btn btn-primary">{{ __('Assign') }}</button>
         

@@ -2,417 +2,307 @@
     $settings_data = \App\Models\Utility::settingsById($invoice->created_by);
 @endphp
 <!DOCTYPE html>
-<html lang="en" dir="{{$settings_data['SITE_RTL'] == 'on'?'rtl':''}}">
-
+<html lang="en" dir="{{ $settings_data['SITE_RTL'] == 'on' ? 'rtl' : '' }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <style type="text/css">
-        :root {
-            --theme-color: {{$color}};
-            --white: #ffffff;
-            --black: #000000;
-        }
-
+        @page { margin: 0px; }
         body {
             font-family: 'Lato', sans-serif;
-        }
-
-        p,
-        li,
-        ul,
-        ol {
+            font-size:12px;
             margin: 0;
             padding: 0;
-            list-style: none;
-            line-height: 1.5;
+            width: 100%;
+            height: 100%;
+            color: #000000;
+            position: relative;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        .invoice-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-image: url('{{ public_path('invoice/invoice.jpg') }}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #4e8fb8;
+            text-align: center;
+            padding-top: 185px;
+           
+        }
+
+        .heading{
+            color:#4e8fb8;
+        }
+
+        .info-section {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 20px;
+           
+        }
+
+        .info {
+            width: 100%;
+            line-height: 1.8;
+            padding-left:20px;
+        }
+
+        .info1 {
+            width: 100%;
+            line-height: 1.8;
+            padding-left:30px;
+        }
+
+        .bill table tr{
+            border:none !important;
+        }
+
+        .table-container {
+            margin-top: 20px;
+            width: 100%;
+            padding-left:30px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
         }
-
-        table tr th {
-            padding: 0.75rem;
+        .table-container table{
+            width:90% !important;
+        }
+        
+        table th, table td {
+            padding: 8px;
             text-align: left;
         }
+        
 
-        table tr td {
-            padding: 0.75rem;
-            text-align: left;
+        table thead th {
+            background-color: #dbe8eb;
+            text-decoration: underline;
+            padding: 10px;
+        }
+        tbody td{
+            border-bottom: 1px dashed #4e8fb8 ;
+        }
+        
+
+        .totals {
+            /* margin-top: 20px; */
+            width: 94%;
+            text-align: right;
+            
         }
 
-        table th small {
-            display: block;
+        .totals table {
+            width: 230px;
+            float: right;
+        }
+
+        .totals table th, .totals table td {
+            padding: 5px;
+            border-bottom: 1px dashed #4e8fb8;
+            font-weight:400;
+        }
+
+        .totals table tr {
+            border-bottom: 1px dashed #4e8fb8; /* Dotted line for totals */;
+        }
+
+        .bank-info {
+            width: 300px;
+            padding-top: 130px; /* Adjusted for proper spacing */
             font-size: 12px;
+            text-align: left; /* Align bank details to the left */
+            padding-left:30px;  
         }
-
-        .invoice-preview-main {
-            max-width: 700px;
+        
+        .bank-info table {
             width: 100%;
-            margin: 0 auto;
-            background: #ffff;
-            box-shadow: 0 0 10px #ddd;
+            border-collapse: collapse;
+        }
+        .bank-info table tr {
+            border-bottom: 1px solid black;
+        }
+        .bank-info th{
+            font-weight:400;
         }
 
-        .invoice-logo {
-            max-width: 200px;
-            width: 100%;
+        .footer-sign{
+            padding-top:95px; */
+            padding-left:30px;
         }
-
-        .invoice-header table td {
-            padding: 15px 30px;
-        }
-
-        .text-right {
-            text-align: right;
-        }
-
-        .no-space tr td {
-            padding: 0;
-            white-space: nowrap;
-        }
-
-        .vertical-align-top td {
-            vertical-align: top;
-        }
-
-        .view-qrcode {
-            max-width: 139px;
-            height: 139px;
-            width: 100%;
-            margin-left: auto;
-            margin-top: 15px;
-            background: var(--white);
-            padding: 13px;
-            border-radius: 10px;
-        }
-
-        .view-qrcode img {
-            width: 100%;
-            height: 100%;
-        }
-
-        .invoice-body {
-            padding: 30px 25px 0;
-        }
-
-
-
-        table.add-border tr {
-            border-top: 1px solid var(--theme-color);
-        }
-
-        tfoot tr:first-of-type {
-            border-bottom: 1px solid var(--theme-color);
-        }
-
-        .total-table tr:first-of-type td {
-            padding-top: 0;
-        }
-
-        .total-table tr:first-of-type {
-            border-top: 0;
-        }
-
-        .sub-total {
-            padding-right: 0;
-            padding-left: 0;
-        }
-
-        .border-0 {
-            border: none !important;
-        }
-
-        .invoice-summary td,
-        .invoice-summary th {
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        .total-table td:last-of-type {
-            width: 146px;
-        }
-
-        .invoice-footer {
-            padding: 15px 20px;
-        }
-
-        .itm-description td {
-            padding-top: 0;
-        }
-        html[dir="rtl"] table tr td,
-        html[dir="rtl"] table tr th{
-            text-align: right;
-        }
-        html[dir="rtl"]  .text-right{
-            text-align: left;
-        }
-        html[dir="rtl"] .view-qrcode{
-            margin-left: 0;
-            margin-right: auto;
-        }
+       
     </style>
-
-    @if($settings_data['SITE_RTL']=='on')
-        <link rel="stylesheet" href="{{ asset('css/bootstrap-rtl.css') }}">
-    @endif
 </head>
 
-<body class="">
-<div class="invoice-preview-main"  id="boxes">
-    <div class="invoice-header" style="background: {{$color}};color:{{$font_color}}">
-        <table>
-            <tbody>
-            <tr>
-                <td>
-                    <img class="invoice-logo" src="{{$img}}" alt="">
+<body>
+<div class="invoice-container">
+    <!-- Title Section -->
+    <div class="title">{{ __('Tax Invoice') }}</div>
+    <div class="">
+        <table class="bill">
+            <tr >
+                <td style="border-bottom:none !important; line-height: 1.8;">
+                    <div class="info">
+                        <strong class="heading">{{ __('Bill To') }}:</strong><br>
+                        {{ $customer->billing_name ?? 'Name' }}<br>
+                        {{ $customer->billing_address ?? 'Address' }}<br>
+                        {{ $customer->billing_city ?? 'City' }}, {{ $customer->billing_state ?? 'State' }} - {{ $customer->billing_zip ?? 'Zip Code' }}<br>
+                        {{ $customer->billing_country ?? 'Country' }}<br>
+                        TRN: {{ $customer->trn ?? 'N/A' }}
+                    </div>
                 </td>
-                <td class="text-right">
-                    <h3 style="text-transform: uppercase; font-size: 40px; font-weight: bold;">{{__('INVOICE')}}</h3>
-                </td>
+                <td style="border-bottom:none !important; line-height: 2.1;">
+                    
+                    <span style="padding-left:350px;">{{ __('Invoice Number') }}:</span> {{ Utility::invoiceNumberFormat($settings, $invoice->invoice_id) ?? '#INV0001' }}<br>
+                    <span style="padding-left:350px;">{{ __('Invoice Date') }}:</span> {{ Utility::dateFormat($settings, $invoice->issue_date) ?? 'Date' }}<br>
+                    <span style="padding-left:350px;">{{ __('Due Date') }}:</span> {{ Utility::dateFormat($settings, $invoice->due_date) ?? 'Date' }}<br>
+                    <span style="padding-left:350px;">{{ __('TRN') }}:</span>: {{ $settings['tax_number'] ?? 'N/A' }}
+                
+            </td>
             </tr>
-            </tbody>
-        </table>
-        <table class="vertical-align-top">
-            <tbody>
-            <tr>
-                <td>
-                    <p>
-                        @if($settings['company_name']){{$settings['company_name']}}@endif<br>
-                        @if($settings['mail_from_address']){{$settings['mail_from_address']}}@endif<br><br>
-                        @if($settings['company_address']){{$settings['company_address']}}@endif
-                        @if($settings['company_city']) <br> {{$settings['company_city']}}, @endif
-                        @if($settings['company_state']){{$settings['company_state']}}@endif
-                        @if($settings['company_zipcode']) - {{$settings['company_zipcode']}}@endif
-                        @if($settings['company_country']) <br>{{$settings['company_country']}}@endif
-                        @if($settings['company_telephone']){{$settings['company_telephone']}}@endif<br>
-                        @if(!empty($settings['registration_number'])){{__('Registration Number')}} : {{$settings['registration_number']}} @endif<br>
-                        @if($settings['vat_gst_number_switch'] == 'on')
-                            @if(!empty($settings['tax_type']) && !empty($settings['vat_number'])){{$settings['tax_type'].' '. __('Number')}} : {{$settings['vat_number']}} <br>@endif
-                        @endif
-                    </p>
-                </td>
-                <td>
-                    <table class="no-space" style="width: 45%;margin-left: auto;">
-                        <tbody>
-                        <tr>
-                            <td>{{__('Number')}}:</td>
-                            <td class="text-right">{{Utility::invoiceNumberFormat($settings,$invoice->invoice_id)}}</td>
-                        </tr>
-                        <tr>
-                            <td>{{__('Issue Date')}}:</td>
-                            <td class="text-right">{{Utility::dateFormat($settings,$invoice->issue_date)}}</td>
-                        </tr>
-
-                        <tr>
-                            <td><b>{{__('Due Date:')}}</b></td>
-                            <td class="text-right">{{Utility::dateFormat($settings,$invoice->due_date)}}</td>
-                        </tr>
-                        @if(!empty($customFields) && count($invoice->customField)>0)
-                            @foreach($customFields as $field)
-                                <tr>
-                                    <td>{{$field->name}} :</td>
-                                    <td> {{!empty($invoice->customField)?$invoice->customField[$field->id]:'-'}}</td>
-                                </tr>
-                            @endforeach
-                        @endif
-                        <tr>
-                            <td colspan="2">
-                                <div class="view-qrcode">
-                                    {!! DNS2D::getBarcodeHTML(route('invoice.link.copy',\Crypt::encrypt($invoice->invoice_id)), "QRCODE",2,2) !!}
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </td>
-            </tr>
-            </tbody>
+            
         </table>
     </div>
-    <div class="invoice-body">
-        <table>
-            <tbody>
-            <tr>
-                <td>
-                    <strong style="margin-bottom: 10px; display:block;">{{__('Bill To')}}:</strong>
-                    @if(!empty($customer->billing_name))
-                        <p>
-                            {{!empty($customer->billing_name)?$customer->billing_name:''}}<br>
-                            {{!empty($customer->billing_address)?$customer->billing_address:''}}<br>
-                            {{!empty($customer->billing_city)?$customer->billing_city:'' .', '}}<br>
-                            {{!empty($customer->billing_state)?$customer->billing_state:'',', '}},
-                            {{!empty($customer->billing_zip)?$customer->billing_zip:''}}<br>
-                            {{!empty($customer->billing_country)?$customer->billing_country:''}}<br>
-                            {{!empty($customer->billing_phone)?$customer->billing_phone:''}}<br>
-                        </p>
-                    @else
-                        -
-                    @endif
-                </td>
 
-                @if($settings['shipping_display']=='on')
-                    <td class="text-right">
-                        <strong style="margin-bottom: 10px; display:block;">{{__('Ship To')}}:</strong>
-                        @if(!empty($customer->shipping_name))
-                        <p>
-                            {{!empty($customer->shipping_name)?$customer->shipping_name:''}}<br>
-                            {{!empty($customer->shipping_address)?$customer->shipping_address:''}}<br>
-                            {{!empty($customer->shipping_city)?$customer->shipping_city:'' . ', '}}<br>
-                            {{!empty($customer->shipping_state)?$customer->shipping_state:'' .', '}},
-                            {{!empty($customer->shipping_zip)?$customer->shipping_zip:''}}<br>
-                            {{!empty($customer->shipping_country)?$customer->shipping_country:''}}<br>
-                            {{!empty($customer->shipping_phone)?$customer->shipping_phone:''}}<br>
-                        </p>
-                        @else
-                            -
-                        @endif
-                    </td>
-                @endif
-            </tr>
-        <tr>
-                
-                @if ($invoice->status == 0)
-                    <td
-                        class="badge bg-primary"><strong>{{ __('Invoice Status') }} : </strong>{{ __(\App\Models\Invoice::$statues[$invoice->status]) }}</td>
-                @elseif($invoice->status == 1)
-                    <td
-                        class="badge bg-warning"><strong>{{ __('Invoice Status') }} : </strong>{{ __(\App\Models\Invoice::$statues[$invoice->status]) }}</td>
-                @elseif($invoice->status == 2)
-                    <td
-                        class="badge bg-danger"><strong>{{ __('Invoice Status') }} : </strong>{{ __(\App\Models\Invoice::$statues[$invoice->status]) }}</td>
-                @elseif($invoice->status == 3)
-                    <td
-                        class="badge bg-info"><strong>{{ __('Invoice Status') }} : </strong>{{ __(\App\Models\Invoice::$statues[$invoice->status]) }}</td>
-                @elseif($invoice->status == 4)
-                    <td
-                        class="badge bg-primary"><strong>{{ __('Invoice Status') }} : </strong>{{ __(\App\Models\Invoice::$statues[$invoice->status]) }}</td>
-                @endif
-        </tr>
-            </tbody>
-        </table>
-        <table class="add-border invoice-summary" style="margin-top: 30px;">
-            <thead style="background: {{$color}};color:{{$font_color}}">
-            <tr>
-                <th>{{__('Item')}}</th>
-                <th>{{__('Quantity')}}</th>
-                <th>{{__('Rate')}}</th>
-                <th>{{__('Discount')}}</th>
-                <th>{{__('Tax')}} (%)</th>
-                <th>{{__('Price')}} <small>after tax & discount</small></th>
-            </tr>
-            </thead>
-            <tbody>
-            @if(isset($invoice->itemData) && count($invoice->itemData) > 0)
-                @foreach($invoice->itemData as $key => $item)
-                <tr>
-                    <td>{{$item->name}}</td>
-                    @php
-                    $unitName = App\Models\ProductServiceUnit::find($item->unit);
-            @endphp
-            <td>{{$item->quantity}} {{ ($unitName != null) ?  '('. $unitName->name .')' : ''}}</td>
-                    <td>{{Utility::priceFormat($settings,$item->price)}}</td>
-                    <td>{{($item->discount!=0)?Utility::priceFormat($settings,$item->discount):'-'}}</td>
-                    @php
-                        $itemtax = 0;
-                    @endphp
-                    <td>
-                        @if(!empty($item->itemTax))
-
-                            @foreach($item->itemTax as $taxes)
-                                @php
-                                    $itemtax += $taxes['tax_price'];
-                                @endphp
-                                <p>{{$taxes['name']}} ({{$taxes['rate']}}) {{$taxes['price']}}</p>
-                            @endforeach
-                        @else
-                            <span>-</span>
-                        @endif
-                    </td>
-                    <td>{{Utility::priceFormat($settings,$item->price * $item->quantity -  $item->discount + $itemtax)}}</td>
-                    @if(!empty($item->description))
-                        <tr class="border-0 itm-description">
-                            <td colspan="6">{{$item->description}}</td>
-                        </tr>
-                    @endif
-                </tr>
-                @endforeach
-            @else
-            @endif
-            </tbody>
-            <tfoot>
-            <tr>
-                <td>{{__('Total')}}</td>
-                <td>{{$invoice->totalQuantity}}</td>
-                <td>{{Utility::priceFormat($settings,$invoice->totalRate)}}</td>
-                <td>{{Utility::priceFormat($settings,$invoice->totalDiscount)}}</td>
-                <td>{{Utility::priceFormat($settings,$invoice->totalTaxPrice) }}</td>
-                <td>{{Utility::priceFormat($settings,$invoice->getSubTotal())}}</td>
-            </tr>
-            <tr>
-                <td colspan="4"></td>
-                <td colspan="2" class="sub-total">
-                    <table class="total-table">
-                        <tr>
-                            <td>{{__('Subtotal')}}:</td>
-                            <td>{{Utility::priceFormat($settings,$invoice->getSubTotal())}}</td>
-                        </tr>
-                        @if($invoice->getTotalDiscount())
-                        <tr>
-                            <td>{{__('Discount')}}:</td>
-                            <td>{{Utility::priceFormat($settings,$invoice->getTotalDiscount())}}</td>
-                        </tr>
-                        @endif
-                        @if(!empty($invoice->taxesData))
-                            @foreach($invoice->taxesData as $taxName => $taxPrice)
-                            <tr>
-                                <td>{{$taxName}} :</td>
-                                <td>{{ Utility::priceFormat($settings,$taxPrice)  }}</td>
-                            </tr>
-                            @endforeach
-                        @endif
-                        <tr>
-                            <td>{{__('Total')}}:</td>
-                            <td>{{Utility::priceFormat($settings,$invoice->getSubTotal()-$invoice->getTotalDiscount()+$invoice->getTotalTax())}}</td>
-                        </tr>
-                        <tr>
-                            <td>{{__('Paid')}}:</td>
-                            <td>{{Utility::priceFormat($settings,($invoice->getTotal()-$invoice->getDue())-($invoice->invoiceTotalCreditNote()))}}</td>
-                        </tr>
-                        <tr>
-                            <td>{{__('Credit Note')}}:</td>
-                            <td>{{Utility::priceFormat($settings,($invoice->invoiceTotalCreditNote()))}}</td>
-                        </tr>
-                        <tr>
-                            <td>{{__('Due Amount')}}:</td>
-                            <td>{{Utility::priceFormat($settings,$invoice->getDue())}}</td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-            </tfoot>
-        </table>
-        <div class="invoice-footer">
-            <b>{{$settings['footer_title']}}</b> <br>
-            {!! $settings['footer_notes'] !!}
+    <!-- Billed By Section -->
+    <div class="info-section">
+        <div class="info1">
+            <strong class="heading">{{ __('Billed By') }}:</strong><br>
+            <span class="underline" style="border-bottom:1px solid black">Vendor Name:</span>&nbsp; Zero Gravity Advertisement Gifts<br>
+            <span class="underline" style="border-bottom:1px solid black">Address:</span>&nbsp; Unit 802, Guardian Tower, Al Mustarhim St, Abu Dhabi<br>
+            <span class="underline" style="border-bottom:1px solid black">PO Box:</span>&nbsp; 107018
         </div>
     </div>
 
+    <!-- Table Section -->
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>{{ __('Description') }}</th>
+                    <th>{{ __('Quantity') }}</th>
+                    <th>{{ __('Rate') }}</th>
+                    <th>{{ __('Discount') }}</th>
+                    <th>{{ __('Tax') }}</th>
+                    <th>{{ __('Price') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                @php
+                    $subtotal = 0;
+                    $totalDiscount = 0;
+                    $totalTax = 0;
+                @endphp
+    
+                @foreach ($invoice->itemData ?? [] as $item)
+                    @php
+                        $itemSubtotal = ($item->price ?? 0) * ($item->quantity ?? 1); // Calculate item subtotal
+                        $itemDiscount = $itemSubtotal * (($item->discount ?? 0) / 100); // Calculate item discount
+                        $itemTax = ($itemSubtotal - $itemDiscount) * (($item->tax ?? 5) / 100); // Calculate item tax
+                        $itemTotal = $itemSubtotal - $itemDiscount + $itemTax; // Total per item
+    
+                        $subtotal += $itemSubtotal;
+                        $totalDiscount += $itemDiscount;
+                        $totalTax += $itemTax;
+                    @endphp
+                    <tr>
+                        <td>{{ $item->name ?? 'Item Name' }}<br>{{ $item->description ?? '' }}</td>
+                        <td>{{ $item->quantity ?? '1' }}</td>
+                        <td>{{ Utility::priceFormat($settings, $item->price ?? 0) }}</td>
+                        <td>{{ $item->discount ?? '0%' }}</td>
+                        <td>{{ $item->tax ?? '5%' }}</td>
+                        <td>{{ Utility::priceFormat($settings, $itemTotal ?? 0) }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Totals Section -->
+    <div class="totals">
+        <table>
+            <tr>
+                <th>{{ __('Subtotal') }}</th>
+                <td>{{ Utility::priceFormat($settings, $subtotal ?? 0) }}</td>
+            </tr>
+            <tr>
+                <th>{{ __('VAT') }} {{ $invoice->vat_name ?? '5%' }}</th> <!-- Use dynamic VAT name if available -->
+                <td>{{ Utility::priceFormat($settings, $totalTax ?? 0) }}</td>
+            </tr>
+            <tr>
+                <th>{{ __('Total') }}</th>
+                <td>{{ Utility::priceFormat($settings, $subtotal - $totalDiscount + $totalTax) }}</td>
+            </tr>
+            <tr>
+                <th>{{ __('Paid') }}</th>
+                <td>{{ Utility::priceFormat($settings, $totalDiscount ?? 0) }}</td>
+            </tr>
+            <tr>
+                <th>{{ __('Due Date') }}</th>
+                <td>{{ $invoice->due_date ?? 'N/A' }}</td> <!-- Display due date dynamically -->
+            </tr>
+        </table>
+    </div>
+    
+
+
+    <!-- Bank Information -->
+    <div class="bank-info">
+        <table>
+            <tr>
+                <th>{{ __('Bank Name') }}</th>
+                <td>{{ $settings['bank_name'] ?? 'National Bank of Fujairah' }}</td>
+            </tr>
+            <tr>
+                <th>{{ __('Account Name') }}</th>
+                <td>{{ $settings['account_name'] ?? 'zero Gravity Advertisement Gifts' }}</td>
+            </tr>
+            <tr>
+                <th>{{ __('Account Number') }}</th>
+                <td>{{ $settings['account_number'] ?? '012001973469' }}</td>
+            </tr>
+            <tr>
+                <th>{{ __('IBAN Number') }}</th>
+                <td>{{ $settings['iban_number'] ?? 'AE170380000012001973469' }}</td>
+            </tr>
+            <tr>
+                <th>{{ __('Swift Code') }}</th>
+                <td>{{ $settings['swift_code'] ?? 'NBFUAEAFDXB' }}</td>
+            </tr>
+            <tr style="border-bottom:none !important;">
+                <th >{{ __('Branch Name') }}</th>
+                <td style="border-bottom:none !important;">{{ $settings['branch'] ?? 'Abu Dhabi' }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <table class="footer-sign">
+        <tr>
+            <td style="border-bottom:none !important;">
+                <strong style="padding-left:30px;">Zero Gravity Advertisement Gifts</strong>
+            </td>
+            <td style="border-bottom:none !important;">
+                <strong style="padding-right:30px;">Client Acknowledgement</strong>
+                
+            
+        </td>
+        </tr>
+        
+    </table>
 </div>
-@if(!isset($preview))
-    @include('invoice.script');
-@endif
-
 </body>
-
 </html>

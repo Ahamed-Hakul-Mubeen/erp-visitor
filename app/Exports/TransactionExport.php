@@ -5,8 +5,9 @@ namespace App\Exports;
 use App\Models\Transaction;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
-class TransactionExport implements FromCollection, WithHeadings
+class TransactionExport implements FromCollection, WithHeadings, ShouldAutoSize
 {
     /**
     * @return \Illuminate\Support\Collection

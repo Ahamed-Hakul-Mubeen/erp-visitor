@@ -24,6 +24,8 @@ class CreateLeavesTable extends Migration
             $table->string('leave_reason');
             $table->string('remark')->nullable();
             $table->string('status');
+            $table->string('pm_approval')->nullable()->default('Pending');
+            $table->string('hr_approval')->nullable()->default('Pending');
             $table->integer('created_by');
             $table->timestamps();
         });

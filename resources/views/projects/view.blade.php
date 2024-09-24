@@ -160,10 +160,38 @@
             // document.execCommand('copy');
             show_toastr('success', 'Url copied to clipboard', 'success');
         }
+
         function copyUrlToClipboard(element) {
             var copyText = element.href;
             navigator.clipboard.writeText(copyText);
             show_toastr('success', 'Url copied to clipboard', 'success');
+        }
+    </script>
+
+    <script type="text/javascript">
+        var attachment_file_count = 0;
+        $(document).ready(function() {
+            $('#add_file_btn_1').click(function() {
+                attachment_file_count++;
+                console.log(attachment_file_count);
+
+                var add = `<div class="row" id="attachment_div${attachment_file_count}">
+                                <div class="col-sm-10">
+                                    <div class="form-group">
+                                        <input type="file" class="form-control" name="file[]">
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <button type="button" onclick=remove_attachment(${attachment_file_count}) class="btn btn-danger btn-sm mt-1"> <i class="text-white ti ti-trash"></i> </button>
+                                </div>
+                            </div>`;
+                $("#attachment_list_div").append(add);
+            });
+        });
+
+        function remove_attachment(file_index)
+        {
+            $(`#attachment_div${file_index}`).remove();
         }
     </script>
 @endpush
@@ -175,12 +203,12 @@
 @section('action-btn')
     <div class="float-end">
         @can('share project')
-            <a href="#" class="btn btn-sm btn-primary" data-ajax-popup="true" data-size="md"
+            {{-- <a href="#" class="btn btn-sm btn-primary" data-ajax-popup="true" data-size="md"
                 data-title="{{ __('Shared Project Settings') }}"
                 data-url="{{ route('projects.copylink.setting.create', [$project->id]) }}" data-toggle="tooltip"
                 title="{{ __('Shared project settings') }}">
                 <i class="text-white ti ti-share"></i>
-            </a>
+            </a> --}}
             {{--            @php $projectID= Crypt::encrypt($project->id); @endphp --}}
             {{--            <a href="#" id="{{ route('projects.link', \Illuminate\Support\Facades\Crypt::encrypt($project->id)) }}" class="m-1 btn btn-sm btn-primary btn-icon" --}}
             {{--               onclick="copyToClipboard(this)" data-bs-toggle="tooltip" title="{{__('Click to copy link')}}"> --}}
@@ -192,11 +220,11 @@
                 {{ __('Gantt Chart') }}
             </a>
         @endcan
-        @if (\Auth::user()->type != 'client' || \Auth::user()->type == 'client')
+        {{-- @if (\Auth::user()->type != 'client' || \Auth::user()->type == 'client')
             <a href="{{ route('projecttime.tracker', $project->id) }}" class="btn btn-sm btn-primary">
                 {{ __('Tracker') }}
             </a>
-        @endif
+        @endif --}}
         @can('view expense')
             <a href="{{ route('projects.expenses.index', $project->id) }}" class="btn btn-sm btn-primary">
                 {{ __('Expense') }}
@@ -474,8 +502,11 @@
                         <h5>{{ __('Members') }}</h5>
                         @can('edit project')
                             <div class="float-end">
-                                <a href="#" data-size="lg" data-url="{{ route('users.project.member.create',$project->id) }}" data-ajax-popup="true"
-                                    data-bs-toggle="tooltip" data-bs-original-title="{{ __('Add New Member') }}" data-title="{{__('Add New Member') }}" class="btn btn-sm btn-secondary">
+                                <a href="#" data-size="lg"
+                                    data-url="{{ route('users.project.member.create', $project->id) }}"
+                                    data-ajax-popup="true" data-bs-toggle="tooltip"
+                                    data-bs-original-title="{{ __('Add New Member') }}"
+                                    data-title="{{ __('Add New Member') }}" class="btn btn-sm btn-secondary">
                                     <i class="ti ti-plus"></i>
                                 </a>
                                 <a href="#" data-size="lg"
@@ -500,23 +531,21 @@
                     <div class="d-flex align-items-center justify-content-between">
                         <h5>{{ __('Milestones') }} ({{ count($project->milestones) }})</h5>
                         <div class="float-end">
-                        @can('create milestone')
-                                <a href="#" data-size="md" data-url="{{ route('project.milestone', $project->id) }}"
+                            @can('create milestone')
+                                <a href="#" data-size="lg" data-url="{{ route('project.milestone', $project->id) }}"
                                     data-ajax-popup="true" data-bs-toggle="tooltip" title=""
                                     class="btn btn-sm btn-primary" data-bs-original-title="{{ __('Create Milestone') }}">
                                     <i class="ti ti-plus"></i>
                                 </a>
-                        @endcan
-                        @can('share milestone')
-                        <a href="{{ route('project.milestone.share', Crypt::encryptString($project->id)) }}"
-                            target="_blank"
-                            data-bs-toggle="tooltip"
-                            onclick="copyUrlToClipboard(this)"
-                            title=""
-                            class="btn btn-sm btn-primary" data-bs-original-title="{{ __('Share Milestone') }}">
-                            <i class="ti ti-share"></i>
-                         </a>
-                        @endcan
+                            @endcan
+                            @can('share milestone')
+                                <a href="{{ route('project.milestone.share', Crypt::encryptString($project->id)) }}"
+                                    target="_blank" data-bs-toggle="tooltip" onclick="copyUrlToClipboard(this)"
+                                    title="" class="btn btn-sm btn-primary"
+                                    data-bs-original-title="{{ __('Share Milestone') }}">
+                                    <i class="ti ti-share"></i>
+                                </a>
+                            @endcan
                         </div>
                     </div>
                 </div>
@@ -529,10 +558,7 @@
                                         <div class="mb-3 col-sm-auto mb-sm-0">
                                             <div class="d-flex align-items-center">
                                                 <div class="div">
-                                                    <h6 class="m-0">{{ $milestone->title }}
-                                                        <span
-                                                            class="badge-xs badge bg-{{ \App\Models\Project::$status_color[$milestone->status] }} p-2 px-3 rounded">{{ __(\App\Models\Project::$project_status[$milestone->status]) }}</span>
-                                                    </h6>
+                                                    <h6 class="m-0">{{ $milestone->title }}</h6>
                                                     <small
                                                         class="text-muted">{{ $milestone->tasks->count() . ' ' . __('Tasks') }}</small>
                                                 </div>
@@ -551,7 +577,7 @@
                                             @endcan
                                             @can('edit milestone')
                                                 <div class="action-btn bg-info ms-2">
-                                                    <a href="#" data-size="md"
+                                                    <a href="#" data-size="lg"
                                                         data-url="{{ route('project.milestone.edit', $milestone->id) }}"
                                                         data-ajax-popup="true" data-bs-toggle="tooltip"
                                                         title="{{ __('Edit') }}"
@@ -570,6 +596,22 @@
                                                     {!! Form::close() !!}
                                                 </div>
                                             @endcan
+
+                                        </div>
+                                        <div class="mt-2">
+
+                                            <div class="mb-2 d-flex align-items-center justify-content-between">
+                                                <div class="d-flex align-items-center">
+                                                    <span class="text-muted">
+                                                        <span class="badge-xs badge bg-{{ \App\Models\Project::$status_color[$milestone->status] }} p-2 px-3 rounded">{{ __(\App\Models\Project::$project_status[$milestone->status]) }}</span>
+                                                    </span>
+                                                </div>
+                                                <span>{{ $milestone->progress }}%</span>
+                                            </div>
+
+                                            <div class="progress">
+                                                <div class="progress-bar bg-primary" style="width: {{ $milestone->progress }}%"></div>
+                                            </div>
                                         </div>
                                     </div>
                                 </li>
@@ -616,10 +658,10 @@
             <div class="card activity-scroll">
                 <div class="card-header">
                     <div class="d-flex align-items-center justify-content-between">
-                        <h5>{{ __('Attachments') }} ({{$project->projectAttachments()->count()}})</h5>
+                        <h5>{{ __('Attachments') }} ({{ $project->projectAttachments()->count() }})</h5>
                         @can('create attachment')
                             <div class="float-end">
-                                <a href="#" data-size="md" data-url="{{ route('project.attachment', $project->id) }}"
+                                <a href="#" data-size="lg" data-url="{{ route('project.attachment', $project->id) }}"
                                     data-ajax-popup="true" data-bs-toggle="tooltip" title=""
                                     class="btn btn-sm btn-primary" data-bs-original-title="{{ __('Add Attachment') }}">
                                     <i class="ti ti-plus"></i>
@@ -629,43 +671,122 @@
                     </div>
                     {{-- <small>{{ __('Attachment that uploaded in this project') }}</small> --}}
                 </div>
-                <div class="card-body">
+                <div class="card-body mt-0 pt-0">
                     <ul class="list-group list-group-flush">
                         @if ($project->projectAttachments()->count() > 0)
                             @foreach ($project->projectAttachments() as $attachment)
                                 <li class="px-0 list-group-item">
-                                    <div class="row align-items-center justify-content-between">
+                                    <div class="row align-items-center justify-content-between mb-1">
                                         <div class="mb-3 col mb-sm-0">
                                             <div class="d-flex align-items-center">
-                                                <div class="div">
-                                                    <h6 class="m-0">{{ $attachment->name }}</h6>
-                                                    <small class="text-muted">{{ $attachment->file_size }}</small>
+                                                <div class="div w-100">
+                                                    <h6 class="m-0 d-flex justify-content-between"><span>{{ $attachment->name }}</span><span>{{ $attachment->created_at->format('Y-m-d') }}</span></h6>
+                                                    <small class="text-muted"></small>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-auto text-sm-end d-flex align-items-center">
-                                            @can('download attachment')
-                                                <div class="action-btn bg-info ms-2">
-                                                    <a href="{{ asset('storage/project/uploads/' . $attachment->file) }}"
-                                                        data-bs-toggle="tooltip" title="{{ __('Download') }}"
-                                                        class="btn btn-sm" download>
-                                                        <i class="text-white ti ti-download"></i>
-                                                    </a>
-                                                </div>
-                                            @endcan
+                                        <div class="col-auto">
+                                            <div class="action-btn bg-warning ms-2">
+                                                <a href="#" class="mx-3 btn btn-sm align-items-center" data-bs-toggle="modal" data-bs-target="#attachmentModal_{{ $attachment->id }}"   data-bs-toggle="tooltip" title="{{ __('View') }}">
+                                                    <i class="text-white ti ti-eye"></i>
+                                                </a>
+                                            </div>
                                             @can('delete attachment')
                                                 <div class="action-btn bg-danger ms-2">
                                                     {!! Form::open(['method' => 'DELETE', 'route' => ['project.attachment.destroy', $attachment->id]]) !!}
                                                     <a href="#" class="mx-3 btn btn-sm align-items-center bs-pass-para"
                                                         data-bs-toggle="tooltip" title="{{ __('Delete') }}"><i
                                                             class="text-white ti ti-trash"></i></a>
-
                                                     {!! Form::close() !!}
                                                 </div>
                                             @endcan
                                         </div>
-
                                     </div>
+
+                                    <div class="modal fade" id="attachmentModal_{{ $attachment->id }}" tabindex="-1" aria-labelledby="attachmentModalLabel_{{ $attachment->id }}" aria-hidden="true" style="z-index:1050">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="attachmentModalLabel_{{ $attachment->id }}">Attachment Details</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body pb-0">
+                                                    <!-- Attachment files -->
+                                                    <?php $attachment_list = json_decode($attachment->file); ?>
+                                                    @if ($attachment_list)
+                                                        @foreach ($attachment_list as $index => $al)
+                                                            <div class="row align-items-center justify-content-between mb-1">
+                                                                <div class="mb-3 col mb-sm-0">
+                                                                    <div class="d-flex align-items-center">
+                                                                        <div class="div">
+                                                                            <!-- Display the individual attachment file name -->
+                                                                            <p class="m-0"><i class="ti ti-file"></i> {{ $al }}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-auto">
+                                                                    @can('download attachment')
+                                                                        <!-- View attachment -->
+                                                                        <div class="action-btn bg-warning ms-2">
+                                                                            <a href="{{ asset('storage/project/uploads/' . $al) }}" target="_blank" data-bs-toggle="tooltip" title="{{ __('View') }}" class="btn btn-sm">
+                                                                                <i class="text-white ti ti-eye"></i>
+                                                                            </a>
+                                                                        </div>
+                                                                    @endcan
+                                                                    @can('download attachment')
+                                                                        <!-- Download attachment -->
+                                                                        <div class="action-btn bg-info ms-2">
+                                                                            <a href="{{ asset('storage/project/uploads/' . $al) }}" data-bs-toggle="tooltip" title="{{ __('Download') }}" class="btn btn-sm" download>
+                                                                                <i class="text-white ti ti-download"></i>
+                                                                            </a>
+                                                                        </div>
+                                                                    @endcan
+                                                                    @can('delete attachment')
+                                                                        <!-- Delete individual attachment file -->
+                                                                        <div class="action-btn bg-danger ms-2">
+                                                                            {!! Form::open(['method' => 'DELETE', 'route' => ['project.attachment.attachmentDestroyFile', $attachment->id, $index]]) !!}
+                                                                            <a href="#" class="mx-3 btn btn-sm align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{ __('Delete') }}">
+                                                                                <i class="text-white ti ti-trash"></i>
+                                                                            </a>
+                                                                            {!! Form::close() !!}
+                                                                        </div>
+                                                                    @endcan
+                                                                </div>
+                                                            </div>
+                                                        @endforeach
+                                                    @endif
+                                                    <div class="form-group pt-5">
+                                                        {{ Form::open(['route' => ['project.attachment.add', $attachment->id], 'files' => true]) }}
+                                                        <div class="row">
+                                                            <div class="col-sm-12">
+                                                                {{ Form::label('file', __('Upload Files'), ['class' => 'form-label']) }}
+                                                            </div>
+                                                            <div class="col-sm-10">
+                                                                <div class="form-group">
+                                                                    <input type="file" class="form-control" name="file[]" required>
+                                                                </div>
+                                                                @error('file')
+                                                                    <span class="invalid-file" role="alert">
+                                                                        <strong class="text-danger">{{ $message }}</strong>
+                                                                    </span>
+                                                                @enderror
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                <button type="button" id="add_file_btn_1" class="btn btn-info btn-sm mt-1"> <i class="ti ti-plus"></i></button>
+                                                            </div>
+                                                        </div>
+                                                        <div id="attachment_list_div"></div>
+                                                        <button type="submit" class="btn btn-primary">{{ __('Add') }}</button>
+                                                        {{ Form::close() }}
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </li>
                             @endforeach
                         @else

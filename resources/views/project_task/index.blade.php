@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="{{asset('css/summernote/summernote-bs4.css')}}">
     <link rel="stylesheet" href="{{ asset('assets/css/plugins/dragula.min.css') }}" id="main-style-link">
 @endpush
+
 @push('script-page')
     <script src="{{asset('css/summernote/summernote-bs4.js')}}"></script>
     <script src="{{ asset('assets/js/plugins/dragula.min.js') }}"></script>
@@ -396,6 +397,13 @@
     <li class="breadcrumb-item">{{__('Task')}}</li>
 @endsection
 @section('action-btn')
+<div class="d-flex justify-content-end align-items-center">
+    <div class="me-3">
+        <a href="{{ url()->previous() }}" class="btn btn-primary add-small">
+            <i class="ti ti-arrow-left"></i> {{ __('Back') }}
+        </a>
+    </div>
+</div>
 @endsection
 
 @section('content')
@@ -488,7 +496,7 @@
                                                 </ul>
                                                 <div class="user-group">
                                                     @foreach($taskDetail->users() as $user)
-                                                        <img @if($user->avatar) src="{{asset('/storage/uploads/avatar/'.$user->avatar)}}" @else src="{{asset('/storage/uploads/avatar/avatar.png')}}" @endif alt="image" data-bs-toggle="tooltip" title="{{(!empty($user)?$user->name:'')}}">
+                                                        <img @if($user->avatar) src="{{url('/storage/uploads/avatar/'.$user->avatar)}}" @else src="{{url('/storage/uploads/avatar/avatar.png')}}" @endif alt="image" data-bs-toggle="tooltip" title="{{(!empty($user)?$user->name:'')}}">
                                                     @endforeach
                                                 </div>
                                             </div>

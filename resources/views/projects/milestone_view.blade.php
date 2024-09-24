@@ -40,6 +40,7 @@
 
 
     <!-- Stylesheets -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" id="main-style-link">
     @if ($SITE_RTL == 'on')
         <link rel="stylesheet" href="{{ asset('assets/css/style-rtl.css') }}">
@@ -58,7 +59,7 @@
 
 <body>
     <div class="container">
-        <div class="row mt-2">
+        <div class="mt-2 row">
             <center>
             <div class="col-md-5">
                 <div class="m-header main-logo">
@@ -76,19 +77,21 @@
             </div>
         </center>
         </div>
-        <div class="row justify-content-center mt-5">
+        <div class="mt-5 row justify-content-center">
             <div class="col-md-10">
                 <div class="my-3">
                     <h4>Project Name : {{$project->project_name}}</h4>
                 </div>
-                <div class="row mb-4">
+                <div class="mb-4 row">
                     <div class="col-md-6">
                         <span class="font-bold lab-title">{{ __('Status') }} : </span>
                         <span
                             class="badge-xs badge p-2 px-3 rounded bg-{{ \App\Models\Project::$status_color[$milestone->status] }} text-white">{{ __(\App\Models\Project::$project_status[$milestone->status]) }}</span>
                     </div>
-
-                    <div class="col-md-12 pt-4">
+                    <div class="col-md-6">
+                        <button class="btn btn-primary" style="float: right;" onclick="window.history.back();"> <i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button>
+                    </div>
+                    <div class="pt-4 col-md-12">
                         <div class="font-weight-bold lab-title">{{ __('Description') }} :</div>
                         <p class="mt-1 lab-val">{{ !empty($milestone->description) ? $milestone->description : '-' }}
                         </p>
@@ -112,7 +115,7 @@
                                             @foreach ($milestone->tasks as $task)
                                                 <tr>
                                                     <td>
-                                                        <span class="h6 text-sm">{{ $task->name }}</span>
+                                                        <span class="text-sm h6">{{ $task->name }}</span>
                                                     </td>
                                                     <td>{{ $task->stage->name }}</td>
                                                     <td>
@@ -137,20 +140,20 @@
 
                                                     <td class="text-end w-15">
                                                         <div class="actions">
-                                                            <a class="action-item px-2" data-bs-toggle="tooltip"
+                                                            <a class="px-2 action-item" data-bs-toggle="tooltip"
                                                                 data-original-title="{{ __('Attachment') }}">
                                                                 <i
-                                                                    class="ti ti-paperclip mr-2"></i>{{ count($task->taskFiles) }}
+                                                                    class="mr-2 ti ti-paperclip"></i>{{ count($task->taskFiles) }}
                                                             </a>
-                                                            <a class="action-item px-2" data-bs-toggle="tooltip"
+                                                            <a class="px-2 action-item" data-bs-toggle="tooltip"
                                                                 data-original-title="{{ __('Comment') }}">
                                                                 <i
-                                                                    class="ti ti-brand-hipchat mr-2"></i>{{ count($task->comments) }}
+                                                                    class="mr-2 ti ti-brand-hipchat"></i>{{ count($task->comments) }}
                                                             </a>
-                                                            <a class="action-item px-2" data-bs-toggle="tooltip"
+                                                            <a class="px-2 action-item" data-bs-toggle="tooltip"
                                                                 data-original-title="{{ __('Checklist') }}">
                                                                 <i
-                                                                    class="ti ti-list-check mr-2"></i>{{ $task->countTaskChecklist() }}
+                                                                    class="mr-2 ti ti-list-check"></i>{{ $task->countTaskChecklist() }}
                                                             </a>
                                                         </div>
                                                     </td>

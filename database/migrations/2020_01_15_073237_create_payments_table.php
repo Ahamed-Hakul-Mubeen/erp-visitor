@@ -27,6 +27,7 @@ class CreatePaymentsTable extends Migration
             $table->integer('payment_method');
             $table->string('reference')->nullable();
             $table->string('add_receipt')->nullable();
+            $table->integer('project_id')->nullable();
             $table->integer('created_by')->default('0');
             $table->timestamps();
         }

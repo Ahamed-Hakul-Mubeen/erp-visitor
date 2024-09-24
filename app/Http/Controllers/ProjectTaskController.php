@@ -158,13 +158,19 @@ class ProjectTaskController extends Controller
     // For Taskboard View
     public function taskBoard($view)
     {
+        $usr = Auth::user();
+    $project_members = User::whereHas('projects', function ($query) use ($usr) {
+        $query->whereIn('project_id', $usr->projects()->pluck('project_id')->toArray());
+    })->where('type', '!=', 'company')
+    ->get();
+
         if ($view == 'list')
         {
-            return view('project_task.taskboard', compact('view'));
+            return view('project_task.taskboard', compact('view','project_members'));
         }
         else
         {
-            $usr = Auth::user();
+            // $usr = Auth::user();
             if (\Auth::user()->type == 'client')
             {
                 $user_projects = Project::where('client_id', \Auth::user()->id)->pluck('id', 'id')->toArray();
@@ -193,7 +199,7 @@ class ProjectTaskController extends Controller
             }
 
             $tasks = $tasks->get();
-            return view('project_task.grid', compact('tasks', 'view'));
+            return view('project_task.grid', compact('tasks', 'view','project_members'));
 
         }
 
@@ -207,75 +213,67 @@ class ProjectTaskController extends Controller
     {
 
         $usr = Auth::user();
-        if (\Auth::user()->type == 'client') {
-            $user_projects = Project::where('client_id', \Auth::user()->id)->pluck('id', 'id')->toArray();
-        } elseif (\Auth::user()->type != 'client') {
-            $user_projects = $usr->projects()->pluck('project_id', 'project_id')->toArray();
-        }
-        if ($request->ajax() && $request->has('view') && $request->has('sort')) {
-            $sort = explode('-', $request->sort);
-//            $task = ProjectTask::whereIn('project_id', $user_projects)->get();
-            $tasks = ProjectTask::whereIn('project_id', $user_projects)->orderBy($sort[0], $sort[1]);
-            if (\Auth::user()->type != 'company') {
-                if (\Auth::user()->type == 'client') {
-                    $tasks->where('created_by', \Auth::user()->creatorId());
+    $user_projects = \Auth::user()->type == 'client' ?
+        Project::where('client_id', \Auth::user()->id)->pluck('id', 'id')->toArray() :
+        $usr->projects()->pluck('project_id', 'project_id')->toArray();
 
-                } else {
-                    $tasks->whereRaw("find_in_set('" . $usr->id . "',assign_to)");
-                }
-            } else {
+    if ($request->ajax() && $request->has('view') && $request->has('sort')) {
+        $sort = explode('-', $request->sort);
+        $tasks = ProjectTask::whereIn('project_id', $user_projects)->orderBy($sort[0], $sort[1]);
+
+        if (\Auth::user()->type != 'company') {
+            if (\Auth::user()->type == 'client') {
                 $tasks->where('created_by', \Auth::user()->creatorId());
+            } else {
+                $tasks->whereRaw("find_in_set('" . $usr->id . "',assign_to)");
             }
-            if (!empty($request->keyword)) {
-                $tasks->where('name', 'LIKE', $request->keyword . '%');
-            }
-//            dd($tasks->get()->toArray());
-            if (!empty($request->status)) {
-                $todaydate = date('Y-m-d');
-
-                // For Optimization
-                $status = $request->status;
-                foreach ($status as $k => $v) {
-                    if ($v == 'due_today' || $v == 'over_due' || $v == 'starred' || $v == 'see_my_tasks') {
-                        unset($status[$k]);
-                    }
-                }
-                // end
-
-                if (count($status) > 0) {
-                    $tasks->whereIn('priority', $status);
-                }
-
-
-//                if(in_array('see_my_tasks', $request->status) && \Auth::user()->type!='company')
-//                {
-//                    $tasks->whereRaw("find_in_set('" . $usr->id . "',assign_to)");
-//                }
-
-                if (in_array('due_today', $request->status)) {
-                    $tasks->where('end_date', $todaydate);
-                }
-
-                if (in_array('over_due', $request->status)) {
-                    $tasks->where('end_date', '<', $todaydate);
-                }
-
-                if (in_array('starred', $request->status)) {
-                    $tasks->where('is_favourite', '=', 1);
-                }
-            }
-
-            $tasks = $tasks->with(['project'])->get();
-            $view=$request->view;
-            $returnHTML = view('project_task.' . $request->view, compact('tasks','view'))->render();
-
-            return response()->json(
-                [
-                    'success' => true,
-                    'html' => $returnHTML,
-                ]
-            );
+        } else {
+            $tasks->where('created_by', \Auth::user()->creatorId());
         }
+
+        if (!empty($request->keyword)) {
+            $tasks->where('name', 'LIKE', $request->keyword . '%');
+        }
+
+        if (!empty($request->status)) {
+            $todaydate = date('Y-m-d');
+            $status = $request->status;
+            foreach ($status as $k => $v) {
+                if ($v == 'due_today' || $v == 'over_due' || $v == 'starred' || $v == 'see_my_tasks') {
+                    unset($status[$k]);
+                }
+            }
+
+            if (count($status) > 0) {
+                $tasks->whereIn('priority', $status);
+            }
+
+            if (in_array('due_today', $request->status)) {
+                $tasks->where('end_date', $todaydate);
+            }
+
+            if (in_array('over_due', $request->status)) {
+                $tasks->where('end_date', '<', $todaydate);
+            }
+
+            if (in_array('starred', $request->status)) {
+                $tasks->where('is_favourite', '=', 1);
+            }
+        }
+
+        if (!empty($request->member_id)) {
+            $tasks->whereRaw("find_in_set('" . $request->member_id . "',assign_to)");
+        }
+
+        $tasks = $tasks->with(['project'])->get();
+        $view = $request->view;
+        $returnHTML = view('project_task.' . $view, compact('tasks', 'view'))->render();
+
+        return response()->json([
+            'success' => true,
+            'html' => $returnHTML,
+        ]);
+    }
     }
 
 

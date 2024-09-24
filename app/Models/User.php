@@ -98,7 +98,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->lang;
     }
 
-    public function priceFormat($price, $no = null)
+    public function priceFormat($price, $no = null, $currency_symbol = null)
     {
         if($no == 'no' && $price < 0)
         {
@@ -107,8 +107,12 @@ class User extends Authenticatable implements MustVerifyEmail
 
         $settings = Utility::settings();
         $decimal_number = Utility::getValByName('decimal_number') ? Utility::getValByName('decimal_number') : 0;
+        if($currency_symbol == null)
+        {
+            $currency_symbol = $settings['site_currency_symbol'];
+        }
 
-        return (($settings['site_currency_symbol_position'] == "pre") ? $settings['site_currency_symbol'] : '') . number_format($price, $decimal_number) . (($settings['site_currency_symbol_position'] == "post") ? $settings['site_currency_symbol'] : '');
+        return (($settings['site_currency_symbol_position'] == "pre") ? $currency_symbol : '') . number_format($price, $decimal_number) . (($settings['site_currency_symbol_position'] == "post") ? $currency_symbol : '');
 
     }
 
@@ -125,6 +129,12 @@ class User extends Authenticatable implements MustVerifyEmail
         $settings = Utility::settings();
 
         return $settings['site_currency_symbol'];
+    }
+    public function currencyCode()
+    {
+        $settings = Utility::settings();
+
+        return $settings['site_currency'];
     }
 
     public function dateFormat($date)
@@ -183,6 +193,11 @@ class User extends Authenticatable implements MustVerifyEmail
 
         return $settings["proposal_prefix"] . sprintf("%05d", $number);
     }
+    public function preOrderNumberFormat($number)
+    {
+        $settings = Utility::settings();
+        return $settings["pre_order_prefix"] . sprintf("%05d", $number);
+    }
 
     public function contractNumberFormat($number)
     {
@@ -193,9 +208,16 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function billNumberFormat($number)
     {
+        $bill = Bill::where("bill_id", $number)->where('created_by', \Auth::user()->creatorId())->first();
+        if($bill && $bill->actual_bill_number != null)
+        {
+            return $bill->actual_bill_number;
+        }else{
+
         $settings = Utility::settings();
 
         return $settings["bill_prefix"] . sprintf("%05d", $number);
+        }
     }
     public function expenseNumberFormat($number)
     {
@@ -1542,6 +1564,29 @@ class User extends Authenticatable implements MustVerifyEmail
 
                 ],
             ],
+
+            'interview_schedule' => [
+                'subject' => 'Interview Schedule',
+                'lang' => [
+                    'ar' => '<p>مرحبًا {candidate_name}،<br>لقد تم جدولة مقابلتك مع {interviewer_name} في {interview_date} الساعة {interview_time}.</p><p>إذا كانت لديك أي استفسارات، فلا تتردد في التواصل معنا.</p><p>شكرًا،<br>{app_name}</p><p>{app_url}</p>',
+                    'zh' => '<p>您好 {candidate_name},<br>您已被安排与 {interviewer_name} 在 {interview_date} 的 {interview_time} 进行面试。</p><p>如果您有任何问题，请随时与我们联系。</p><p>谢谢，<br>{app_name}</p><p>{app_url}</p>',
+                    'da' => '<p>Hej {candidate_name},<br>Du er planlagt til en samtale med {interviewer_name} den {interview_date} kl. {interview_time}.</p><p>Kontakt os, hvis du har spørgsmål.</p><p>Tak, <br>{app_name}</p><p>{app_url}</p>',
+                    'de' => '<p>Hallo {candidate_name},<br>Sie sind für ein Vorstellungsgespräch mit {interviewer_name} am {interview_date} um {interview_time} eingeplant.</p><p>Bei Fragen stehen wir Ihnen gerne zur Verfügung.</p><p>Danke, <br>{app_name}</p><p>{app_url}</p>',
+                    'en' => '<p>Hi {candidate_name},<br>You are scheduled for an interview with {interviewer_name} on {interview_date} at {interview_time}.</p><p>If you have any questions, feel free to reach out to us.</p><p>Thank you, <br>{app_name}</p><p>{app_url}</p>',
+                    'es' => '<p>Hola {candidate_name},<br>Se ha programado su entrevista con {interviewer_name} el {interview_date} a las {interview_time}.</p><p>Si tiene alguna pregunta, no dude en ponerse en contacto con nosotros.</p><p>Gracias, <br>{app_name}</p><p>{app_url}</p>',
+                    'fr' => '<p>Bonjour {candidate_name},<br>Votre entretien avec {interviewer_name} est prévu pour le {interview_date} à {interview_time}.</p><p>Si vous avez des questions, n\'hésitez pas à nous contacter.</p><p>Merci, <br>{app_name}</p><p>{app_url}</p>',
+                    'he' => '<p>שלום {candidate_name},<br>נקבע לך ראיון עם {interviewer_name} בתאריך {interview_date} בשעה {interview_time}.</p><p>אם יש לך שאלות, אל תהסס לפנות אלינו.</p><p>תודה, <br>{app_name}</p><p>{app_url}</p>',
+                    'it' => '<p>Ciao {candidate_name},<br>Hai un colloquio programmato con {interviewer_name} il {interview_date} alle {interview_time}.</p><p>Se hai domande, non esitare a contattarci.</p><p>Grazie, <br>{app_name}</p><p>{app_url}</p>',
+                    'ja' => '<p>こんにちは {candidate_name},<br>{interviewer_name} との面接が {interview_date} の {interview_time} に予定されています。</p><p>ご質問があれば、お気軽にお問い合わせください。</p><p>ありがとうございます,<br>{app_name}</p><p>{app_url}</p>',
+                    'nl' => '<p>Hallo {candidate_name},<br>Je hebt een interview gepland met {interviewer_name} op {interview_date} om {interview_time}.</p><p>Als je vragen hebt, neem gerust contact met ons op.</p><p>Dank je, <br>{app_name}</p><p>{app_url}</p>',
+                    'pl' => '<p>Witaj {candidate_name},<br>Masz zaplanowaną rozmowę kwalifikacyjną z {interviewer_name} dnia {interview_date} o godzinie {interview_time}.</p><p>W razie jakichkolwiek pytań prosimy o kontakt.</p><p>Dziękujemy, <br>{app_name}</p><p>{app_url}</p>',
+                    'ru' => '<p>Здравствуйте {candidate_name},<br>У вас назначено собеседование с {interviewer_name} на {interview_date} в {interview_time}.</p><p>Если у вас есть вопросы, пожалуйста, свяжитесь с нами.</p><p>Спасибо, <br>{app_name}</p><p>{app_url}</p>',
+                    'pt' => '<p>Olá {candidate_name},<br>Você está agendado para uma entrevista com {interviewer_name} no dia {interview_date} às {interview_time}.</p><p>Se tiver dúvidas, entre em contato conosco.</p><p>Obrigado, <br>{app_name}</p><p>{app_url}</p>',
+                    'tr' => '<p>Merhaba {candidate_name},<br>{interviewer_name} ile {interview_date} tarihinde saat {interview_time}’de görüşmeniz planlanmıştır.</p><p>Herhangi bir sorunuz olursa bize ulaşmaktan çekinmeyin.</p><p>Teşekkürler, <br>{app_name}</p><p>{app_url}</p>',
+                    'pt-br' => '<p>Olá {candidate_name},<br>Você está agendado para uma entrevista com {interviewer_name} no dia {interview_date} às {interview_time}.</p><p>Se tiver dúvidas, entre em contato conosco.</p><p>Obrigado, <br>{app_name}</p><p>{app_url}</p>',
+                ],
+            ],
+
             'customer_invoice_sent' => [
                 'subject' => 'Customer Invoice Sent',
                 'lang' => [
@@ -3661,6 +3706,7 @@ class User extends Authenticatable implements MustVerifyEmail
         BankAccount::create(
             [
                 'holder_name' => 'cash',
+                'code' => 1058,
                 'bank_name' => '',
                 'account_number' => '-',
                 'opening_balance' => '0.00',

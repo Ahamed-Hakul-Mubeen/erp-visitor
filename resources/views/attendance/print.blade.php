@@ -14,6 +14,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Attendance Report</title>
     <style>
         body {
@@ -139,8 +140,8 @@
 </table>
 
 <div class="no-print footer">
-    <button onclick="window.print()">Print</button>
-    <button onclick="window.close()">Close</button>
+    <button onclick="window.print()"> <i class="fa fa-print"></i> Print</button>
+    <button onclick="window.close()"> <i class="fa fa-close"></i> Close</button>
 </div>
 
 </body>

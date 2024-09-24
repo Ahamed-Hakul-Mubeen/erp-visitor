@@ -95,11 +95,11 @@ else {
             </nav>
             <section class="job-banner">
                 <div class="job-banner-bg">
-                    <img src="{{ asset('/storage/uploads/job/banner.png') }}" alt="">
+                    <img src="{{ url('/storage/uploads/job/banner.png') }}" alt="">
                 </div>
                 <div class="container">
-                    <div class="job-banner-content text-center text-white">
-                        <h1 class="text-white mb-3">
+                    <div class="text-center text-white job-banner-content">
+                        <h1 class="mb-3 text-white">
                             {{ __(' We help') }} <br> {{ __('businesses grow') }}
                         </h1>
                         <p>{{ __('Work there. Find the dream job you’ve always wanted..') }}</p>
@@ -110,11 +110,11 @@ else {
                 <div class="container">
                     <div class="section-title bg-light">
                         @php
-                            $totaljob = \App\Models\Job::where('created_by', '=', $id)->count();
+                            $totaljob = \App\Models\Job::where('created_by', '=', $id)->where('status', 'active')->count();
 
                         @endphp
 
-                        <h2 class="h1 mb-3"> <span class="text-primary">+{{ $totaljob }}
+                        <h2 class="mb-3 h1"> <span class="text-primary">+{{ $totaljob }}
                             </span>{{ __('Job openings') }}</h2>
                         <p>{{ __('Always looking for better ways to do things, innovate') }} <br>
                             {{ __('and help people achieve their goals') }}.</p>
@@ -123,7 +123,7 @@ else {
                         @foreach ($jobs as $job)
                             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 job-card">
                                 <div class="job-card-body">
-                                    <div class="d-flex mb-3 align-items-center justify-content-between ">
+                                    <div class="mb-3 d-flex align-items-center justify-content-between ">
                                         <img src="{{ asset('/storage/uploads/job/figma.png') }}" alt="">
                                         @if (!empty($job->branches) ? $job->branches->name : '')
                                             <span>{{ !empty($job->branches) ? $job->branches->name : '' }} <i
@@ -136,20 +136,20 @@ else {
                                         </a>
                                     </h5>
                                     <div
-                                        class="d-flex mb-3 align-items-start flex-column flex-xl-row flex-md-row flex-lg-column">
+                                        class="mb-3 d-flex align-items-start flex-column flex-xl-row flex-md-row flex-lg-column">
                                         <span class="d-inline-block me-2"> <i class="ti ti-circle-plus "></i>
                                             {{ $job->position }} {{ __('position available') }}</span>
                                     </div>
 
-                                    <div class="d-flex flex-wrap gap-1 align-items-center">
+                                    <div class="flex-wrap gap-1 d-flex align-items-center">
                                         @foreach (explode(',', $job->skill) as $skill)
-                                            <span class="badge rounded  p-2 bg-primary">{{ $skill }}</span>
+                                            <span class="p-2 rounded badge bg-primary">{{ $skill }}</span>
                                         @endforeach
 
                                     </div>
 
                                     <a href="{{ route('job.requirement', [$job->code, !empty($job) ? (!empty($job->createdBy->lang) ? $job->createdBy->lang : 'en') : 'en']) }}"
-                                        class="btn btn-primary w-100 mt-4">
+                                        class="mt-4 btn btn-primary w-100">
                                         {{ __('Read more') }}
                                     </a>
 

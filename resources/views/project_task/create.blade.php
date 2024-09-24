@@ -81,7 +81,7 @@
                         <div class="row align-items-center">
                             <div class="col-auto">
                                 <a href="#" class="avatar avatar-sm rounded-circle">
-                                    <img class="wid-40 rounded-circle ml-3" data-original-title="{{(!empty($user)?$user->name:'')}}" @if($user->avatar) src="{{asset('/storage/uploads/avatar/'.$user->avatar)}}" @else src="{{asset('/storage/uploads/avatar/avatar.png')}}" @endif/>
+                                    <img class="wid-40 rounded-circle ml-3" data-original-title="{{(!empty($user)?$user->name:'')}}" @if($user->avatar) src="{{ Storage::url('uploads/avatar/'.$user->avatar) }}" @else src="{{ Storage::url('uploads/avatar/avatar.png') }}" @endif/>
                                 </a>
                             </div>
                             <div class="col">

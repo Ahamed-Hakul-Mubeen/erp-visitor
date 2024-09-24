@@ -171,6 +171,9 @@
                         '                                </div>';
 
                     $("#comments-file").prepend(html);
+                    $('#form-file')[0].reset();
+                    $('#submit_btn').prop('disabled', false);
+                    $('#submit_btn').html('{{ __("Upload") }}');
                 },
                 error: function (data) {
                     data = data.responseJSON;
@@ -210,9 +213,15 @@
 
 @endpush
 @section('action-btn')
-    <div class="float-end">
+    <div class="d-flex justify-content-end align-items-center">
+        <div class="me-3">
+            <a href="{{ route('projects.show',$project->id) }}" class="btn btn-primary add-small">
+                <i class="ti ti-arrow-left"></i> {{ __('Back') }}
+            </a>
+        </div>
+        <div class="d-flex">
         @can('manage bug report')
-            <a href="{{ route('task.bug',$project->id) }}" data-bs-toggle="tooltip" title="{{__('List')}}" class="btn btn-sm btn-primary">
+            <a href="{{ route('task.bug',$project->id) }}" data-bs-toggle="tooltip" title="{{__('List')}}" class="btn btn-sm btn-primary me-2">
                 <i class="ti ti-list"></i>
             </a>
         @endcan
@@ -221,6 +230,7 @@
                 <i class="ti ti-plus"></i>
             </a>
         @endcan
+        </div>
     </div>
 @endsection
 
@@ -307,7 +317,7 @@
                                                 @php $user = $bug->users(); @endphp
 
                                                 <div class="user-group">
-                                                    <img @if(isset($user[0]->avatar)) src="{{asset('/storage/uploads/avatar/'.$user[0]->avatar)}}" @else src="{{asset('/storage/uploads/avatar/avatar.png')}}" @endif alt="image" data-bs-toggle="tooltip" title="{{(!empty($user[0])?$user[0]->name:'')}}">
+                                                    <img @if(isset($user[0]->avatar)) src="{{ Storage::url('uploads/avatar/'.$user[0]->avatar)}}" @else src="{{ Storage::url('uploads/avatar/avatar.png')}}" @endif alt="image" data-bs-toggle="tooltip" title="{{(!empty($user[0])?$user[0]->name:'')}}">
                                                 </div>
                                             </div>
                                         </div>

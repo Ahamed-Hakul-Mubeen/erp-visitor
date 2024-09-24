@@ -13,23 +13,35 @@ use Illuminate\Http\Request;
 class AssetManagementController extends Controller
 {
     //
-    public function index()
-    {   
-        if(\Auth::user()->can('manage assets management'))
-        {
-            $assets = AssetManagement::where('created_by', \Auth::user()->id)->get();
-            return view('asset_management.index', compact('assets'));
-        }else
-        {
-            return redirect()->back()->with('error', __('Permission denied.'));
+    public function index(Request $request)
+{
+    if (\Auth::user()->can('manage assets management')) {
+        // Fetch all assets created by the authenticated user
+        $query = AssetManagement::where('created_by', \Auth::user()->id);
+
+        // Filter assets based on the status
+        if ($request->has('asset_status') && $request->asset_status !== '') {
+            if ($request->asset_status == 'available') {
+                $query->where('status', 0); // Assuming 0 means available
+            } elseif ($request->asset_status == 'unavailable') {
+                $query->where('status', 1); // Assuming 1 means unavailable
+            }
         }
+
+        // Get the filtered or full asset list
+        $assets = $query->get();
+
+        return view('asset_management.index', compact('assets'));
+    } else {
+        return redirect()->back()->with('error', __('Permission denied.'));
     }
+}
 
     public function create()
     {   
         if(\Auth::user()->can('create assets management'))
         {
-            $productTypes = ProductType::pluck('name', 'id');
+            $productTypes = ProductType::where('created_by', \Auth::user()->creatorId())->pluck('name', 'id');
             return view('asset_management.create', compact('productTypes'));
         }else
         {
@@ -39,39 +51,41 @@ class AssetManagementController extends Controller
 
   
     public function store(Request $request)
-    {   
-        
-        if(\Auth::user()->can('create assets management'))
-        {
+{
+    if(\Auth::user()->can('create assets management'))
+    {
         // Validate the incoming request data
         $validator = \Validator::make($request->all(), [
-          
+            'product_name' => 'required',
             'product_description' => 'required',
             'product_configuration' => 'required',
+            'asset_property_values' => 'nullable|array', 
         ]);
 
-        // If validation fails, redirect back with the first error message
         if ($validator->fails()) {
             $messages = $validator->getMessageBag();
             return redirect()->back()->with('error', $messages->first());
         }
 
-        // Create a new instance of AssetManagement and set its attributes
+        // Create a new instance of AssetManagement
         $assetManagement = new AssetManagement();
         $assetManagement->product_type_id = $request->product_name;
         $assetManagement->product_description = $request->product_description;
         $assetManagement->product_configuration = $request->product_configuration;
         $assetManagement->created_by = \Auth::user()->id;
+
+        // Store asset properties values as JSON
+        if ($request->has('asset_property_values')) {
+            $assetManagement->asset_properties_values = json_encode($request->asset_property_values);
+        }
+
         $assetManagement->save();
 
-        // Redirect to the asset management index page with a success message
         return redirect()->route('asset_management.index')->with('success', __('Asset added successfully.'));
-        }else
-        {
-            return redirect()->back()->with('error', __('Permission denied.'));
-        }
+    } else {
+        return redirect()->back()->with('error', __('Permission denied.'));
     }
-
+}
     public function edit($id)
     {  
         if(\Auth::user()->can('edit assets management'))
@@ -90,37 +104,40 @@ class AssetManagementController extends Controller
     public function update(Request $request,$id)
 {    
 
-     if(\Auth::user()->can('edit assets management'))
-    {
-    // Validate the request inputs
-    $validator = \Validator::make($request->all(), [
-        
-        'product_description' => 'required|string|max:255',
-        'product_configuration' => 'required|string|max:255',
-    ]);
+    if (\Auth::user()->can('edit assets management')) {
+        // Validate the request inputs
+        $validator = \Validator::make($request->all(), [
+            'product_description' => 'required|string|max:255',
+            'product_configuration' => 'required|string|max:255',
+            'asset_property_values' => 'nullable|array', // Validate asset property values
+        ]);
 
-    // If validation fails, redirect back with the first error message
-    if ($validator->fails()) {
-        $messages = $validator->getMessageBag();
-        return redirect()->back()->with('error', $messages->first());
-    }
+        // If validation fails, redirect back with the first error message
+        if ($validator->fails()) {
+            $messages = $validator->getMessageBag();
+            return redirect()->back()->with('error', $messages->first());
+        }
 
-    // Find the asset by ID
-    $asset = AssetManagement::find($id);
-    if (!$asset) {
-        return redirect()->route('asset_management.index')->with('error', __('Asset not found.'));
-    }
+        // Find the asset by ID
+        $asset = AssetManagement::find($id);
+        if (!$asset) {
+            return redirect()->route('asset_management.index')->with('error', __('Asset not found.'));
+        }
 
- 
-    $asset->product_type_id = $request->product_name;
-    $asset->product_description = $request->product_description;
-    $asset->product_configuration = $request->product_configuration;
-    $asset->save();
+        // Update asset details
+        $asset->product_type_id = $request->product_name;
+        $asset->product_description = $request->product_description;
+        $asset->product_configuration = $request->product_configuration;
 
-    
-    return redirect()->route('asset_management.index')->with('success', __('Asset successfully updated.'));
-    }
-    else{
+        // Update asset property values as JSON
+        if ($request->has('asset_property_values')) {
+            $asset->asset_properties_values = json_encode($request->asset_property_values);
+        }
+
+        $asset->save();
+
+        return redirect()->route('asset_management.index')->with('success', __('Asset successfully updated.'));
+    } else {
         return redirect()->back()->with('error', __('Permission denied.'));
     }
 }
@@ -168,7 +185,7 @@ public function assignAsset(Request $request, $id)
         $history->asset_id = $asset->id;    
         $history->employee_id = $request->employee_id;
         $history->action = 'assigned';
-        $history->assign_description = $request->assign_description;
+        $history->description = $request->assign_description;
         $history->action_date = $request->assigned_date;
         $history->created_by = auth()->user()->id;
         $history->save();
@@ -185,7 +202,11 @@ public function assignAsset(Request $request, $id)
         if(\Auth::user()->can('assign assets management'))
         {
             $asset = AssetManagement::find($id);
-            $employees = Employee::where('created_by', \Auth::user()->creatorId())->get(); 
+            $employees = Employee::where('created_by', \Auth::user()->creatorId())
+            ->whereHas('user', function ($query) {
+                $query->where('type', 'Employee');
+            })
+            ->get();
             $latestHistory = AssetHistory::where('asset_id', $id)
                                         ->whereIn('action', ['assigned', 'transferred'])
                                         ->latest()->first();
@@ -208,7 +229,11 @@ public function assignAsset(Request $request, $id)
         // if (!$latestHistory) {
         // return redirect()->back()->with('error', __('No assignment history found for this asset.'));
         // }                             
-        $employees = Employee::where('created_by', \Auth::user()->creatorId())->get();
+        $employees = Employee::where('created_by', \Auth::user()->creatorId())
+        ->whereHas('user', function ($query) {
+            $query->where('type', 'Employee');
+        })
+        ->get();
     
         return view('asset_management.transfer', compact('latestHistory', 'employees'));
     }else
@@ -256,7 +281,7 @@ public function assignAsset(Request $request, $id)
         $history->from_employee_id = $request->from_employee_id;
         $history->to_employee_id = $request->to_employee_id;
         $history->action = 'transferred';
-        $history->transfer_description = $request->transfer_description;
+        $history->description = $request->transfer_description;
         $history->action_date = $request->transfer_date;
         $history->created_by = \Auth::user()->id;
         $history->save();
@@ -281,7 +306,11 @@ public function assignAsset(Request $request, $id)
             // if (!$latestHistory) {
             //     return redirect()->back()->with('error', __('No assigned asset found to unassign.'));
             // }
-            $employees = Employee::where('created_by', \Auth::user()->creatorId())->get();
+            $employees = Employee::where('created_by', \Auth::user()->creatorId())
+            ->whereHas('user', function ($query) {
+                $query->where('type', 'Employee');
+            })
+            ->get();
             return view('asset_management.unassign', compact('asset', 'latestHistory','employees'));
             }else
             {
@@ -305,7 +334,7 @@ public function assignAsset(Request $request, $id)
             $history->asset_id = $asset->id;    
             $history->employee_id = $request->employee_id;
             $history->action = 'unassigned';
-            $history->unassign_description = $request->unassign_description;
+            $history->description = $request->unassign_description;
             $history->action_date = $request->assigned_date;
             $history->created_by = auth()->user()->id;
             $history->save();
@@ -323,7 +352,6 @@ public function assignAsset(Request $request, $id)
             // Fetch asset assignment history
             $historyRecords = AssetHistory::with(['employee', 'fromEmployee', 'toEmployee', 'createdBy'])
             ->where('asset_id', $id)
-            ->orderBy('action_date', 'desc')
             ->get();
         
             return view('asset_management.history', compact('historyRecords'));
@@ -333,6 +361,41 @@ public function assignAsset(Request $request, $id)
         }
         }
 
-       
-
+        public function getAssetProperties(Request $request)
+        {
+            // Assuming you store asset properties in a JSON field in your ProductType model
+            $productType = ProductType::find($request->product_type_id);
+            $assetProperties = json_decode($productType->asset_properties, true); // Decode JSON asset properties
+            return response()->json($assetProperties);
+        }
+        public function showProperties($id)
+        {
+            // Fetch the asset based on its ID
+            $asset = AssetManagement::findOrFail($id);
+            // Fetch the asset properties stored as JSON in the ProductType model
+            $properties = $asset->asset_properties_values;  // Adjust based on your actual data structure
+            
+            // Return the properties view with the asset and its properties
+            return view('asset_management.properties', compact('asset', 'properties'));
+        }
+        public function getAssetPropertiesForEdit($assetId = null, Request $request)
+        {
+            // Find the asset if editing
+            $asset = $assetId ? AssetManagement::find($assetId) : null;
+        
+            // Get the product type from the request or asset
+            $productType = ProductType::find($request->product_type_id ?? $asset->product_type_id);
+        
+            // Decode the asset properties stored in the ProductType
+            $assetProperties = json_decode($productType->asset_properties, true);
+        
+            // Get the existing values from the asset, only if the asset exists
+            $existingValues = $asset ? json_decode($asset->asset_properties_values, true) : [];
+        
+            // Return both properties and existing values
+            return response()->json([
+                'properties' => $assetProperties,
+                'existingValues' => $existingValues,
+            ]);
+        }
 }

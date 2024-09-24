@@ -41,9 +41,16 @@
             {{ Form::label('due_date', __('Due Date'),['class' => 'col-form-label']) }}
             {{ Form::date('due_date', null, array('class' => 'form-control','required'=>'required')) }}
         </div>
-        <div class="form-group col-md-12">
-            {{ Form::label('cost', __('Cost'),['class' => 'col-form-label']) }}
-            {{ Form::number('cost', null, array('class' => 'form-control','required'=>'required','stage'=>'0.01')) }}
+        <div class="form-group col-md-6">
+            {{ Form::label('cost', __('Cost (% of Budget)'), ['class' => 'col-form-label']) }}
+            <div class="input-group search-form">
+                {{ Form::number('cost', null, array('class' => 'form-control', 'required' => 'required', 'max' => '100' ,'placeholder'=>__('Percentage'))) }}
+                <span class="bg-transparent input-group-text">%</span>
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            {{ Form::label('vender_id', __('Vendor'),['class'=>'col-form-label']) }}
+            {{ Form::select('vender_id', $vender,null, array('class' => 'form-control select','required'=>'required')) }}
         </div>
     </div>
     <div class="row">
@@ -64,7 +71,7 @@
 
     <div class="modal-footer">
         <input type="button" value="{{__('Cancel')}}" class="btn btn-light" data-bs-dismiss="modal">
-        <button type="submit" class="btn btn-primary">{{ __('Edit') }}</button>
+        <button type="submit" class="btn btn-primary">{{ __('Update') }}</button>
     </div>
 
 {{ Form::close() }}

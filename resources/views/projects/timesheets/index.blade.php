@@ -11,7 +11,13 @@
 @endsection
 
 @section('action-btn')
+
     <div class="row gy-3 justify-content-end align-items-center">
+        <div class="col-auto">
+            <a href="{{ url()->previous() }}" class="btn btn-primary add-small">
+                <i class="ti ti-arrow-left"></i> {{ __('Back') }}
+            </a>
+        </div>
         <div class="col-auto weekly-dates-div text-end me-2">
             <a href="#" class="action-item previous"><i class="ti ti-arrow-left"></i></a>
             <span class="weekly-dates"></span>

@@ -119,16 +119,16 @@
                         <div class="px-3 py-2 row align-items-center">
                             @csrf
                             <div class="col-10">
-                                <input type="file" name="task_attachment" id="task_attachment" onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])" required class="form-control"/>
+                                <input type="file" name="task_attachment" id="task_attachment" onchange="previewImage()" required class="form-control"/>
 
                             </div>
                             <div class="col-2 card-meta d-inline-flex align-items-center">
-                                <button class="btn btn-sm btn-primary" type="button" id="file_attachment_submit"
+                                <button class="btn btn-sm btn-primary active" type="button" id="file_attachment_submit"
                                         data-action="{{ route('comment.store.file',[$task->project_id,$task->id]) }}" data-bs-toggle="tooltip" title="{{__('Create')}}">
                                     <i class="ti ti-check"></i>
                                 </button>
                             </div>
-                            <img id="blah" src="" class="img_preview" />
+                            <img id="image_preview" class="img_preview" src="" style="display:none;" />
                         </div>
                     </div>
                 </form>
@@ -182,7 +182,7 @@
                         <div class="row align-items-center">
                             <div class="col-auto">
                                 <a href="#" class="avatar avatar-sm ms-2">
-                                    <img data-toggle="tooltip" data-original-title="{{(!empty($user)?$user->name:'')}}" @if($user->avatar) src="{{asset('/storage/uploads/avatar/'.$user->avatar)}}" @else src="{{asset('/storage/uploads/avatar/avatar.png')}}" @endif title="{{ $user->name }}" class="wid-40 rounded-circle ml-3">
+                                    <img data-toggle="tooltip" data-original-title="{{(!empty($user)?$user->name:'')}}" @if($user->avatar) src="{{ Storage::url('uploads/avatar/'.$user->avatar) }}" @else src="{{ Storage::url('uploads/avatar/avatar.png') }}" @endif title="{{ $user->name }}" class="wid-40 rounded-circle ml-3">
                                 </a>
                             </div>
                             <div class="col ml-n2">
@@ -227,7 +227,7 @@
                         <div class="row align-items-center">
                             <div class="col-auto">
                                 <a href="#" class="avatar avatar-sm rounded-circle ms-2">
-                                    <img data-original-title="{{(!empty($user)?$user->name:'')}}" @if($user->avatar) src="{{asset('/storage/uploads/avatar/'.$user->avatar)}}" @else src="{{asset('/storage/uploads/avatar/avatar.png')}}" @endif title="{{ $comment->user->name }}" class="wid-40 rounded-circle ml-3">
+                                    <img data-original-title="{{(!empty($user)?$user->name:'')}}" @if($user->avatar) src="{{ Storage::url('uploads/avatar/'.$user->avatar) }}" @else src="{{ Storage::url('uploads/avatar/avatar.png') }}" @endif title="{{ $comment->user->name }}" class="wid-40 rounded-circle ml-3">
                                 </a>
                             </div>
                             <div class="col ml-n2">
@@ -250,7 +250,7 @@
 
             <div class="col-12 d-flex">
                 <div class="avatar me-3">
-                    <img data-original-title="{{(!empty(\Auth::user()) ? \Auth::user()->name:'')}}" @if(\Auth::user()->avatar) src="{{asset('/storage/uploads/avatar/'.\Auth::user()->avatar)}}" @else src="{{asset('/storage/uploads/avatar/avatar.png')}}" @endif title="{{ Auth::user()->name }}" class="wid-40 rounded-circle ml-3">
+                    <img data-original-title="{{(!empty(\Auth::user()) ? \Auth::user()->name:'')}}" @if(\Auth::user()->avatar) src="{{ Storage::url('uploads/avatar/'.\Auth::user()->avatar)}}" @else src="{{ Storage::url('uploads/avatar/avatar.png')}}" @endif title="{{ Auth::user()->name }}" class="wid-40 rounded-circle ml-3">
                 </div>
                 <div class="form-group mb-0 form-send w-100">
                     <form method="post" class="card-comment-box" id="form-comment" data-action="{{route('task.comment.store',[$task->project_id,$task->id])}}">
@@ -265,6 +265,21 @@
         </div>
     </div>
 </div>
+
+<script>
+    function previewImage() {
+        const file = document.getElementById('task_attachment').files[0];
+        const imagePreview = document.getElementById('image_preview');
+
+        if (file && file.type.startsWith('image/')) {
+            const fileURL = window.URL.createObjectURL(file);
+            imagePreview.src = fileURL;
+            imagePreview.style.display = 'block';
+        } else {
+            imagePreview.style.display = 'none';
+        }
+    }
+</script>
 @push('script-page')
     <script>
         $(document).ready(function () {

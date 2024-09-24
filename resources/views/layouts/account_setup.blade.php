@@ -8,5 +8,8 @@
 
         <a href="{{ route('custom-field.index') }}" class="list-group-item list-group-item-action border-0 {{ (Request::route()->getName() == 'custom-field.index' ) ? 'active' : '' }}   ">{{__('Custom Field')}}<div class="float-end"><i class="ti ti-chevron-right"></i></div></a>
 
+        <a href="{{ route('currency.index') }}" class="list-group-item list-group-item-action border-0 {{ (Request::route()->getName() == 'currency.index' ) ? 'active' : '' }}   ">{{__('Currency List')}}<div class="float-end"><i class="ti ti-chevron-right"></i></div></a>
+        <a href="{{ route('exchange_rate.index') }}" class="list-group-item list-group-item-action border-0 {{ (Request::route()->getName() == 'exchange_rate.index' ) ? 'active' : '' }}   ">{{__('Exchange Rate')}}<div class="float-end"><i class="ti ti-chevron-right"></i></div></a>
+
     </div>
 </div>

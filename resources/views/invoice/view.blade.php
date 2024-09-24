@@ -272,7 +272,7 @@
                                     </div>
                                     <h6 class="text-warning my-3">{{ __('Send Invoice') }}</h6>
                                     <p class="text-muted text-sm mb-3">
-                                        @if ($invoice->status != 0)
+                                        @if ($invoice->status != 0 && $invoice->send_date)
                                             <i class="ti ti-clock mr-2"></i>{{ __('Sent on') }}
                                             {{ \Auth::user()->dateFormat($invoice->send_date) }}
                                         @else
@@ -282,9 +282,9 @@
                                         @endif
                                     </p>
 
-                                    @if ($invoice->status == 0)
+                                    @if ($invoice->status == 0 && (\Auth::user()->type == "company" || \Auth::user()->type == "Accountant"))
                                         @can('send bill')
-                                            <a href="{{ route('invoice.sent', $invoice->id) }}" class="btn btn-sm btn-warning"
+                                            <a id="send_btn" href="#" data-href="{{ route('invoice.sent', $invoice->id) }}" class="btn btn-sm btn-warning"
                                                 data-bs-toggle="tooltip" data-original-title="{{ __('Mark Sent') }}"><i
                                                     class="ti ti-send mr-2"></i>{{ __('Send') }}</a>
                                         @endcan
@@ -523,8 +523,8 @@
                                                     @endphp
                                                     <td>{{ !empty($productName) ? $productName->name : '' }}</td>
                                                     <td>{{ $iteam->quantity . ' (' . $productName->unit->name . ')' }}</td>
-                                                    <td>{{ \Auth::user()->priceFormat($iteam->price) }}</td>
-                                                    <td>{{ \Auth::user()->priceFormat($iteam->discount) }}</td>
+                                                    <td>{{ \Auth::user()->priceFormat($iteam->price, null, $invoice->currency_symbol) }}</td>
+                                                    <td>{{ \Auth::user()->priceFormat($iteam->discount, null, $invoice->currency_symbol) }}</td>
 
                                                     {{-- <td>
                                                         @if (!empty($iteam->tax))
@@ -557,17 +557,36 @@
 
                                                                     if (!empty($iteam->tax)) {
                                                                         foreach (explode(',', $iteam->tax) as $tax) {
-                                                                            $taxPrice = \Utility::taxRate($getTaxData[$tax]['rate'], $iteam->price, $iteam->quantity);
+                                                                            $taxPrice = \Utility::taxRate(
+                                                                                $getTaxData[$tax]['rate'],
+                                                                                $iteam->price,
+                                                                                $iteam->quantity,
+                                                                                $iteam->discount
+                                                                            );
                                                                             $totalTaxPrice += $taxPrice;
-                                                                            $itemTax['name'] = $getTaxData[$tax]['name'];
-                                                                            $itemTax['rate'] = $getTaxData[$tax]['rate'] . '%';
-                                                                            $itemTax['price'] = \Auth::user()->priceFormat($taxPrice);
+                                                                            $itemTax['name'] =
+                                                                                $getTaxData[$tax]['name'];
+                                                                            $itemTax['rate'] =
+                                                                                $getTaxData[$tax]['rate'] . '%';
+                                                                            $itemTax[
+                                                                                'price'
+                                                                            ] = \Auth::user()->priceFormat($taxPrice, null, $invoice->currency_symbol);
 
                                                                             $itemTaxes[] = $itemTax;
-                                                                            if (array_key_exists($getTaxData[$tax]['name'], $taxesData)) {
-                                                                                $taxesData[$getTaxData[$tax]['name']] = $taxesData[$getTaxData[$tax]['name']] + $taxPrice;
+                                                                            if (
+                                                                                array_key_exists(
+                                                                                    $getTaxData[$tax]['name'],
+                                                                                    $taxesData,
+                                                                                )
+                                                                            ) {
+                                                                                $taxesData[$getTaxData[$tax]['name']] =
+                                                                                    $taxesData[
+                                                                                        $getTaxData[$tax]['name']
+                                                                                    ] + $taxPrice;
                                                                             } else {
-                                                                                $taxesData[$getTaxData[$tax]['name']] = $taxPrice;
+                                                                                $taxesData[
+                                                                                    $getTaxData[$tax]['name']
+                                                                                ] = $taxPrice;
                                                                             }
                                                                         }
                                                                         $iteam->itemTax = $itemTaxes;
@@ -576,11 +595,11 @@
                                                                     }
                                                                 @endphp
                                                                 @foreach ($iteam->itemTax as $tax)
-
-                                                                        <tr>
-                                                                            <td>{{$tax['name'] .' ('.$tax['rate'] .'%)'}}</td>
-                                                                            <td>{{ $tax['price']}}</td>
-                                                                        </tr>
+                                                                    <tr>
+                                                                        <td>{{ $tax['name'] . ' (' . $tax['rate'] . ')' }}
+                                                                        </td>
+                                                                        <td>{{ $tax['price'] }}</td>
+                                                                    </tr>
                                                                 @endforeach
                                                             </table>
                                                         @else
@@ -590,7 +609,7 @@
 
                                                     <td>{{ !empty($iteam->description) ? $iteam->description : '-' }}</td>
                                                     <td class="text-end">
-                                                        {{ \Auth::user()->priceFormat($iteam->price * $iteam->quantity - $iteam->discount + $totalTaxPrice) }}
+                                                        {{ \Auth::user()->priceFormat($iteam->price * $iteam->quantity - $iteam->discount + $taxPrice, null, $invoice->currency_symbol) }}
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -599,23 +618,23 @@
                                                     <td></td>
                                                     <td><b>{{ __('Total') }}</b></td>
                                                     <td><b>{{ $totalQuantity }}</b></td>
-                                                    <td><b>{{ \Auth::user()->priceFormat($totalRate) }}</b></td>
-                                                    <td><b>{{ \Auth::user()->priceFormat($totalDiscount) }}</b></td>
-                                                    <td><b>{{ \Auth::user()->priceFormat($totalTaxPrice) }}</b></td>
+                                                    <td><b>{{ \Auth::user()->priceFormat($totalRate, null, $invoice->currency_symbol) }}</b></td>
+                                                    <td><b>{{ \Auth::user()->priceFormat($totalDiscount, null, $invoice->currency_symbol) }}</b></td>
+                                                    <td><b>{{ \Auth::user()->priceFormat($totalTaxPrice, null, $invoice->currency_symbol) }}</b></td>
                                                     <td></td>
                                                 </tr>
                                                 <tr>
                                                     <td colspan="6"></td>
                                                     <td class="text-end"><b>{{ __('Sub Total') }}</b></td>
                                                     <td class="text-end">
-                                                        {{ \Auth::user()->priceFormat($invoice->getSubTotal()) }}</td>
+                                                        {{ \Auth::user()->priceFormat($invoice->getSubTotal(), null, $invoice->currency_symbol) }}</td>
                                                 </tr>
 
                                                 <tr>
                                                     <td colspan="6"></td>
                                                     <td class="text-end"><b>{{ __('Discount') }}</b></td>
                                                     <td class="text-end">
-                                                        {{ \Auth::user()->priceFormat($invoice->getTotalDiscount()) }}
+                                                        {{ \Auth::user()->priceFormat($invoice->getTotalDiscount(), null, $invoice->currency_symbol) }}
                                                     </td>
                                                 </tr>
 
@@ -625,7 +644,7 @@
                                                             <td colspan="6"></td>
                                                             <td class="text-end"><b>{{ $taxName }}</b></td>
                                                             <td class="text-end">
-                                                                {{ \Auth::user()->priceFormat($taxPrice) }}</td>
+                                                                {{ \Auth::user()->priceFormat($taxPrice, null, $invoice->currency_symbol) }}</td>
                                                         </tr>
                                                     @endforeach
                                                 @endif
@@ -633,27 +652,27 @@
                                                     <td colspan="6"></td>
                                                     <td class="blue-text text-end"><b>{{ __('Total') }}</b></td>
                                                     <td class="blue-text text-end">
-                                                        {{ \Auth::user()->priceFormat($invoice->getTotal()) }}</td>
+                                                        {{ \Auth::user()->priceFormat($invoice->getTotal(), null, $invoice->currency_symbol) }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td colspan="6"></td>
                                                     <td class="text-end"><b>{{ __('Paid') }}</b></td>
                                                     <td class="text-end">
-                                                        {{ \Auth::user()->priceFormat($invoice->getTotal() - $invoice->getDue() - $invoice->invoiceTotalCreditNote()) }}
+                                                        {{ \Auth::user()->priceFormat($invoice->getTotal() - $invoice->getDue() - $invoice->invoiceTotalCreditNote(), null, $invoice->currency_symbol) }}
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td colspan="6"></td>
                                                     <td class="text-end"><b>{{ __('Credit Note') }}</b></td>
                                                     <td class="text-end">
-                                                        {{ \Auth::user()->priceFormat($invoice->invoiceTotalCreditNote()) }}
+                                                        {{ \Auth::user()->priceFormat($invoice->invoiceTotalCreditNote(), null, $invoice->currency_symbol) }}
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td colspan="6"></td>
                                                     <td class="text-end"><b>{{ __('Due') }}</b></td>
                                                     <td class="text-end">
-                                                        {{ \Auth::user()->priceFormat($invoice->getDue()) }}</td>
+                                                        {{ \Auth::user()->priceFormat($invoice->getDue(), null, $invoice->currency_symbol) }}</td>
                                                 </tr>
                                             </tfoot>
                                         </table>
@@ -708,12 +727,16 @@
                                                     download="" class="btn btn-sm btn-secondary btn-icon rounded-pill"
                                                     target="_blank"><span class="btn-inner--icon"><i
                                                             class="ti ti-download"></i></span></a>
+                                                <a href="{{ asset(Storage::url('uploads/payment')) . '/' . $payment->add_receipt }}"
+                                                    class="btn btn-sm btn-secondary btn-icon rounded-pill"
+                                                    target="_blank"><span class="btn-inner--icon"><i
+                                                            class="ti ti-eye"></i></span></a>
                                             @else
                                                 -
                                             @endif
                                         </td>
                                         <td>{{ \Auth::user()->dateFormat($payment->date) }}</td>
-                                        <td>{{ \Auth::user()->priceFormat($payment->amount) }}</td>
+                                        <td>{{ \Auth::user()->priceFormat($payment->amount, null, $invoice->currency_symbol) }}</td>
                                         <td>{{ $payment->payment_type }}</td>
                                         <td>{{ !empty($payment->bankAccount) ? $payment->bankAccount->bank_name . ' ' . $payment->bankAccount->holder_name : '--' }}
                                         </td>
@@ -765,7 +788,7 @@
                                     <tr>
                                         <td>-</td>
                                         <td>{{ \Auth::user()->dateFormat($bankPayment->date) }}</td>
-                                        <td>{{ \Auth::user()->priceFormat($bankPayment->amount) }}</td>
+                                        <td>{{ \Auth::user()->priceFormat($bankPayment->amount, null, $invoice->currency_symbol) }}</td>
                                         <td>{{ __('Bank Transfer') }}<br>
                                         </td>
                                         <td>-</td>
@@ -857,7 +880,7 @@
                             @forelse($invoice->creditNote as $key =>$creditNote)
                                 <tr>
                                     <td>{{ \Auth::user()->dateFormat($creditNote->date) }}</td>
-                                    <td class="">{{ \Auth::user()->priceFormat($creditNote->amount) }}</td>
+                                    <td class="">{{ \Auth::user()->priceFormat($creditNote->amount, null, $invoice->currency_symbol) }}</td>
                                     <td class="">{{ $creditNote->description }}</td>
                                     <td>
                                         @can('edit credit note')
@@ -906,3 +929,16 @@
 
 
 @endsection
+
+@push('script-page')
+<script>
+    $(document).ready(function(){
+        $("#send_btn").click(function(event) {
+            event.preventDefault();
+            $(this).addClass("disabled").css("pointer-events", "none").attr("disabled", true);
+            $("#send_btn").html("<i class='fa fa-spinner fa-spin'></i> Processing");
+            window.location.href = $("#send_btn").data("href");
+        });
+    });
+</script>
+@endpush

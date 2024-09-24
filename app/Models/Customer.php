@@ -113,6 +113,12 @@ class Customer extends Authenticatable
 
         return $settings["proposal_prefix"] . sprintf("%05d", $number);
     }
+    public function preOrderNumberFormat($number)
+    {
+        $settings = Utility::settings();
+
+        return $settings["pre_order_prefix"] . sprintf("%05d", $number);
+    }
 
     public function invoiceChartData()
     {

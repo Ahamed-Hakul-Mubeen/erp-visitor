@@ -1,3 +1,6 @@
+@php
+    $advancepath=\App\Models\Utility::get_file('uploads/advance');
+@endphp
 <div class="table-responsive">
     <table class="table table-md">
         <tbody>

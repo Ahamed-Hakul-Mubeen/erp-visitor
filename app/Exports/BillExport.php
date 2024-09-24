@@ -6,8 +6,9 @@ use App\Models\Bill;
 use App\Models\ProductServiceCategory;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
-class BillExport implements FromCollection, WithHeadings
+class BillExport implements FromCollection, WithHeadings, ShouldAutoSize
 {
     /**
      * @return \Illuminate\Support\Collection
