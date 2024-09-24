@@ -4,7 +4,7 @@
         @if (\Auth::user()->type == 'super admin')
             <div class="col-md-6">
                 <div class="form-group">
-                    {{ Form::label('name', __('Name'), ['class' => 'form-label']) }}
+                    {{ Form::label('name', __('Name'), ['class' => 'form-label']) }}<span class="text-danger">*</span>
                     {{ Form::text('name', null, ['class' => 'form-control', 'placeholder' => __('Enter Company Name'), 'required' => 'required']) }}
                     @error('name')
                         <small class="invalid-name" role="alert">
@@ -15,7 +15,7 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    {{ Form::label('email', __('Email'), ['class' => 'form-label']) }}
+                    {{ Form::label('email', __('Email'), ['class' => 'form-label']) }}<span class="text-danger">*</span>
                     {{ Form::text('email', null, ['class' => 'form-control', 'placeholder' => __('Enter Company Email'), 'required' => 'required']) }}
                     @error('email')
                         <small class="invalid-email" role="alert">
@@ -35,8 +35,8 @@
             </div>
             <div class="col-md-6 ps_div d-none">
                 <div class="form-group">
-                    {{ Form::label('password', __('Password'), ['class' => 'form-label']) }}
-                    {{ Form::password('password', ['class' => 'form-control', 'placeholder' => __('Enter Company Password'), 'minlength' => '6']) }}
+                    {{ Form::label('password', __('Password'), ['class' => 'form-label']) }}<span class="text-danger">*</span>
+                    {{ Form::password('password', ['class' => 'form-control', 'placeholder' => __('Enter Company Password'), 'minlength' => '6','required'=>'required']) }}
                     @error('password')
                         <small class="invalid-password" role="alert">
                             <strong class="text-danger">{{ $message }}</strong>
@@ -47,7 +47,7 @@
         @else
             <div class="col-md-6">
                 <div class="form-group">
-                    {{ Form::label('name', __('Name'), ['class' => 'form-label']) }}
+                    {{ Form::label('name', __('Name'), ['class' => 'form-label']) }}<span class="text-danger">*</span>
                     {{ Form::text('name', null, ['class' => 'form-control', 'placeholder' => __('Enter User Name'), 'required' => 'required']) }}
                     @error('name')
                         <small class="invalid-name" role="alert">
@@ -58,7 +58,7 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    {{ Form::label('email', __('Email'), ['class' => 'form-label']) }}
+                    {{ Form::label('email', __('Email'), ['class' => 'form-label']) }}<span class="text-danger">*</span>
                     {{ Form::text('email', null, ['class' => 'form-control', 'placeholder' => __('Enter User Email'), 'required' => 'required']) }}
                     @error('email')
                         <small class="invalid-email" role="alert">
@@ -68,7 +68,7 @@
                 </div>
             </div>
             <div class="form-group col-md-6">
-                {{ Form::label('role', __('User Role'), ['class' => 'form-label']) }}
+                {{ Form::label('role', __('User Role'), ['class' => 'form-label']) }}<span class="text-danger">*</span>
                 {!! Form::select('role', $roles, null, ['class' => 'form-control select', 'required' => 'required']) !!}
                 @error('role')
                     <small class="invalid-role" role="alert">

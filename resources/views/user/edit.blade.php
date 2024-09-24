@@ -3,8 +3,8 @@
     <div class="row">
         <div class="col-md-6">
             <div class="form-group ">
-                {{Form::label('name',__('Name'),['class'=>'form-label']) }}
-                {{Form::text('name',null,array('class'=>'form-control font-style','placeholder'=>__('Enter User Name')))}}
+                {{Form::label('name',__('Name'),['class'=>'form-label']) }}<span class="text-danger">*</span>
+                {{Form::text('name',null,array('class'=>'form-control font-style','placeholder'=>__('Enter User Name'),'required'=>'required'))}}
                 @error('name')
                 <small class="invalid-name" role="alert">
                     <strong class="text-danger">{{ $message }}</strong>
@@ -14,8 +14,8 @@
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                {{Form::label('email',__('Email'),['class'=>'form-label'])}}
-                {{Form::text('email',null,array('class'=>'form-control','placeholder'=>__('Enter User Email')))}}
+                {{Form::label('email',__('Email'),['class'=>'form-label'])}}<span class="text-danger">*</span>
+                {{Form::text('email',null,array('class'=>'form-control','placeholder'=>__('Enter User Email'),'required'=>'required'))}}
                 @error('email')
                 <small class="invalid-email" role="alert">
                     <strong class="text-danger">{{ $message }}</strong>
@@ -25,7 +25,7 @@
         </div>
         @if(\Auth::user()->type != 'super admin')
             <div class="form-group col-md-12">
-                {{ Form::label('role', __('User Role'),['class'=>'form-label']) }}
+                {{ Form::label('role', __('User Role'),['class'=>'form-label']) }}<span class="text-danger">*</span>
                 {!! Form::select('role', $roles, $user->roles,array('class' => 'form-control select','required'=>'required')) !!}
                 @error('role')
                 <small class="invalid-role" role="alert">
