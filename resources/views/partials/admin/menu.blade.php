@@ -856,7 +856,7 @@
                                     </ul>
                                 </li>
                             @endif
-                            @if (Gate::check('manage bank account') || Gate::check('manage bank transfer'))
+                            {{-- @if (Gate::check('manage bank account') || Gate::check('manage bank transfer'))
                                 <li
                                     class="dash-item dash-hasmenu {{ Request::segment(1) == 'exchange_history' || Request::segment(1) == 'exchange_history' ? 'active dash-trigger' : '' }}">
                                     <a class="dash-link" href="#">{{ __('Money Exchange') }}<span
@@ -874,7 +874,7 @@
                                         </li>
                                     </ul>
                                 </li>
-                            @endif
+                            @endif --}}
                             @if (Gate::check('manage customer') ||
                                     Gate::check('manage proposal') ||
                                     Gate::check('manage invoice') ||
@@ -909,7 +909,7 @@
                                         <li
                                             class="dash-item {{ Request::route()->getName() == 'invoice.index' || Request::route()->getName() == 'invoice.create' || Request::route()->getName() == 'invoice.edit' || Request::route()->getName() == 'invoice.show' ? ' active' : '' }}">
                                             <a class="dash-link"
-                                                href="{{ route('invoice.index') }}">{{ __('Invoice') }}</a>
+                                                href="{{ url('invoice/index') }}">{{ __('Invoice') }}</a>
                                         </li>
                                         <li
                                             class="dash-item {{ Request::route()->getName() == 'revenue.index' || Request::route()->getName() == 'revenue.create' || Request::route()->getName() == 'revenue.edit' ? ' active' : '' }}">
