@@ -3,12 +3,12 @@
     <div class="row">
         <div class="col-md-12">
             <div class="form-group">
-                {{Form::label('name',__('Project Task Stage Title'),['class'=>'form-label'])}}
-                {{Form::text('name',null,array('class'=>'form-control','placeholder'=>__('Enter project stage title')))}}
+                {{Form::label('name',__('Project Task Stage Title'),['class'=>'form-label'])}}<span class="text-danger">*</span>
+                {{Form::text('name',null,array('class'=>'form-control','placeholder'=>__('Enter project stage title'),'required'=>'required'))}}
             </div>
         </div>
         <div class="form-group col-12">
-            {{ Form::label('color', __('Color'),['class'=>'form-label']) }}
+            {{ Form::label('color', __('Color'),['class'=>'form-label']) }}<span class="text-danger">*</span>
             <input class="jscolor form-control " value="{{ $taskStage->color }}" name="color" id="color" required>
             <small class="small">{{ __('For chart representation') }}</small>
         </div>

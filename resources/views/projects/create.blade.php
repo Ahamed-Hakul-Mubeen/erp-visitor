@@ -24,14 +24,14 @@
     <div class="row">
         <div class="col-sm-6 col-md-6">
             <div class="form-group">
-                {{ Form::label('start_date', __('Start Date'), ['class' => 'form-label']) }}
-                {{ Form::date('start_date', null, ['class' => 'form-control']) }}
+                {{ Form::label('start_date', __('Start Date'), ['class' => 'form-label']) }}<span class="text-danger">*</span>
+                {{ Form::date('start_date', null, ['class' => 'form-control','required'=>'required']) }}
             </div>
         </div>
         <div class="col-sm-6 col-md-6">
             <div class="form-group">
-                {{ Form::label('end_date', __('End Date'), ['class' => 'form-label']) }}
-                {{ Form::date('end_date', null, ['class' => 'form-control']) }}
+                {{ Form::label('end_date', __('End Date'), ['class' => 'form-label']) }}<span class="text-danger">*</span>
+                {{ Form::date('end_date', null, ['class' => 'form-control','required'=>'required']) }}
             </div>
         </div>
     </div>
@@ -57,14 +57,14 @@
         </div>
         <div class="col-sm-6 col-md-6">
             <div class="form-group">
-                {{ Form::label('budget', __('Budget'), ['class' => 'form-label']) }}
-                {{ Form::number('budget', null, ['class' => 'form-control']) }}
+                {{ Form::label('budget', __('Budget'), ['class' => 'form-label']) }}<span class="text-danger">*</span>
+                {{ Form::number('budget', null, ['class' => 'form-control','required'=>'required']) }}
             </div>
         </div>
         <div class="col-6 col-md-6">
             <div class="form-group">
-                {{ Form::label('estimated_hrs', __('Estimated Hours'),['class' => 'form-label']) }}
-                {{ Form::number('estimated_hrs', null, ['class' => 'form-control','min'=>'0','maxlength' => '8']) }}
+                {{ Form::label('estimated_hrs', __('Estimated Hours'),['class' => 'form-label']) }}<span class="text-danger">*</span>
+                {{ Form::number('estimated_hrs', null, ['class' => 'form-control','min'=>'0','maxlength' => '8','required'=>'required']) }}
             </div>
         </div>
     </div>
