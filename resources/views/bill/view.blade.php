@@ -297,8 +297,9 @@
                                                             @php
                                                                 $productName = $item->product;
                                                                 $totalQuantity += $item->quantity;
-                                                        $totalRate += $item->price;
-                                                        $totalDiscount += $item->discount;
+                                                                $totalRate += $item->price;
+                                                                $totalDiscount += $item->discount;
+                                                                $taxPrice =0;
                                                             @endphp
                                                             <td>{{!empty($productName)?$productName->name:'-'}}</td>
                                                             <td>{{ $item->quantity . ' (' . $productName->unit->name . ')' }}</td>

@@ -282,6 +282,7 @@
                                                         $totalQuantity += $iteam->quantity;
                                                         $totalRate += $iteam->price;
                                                         $totalDiscount += $iteam->discount;
+                                                        $taxPrice =0;
                                                     @endphp
                                                     <td>{{ !empty($productName) ? $productName->name : '' }}</td>
                                                     <td>{{ $iteam->quantity . ' (' . $productName->unit->name . ')' }}</td>
@@ -293,7 +294,7 @@
                                                                 @php
                                                                     $itemTaxes = [];
                                                                     $getTaxData = Utility::getTaxData();
-
+                                                            
                                                                     if (!empty($iteam->tax)) {
                                                                         foreach (explode(',', $iteam->tax) as $tax) {
                                                                             $taxPrice = \Utility::taxRate($getTaxData[$tax]['rate'], $iteam->price, $iteam->quantity, $iteam->discount);
