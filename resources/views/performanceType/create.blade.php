@@ -3,8 +3,8 @@
 <div class="modal-body">
 
     <div class="form-group">
-        {{ Form::label('name', __('Name'),['class'=>'form-label'])}}
-        {{ Form::text('name', '', array('class' => 'form-control','required'=>'required' , 'placeholder' => 'Enter Performance Type Name')) }}
+        {{ Form::label('name', __('Name'),['class'=>'form-label'])}}<span class="text-danger">*</span>
+        {{ Form::text('name', '', array('class' => 'form-control','required'=>'required' , 'placeholder' => 'Enter Performance Type Name' ,'required'=>'required')) }}
     </div>
 </div>
 <div class="modal-footer">

@@ -17,17 +17,17 @@
     <div class="row">
         @if (\Auth::user()->type != 'Employee')
             <div class="form-group col-lg-12">
-                {{ Form::label('employee_id', __('Employee'), ['class' => 'form-label']) }}
+                {{ Form::label('employee_id', __('Employee'), ['class' => 'form-label']) }}<span class="text-danger">*</span>
                 {{ Form::select('employee_id', $employees, null, ['class' => 'form-control select', 'required' => 'required']) }}
             </div>
         @endif
         <div class="form-group col-lg-6 col-md-6">
-            {{ Form::label('notice_date', __('Notice Date'), ['class' => 'form-label']) }}
-            {{ Form::date('notice_date', null, ['class' => 'form-control ']) }}
+            {{ Form::label('notice_date', __('Notice Date'), ['class' => 'form-label']) }}<span class="text-danger">*</span>
+            {{ Form::date('notice_date', null, ['class' => 'form-control ','required' => 'required']) }}
         </div>
         <div class="form-group col-lg-6 col-md-6">
-            {{ Form::label('resignation_date', __('Resignation Date'), ['class' => 'form-label']) }}
-            {{ Form::date('resignation_date', null, ['class' => 'form-control ']) }}
+            {{ Form::label('resignation_date', __('Resignation Date'), ['class' => 'form-label']) }}<span class="text-danger">*</span>
+            {{ Form::date('resignation_date', null, ['class' => 'form-control ','required' => 'required']) }}
         </div>
         <div class="form-group col-lg-4 col-md-4">
             {{ Form::label('no_of_years', __('Number of Years worked'), ['class' => 'form-label']) }}

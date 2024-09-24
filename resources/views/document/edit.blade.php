@@ -3,8 +3,8 @@
     <div class="row">
         <div class="col-12">
             <div class="form-group">
-                {{Form::label('name',__('Name',['class'=>'form-label']))}}
-                {{Form::text('name',null,array('class'=>'form-control','placeholder'=>__('Enter Department Name')))}}
+                {{Form::label('name',__('Name',['class'=>'form-label']))}}<span class="text-danger">*</span>
+                {{Form::text('name',null,array('class'=>'form-control','placeholder'=>__('Enter Department Name'),'required'=>'required'))}}
                 @error('name')
                 <span class="invalid-name" role="alert">
                     <strong class="text-danger">{{ $message }}</strong>
@@ -14,7 +14,7 @@
         </div>
         <div class="col-12">
             <div class="form-group">
-                {{ Form::label('is_required', __('Required Field'),['class'=>'form-label']) }}
+                {{ Form::label('is_required', __('Required Field'),['class'=>'form-label']) }}<span class="text-danger">*</span>
                 <select class="form-control select2" required name="is_required">
                     <option value="0" @if($document->is_required == 0) selected @endif>{{__('Not Required')}}</option>
                     <option value="1" @if($document->is_required == 1) selected @endif>{{__('Is Required')}}</option>

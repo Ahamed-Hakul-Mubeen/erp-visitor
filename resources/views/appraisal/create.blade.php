@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="form-group">
-                {{ Form::label('branch', __('Company*'), ['class' => 'form-label']) }}
+                {{ Form::label('branch', __('Company'), ['class' => 'form-label']) }}<span class="text-danger">*</span>
 
                 <select name="branch" id="branch" required class="form-control ">
                     <option selected disabled value="0">{{__('Select Company')}}</option>
@@ -19,7 +19,7 @@
 
         <div class="mt-2 col-md-6">
             <div class="form-group">
-                {{ Form::label('employee', __('Employee*'), ['class' => 'form-label']) }}
+                {{ Form::label('employee', __('Employee'), ['class' => 'form-label']) }}<span class="text-danger">*</span>
 
                 <div class="employee_div">
 
@@ -32,7 +32,7 @@
 
         <div class="col-md-6">
             <div class="form-group">
-                {{ Form::label('appraisal_date', __('Select Month*'), ['class' => 'col-form-label']) }}
+                {{ Form::label('appraisal_date', __('Select Month'), ['class' => 'col-form-label']) }}<span class="text-danger">*</span>
                 {{ Form::month('appraisal_date', '', ['class' => 'form-control ','autocomplete'=>'off' ,'required' => 'required']) }}
             </div>
         </div>

@@ -16,21 +16,21 @@
     <div class="row">
         @if(\Auth::user()->type !='employee')
             <div class="form-group col-md-6 col-lg-6 ">
-                {{ Form::label('complaint_from', __('Complaint From'),['class'=>'form-label'])}}
+                {{ Form::label('complaint_from', __('Complaint From'),['class'=>'form-label'])}}<span class="text-danger">*</span>
                 {{ Form::select('complaint_from', $employees,null, array('class' => 'form-control  select','required'=>'required')) }}
             </div>
         @endif
         <div class="form-group col-md-6 col-lg-6">
-            {{Form::label('complaint_against',__('Complaint Against'),['class'=>'form-label'])}}
-            {{Form::select('complaint_against',$employees,null,array('class'=>'form-control select'))}}
+            {{Form::label('complaint_against',__('Complaint Against'),['class'=>'form-label'])}}<span class="text-danger">*</span>
+            {{Form::select('complaint_against',$employees,null,array('class'=>'form-control select','required' => 'required'))}}
         </div>
         <div class="form-group col-md-6 col-lg-6">
-            {{Form::label('title',__('Title'),['class'=>'form-label'])}}
-            {{Form::text('title',null,array('class'=>'form-control' , 'placeholder'=>__('Enter Complaint Title')))}}
+            {{Form::label('title',__('Title'),['class'=>'form-label'])}}<span class="text-danger">*</span>
+            {{Form::text('title',null,array('class'=>'form-control' , 'placeholder'=>__('Enter Complaint Title'),'required' => 'required'))}}
         </div>
         <div class="form-group col-md-6 col-lg-6">
-            {{Form::label('complaint_date',__('Complaint Date'),['class'=>'form-label'])}}
-            {{Form::date('complaint_date',null,array('class'=>'form-control'))}}
+            {{Form::label('complaint_date',__('Complaint Date'),['class'=>'form-label'])}}<span class="text-danger">*</span>
+            {{Form::date('complaint_date',null,array('class'=>'form-control','required' => 'required'))}}
         </div>
         <div class="form-group col-md-12">
             {{Form::label('description',__('Description'),['class'=>'form-label'])}}

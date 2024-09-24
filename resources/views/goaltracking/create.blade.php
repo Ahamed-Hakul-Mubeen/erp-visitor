@@ -17,32 +17,32 @@
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">
-                {{Form::label('branch',__('Company'),['class'=>'form-label'])}}
+                {{Form::label('branch',__('Company'),['class'=>'form-label'])}}<span class="text-danger">*</span>
                 {{Form::select('branch',$brances,null,array('class'=>'form-control select','required'=>'required'))}}
             </div>
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                {{Form::label('goal_type',__('GoalTypes'),['class'=>'form-label'])}}
+                {{Form::label('goal_type',__('GoalTypes'),['class'=>'form-label'])}}<span class="text-danger">*</span>
                 {{Form::select('goal_type',$goalTypes,null,array('class'=>'form-control select','required'=>'required'))}}
             </div>
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                {{Form::label('start_date',__('Start Date'),['class'=>'form-label'])}}
-                {{Form::date('start_date',null,array('class' => 'form-control '))}}
+                {{Form::label('start_date',__('Start Date'),['class'=>'form-label'])}}<span class="text-danger">*</span>
+                {{Form::date('start_date',null,array('class' => 'form-control ','required' => 'required'))}}
             </div>
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                {{Form::label('end_date',__('End Date'),['class'=>'form-label'])}}
-                {{Form::date('end_date',null,array('class' => 'form-control '))}}
+                {{Form::label('end_date',__('End Date'),['class'=>'form-label'])}}<span class="text-danger">*</span>
+                {{Form::date('end_date',null,array('class' => 'form-control ','required' => 'required'))}}
             </div>
         </div>
         <div class="col-md-12">
             <div class="form-group">
-                {{Form::label('subject',__('Subject'),['class'=>'form-label'])}}
-                {{Form::text('subject',null,array('class'=>'form-control'))}}
+                {{Form::label('subject',__('Subject'),['class'=>'form-label'])}}<span class="text-danger">*</span>
+                {{Form::text('subject',null,array('class'=>'form-control','required' => 'required'))}}
             </div>
         </div>
         <div class="col-md-12">

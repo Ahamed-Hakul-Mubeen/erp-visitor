@@ -15,14 +15,14 @@
     {{-- end for ai module--}}
     <div class="row">
         <div class="form-group col-md-12">
-            {{Form::label('occasion',__('Occasion'),['class'=>'form-label'])}}
-            {{Form::text('occasion',null,array('class'=>'form-control'))}}
+            {{Form::label('occasion',__('Occasion'),['class'=>'form-label'])}}<span class="text-danger">*</span>
+            {{Form::text('occasion',null,array('class'=>'form-control','required'=>'required'))}}
         </div>
     </div>
     <div class="row">
         <div class="form-group col-md-12">
-            {{Form::label('date',__('Start Date'),['class'=>'form-label'])}}
-            {{Form::date('date',null,array('class'=>'form-control '))}}
+            {{Form::label('date',__('Start Date'),['class'=>'form-label'])}}<span class="text-danger">*</span>
+            {{Form::date('date',null,array('class'=>'form-control ','required'=>'required'))}}
         </div>
         {{-- <div class="form-group col-md-6">
             {{Form::label('end_date',__('End Date'),['class'=>'form-label'])}}

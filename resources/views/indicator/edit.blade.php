@@ -3,19 +3,19 @@
     <div class="row">
         <div class="col-md-12">
             <div class="form-group">
-                {{Form::label('branch',__('Company'),['class'=>'form-label'])}}
+                {{Form::label('branch',__('Company'),['class'=>'form-label'])}}<span class="text-danger">*</span><span class="text-danger">*</span>
                 {{Form::select('branch',$brances,null,array('class'=>'form-control select','required'=>'required'))}}
             </div>
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                {{Form::label('department',__('Department'),['class'=>'form-label'])}}
+                {{Form::label('department',__('Department'),['class'=>'form-label'])}}<span class="text-danger">*</span>
                 {{Form::select('department',$departments,null,array('class'=>'form-control select','required'=>'required','id'=>'department_id'))}}
             </div>
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                {{Form::label('designation',__('Designation'),['class'=>'form-label'])}}
+                {{Form::label('designation',__('Designation'),['class'=>'form-label'])}}<span class="text-danger">*</span>
                 <select class="select form-control select2-multiple" id="designation_id" name="designation"
                         data-toggle="select2" data-placeholder="{{ __('Select Designation ...') }}" required>
                 </select>
