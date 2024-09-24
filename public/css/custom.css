@@ -1940,8 +1940,13 @@ body.theme-10 .account-arrow .account-icon{
 }
 .apexcharts-yaxis
 {
-    transform: translate(0px, 0px) !important;
+    transform: translate(10px, 10px) !important;
+    -webkit-transform: translate(10px, 10px) !important;
+    -moz-transform: translate(10px, 10px) !important;
+    -ms-transform: translate(10px, 10px) !important;
+    -o-transform: translate(10px, 10px) !important;
 }
+
 .apexcharts-pie-area
 {
     display: none;

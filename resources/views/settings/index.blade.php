@@ -370,10 +370,10 @@
                                 <div class="float-end"><i class="ti ti-chevron-right"></i></div></a>
                             <a href="#payment-settings" class="list-group-item list-group-item-action border-0">{{ __('Payment Settings') }}
                                 <div class="float-end"><i class="ti ti-chevron-right"></i></div></a>
-                            <a href="#pusher-settings" class="list-group-item list-group-item-action border-0">{{ __('Pusher Settings') }}
+                            {{-- <a href="#pusher-settings" class="list-group-item list-group-item-action border-0">{{ __('Pusher Settings') }}
                                 <div class="float-end"><i class="ti ti-chevron-right"></i></div></a>
                             <a href="#recaptcha_settings" class="list-group-item list-group-item-action border-0">{{ __('ReCaptcha Settings') }}
-                                <div class="float-end"><i class="ti ti-chevron-right"></i></div></a>
+                                <div class="float-end"><i class="ti ti-chevron-right"></i></div></a> --}}
                             <a href="#storage-settings" class="list-group-item list-group-item-action border-0">{{ __('Storage Settings') }}
                                 <div class="float-end"><i class="ti ti-chevron-right"></i></div></a>
                             <a href="#seo-settings" class="list-group-item list-group-item-action border-0">{{ __('SEO Settings') }}
