@@ -32,10 +32,14 @@
                                 <th> {{__('Date')}}</th>
                                 <th> {{__('Amount')}}</th>
                                 <th> {{__('Description')}}</th>
+                                <th> {{__('Attachment')}}</th>
                                 <th width="10%"> {{__('Action')}}</th>
                             </tr>
                             </thead>
                             <tbody>
+                            @php
+                                $journalpath=\App\Models\Utility::get_file('');
+                            @endphp
                             @foreach ($journalEntries as $journalEntry)
                                 <tr>
                                     <td class="Id">
@@ -46,6 +50,16 @@
                                         {{ \Auth::user()->priceFormat($journalEntry->totalCredit())}}
                                     </td>
                                     <td>{{!empty($journalEntry->description)?$journalEntry->description:'-'}}</td>
+                                    <td>
+                                        @if(!empty($journalEntry->attachment))
+                                        <a class="action-btn bg-primary ms-2 btn btn-sm align-items-center" href="{{ $journalpath . '/' . $journalEntry->attachment }}" data-bs-toggle="tooltip" title="{{__('Download')}}" download="">
+                                            <i class="ti ti-download text-white"></i>
+                                        </a>
+                                        <a href="{{ $journalpath . '/' . $journalEntry->attachment }}"  class="action-btn bg-secondary ms-2 mx-3 btn btn-sm align-items-center" data-bs-toggle="tooltip" title="{{__('View')}}" target="_blank"><span class="btn-inner--icon"><i class="ti ti-crosshair text-white" ></i></span></a>
+                                        @else
+                                            <span class="px-5">-</span>
+                                        @endif
+                                    </td>
                                     <td>
                                         @can('edit journal entry')
                                             <div class="action-btn bg-primary ms-2">

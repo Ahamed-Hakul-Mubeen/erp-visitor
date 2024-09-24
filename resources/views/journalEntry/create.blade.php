@@ -145,7 +145,7 @@
 @endsection
 
 @section('content')
-    {{ Form::open(['url' => 'journal-entry', 'class' => 'w-100']) }}
+    {{ Form::open(['url' => 'journal-entry', 'class' => 'w-100','files' => true]) }}
     <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
     <div class="row mt-4">
         <div class="col-xl-12">
@@ -171,13 +171,18 @@
                                 {{ Form::text('reference', '', ['class' => 'form-control' , 'placeholder'=>__('Enter Reference')]) }}
                             </div>
                         </div>
+                        <div class="col-lg-4 col-md-4">
+                            <div class="form-group">
+                                {{ Form::label('reference', __('Attachment'), ['class' => 'form-label']) }}
+                                <input type="file" class="form-control" name="attachment">
+                            </div>
+                        </div>
                         <div class="col-lg-8 col-md-8">
                             <div class="form-group">
                                 {{ Form::label('description', __('Description'), ['class' => 'form-label']) }}
                                 {{ Form::textarea('description', '', ['class' => 'form-control', 'rows' => '2' , 'placeholder'=>__('Enter Description')]) }}
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>

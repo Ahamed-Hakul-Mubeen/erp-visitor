@@ -48,7 +48,6 @@ class JournalEntryController extends Controller
 
     public function store(Request $request)
     {
-
         if (\Auth::user()->can('create invoice')) {
             $validator = \Validator::make(
                 $request->all(), [
@@ -84,6 +83,16 @@ class JournalEntryController extends Controller
             $journal->reference = $request->reference;
             $journal->description = $request->description;
             $journal->created_by = \Auth::user()->creatorId();
+            if ($request->hasFile('attachment')) {
+                $file_size = $request->file('attachment')->getSize();
+                $result = Utility::updateStorageLimit(\Auth::user()->creatorId(), $file_size);
+                if ($result == 1) {
+                    $fileName = time() . '.' . $request->attachment->extension();
+                    $request->file('attachment')->storeAs('journals', $fileName);
+                    $journal->attachment      = 'journals/' . $fileName;
+                }
+            }
+
             $journal->save();
 
             for ($i = 0; $i < count($accounts); $i++) {
@@ -212,6 +221,18 @@ class JournalEntryController extends Controller
                 $journalEntry->reference = $request->reference;
                 $journalEntry->description = $request->description;
                 $journalEntry->created_by = \Auth::user()->creatorId();
+                if ($request->hasFile('attachment')) {
+                    if ($journalEntry->attachment) {
+                        \Storage::disk('local')->delete($journalEntry->attachment);
+                    }
+                    $file_size = $request->file('attachment')->getSize();
+                    $result = Utility::updateStorageLimit(\Auth::user()->creatorId(), $file_size);
+                    if ($result == 1) {
+                        $fileName = time() . '.' . $request->attachment->extension();
+                        $request->file('attachment')->storeAs('journals', $fileName);
+                        $journalEntry->attachment      = 'journals/' . $fileName;
+                    }
+                }
                 $journalEntry->save();
 
                 for ($i = 0; $i < count($accounts); $i++) {
