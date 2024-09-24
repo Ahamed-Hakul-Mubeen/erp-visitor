@@ -11,7 +11,7 @@
 @php
     $languages = App\Models\Utility::languages();
 @endphp
-@section('language-bar')
+{{-- @section('language-bar')
     <div class="lang-dropdown-only-desk">
         <li class="dropdown dash-h-item drp-language">
             <a class="dash-head-link dropdown-toggle btn" href="#" data-bs-toggle="dropdown" aria-expanded="false">
@@ -28,7 +28,7 @@
             </div>
         </li>
     </div>
-@endsection
+@endsection --}}
 
 @section('content')
     <div class="card-body">
@@ -41,7 +41,7 @@
     <div class="">
         <div class="form-group mb-3">
             {{Form::label('email',__('E-Mail Address'),['class'=>'form-label'])}}
-            {{Form::text('email',null,array('class'=>'form-control' , 'placeholder'=>__('Enter email')))}}
+            {{Form::text('email',$request->email,array('class'=>'form-control' , 'placeholder'=>__('Enter email'),'readonly' => true))}}
             @error('email')
             <span class="invalid-email text-danger" role="alert">
                         <strong>{{ $message }}</strong>
