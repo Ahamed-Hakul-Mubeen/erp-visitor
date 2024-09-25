@@ -439,7 +439,7 @@
                         <div class="col-md-6">
                             <div class="form-group" id="vender-box">
                                 <div class="d-flex justify-content-between">
-                                    {{ Form::label('vender_id', __('Vendor'),['class'=>'form-label']) }}
+                                    {{ Form::label('vender_id', __('Vendor'),['class'=>'form-label']) }}<span class="text-danger">*</span>
                                     <a href="#" data-size="lg" data-url="{{ route('vender.create',['redirect_to_pre_order' => 1]) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create')}}" data-title="{{__('Create Vender')}}">
                                         <i class="ti ti-plus"></i>{{__('Add Vendor')}}
                                     </a>
@@ -454,7 +454,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        {{ Form::label('issue_date', __('Issue Date'),['class'=>'form-label']) }}
+                                        {{ Form::label('issue_date', __('Issue Date'),['class'=>'form-label']) }}<span class="text-danger">*</span>
                                         <div class="form-icon-user">
                                             {{Form::date('issue_date',null,array('class'=>'form-control','required'=>'required'))}}
                                         </div>
@@ -462,7 +462,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        {{ Form::label('category_id', __('Category'),['class'=>'form-label']) }}
+                                        {{ Form::label('category_id', __('Category'),['class'=>'form-label']) }}<span class="text-danger">*</span>
                                         {{ Form::select('category_id', $category,null, array('class' => 'form-control select','required'=>'required')) }}
                                     </div>
                                 </div>

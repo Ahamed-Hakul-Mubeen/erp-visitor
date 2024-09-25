@@ -527,7 +527,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group" id="customer-box">
-                                    {{ Form::label('customer_id', __('Customer'),['class'=>'form-label']) }}
+                                    {{ Form::label('customer_id', __('Customer'),['class'=>'form-label']) }}<span class="text-danger">*</span>
                                     {{ Form::select('customer_id', $customers,null, array('class' => 'form-control select ','id'=>'customer','data-url'=>route('proposal.customer'),'required'=>'required')) }}
                             </div>
                             <div id="customer_detail" class="d-none">
@@ -537,7 +537,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        {{ Form::label('issue_date', __('Issue Date'),['class'=>'form-label']) }}
+                                        {{ Form::label('issue_date', __('Issue Date'),['class'=>'form-label']) }}<span class="text-danger">*</span>
                                         <div class="form-icon-user">
                                             {{Form::date('issue_date',null,array('class'=>'form-control','required'=>'required'))}}
 
@@ -546,7 +546,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                        {{ Form::label('category_id', __('Category'),['class'=>'form-label']) }}
+                                        {{ Form::label('category_id', __('Category'),['class'=>'form-label']) }}<span class="text-danger">*</span>
                                         {{ Form::select('category_id', $category,null, array('class' => 'form-control select','required'=>'required')) }}
                                 </div>
                                 <div class="col-md-6">
@@ -606,7 +606,7 @@
 
                             <thead>
                             <tr>
-                                <th>{{__('Items')}}</th>
+                                <th>{{__('Items')}}<span class="text-danger">*</span></th>
                                 <th>{{__('Quantity')}}</th>
                                 <th>{{__('Price')}} </th>
                                 <th>{{__('Discount')}}</th>

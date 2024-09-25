@@ -2,19 +2,19 @@
 <div class="modal-body">
     <div class="row">
         <div class="form-group col-md-6">
-            {{ Form::label('date', __('Date'),['class'=>'form-label']) }}
+            {{ Form::label('date', __('Date'),['class'=>'form-label']) }}<span class="text-danger">*</span>
             {{Form::date('date',null,array('class'=>'form-control','required'=>'required'))}}
         </div>
         <div class="form-group col-md-6">
-            {{ Form::label('amount', __('Amount'),['class'=>'form-label']) }}
+            {{ Form::label('amount', __('Amount'),['class'=>'form-label']) }}<span class="text-danger">*</span>
             {{ Form::number('amount', null, array('class' => 'form-control','required'=>'required','step'=>'0.01')) }}
         </div>
         <div class="form-group col-md-6">
-            {{ Form::label('account_id', __('Account'),['class'=>'form-label']) }}
+            {{ Form::label('account_id', __('Account'),['class'=>'form-label']) }}<span class="text-danger">*</span>
             {{ Form::select('account_id',$accounts,null, array('class' => 'form-control select','required'=>'required')) }}
         </div>
         <div class="form-group col-md-6">
-            {{ Form::label('customer_id', __('Customer'),['class'=>'form-label']) }}
+            {{ Form::label('customer_id', __('Customer'),['class'=>'form-label']) }}<span class="text-danger">*</span>
             {{ Form::select('customer_id', $customers,null, array('class' => 'form-control select','required'=>'required')) }}
         </div>
         <div class="form-group col-md-12">
@@ -22,7 +22,7 @@
             {{ Form::textarea('description', null, array('class' => 'form-control','rows'=>3)) }}
         </div>
         <div class="form-group col-md-6">
-            {{ Form::label('category_id', __('Category'),['class'=>'form-label']) }}
+            {{ Form::label('category_id', __('Category'),['class'=>'form-label']) }}<span class="text-danger">*</span>
             {{ Form::select('category_id', $categories,null, array('class' => 'form-control select','required'=>'required')) }}
         </div>
 

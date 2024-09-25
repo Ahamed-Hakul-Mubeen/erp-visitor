@@ -10,20 +10,20 @@
     <div class="row">
         <div class="col-lg-4 col-md-4 col-sm-6">
             <div class="form-group">
-                {{Form::label('name',__('Name'),array('class'=>'form-label')) }}
+                {{Form::label('name',__('Name'),array('class'=>'form-label')) }}<span class="text-danger">*</span>
                 {{Form::text('name',null,array('class'=>'form-control','required'=>'required' ,'placeholder'=>_('Enter Name')))}}
             </div>
         </div>
         <div class="col-lg-4 col-md-4 col-sm-6">
             <div class="form-group">
-                {{Form::label('contact',__('Contact'),['class'=>'form-label'])}}
+                {{Form::label('contact',__('Contact'),['class'=>'form-label'])}}<span class="text-danger">*</span>
                 {{Form::number('contact',null,array('class'=>'form-control','required'=>'required' , 'placeholder'=>__('Enter Contact')))}}
             </div>
         </div>
         <div class="col-lg-4 col-md-4 col-sm-6">
             <div class="form-group">
-                {{Form::label('email',__('Email'),['class'=>'form-label'])}}
-                {{Form::email('email',null,array('class'=>'form-control' , 'placeholder'=>__('Enter email')))}}
+                {{Form::label('email',__('Email'),['class'=>'form-label'])}}<span class="text-danger">*</span>
+                {{Form::email('email',null,array('class'=>'form-control' , 'placeholder'=>__('Enter email'),'required'=>'required'))}}
 
             </div>
         </div>

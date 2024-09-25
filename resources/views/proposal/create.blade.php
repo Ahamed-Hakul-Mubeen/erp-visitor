@@ -439,7 +439,9 @@
                         <div class="col-md-6">
                             <div class="form-group" id="customer-box">
                                 <div class="d-flex justify-content-between">
-                                    {{ Form::label('customer_id', __('Customer'),['class'=>'form-label']) }}
+                                    <div>
+                                        {{ Form::label('customer_id', __('Customer'),['class'=>'form-label']) }}<span class="text-danger">*</span>
+                                    </div>
                                     <a href="#" data-size="lg" data-url="{{ route('customer.create',['redirect_to_proposal' => 1]) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create')}}" data-title="{{__('Create Customer')}}">
                                         <i class="ti ti-plus"></i>{{__('Add Customer')}}
                                     </a>
@@ -454,7 +456,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        {{ Form::label('issue_date', __('Issue Date'),['class'=>'form-label']) }}
+                                        {{ Form::label('issue_date', __('Issue Date'),['class'=>'form-label']) }}<span class="text-danger">*</span>
                                         <div class="form-icon-user">
                                             {{Form::date('issue_date',null,array('class'=>'form-control','required'=>'required'))}}
                                         </div>
@@ -462,7 +464,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        {{ Form::label('category_id', __('Category'),['class'=>'form-label']) }}
+                                        {{ Form::label('category_id', __('Category'),['class'=>'form-label']) }}<span class="text-danger">*</span>
                                         {{ Form::select('category_id', $category,null, array('class' => 'form-control select','required'=>'required')) }}
                                     </div>
                                 </div>
@@ -517,7 +519,7 @@
                         <table class="table mb-0" data-repeater-list="items">
                             <thead>
                             <tr>
-                                <th>{{__('Items')}}</th>
+                                <th>{{__('Items')}}<span class="text-danger">*</span></th>
                                 <th>{{__('Quantity')}}</th>
                                 <th>{{__('Price')}} </th>
                                 <th>{{__('Discount')}}</th>

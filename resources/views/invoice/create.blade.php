@@ -444,7 +444,7 @@
             $(".price").change();
             $(".discount").change();
         });
-        
+
         $(document).ready(function() {
     $('#due_date').attr('min', new Date().toISOString().split('T')[0]);
 
@@ -452,14 +452,14 @@
     $('#issue_date').on('change', function() {
         const issueDate = new Date($(this).val());
         const dueDateInput = $('#due_date');
-        
+
         if ($(this).val()) {
             dueDateInput.attr('min', issueDate.toISOString().split('T')[0]);
         } else {
             dueDateInput.attr('min', new Date().toISOString().split('T')[0]);
         }
     });
-    
+
     // Event listener for clicking due date
     $(document).on('click', '#due_date', function () {
         const issueDate = new Date($('#issue_date').val());
@@ -472,7 +472,7 @@
             var my_currency_symbol = $(this).find(':selected').data("symbol");
             $(".my_currency_symbol").html(my_currency_symbol);
             $("#currency_symbol").val(my_currency_symbol);
-            
+
             $(".item").trigger("change");
         });
     </script>
@@ -488,7 +488,11 @@
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                             <div class="form-group" id="customer-box">
                                 <div class="d-flex justify-content-between">
-                                    {{ Form::label('customer_id', __('Customer'),['class'=>'form-label']) }}
+                                    <div>
+
+                                        {{ Form::label('customer_id', __('Customer'),['class'=>'form-label']) }}
+                                        <span class="text-danger">*</span>
+                                    </div>
                                     <a href="#" data-size="lg" data-url="{{ route('customer.create',['redirect_to_invoice' => 1]) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create')}}" data-title="{{__('Create Customer')}}">
                                         <i class="ti ti-plus"></i>{{__('Add Customer')}}
                                     </a>
@@ -504,7 +508,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        {{ Form::label('issue_date', __('Issue Date'),['class'=>'form-label']) }}
+                                        {{ Form::label('issue_date', __('Issue Date'),['class'=>'form-label']) }}<span class="text-danger">*</span>
                                         <div class="form-icon-user">
                                             {{Form::date('issue_date',null,array('class'=>'form-control','required'=>'required'))}}
 
@@ -513,7 +517,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        {{ Form::label('due_date', __('Due Date'),['class'=>'form-label']) }}
+                                        {{ Form::label('due_date', __('Due Date'),['class'=>'form-label']) }}<span class="text-danger">*</span>
                                         <div class="form-icon-user">
                                             {{Form::date('due_date',null,array('class'=>'form-control','required'=>'required'))}}
 
@@ -522,15 +526,15 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        {{ Form::label('invoice_number', __('Invoice Number'),['class'=>'form-label']) }}
+                                        {{ Form::label('invoice_number', __('Invoice Number'),['class'=>'form-label']) }}<span class="text-danger">*</span>
                                         <div class="form-icon-user">
-                                            <input type="text" name="invoice_number" class="form-control" value="{{$invoice_number}}" >
+                                            <input type="text" name="invoice_number" required class="form-control" value="{{$invoice_number}}" >
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        {{ Form::label('category_id', __('Category'),['class'=>'form-label']) }}
+                                        {{ Form::label('category_id', __('Category'),['class'=>'form-label']) }}<span class="text-danger">*</span>
                                         {{ Form::select('category_id', $category,null, array('class' => 'form-control select','required'=>'required')) }}
                                     </div>
                                 </div>
@@ -545,7 +549,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        {{ Form::label('currency_code', __('Currency'),['class'=>'form-label']) }} <span id="conversion_rate_span"></span>
+                                        {{ Form::label('currency_code', __('Currency'),['class'=>'form-label']) }} <span class="text-danger">*</span><span id="conversion_rate_span"></span>
                                         <select class="form-control" name="currency_code" id="currency_code" required>
                                             {{-- <option value="">Select Currency</option> --}}
                                             @php $currency_code = \Auth::user()->currencyCode() @endphp
@@ -607,7 +611,7 @@
                         <table class="table mb-0" data-repeater-list="items">
                             <thead>
                             <tr>
-                                <th>{{__('Items')}}</th>
+                                <th>{{__('Items')}}<span class="text-danger">*</span></th>
                                 <th>{{__('Quantity')}}</th>
                                 <th>{{__('Price')}} </th>
                                 <th>{{__('Discount')}}</th>

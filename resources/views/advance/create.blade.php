@@ -2,20 +2,23 @@
 <div class="modal-body">
     <div class="row">
         <div class="form-group col-md-6">
-            {{ Form::label('date', __('Date'),['class'=>'form-label']) }}
+            {{ Form::label('date', __('Date'),['class'=>'form-label']) }}<span class="text-danger">*</span>
             {{Form::date('date',null,array('class'=>'form-control','required'=>'required'))}}
         </div>
         <div class="form-group col-md-6">
-            {{ Form::label('amount', __('Amount'),['class'=>'form-label']) }}
+            {{ Form::label('amount', __('Amount'),['class'=>'form-label']) }}<span class="text-danger">*</span>
             {{ Form::number('amount', '', array('class' => 'form-control','required'=>'required','step'=>'0.01' , 'placeholder'=>__('Enter Amount'))) }}
         </div>
         <div class="form-group col-md-6">
-            {{ Form::label('account_id', __('Account'),['class'=>'form-label']) }}
+            {{ Form::label('account_id', __('Account'),['class'=>'form-label']) }}<span class="text-danger">*</span>
             {{ Form::select('account_id',$accounts,null, array('class' => 'form-control select','required'=>'required')) }}
         </div>
         <div class="form-group col-md-6">
             <div class="d-flex justify-content-between">
-            {{ Form::label('customer_id', __('Customer'),['class'=>'form-label']) }}
+                <div>
+                    {{ Form::label('customer_id', __('Customer'),['class'=>'form-label']) }}
+                    <span class="text-danger">*</span>
+                </div>
             <a href="#" data-size="lg" data-url="{{ route('customer.create',['redirect_to_advance' => 1]) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create')}}" data-title="{{__('Create Customer')}}">
                 <i class="ti ti-plus"></i>{{__('Add Customer')}}
             </a>
@@ -50,5 +53,5 @@
         var src = URL.createObjectURL(this.files[0])
         document.getElementById('image').src = src
     }
-    
+
 </script>

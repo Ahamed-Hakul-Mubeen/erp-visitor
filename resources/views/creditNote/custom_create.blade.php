@@ -2,7 +2,7 @@
 <div class="modal-body">
     <div class="row">
         <div class="form-group col-md-12">
-            {{ Form::label('invoice', __('Invoice'),['class'=>'form-label']) }}
+            {{ Form::label('invoice', __('Invoice'),['class'=>'form-label']) }}<span class="text-danger">*</span>
                 <select class="form-control select" required="required" id="invoice" name="invoice">
                     <option value="0">{{__('Select Invoice')}}</option>
                     @foreach($invoices as $key=>$invoice)
@@ -11,12 +11,12 @@
                 </select>
         </div>
         <div class="form-group col-md-6">
-            {{ Form::label('amount', __('Amount'),['class'=>'form-label']) }}
+            {{ Form::label('amount', __('Amount'),['class'=>'form-label']) }}<span class="text-danger">*</span>
             {{ Form::number('amount', null, array('class' => 'form-control','required'=>'required','step'=>'0.01' , 'placeholder' => __('Enter Amount'))) }}
 
         </div>
         <div class="form-group  col-md-6">
-            {{ Form::label('date', __('Date'),['class'=>'form-label']) }}
+            {{ Form::label('date', __('Date'),['class'=>'form-label']) }}<span class="text-danger">*</span>
             {{Form::date('date',null,array('class'=>'form-control','required'=>'required'))}}
 
         </div>

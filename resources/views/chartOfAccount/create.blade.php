@@ -17,15 +17,15 @@
     <div class="row">
 
         <div class="form-group col-md-12">
-            {{ Form::label('name', __('Name'), ['class' => 'form-label']) }}
+            {{ Form::label('name', __('Name'), ['class' => 'form-label']) }}<span class="text-danger">*</span>
             {{ Form::text('name', '', ['class' => 'form-control', 'required' => 'required' , 'placeholder'=>__('Enter Name')]) }}
         </div>
         <div class="form-group col-md-6">
-            {{ Form::label('code', __('Code'), ['class' => 'form-label']) }}
+            {{ Form::label('code', __('Code'), ['class' => 'form-label']) }}<span class="text-danger">*</span>
             {{ Form::number('code', '', ['class' => 'form-control', 'required' => 'required' , 'placeholder'=>__('Enter Code')]) }}
         </div>
         <div class="form-group col-md-6">
-            {{ Form::label('sub_type', __('Account Type'), ['class' => 'form-label']) }}
+            {{ Form::label('sub_type', __('Account Type'), ['class' => 'form-label']) }}<span class="text-danger">*</span>
             {{ Form::select('sub_type', $account_type, null, ['class' => 'form-control select', 'required' => 'required']) }}
         </div>
 
