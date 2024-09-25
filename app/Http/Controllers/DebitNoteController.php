@@ -74,6 +74,7 @@ class DebitNoteController extends Controller
             $debit->date        = $request->date;
             $debit->amount      = $request->amount;
             $debit->description = $request->description;
+            $debit->created_user = \Auth::user()->id;
             $debit->save();
 
             Utility::updateUserBalance('vendor', $bill->vender_id, $request->amount, 'credit');
@@ -138,6 +139,7 @@ class DebitNoteController extends Controller
             $debit->date        = $request->date;
             $debit->amount      = $request->amount;
             $debit->description = $request->description;
+            $debit->created_user = \Auth::user()->id;
             $debit->save();
 //            Utility::userBalance('vendor', $billDue->vender_id, $request->amount, 'debit');
             Utility::updateUserBalance('vendor', $billDue->vender_id, $request->amount, 'credit');
@@ -212,6 +214,7 @@ class DebitNoteController extends Controller
             $debit->date        = $request->date;
             $debit->amount      = $request->amount;
             $debit->description = $request->description;
+            $debit->created_user = \Auth::user()->id;
             $debit->save();
 //            Utility::userBalance('vendor', $bill->vender_id, $request->amount, 'debit');
             Utility::updateUserBalance('vendor', $bill->vender_id, $request->amount, 'credit');

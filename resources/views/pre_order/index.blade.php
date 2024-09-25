@@ -81,6 +81,7 @@
 {{--                                @endif--}}
                                 <th> {{__('Category')}}</th>
                                 <th> {{__('Issue Date')}}</th>
+                                <th> {{__('Created User')}}</th>
                                 <th> {{__('Status')}}</th>
                                 @if(Gate::check('edit proposal') || Gate::check('delete proposal') || Gate::check('show proposal'))
                                     <th width="10%"> {{__('Action')}}</th>
@@ -103,6 +104,7 @@
 
                                     <td>{{ !empty($preOrder->category)?$preOrder->category->name:''}}</td>
                                     <td>{{ Auth::user()->dateFormat($preOrder->issue_date) }}</td>
+                                    <td>{{ $preOrder->createdUser ? $preOrder->createdUser->name : '' }}</td>
                                     <td>
                                         @if($preOrder->status == 0)
                                             <span class="status_badge badge bg-primary p-2 px-3 rounded">{{ __(\App\Models\PreOrder::$statues[$preOrder->status]) }}</span>

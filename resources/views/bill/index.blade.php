@@ -96,6 +96,7 @@
                                 <th> {{__('Category')}}</th>
                                 <th> {{__('Bill Date')}}</th>
                                 <th> {{__('Due Date')}}</th>
+                                <th> {{__('Created User')}}</th>
                                 <th>{{__('Status')}}</th>
                                 @if(Gate::check('edit bill') || Gate::check('delete bill') || Gate::check('show bill'))
                                     <th width="10%"> {{__('Action')}}</th>
@@ -111,6 +112,7 @@
                                     <td>{{ !empty($bill->category)?$bill->category->name:'-'}}</td>
                                     <td>{{ Auth::user()->dateFormat($bill->bill_date) }}</td>
                                     <td>{{ Auth::user()->dateFormat($bill->due_date) }}</td>
+                                    <td>{{ $bill->createdUser ? $bill->createdUser->name : '' }}</td>
                                     <td>
                                         @if($bill->status == 0)
                                             <span class="status_badge badge bg-secondary p-2 px-3 rounded">{{ __(\App\Models\Invoice::$statues[$bill->status]) }}</span>

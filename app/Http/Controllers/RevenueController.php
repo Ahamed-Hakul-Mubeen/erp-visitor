@@ -32,7 +32,7 @@ class RevenueController extends Controller
             $category->prepend('Select Category', '');
 
 
-            $query = Revenue::where('created_by', '=', \Auth::user()->creatorId());
+            $query = Revenue::with('createdUser')->where('created_by', '=', \Auth::user()->creatorId());
 
 
             if(count(explode('to', $request->date)) > 1)
@@ -144,6 +144,7 @@ class RevenueController extends Controller
 
 
             $revenue->created_by     = \Auth::user()->creatorId();
+            $revenue->created_user     = \Auth::user()->id;
             $revenue->save();
 
             $category            = ProductServiceCategory::where('id', $request->category_id)->first();
@@ -337,7 +338,7 @@ class RevenueController extends Controller
                     }
                 }
             }
-
+            $revenue->created_user     = \Auth::user()->id;
             $revenue->save();
 
             $category            = ProductServiceCategory::where('id', $request->category_id)->first();

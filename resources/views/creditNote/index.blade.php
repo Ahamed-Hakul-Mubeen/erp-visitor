@@ -55,6 +55,7 @@
                                 <th> {{__('Customer')}}</th>
                                 <th> {{__('Date')}}</th>
                                 <th> {{__('Amount')}}</th>
+                                <th> {{__('Created User')}}</th>
                                 <th> {{__('Description')}}</th>
                                 <th width="10%"> {{__('Action')}}</th>
                             </tr>
@@ -70,6 +71,7 @@
                                             <td>{{ (!empty($invoice->customer)?$invoice->customer->name:'-') }}</td>
                                             <td>{{ Auth::user()->dateFormat($creditNote->date) }}</td>
                                             <td>{{ Auth::user()->priceFormat($creditNote->amount) }}</td>
+                                            <td>{{!empty($creditNote->createdUser)?$creditNote->createdUser->name:'-'}}</td>
                                             <td>{{!empty($creditNote->description)?$creditNote->description:'-'}}</td>
                                             <td>
                                                 @can('edit credit note')

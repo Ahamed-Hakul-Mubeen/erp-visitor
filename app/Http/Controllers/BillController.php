@@ -42,7 +42,7 @@ class BillController extends Controller
 
             $status = Bill::$statues;
 
-            $query = Bill::where('type', '=', 'Bill')->where('created_by', '=', \Auth::user()->creatorId());
+            $query = Bill::with('createdUser')->where('type', '=', 'Bill')->where('created_by', '=', \Auth::user()->creatorId());
             if(!empty($request->vender))
             {
                 $query->where('vender_id', '=', $request->vender);
@@ -178,6 +178,7 @@ class BillController extends Controller
             $bill->category_id      = !empty($request->category_id) ? $request->category_id :0;
             $bill->order_number     = !empty($request->order_number) ? $request->order_number : 0;
             $bill->created_by       = \Auth::user()->creatorId();
+            $bill->created_user       = \Auth::user()->id;
             $bill->save();
 
             CustomField::saveData($bill, $request->customField);
@@ -480,6 +481,7 @@ class BillController extends Controller
                 $bill->user_type         =  'vendor';
                 $bill->order_number   = $request->order_number;
                 $bill->category_id    = $request->category_id;
+                $bill->created_user    = \Auth::user()->id;
 
                 if($bill->project_id) {
                     ProjectExpense::where("reference_type", "Bill")->where("reference_id", $bill->id)->where("created_by", \Auth::user()->creatorId())->delete();
@@ -1289,6 +1291,7 @@ class BillController extends Controller
             $duplicateBill->status           = 0;
             $duplicateBill->shipping_display = $bill['shipping_display'];
             $duplicateBill->created_by       = $bill['created_by'];
+            $duplicateBill->created_user       = \Auth::user()->id;
             $duplicateBill->save();
 
             if($duplicateBill)

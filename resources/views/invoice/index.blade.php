@@ -106,6 +106,7 @@
                                 <th>{{ __('Issue Date') }}</th>
                                 <th>{{ __('Due Date') }}</th>
                                 <th>{{ __('Due Amount') }}</th>
+                                <th>{{ __('Created User') }}</th>
                                 <th>{{ __('Status') }}</th>
                                 @if (Gate::check('edit invoice') || Gate::check('delete invoice') || Gate::check('show invoice'))
                                     <th>{{ __('Action') }}</th>
@@ -135,6 +136,7 @@
                                         @endif
                                     </td>
                                     <td>{{ \Auth::user()->priceFormat($invoice->getDue()) }}</td>
+                                    <td>{{ !empty($invoice->createdUser)?$invoice->createdUser->name:'' }}</td>
                                     <td>
                                         @if ($invoice->status == 0)
                                             <span

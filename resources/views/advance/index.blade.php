@@ -95,6 +95,7 @@
                                 <th> {{__('Balance')}}</th>
                                 <th> {{__('Account')}}</th>
                                 <th> {{__('Customer')}}</th>
+                                <th> {{__('Created User')}}</th>
                                 {{-- <th> {{__('Reference')}}</th> --}}
                                 {{-- <th> {{__('Description')}}</th>
                                 <th>{{__('Payment Receipt')}}</th> --}}
@@ -120,6 +121,7 @@
                                     <td>{{  Auth::user()->priceFormat($advance->balance)}}</td>
                                     <td>{{ !empty($advance->bankAccount)?$advance->bankAccount->bank_name.' '.$advance->bankAccount->holder_name:''}}</td>
                                     <td>{{  (!empty($advance->customer)?$advance->customer->name:'-')}}</td>
+                                    <td>{{  (!empty($advance->createdUser)?$advance->createdUser->name:'-')}}</td>
                                     {{-- <td>{{  !empty($advance->reference)?$advance->reference:'-'}}</td>
                                     <td>{{  !empty($advance->description)?$advance->description:'-'}}</td> --}}
 

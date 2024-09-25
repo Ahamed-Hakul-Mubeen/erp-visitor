@@ -15,6 +15,7 @@ class PreOrder extends Model
         'Accepted',
         'Declined',
         'Close',
+        'created_user',
     ];
 
     public function category()
@@ -82,5 +83,9 @@ class PreOrder extends Model
     public function vender()
     {
         return $this->hasOne('App\Models\Vender', 'id', 'vender_id');
+    }
+    public function createdUser()
+    {
+        return $this->hasOne('App\Models\User', 'id', 'created_user');
     }
 }

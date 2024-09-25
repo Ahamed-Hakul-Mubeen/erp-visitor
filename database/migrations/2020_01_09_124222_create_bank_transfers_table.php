@@ -23,6 +23,7 @@ class CreateBankTransfersTable extends Migration
             $table->integer('payment_method')->default('0');
             $table->string('reference')->nullable();
             $table->text('description');
+            $table->unsignedBigInteger('created_user');
             $table->integer('created_by')->default('0');
             $table->timestamps();
         }

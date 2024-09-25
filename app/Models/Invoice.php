@@ -15,6 +15,7 @@ class Invoice extends Model
         'status',
         'category_id',
         'created_by',
+        'created_user'
     ];
 
     public static $statues = [
@@ -174,4 +175,9 @@ class Invoice extends Model
     {
         return $this->hasMany(InvoiceProduct::class);
     }
+    public function createdUser()
+    {
+        return $this->hasOne('App\Models\User', 'id', 'created_user');
+    }
+
 }

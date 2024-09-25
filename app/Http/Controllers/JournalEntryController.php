@@ -16,7 +16,7 @@ class JournalEntryController extends Controller
     public function index()
     {
         if (\Auth::user()->can('manage journal entry')) {
-            $journalEntries = JournalEntry::where('created_by', '=', \Auth::user()->creatorId())->get();
+            $journalEntries = JournalEntry::with('createdUser')->where('created_by', '=', \Auth::user()->creatorId())->get();
 
             return view('journalEntry.index', compact('journalEntries'));
         } else {
@@ -84,6 +84,7 @@ class JournalEntryController extends Controller
             $journal->reference = $request->reference;
             $journal->description = $request->description;
             $journal->created_by = \Auth::user()->creatorId();
+            $journal->created_user = \Auth::user()->id;
             $journal->save();
 
             for ($i = 0; $i < count($accounts); $i++) {
@@ -212,6 +213,7 @@ class JournalEntryController extends Controller
                 $journalEntry->reference = $request->reference;
                 $journalEntry->description = $request->description;
                 $journalEntry->created_by = \Auth::user()->creatorId();
+                $journalEntry->created_user = \Auth::user()->id;
                 $journalEntry->save();
 
                 for ($i = 0; $i < count($accounts); $i++) {

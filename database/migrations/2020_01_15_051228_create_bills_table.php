@@ -30,6 +30,7 @@ class CreateBillsTable extends Migration
             $table->date('send_date')->nullable();
             $table->integer('discount_apply')->default('0');
             $table->integer('category_id');
+            $table->unsignedBigInteger('created_user');
             $table->integer('created_by')->default('0');
             $table->timestamps();
         }

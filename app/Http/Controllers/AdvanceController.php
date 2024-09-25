@@ -22,7 +22,7 @@ class AdvanceController extends Controller
             $account = BankAccount::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('holder_name', 'id');
             $account->prepend('Select Account', '');
 
-            $query = Advance::where('created_by', '=', \Auth::user()->creatorId());
+            $query = Advance::with('createdUser')->where('created_by', '=', \Auth::user()->creatorId());
 
             if(count(explode('to', $request->date)) > 1)
             {
@@ -128,6 +128,7 @@ class AdvanceController extends Controller
             }
 
             $advance->created_by     = \Auth::user()->creatorId();
+            $advance->created_user     = \Auth::user()->id;
             $advance->save();
 
             $customer         = Customer::where('id', $request->customer_id)->first();
@@ -256,7 +257,7 @@ class AdvanceController extends Controller
                     }
                 }
             }
-
+            $advance->created_user     = \Auth::user()->id;
             $advance->save();
 
             TransactionLines::where("reference", "Advance")->where("reference_id", $advance->id)->where('created_by', \Auth::user()->creatorId())->delete();

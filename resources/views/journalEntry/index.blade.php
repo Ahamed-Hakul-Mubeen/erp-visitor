@@ -31,6 +31,7 @@
                                 <th> {{__('Journal ID')}}</th>
                                 <th> {{__('Date')}}</th>
                                 <th> {{__('Amount')}}</th>
+                                <th> {{__('Created User')}}</th>
                                 <th> {{__('Description')}}</th>
                                 <th width="10%"> {{__('Action')}}</th>
                             </tr>
@@ -45,6 +46,7 @@
                                     <td>
                                         {{ \Auth::user()->priceFormat($journalEntry->totalCredit())}}
                                     </td>
+                                    <td>{{!empty($journalEntry->createdUser)?$journalEntry->createdUser->name:'-'}}</td>
                                     <td>{{!empty($journalEntry->description)?$journalEntry->description:'-'}}</td>
                                     <td>
                                         @can('edit journal entry')

@@ -12,6 +12,7 @@ class JournalEntry extends Model
         'description',
         'journal_id',
         'created_by',
+        'created_user'
     ];
 
 
@@ -40,6 +41,10 @@ class JournalEntry extends Model
         }
 
         return $total;
+    }
+    public function createdUser()
+    {
+        return $this->hasOne('App\Models\User', 'id', 'created_user');
     }
 
 

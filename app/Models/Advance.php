@@ -18,4 +18,9 @@ class Advance extends Model
     {
         return $this->hasOne('App\Models\BankAccount', 'id', 'account_id');
     }
+    public function createdUser()
+    {
+        return $this->hasOne('App\Models\User', 'id', 'created_user');
+    }
+
 }

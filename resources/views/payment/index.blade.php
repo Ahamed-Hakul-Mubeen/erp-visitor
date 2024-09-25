@@ -89,6 +89,7 @@
                                 <th>{{__('Vendor')}}</th>
                                 <th>{{__('Category')}}</th>
                                 <th>{{__('Reference')}}</th>
+                                <th>{{__('Created User')}}</th>
                                 <th>{{__('Description')}}</th>
                                 <th>{{__('Payment Receipt')}}</th>
                                 @if(Gate::check('edit payment') || Gate::check('delete payment'))
@@ -110,6 +111,7 @@
                                     <td>{{  !empty($payment->vender)?$payment->vender->name:'-'}}</td>
                                     <td>{{  !empty($payment->category)?$payment->category->name:'-'}}</td>
                                     <td>{{  !empty($payment->reference)?$payment->reference:'-'}}</td>
+                                    <td>{{  !empty($payment->createdUser)?$payment->createdUser->name:'-'}}</td>
                                     <td>{{  !empty($payment->description)?$payment->description:'-'}}</td>
                                     <td>
                                         @if(!empty($payment->add_receipt))

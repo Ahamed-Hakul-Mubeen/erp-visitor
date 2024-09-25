@@ -15,6 +15,7 @@ class Proposal extends Model
         'is_convert',
         'converted_invoice_id',
         'created_by',
+        'created_user',
     ];
 
     public static $statues = [
@@ -130,6 +131,10 @@ class Proposal extends Model
     public function taxes()
     {
         return $this->hasOne('App\Models\Tax', 'id', 'tax');
+    }
+    public function createdUser()
+    {
+        return $this->hasOne('App\Models\User', 'id', 'created_user');
     }
 
 }

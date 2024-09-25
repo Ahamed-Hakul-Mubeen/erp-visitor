@@ -76,6 +76,7 @@ class CreditNoteController extends Controller
             $credit->date        = $request->date;
             $credit->amount      = $request->amount;
             $credit->description = $request->description;
+            $credit->created_user = \Auth::user()->id;
             $credit->save();
 
             $customer = Customer::find($invoice->customer_id);
@@ -148,6 +149,7 @@ class CreditNoteController extends Controller
             $credit->date        = $request->date;
             $credit->amount      = $request->amount;
             $credit->description = $request->description;
+            $credit->created_user = \Auth::user()->id;
             $credit->save();
 
             Utility::updateUserBalance('customer', $invoiceDue->customer_id, $request->amount, 'debit');
@@ -227,6 +229,7 @@ class CreditNoteController extends Controller
             $credit->date        = $request->date;
             $credit->amount      = $request->amount;
             $credit->description = $request->description;
+            $credit->created_user = \Auth::user()->id;
             $credit->save();
 
             Utility::updateUserBalance('customer', $invoice->customer_id, $request->amount, 'debit');

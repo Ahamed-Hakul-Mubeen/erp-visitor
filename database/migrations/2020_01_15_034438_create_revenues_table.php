@@ -25,6 +25,7 @@ class CreateRevenuesTable extends Migration
             $table->string('add_receipt')->nullable();
             $table->text('description')->nullable();
             $table->integer('created_by')->default('0');
+            $table->unsignedBigInteger('created_user');
             $table->timestamps();
         });
     }

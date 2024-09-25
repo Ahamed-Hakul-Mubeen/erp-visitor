@@ -14,6 +14,7 @@ class Bill extends Model
         'bill_id',
         'order_number',
         'category_id',
+        'created_user',
         'created_by',
     ];
 
@@ -178,5 +179,9 @@ class Bill extends Model
     public function taxes()
     {
         return $this->hasOne('App\Models\Tax', 'id', 'tax');
+    }
+    public function createdUser()
+    {
+        return $this->hasOne('App\Models\User', 'id', 'created_user');
     }
 }

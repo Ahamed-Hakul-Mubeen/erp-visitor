@@ -24,6 +24,7 @@ class CreateEstimationsTable extends Migration
             $table->unsignedBigInteger('tax_id');
             $table->text('terms')->nullable();
             $table->integer('created_by');
+            $table->unsignedBigInteger('created_user');
             $table->timestamps();
         }
         );

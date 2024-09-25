@@ -41,7 +41,7 @@ class InvoiceController extends Controller
             $customer = Customer::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             $customer->prepend('Select Customer', '');
             $status = Invoice::$statues;
-            $query = Invoice::where('created_by', '=', \Auth::user()->creatorId());
+            $query = Invoice::with('createdUser')->where('created_by', '=', \Auth::user()->creatorId());
 
             if (!empty($request->customer)) {
                 $query->where('customer_id', '=', $request->customer);
@@ -152,6 +152,7 @@ class InvoiceController extends Controller
             $invoice->exchange_rate = $request->exchange_rate;
             //            $invoice->discount_apply = isset($request->discount_apply) ? 1 : 0;
             $invoice->created_by = \Auth::user()->creatorId();
+            $invoice->created_user = \Auth::user()->id;
             $invoice->save();
             CustomField::saveData($invoice, $request->customField);
             $products = $request->items;
@@ -269,6 +270,7 @@ class InvoiceController extends Controller
                 $invoice->actual_invoice_number = $request->invoice_number;
                 //                $invoice->discount_apply = isset($request->discount_apply) ? 1 : 0;
                 $invoice->category_id = $request->category_id;
+                $invoice->created_user = \Auth::user()->id;
                 $invoice->save();
 
                 Utility::starting_number($invoice->invoice_id + 1, 'invoice');
@@ -1052,6 +1054,7 @@ class InvoiceController extends Controller
             $duplicateInvoice->status = 0;
             $duplicateInvoice->shipping_display = $invoice['shipping_display'];
             $duplicateInvoice->created_by = $invoice['created_by'];
+            $duplicateInvoice->created_user = \Auth::user()->id;
             $duplicateInvoice->save();
 
             if ($duplicateInvoice) {

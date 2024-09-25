@@ -97,6 +97,7 @@
                                 <th> {{__('To Account')}}</th>
                                 <th> {{__('Amount')}}</th>
                                 <th> {{__('Reference')}}</th>
+                                <th> {{__('Created User')}}</th>
                                 <th> {{__('Description')}}</th>
                                 @if(Gate::check('edit transfer') || Gate::check('delete transfer'))
                                     <th width="10%"> {{__('Action')}}</th>
@@ -112,6 +113,7 @@
                                     <td>{{!empty( $transfer->toBankAccount)? $transfer->toBankAccount->bank_name.' '. $transfer->toBankAccount->holder_name:''}}</td>
                                     <td>{{  \Auth::user()->priceFormat( $transfer->amount)}}</td>
                                     <td>{{  $transfer->reference}}</td>
+                                    <td>{{  !empty( $transfer->createdUser) ? $transfer->createdUser->name : '' }}</td>
                                     <td>{{  $transfer->description}}</td>
                                     @if(Gate::check('edit bank transfer') || Gate::check('delete bank transfer'))
                                         <td class="Action">

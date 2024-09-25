@@ -103,6 +103,7 @@
                                 <th> {{__('Customer')}}</th>
                                 <th> {{__('Category')}}</th>
                                 <th> {{__('Reference')}}</th>
+                                <th> {{__('Created User')}}</th>
                                 <th> {{__('Description')}}</th>
                                 <th>{{__('Payment Receipt')}}</th>
 
@@ -124,6 +125,7 @@
                                     <td>{{  (!empty($revenue->customer)?$revenue->customer->name:'-')}}</td>
                                     <td>{{  !empty($revenue->category)?$revenue->category->name:'-'}}</td>
                                     <td>{{  !empty($revenue->reference)?$revenue->reference:'-'}}</td>
+                                    <td>{{  !empty($revenue->createdUser)?$revenue->createdUser->name:'-'}}</td>
                                     <td>{{  !empty($revenue->description)?$revenue->description:'-'}}</td>
 
                                     <td>

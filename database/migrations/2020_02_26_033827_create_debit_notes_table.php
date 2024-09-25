@@ -20,6 +20,7 @@ class CreateDebitNotesTable extends Migration
             $table->decimal('amount', 15, 2)->default('0.00');
             $table->date('date');
             $table->text('description')->nullable();
+            $table->unsignedBigInteger('created_user');
             $table->timestamps();
         });
     }

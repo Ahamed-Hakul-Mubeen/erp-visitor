@@ -26,6 +26,7 @@ class CreateProposalsTable extends Migration
             $table->integer('is_convert')->default('0');
             $table->integer('converted_invoice_id')->default('0');
             $table->integer('created_by')->default('0');
+            $table->unsignedBigInteger('created_user');
             $table->timestamps();
         }
         );

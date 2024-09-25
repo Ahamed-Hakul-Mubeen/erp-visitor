@@ -92,4 +92,9 @@ class Estimation extends Model
 
         return \Auth::user()->priceFormat($total);
     }
+    public function createdUser()
+    {
+        return $this->hasOne('App\Models\User', 'id', 'created_user');
+    }
+
 }

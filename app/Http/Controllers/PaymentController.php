@@ -31,7 +31,7 @@ class PaymentController extends Controller
             $category = ProductServiceCategory::where('created_by', '=', \Auth::user()->creatorId())->where('type', '=', 'expense')->get()->pluck('name', 'id');
             $category->prepend('Select Category', '');
 
-            $query = Payment::where('created_by', '=', \Auth::user()->creatorId());
+            $query = Payment::with('createdUser')->where('created_by', '=', \Auth::user()->creatorId());
 
 //            if(!empty($request->date))
 //            {
@@ -143,6 +143,7 @@ class PaymentController extends Controller
             }
             $payment->description = $request->description;
             $payment->created_by = \Auth::user()->creatorId();
+            $payment->created_user = \Auth::user()->id;
             $payment->save();
 
 
@@ -345,6 +346,7 @@ class PaymentController extends Controller
             }
 
             $payment->description = $request->description;
+            $payment->created_user = \Auth::user()->id;
             $payment->save();
 
             $category = ProductServiceCategory::where('id', $request->category_id)->first();

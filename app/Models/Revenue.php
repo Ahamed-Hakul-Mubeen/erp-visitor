@@ -17,6 +17,7 @@ class Revenue extends Model
         'reference',
         'description',
         'created_by',
+        'created_user'
     ];
 
     public function category()
@@ -33,4 +34,9 @@ class Revenue extends Model
     {
         return $this->hasOne('App\Models\BankAccount', 'id', 'account_id');
     }
+    public function createdUser()
+    {
+        return $this->hasOne('App\Models\User', 'id', 'created_user');
+    }
+
 }

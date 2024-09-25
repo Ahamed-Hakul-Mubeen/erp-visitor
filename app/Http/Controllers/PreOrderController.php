@@ -34,7 +34,7 @@ class PreOrderController extends Controller
 
             $status = PreOrder::$statues;
 
-            $query = PreOrder::where('created_by', '=', \Auth::user()->creatorId());
+            $query = PreOrder::with('createdUser')->where('created_by', '=', \Auth::user()->creatorId());
 
             if (!empty($request->vender)) {
                 $query->where('id', '=', $request->vender);
@@ -48,7 +48,6 @@ class PreOrderController extends Controller
                 $query->where('status', '=', $request->status);
             }
             $preOrders = $query->with(['category'])->get();
-
             return view('pre_order.index', compact('preOrders', 'vender', 'status'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
@@ -124,6 +123,7 @@ class PreOrderController extends Controller
             $pre_order->category_id     = $request->category_id;
             // $pre_order->discount_apply = isset($request->discount_apply) ? 1 : 0;
             $pre_order->created_by      = \Auth::user()->creatorId();
+            $pre_order->created_user      = \Auth::user()->id;
             $pre_order->save();
             CustomField::saveData($pre_order, $request->customField);
             $products = $request->items;
@@ -220,6 +220,7 @@ class PreOrderController extends Controller
                 $pre_order->vender_id    = $request->vender_id;
                 $pre_order->issue_date     = $request->issue_date;
                 $pre_order->category_id    = $request->category_id;
+                $pre_order->created_user      = \Auth::user()->id;
                 //                $pre_order->discount_apply = isset($request->discount_apply) ? 1 : 0;
                 $pre_order->save();
                 CustomField::saveData($pre_order, $request->customField);
@@ -470,6 +471,7 @@ class PreOrderController extends Controller
             $duplicatePreOrder->category_id = $pre_order['category_id'];
             $duplicatePreOrder->status      = 0;
             $duplicatePreOrder->created_by  = $pre_order['created_by'];
+            $duplicatePreOrder->created_user  = \Auth::user()->id;
             $duplicatePreOrder->save();
 
             if ($duplicatePreOrder) {
@@ -508,6 +510,7 @@ class PreOrderController extends Controller
             $convertBill->category_id   = $pre_order['category_id'];
             $convertBill->status        = 0;
             $convertBill->created_by    = $pre_order['created_by'];
+            $convertBill->created_user    = $pre_order['created_user'];
             $convertBill->type          = "Bill";
             $convertBill->user_type     = "vendor";
             $convertBill->save();
@@ -552,6 +555,7 @@ class PreOrderController extends Controller
         $status           = $request->status;
         $pre_order         = PreOrder::find($id);
         $pre_order->status = $status;
+        $pre_order->created_user = \Auth::user()->id;
         $pre_order->save();
 
         return redirect()->back()->with('success', __('PreOrder status changed successfully.'));

@@ -16,6 +16,7 @@ class Payment extends Model
         'category_id',
         'payment_method',
         'reference',
+        'created_user',
         'created_by',
     ];
 
@@ -39,5 +40,8 @@ class Payment extends Model
     {
         return $this->hasOne('App\Models\ChartOfAccount', 'id', 'chart_account_id');
     }
-
+    public function createdUser()
+    {
+        return $this->hasOne('App\Models\User', 'id', 'created_user');
+    }
 }

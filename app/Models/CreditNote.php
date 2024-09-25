@@ -11,10 +11,16 @@ class CreditNote extends Model
         'customer',
         'amount',
         'date',
+        'created_user'
     ];
 
     public function customer()
     {
         return $this->hasOne('App\Models\Customer', 'customer_id', 'customer');
     }
+    public function createdUser()
+    {
+        return $this->hasOne('App\Models\User', 'id', 'created_user');
+    }
+
 }

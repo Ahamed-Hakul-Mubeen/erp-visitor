@@ -56,6 +56,7 @@
                                 <th> {{__('Vendor')}}</th>
                                 <th> {{__('Date')}}</th>
                                 <th> {{__('Amount')}}</th>
+                                <th> {{__('Created User')}}</th>
                                 <th> {{__('Description')}}</th>
                                 <th width="10%"> {{__('Action')}}</th>
                             </tr>
@@ -65,7 +66,6 @@
                             @foreach ($bills as $bill)
                                 @if(!empty($bill->debitNote))
                                     @foreach ($bill->debitNote as $debitNote)
-
                                         <tr class="font-style">
                                             <td class="Id">
                                                 <a href="{{ route('bill.show',\Crypt::encrypt($debitNote->bill)) }}" class="btn btn-outline-primary">{{ AUth::user()->billNumberFormat($bill->bill_id) }}
@@ -75,6 +75,7 @@
                                             <td>{{ (!empty($bill->vender)?$bill->vender->name:'-') }}</td>
                                             <td>{{ Auth::user()->dateFormat($debitNote->date) }}</td>
                                             <td>{{ Auth::user()->priceFormat($debitNote->amount) }}</td>
+                                            <td>{{!empty($debitNote->createdUser)?$debitNote->createdUser->name:'-'}}</td>
                                             <td>{{!empty($debitNote->description)?$debitNote->description:'-'}}</td>
                                             <td class="Action">
                                                 <span>

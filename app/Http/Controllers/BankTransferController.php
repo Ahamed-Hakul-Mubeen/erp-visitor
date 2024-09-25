@@ -19,7 +19,7 @@ class BankTransferController extends Controller
             $account = BankAccount::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('holder_name', 'id');
             $account->prepend('Select Account', '');
 
-            $query = BankTransfer::where('created_by', '=', \Auth::user()->creatorId());
+            $query = BankTransfer::with('createdUser')->where('created_by', '=', \Auth::user()->creatorId());
 
             if(count(explode('to', $request->date)) > 1)
             {
@@ -93,6 +93,7 @@ class BankTransferController extends Controller
             $transfer->reference      = $request->reference;
             $transfer->description    = $request->description;
             $transfer->created_by     = \Auth::user()->creatorId();
+            $transfer->created_user     = \Auth::user()->id;
             $transfer->save();
 
             Utility::bankAccountBalance($request->from_account, $request->amount, 'debit');
@@ -185,6 +186,7 @@ class BankTransferController extends Controller
             $transfer->payment_method = 0;
             $transfer->reference      = $request->reference;
             $transfer->description    = $request->description;
+            $transfer->created_user     = \Auth::user()->id;
             $transfer->save();
 
             TransactionLines::where("reference", "Bank Transaction")->where("reference_id", $transfer->id)->where('created_by', \Auth::user()->creatorId())->delete();

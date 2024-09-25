@@ -15,6 +15,7 @@ class BankTransfer extends Model
         'reference',
         'description',
         'created_by',
+        'created_user'
     ];
 
     public function fromBankAccount()
@@ -25,6 +26,10 @@ class BankTransfer extends Model
     public function toBankAccount()
     {
         return $this->hasOne('App\Models\BankAccount', 'id', 'to_account');
+    }
+    public function createdUser()
+    {
+        return $this->hasOne('App\Models\User', 'id', 'created_user');
     }
 
 }

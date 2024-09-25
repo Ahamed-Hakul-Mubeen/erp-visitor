@@ -43,7 +43,7 @@ class ProposalController extends Controller
 
             $status = Proposal::$statues;
 
-            $query = Proposal::where('created_by', '=', \Auth::user()->creatorId());
+            $query = Proposal::with('createdUser')->where('created_by', '=', \Auth::user()->creatorId());
 
             if(!empty($request->customer))
             {
@@ -144,6 +144,7 @@ class ProposalController extends Controller
             $proposal->category_id    = $request->category_id;
 //            $proposal->discount_apply = isset($request->discount_apply) ? 1 : 0;
             $proposal->created_by     = \Auth::user()->creatorId();
+            $proposal->created_user     = \Auth::user()->id;
             $proposal->save();
             CustomField::saveData($proposal, $request->customField);
             $products = $request->items;
@@ -250,6 +251,7 @@ class ProposalController extends Controller
                 $proposal->customer_id    = $request->customer_id;
                 $proposal->issue_date     = $request->issue_date;
                 $proposal->category_id    = $request->category_id;
+                $proposal->created_user     = \Auth::user()->id;
 //                $proposal->discount_apply = isset($request->discount_apply) ? 1 : 0;
                 $proposal->save();
                 CustomField::saveData($proposal, $request->customField);
@@ -550,6 +552,7 @@ class ProposalController extends Controller
             $duplicateProposal->category_id = $proposal['category_id'];
             $duplicateProposal->status      = 0;
             $duplicateProposal->created_by  = $proposal['created_by'];
+            $duplicateProposal->created_user     = \Auth::user()->id;
             $duplicateProposal->save();
 
             if($duplicateProposal)
@@ -593,6 +596,7 @@ class ProposalController extends Controller
             $convertInvoice->category_id = $proposal['category_id'];
             $convertInvoice->status      = 0;
             $convertInvoice->created_by  = $proposal['created_by'];
+            $convertInvoice->created_user     = \Auth::user()->id;
             $convertInvoice->save();
 
             $proposal->converted_invoice_id = $convertInvoice->id;
