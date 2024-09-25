@@ -35,7 +35,7 @@
     <a href="#" class="btn btn-primary btn-sm" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <span class="btn-inner--icon">{{__('Status')}}</span>
         </a>
-    <div class="dropdown-menu dropdown-menu-right task-filter-actions dropdown-steady" id="task_status">
+        <div class="dropdown-menu dropdown-menu-right task-filter-actions dropdown-steady" id="task_status">
             <a class="dropdown-item filter-action filter-show-all pl-4" href="#">{{__('Show All')}}</a>
             <hr class="my-0">
             <a class="dropdown-item filter-action pl-4 active" href="#" data-val="see_my_tasks">{{ __('See My Tasks') }}</a>
@@ -49,7 +49,7 @@
             <a class="dropdown-item filter-action filter-other pl-4" href="#" data-val="starred">{{ __('Starred') }}</a>
         </div>
 
-       
+
             <a href="#" class="btn btn-primary btn-sm" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="btn-inner--text">{{__('Member')}}</span>
             </a>
@@ -58,8 +58,8 @@
                     <a class="dropdown-item filter-member pl-4" href="#" data-member-id="{{ $member->id }}">{{ $member->name }}</a>
                 @endforeach
             </div>
-        
-    
+
+
 
     @if($view == 'grid')
         <a href="{{ route('taskBoard.view', 'list') }}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" title="{{__('List View')}}">
@@ -125,6 +125,8 @@
 
         // when selecting project member
         $('#task_member').on('click', '.filter-member', function () {
+            $('.filter-member').removeClass('active');
+            $(this).addClass('active');
             memberId = $(this).attr('data-member-id');
             ajaxFilterTaskView(sort, $('#task_keyword').val(), status, memberId);
         });
