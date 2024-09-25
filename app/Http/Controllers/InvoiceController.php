@@ -1272,7 +1272,7 @@ class InvoiceController extends Controller
             $data['customFields'] = $customFields;
 
             $pdf = PDF::loadView('invoice.templates.' . $settings['invoice_template'], $data);
-            return $pdf->download('laravel.pdf');
+            return $pdf->download(Utility::customerInvoiceNumberFormat($invoice->invoice_id).'.pdf');
 
             return view('invoice.templates.' . $settings['invoice_template'], compact('invoice', 'color', 'settings', 'customer', 'img', 'font_color', 'customFields'));
         } else {
