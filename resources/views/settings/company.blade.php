@@ -735,7 +735,7 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="form-group col-md-6">
-                                    {{ Form::label('site_currency', __('Currency *'), ['class' => 'form-label']) }}
+                                    {{ Form::label('site_currency', __('Currency'), ['class' => 'form-label']) }}<span class="text-danger">*</span>
                                     {{ Form::text('site_currency', $setting['site_currency'], ['class' => 'form-control font-style', 'required', 'placeholder' => __('Enter Currency')]) }}
                                     <small> {{ __('Note: Add currency code as per three-letter ISO code.') }}<br>
                                         <a href="https://stripe.com/docs/currencies"
@@ -748,8 +748,8 @@
                                     @enderror
                                 </div>
                                 <div class="form-group col-md-6">
-                                    {{ Form::label('site_currency_symbol', __('Currency Symbol *'), ['class' => 'form-label']) }}
-                                    {{ Form::text('site_currency_symbol', null, ['class' => 'form-control']) }}
+                                    {{ Form::label('site_currency_symbol', __('Currency Symbol'), ['class' => 'form-label']) }}<span class="text-danger">*</span>
+                                    {{ Form::text('site_currency_symbol', null, ['class' => 'form-control','required'=>'required']) }}
                                     @error('site_currency_symbol')
                                         <span class="invalid-site_currency_symbol" role="alert">
                                             <strong class="text-danger">{{ $message }}</strong>
@@ -961,8 +961,8 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="form-group col-md-6">
-                                    {{ Form::label('company_name *', __('Company Name *'), ['class' => 'form-label']) }}
-                                    {{ Form::text('company_name', null, ['class' => 'form-control font-style']) }}
+                                    {{ Form::label('company_name *', __('Company Name'), ['class' => 'form-label']) }}<span class="text-danger">*</span>
+                                    {{ Form::text('company_name', null, ['class' => 'form-control font-style','required'=>'required']) }}
                                     @error('company_name')
                                         <span class="invalid-company_name" role="alert">
                                             <strong class="text-danger">{{ $message }}</strong>
@@ -1272,9 +1272,9 @@
                                     {{ Form::text('apps_url', URL::to('/'), ['class' => 'form-control', 'placeholder' => __('Application URL'), 'readonly' => 'true']) }}
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label class="form-control-label">{{ __('Tracking Interval') }}</label> <br>
+                                    <label class="form-control-label">{{ __('Tracking Interval') }}</label><span class="text-danger">*</span> <br>
                                     <small>{{ __('Image Screenshot Take Interval time ( 1 = 1 min)') }}</small>
-                                    {{ Form::number('interval_time', isset($setting['interval_time']) ? $setting['interval_time'] : '10', ['class' => 'form-control', 'placeholder' => __('Enter Tracking Interval Time')]) }}
+                                    {{ Form::number('interval_time', isset($setting['interval_time']) ? $setting['interval_time'] : '10', ['class' => 'form-control', 'placeholder' => __('Enter Tracking Interval Time'),'required'=>'required']) }}
                                 </div>
                             </div>
                         </div>
