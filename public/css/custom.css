@@ -1887,7 +1887,7 @@ body.theme-1 .account-arrow .account-icon{
     background-color: #0CAF60;
 }
 body.theme-2 .account-arrow .account-icon{
-    background-color: #584ED2;        
+    background-color: #584ED2;
 }
 body.theme-3 .account-arrow .account-icon{
     background-color: #6FD943;
@@ -1949,7 +1949,7 @@ body.theme-10 .account-arrow .account-icon{
 
 .apexcharts-pie-area
 {
-    display: none;
+    /* display: none; */
 }
 
 .color-wrp .color-picker-wrp input[type="color"] {
