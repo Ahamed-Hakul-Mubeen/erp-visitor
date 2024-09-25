@@ -23,9 +23,6 @@
                     'status': 1
                 },
                 show: function () {
-                    var my_currency_symbol = $('#currency_code').find(':selected').data("symbol");
-                    $(".my_currency_symbol").html(my_currency_symbol);
-                    $("#currency_symbol").val(my_currency_symbol);
                     $(this).slideDown();
                     var file_uploads = $(this).find('input.multi');
                     if (file_uploads.length) {
@@ -518,23 +515,6 @@
                     },
                 });
 
-            }
-        });
-        $(document).on('change', '#currency_code', function() {
-            var my_currency_symbol = $(this).find(':selected').data("symbol");
-            $(".my_currency_symbol").html(my_currency_symbol);
-            $("#currency_symbol").val(my_currency_symbol);
-
-            var value = $(selector + " .repeater").attr('data-value');
-
-            if (typeof value != 'undefined' && value.length != 0) {
-                value = JSON.parse(value);
-                $repeater.setList(value);
-                for (var i = 0; i < value.length; i++) {
-                    var tr = $('#sortable-table .id[value="' + value[i].id + '"]').parent();
-                    tr.find('.item').val(value[i].product_id);
-                    changeItem(tr.find('.item'));
-                }
             }
         });
     </script>

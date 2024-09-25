@@ -284,10 +284,10 @@
             <tr>
                 <th>{{__('Item')}}</th>
                 <th>{{__('Quantity')}}</th>
-                <th>{{__('Rate')}}</th>
-                <th>{{__('Discount')}}</th>
-                <th>{{__('Tax')}} (%)</th>
-                <th>{{__('Price')}} <small>{{__('after tax & discount')}}</small></th>
+                <th style="text-align: right;">{{__('Rate')}}</th>
+                <th style="text-align: right;">{{__('Discount')}}</th>
+                <th style="text-align: right;">{{__('Tax')}} (%)</th>
+                <th style="text-align: right;">{{__('Price')}} <small>{{__('after tax & discount')}}</small></th>
             </tr>
             </thead>
             <tbody>
@@ -299,25 +299,25 @@
                             $unitName = App\Models\ProductServiceUnit::find($item->unit);
                     @endphp
                                 <td>{{$item->quantity}} {{ ($unitName != null) ?  '('. $unitName->name .')' : ''}}</td>
-                        <td>{{Utility::priceFormat($settings,$item->price)}}</td>
-                        <td>{{($item->discount!=0)?Utility::priceFormat($settings,$item->discount):'-'}}</td>
+                        <td style="text-align: right;">{{Utility::priceFormat($settings,$item->price, $proposal->currency_symbol)}}</td>
+                        <td>{{($item->discount!=0)?Utility::priceFormat($settings,$item->discount, $proposal->currency_symbol):'-'}}</td>
                         @php
                             $itemtax = 0;
                         @endphp
-                        <td>
+                        <td style="text-align: right;">
                             @if(!empty($item->itemTax))
 
                                 @foreach($item->itemTax as $taxes)
                                     @php
                                         $itemtax += $taxes['tax_price'];
                                     @endphp
-                                    <p>{{$taxes['name']}} ({{$taxes['rate']}}) {{$taxes['price']}}</p>
+                                    <p>{{$taxes['name']}} ({{$taxes['rate']}}) <br>{{Utility::priceFormat($settings, $taxes['tax_price'], $proposal->currency_symbol)}}</p>
                                 @endforeach
                             @else
                                 <span>-</span>
                             @endif
                         </td>
-                        <td>{{Utility::priceFormat($settings,$item->price * $item->quantity -  $item->discount + $itemtax)}}</td>
+                        <td style="text-align: right;">{{Utility::priceFormat($settings,$item->price * $item->quantity -  $item->discount + $itemtax, $proposal->currency_symbol)}}</td>
                     @if(!empty($item->description))
                         <tr class="border-0 itm-description">
                             <td colspan="6">{{$item->description}}</td>
@@ -333,10 +333,10 @@
             <tr>
                 <td>{{__('Total')}}</td>
                 <td>{{$proposal->totalQuantity}}</td>
-                <td>{{Utility::priceFormat($settings,$proposal->totalRate)}}</td>
-                <td>{{Utility::priceFormat($settings,$proposal->totalDiscount)}}</td>
-                <td>{{Utility::priceFormat($settings,$proposal->totalTaxPrice) }}</td>
-                <td>{{Utility::priceFormat($settings,$proposal->getSubTotal())}}</td>
+                <td style="text-align: right;">{{Utility::priceFormat($settings,$proposal->totalRate, $proposal->currency_symbol)}}</td>
+                <td style="text-align: right;">{{Utility::priceFormat($settings,$proposal->totalDiscount, $proposal->currency_symbol)}}</td>
+                <td style="text-align: right;">{{Utility::priceFormat($settings,$proposal->totalTaxPrice, $proposal->currency_symbol) }}</td>
+                <td style="text-align: right;">{{Utility::priceFormat($settings,$proposal->getSubTotal(), $proposal->currency_symbol)}}</td>
             </tr>
             <tr>
                 <td colspan="4"></td>
@@ -344,25 +344,25 @@
                     <table class="total-table">
                         <tr>
                             <td>{{__('Subtotal')}}:</td>
-                            <td>{{Utility::priceFormat($settings,$proposal->getSubTotal())}}</td>
+                            <td style="text-align: right;">{{Utility::priceFormat($settings,$proposal->getSubTotal(), $proposal->currency_symbol)}}</td>
                         </tr>
                         @if($proposal->getTotalDiscount())
                             <tr>
                                 <td>{{__('Discount')}}:</td>
-                                <td>{{Utility::priceFormat($settings,$proposal->getTotalDiscount())}}</td>
+                                <td style="text-align: right;">{{Utility::priceFormat($settings,$proposal->getTotalDiscount(), $proposal->currency_symbol)}}</td>
                             </tr>
                         @endif
                         @if(!empty($proposal->taxesData))
                             @foreach($proposal->taxesData as $taxName => $taxPrice)
                                 <tr>
                                     <td>{{$taxName}} :</td>
-                                    <td>{{ Utility::priceFormat($settings,$taxPrice)  }}</td>
+                                    <td style="text-align: right;">{{ Utility::priceFormat($settings,$taxPrice, $proposal->currency_symbol)  }}</td>
                                 </tr>
                             @endforeach
                         @endif
                         <tr>
                             <td>{{__('Total')}}:</td>
-                            <td>{{Utility::priceFormat($settings,$proposal->getSubTotal()-$proposal->getTotalDiscount()+$proposal->getTotalTax())}}</td>
+                            <td style="text-align: right;">{{Utility::priceFormat($settings,$proposal->getSubTotal()-$proposal->getTotalDiscount()+$proposal->getTotalTax(), $proposal->currency_symbol)}}</td>
                         </tr>
 
 

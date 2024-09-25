@@ -1055,6 +1055,9 @@ class InvoiceController extends Controller
             $duplicateInvoice->due_date = $invoice['due_date'];
             $duplicateInvoice->send_date = null;
             $duplicateInvoice->category_id = $invoice['category_id'];
+            $duplicateInvoice->currency_code    = $invoice['currency_code'];
+            $duplicateInvoice->currency_symbol  = $invoice['currency_symbol'];
+            $duplicateInvoice->exchange_rate    = $invoice['exchange_rate'];
             $duplicateInvoice->ref_number = $invoice['ref_number'];
             $duplicateInvoice->status = 0;
             $duplicateInvoice->shipping_display = $invoice['shipping_display'];
