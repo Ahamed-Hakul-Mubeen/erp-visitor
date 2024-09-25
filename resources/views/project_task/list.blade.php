@@ -49,7 +49,7 @@
                                                     $getUsers = App\Models\ProjectTask::getusers();
                                                     if (!empty($task->assign_to)) {
                                                         foreach (explode(',', $task->assign_to) as $key_user) {
-                                                            if(isset([$key_user]['name']))
+                                                            if (isset($getUsers[$key_user]))
                                                             {
                                                                 $user['name'] = $getUsers[$key_user]['name'];
                                                                 $user['avatar'] = $getUsers[$key_user]['avatar'];
@@ -66,7 +66,7 @@
                                                     @foreach ($taskuser as $key => $user)
                                                         <a href="#" class="avatar rounded-circle avatar-sm">
                                                             <img data-original-title="{{ !empty($user) ? $user['name'] : '' }}"
-                                                                @if ($user['avatar']) src="{{ asset('/storage/uploads/avatar/' . $user['avatar']) }}" @else src="{{ asset('/storage/uploads/avatar/avatar.png') }}" @endif
+                                                                @if ($user['avatar']) src="{{ Storage::url('uploads/avatar/' . $user['avatar']) }}" @else src="{{ Storage::url('uploads/avatar/avatar.png') }}" @endif
                                                                 title="{{ $user['name'] }}" class="hweb">
                                                         </a>
                                                     @endforeach
