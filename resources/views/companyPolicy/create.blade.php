@@ -16,20 +16,20 @@
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">
-                {{Form::label('branch',__('Company'),['class'=>'form-label'])}}
+                {{Form::label('branch',__('Company'),['class'=>'form-label'])}}<span class="text-danger">*</span>
                 {{Form::select('branch',$branch,null,array('class'=>'form-control select','required'=>'required'))}}
             </div>
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                {{Form::label('title',__('Title'),['class'=>'form-label'])}}
+                {{Form::label('title',__('Title'),['class'=>'form-label'])}}<span class="text-danger">*</span>
                 {{Form::text('title',null,array('class'=>'form-control','required'=>'required' , 'placeholder'=>__('Enter Title')))}}
             </div>
         </div>
         <div class="col-md-12">
             <div class="form-group">
-                {{ Form::label('description', __('Description'),['class'=>'form-label'])}}
-                {{ Form::textarea('description',null, array('class' => 'form-control' , 'placeholder'=>__('Enter Description'))) }}
+                {{ Form::label('description', __('Description'),['class'=>'form-label'])}}<span class="text-danger">*</span>
+                {{ Form::textarea('description',null, array('class' => 'form-control' , 'placeholder'=>__('Enter Description'),'required'=>'required')) }}
             </div>
         </div>
         <div class="col-md-12">

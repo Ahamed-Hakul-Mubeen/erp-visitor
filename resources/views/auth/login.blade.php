@@ -59,7 +59,7 @@
             {{session('status') }}
         </div>
     @endif
-        
+
         @if ($message = Session::get('error'))
             <div class="alert alert-danger alert-block">
                 <strong>{{ $message }}</strong>
@@ -86,7 +86,7 @@
             </div>
             <div class="mb-4 form-group">
                 <div class="flex-wrap d-flex align-items-center justify-content-between">
-                   
+
                     @if (Route::has('password.request'))
                         <span><a href="{{ route('password.request',$lang) }}"
                                 tabindex="0">{{ __('Forgot your password?') }}</a></span>
@@ -109,11 +109,11 @@
             <div class="d-grid">
                 {{ Form::submit(__('Login'), ['class' => 'btn btn-primary mt-2', 'id' => 'saveBtn']) }}
             </div>
-            @if ($settings['enable_signup'] == 'on')
+            {{-- @if ($settings['enable_signup'] == 'on')
             <p class="my-4 text-center">{{ __("Don't have an account?") }}
                 <a href="{{ route('register',$lang) }}" class="text-primary">{{__('Register')}}</a>
             </p>
-        @endif
+            @endif --}}
         </div>
         {{ Form::close() }}
     </div>

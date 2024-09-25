@@ -29,6 +29,9 @@ class CreateInvoicesTable extends Migration
             $table->integer('discount_apply')->default('0');
             $table->integer('created_by')->default('0');
             $table->unsignedBigInteger('created_user');
+            $table->string('currency_code')->nullable()->default(null);
+            $table->string('currency_symbol')->nullable()->default(null);
+            $table->float('exchange_rate', 10, 10);
             $table->timestamps();
         }
         );

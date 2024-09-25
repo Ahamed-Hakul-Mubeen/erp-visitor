@@ -5,14 +5,14 @@
     <div class="row ">
         <div class="col-12">
             <div class="form-group">
-                {{Form::label('name',__('Name'),['class'=>'form-label'])}}
-                {{Form::text('name',null,array('class'=>'form-control'))}}
+                {{Form::label('name',__('Name'),['class'=>'form-label'])}}<span class="text-danger">*</span>
+                {{Form::text('name',null,array('class'=>'form-control','required'=>'required'))}}
             </div>
         </div>
         <div class="col-12">
             <div class="form-group">
-                {{Form::label('type',__('Type'),['class'=>'form-label'])}}
-                {{Form::select('type',$performance,null,array('class'=>'form-control select' , 'placeholder' => 'Enter Competencies Name'))}}
+                {{Form::label('type',__('Type'),['class'=>'form-label'])}}<span class="text-danger">*</span>
+                {{Form::select('type',$performance,null,array('class'=>'form-control select' , 'placeholder' => 'Enter Competencies Name','required'=>'required'))}}
             </div>
         </div>
 

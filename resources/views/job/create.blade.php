@@ -55,7 +55,7 @@
         }
     });
 });
-       
+
     </script>
     <script src="{{asset('css/summernote/summernote-bs4.js')}}"></script>
 @endpush
@@ -83,38 +83,40 @@
                 <div class="card-body job-create ">
                     <div class="row">
                         <div class="form-group col-md-12">
-                            {!! Form::label('title', __('Job Title'),['class'=>'form-label']) !!}
+                            {!! Form::label('title', __('Job Title'),['class'=>'form-label']) !!}<span class="text-danger">*</span>
                             {!! Form::text('title', old('title'), ['class' => 'form-control','required' => 'required' , 'placeholder'=>__('Enter Job Title')]) !!}
                         </div>
                         <div class="form-group col-md-6">
-                            {!! Form::label('branch', __('Company'),['class'=>'form-label']) !!}
+                            {!! Form::label('branch', __('Company'),['class'=>'form-label']) !!}<span class="text-danger">*</span>
                             {{ Form::select('branch', $branches,null, array('class' => 'form-control select','required'=>'required')) }}
                         </div>
                         <div class="form-group col-md-6">
-                            {!! Form::label('category', __('Job Category'),['class'=>'form-label']) !!}
+                            {!! Form::label('category', __('Job Category'),['class'=>'form-label']) !!}<span class="text-danger">*</span>
                             {{ Form::select('category', $categories,null, array('class' => 'form-control select','required'=>'required')) }}
                         </div>
 
                         <div class="form-group col-md-6">
-                            {!! Form::label('position', __('Positions'),['class'=>'form-label']) !!}
+                            {!! Form::label('position', __('Positions'),['class'=>'form-label']) !!}<span class="text-danger">*</span>
                             {!! Form::number('position', old('positions'), ['class' => 'form-control','required' => 'required']) !!}
                         </div>
                         <div class="form-group col-md-6">
-                            {!! Form::label('status', __('Status'),['class'=>'form-label']) !!}
+                            {!! Form::label('status', __('Status'),['class'=>'form-label']) !!}<span class="text-danger">*</span>
                             {{ Form::select('status', $status,null, array('class' => 'form-control select','required'=>'required')) }}
                         </div>
                         <div class="form-group col-md-6">
-                            {!! Form::label('start_date', __('Start Date'),['class'=>'form-label']) !!}
+                            {!! Form::label('start_date', __('Start Date'),['class'=>'form-label']) !!}<span class="text-danger">*</span>
                             {!! Form::date('start_date', old('start_date'), ['class' => 'form-control', 'id' => 'start_date', 'required' => 'required']) !!}
                             <span class="text-danger" id="start_date_error"></span> <!-- Error message -->
                         </div>
                         <div class="form-group col-md-6">
-                            {!! Form::label('end_date', __('End Date'),['class'=>'form-label']) !!}
+                            {!! Form::label('end_date', __('End Date'),['class'=>'form-label']) !!}<span class="text-danger">*</span>
                             {!! Form::date('end_date', old('end_date'), ['class' => 'form-control', 'id' => 'end_date', 'required' => 'required']) !!}
                             <span class="text-danger" id="end_date_error"></span> <!-- Error message -->
                         </div>
                         <div class="form-group col-md-12">
-                            <input type="text" class="form-control" value="" data-toggle="tags" name="skill" placeholder="Skill"/>
+                            {!! Form::label('Skill', __('Skill'),['class'=>'form-label']) !!}<span class="text-danger">*</span>
+
+                            <input type="text" class="form-control" value="" data-toggle="tags" name="skill" placeholder="Skill" required/>
                         </div>
                     </div>
                 </div>
@@ -186,8 +188,8 @@
                 <div class="card-body ">
                     <div class="row">
                         <div class="form-group col-md-12">
-                            {!! Form::label('description', __('Job Description'),['class'=>'form-label']) !!}
-                            <textarea class="form-control summernote-simple-2" name="description" id="exampleFormControlTextarea1" rows="15" placeholder="EnterJob Description"></textarea>
+                            {!! Form::label('description', __('Job Description'),['class'=>'form-label']) !!}<span class="text-danger">*</span>
+                            <textarea class="form-control summernote-simple-2" required name="description" id="exampleFormControlTextarea1" rows="15" placeholder="EnterJob Description"></textarea>
                         </div>
                     </div>
                 </div>
@@ -198,7 +200,7 @@
                 <div class="card-body">
                     <div class="row ">
                         <div class="form-group col-6 mb-2">
-                            {!! Form::label('requirement', __('Job Requirement'),['class'=>'form-label' , 'placeholder'=>__('Enter Job Requirement')]) !!}
+                            {!! Form::label('requirement', __('Job Requirement'),['class'=>'form-label' , 'placeholder'=>__('Enter Job Requirement')]) !!}<span class="text-danger">*</span>
                         </div>
                         <div class="col-6 text-end">
                             @if($plan->chatgpt == 1)
@@ -209,7 +211,7 @@
                             @endif
                         </div>
                         <div class="form-group col-md-12 mt-2">
-                            <textarea class="form-control summernote-simple" name="requirement" id="exampleFormControlTextarea2" rows="8"></textarea>
+                            <textarea class="form-control summernote-simple" name="requirement" required id="exampleFormControlTextarea2" rows="8"></textarea>
                         </div>
                     </div>
                 </div>

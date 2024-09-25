@@ -15,11 +15,11 @@
     {{-- end for ai module--}}
     <div class="row">
         <div class="col-6 form-group">
-            {{ Form::label('subject', __('Subject'),['class'=>'form-label']) }}
+            {{ Form::label('subject', __('Subject'),['class'=>'form-label']) }}<span class="text-danger">*</span>
             {{ Form::text('subject', null, array('class' => 'form-control','required'=>'required' , 'placeholder'=>__('Enter Subject'))) }}
         </div>
         <div class="col-6 form-group">
-            {{ Form::label('user_id', __('User'),['class'=>'form-label']) }}
+            {{ Form::label('user_id', __('User'),['class'=>'form-label']) }}<span class="text-danger">*</span>
             {{ Form::select('user_id', $users,null, array('class' => 'form-control select','required'=>'required')) }}
             @if(count($users) == 1)
                 <div class="text-xs text-muted">
@@ -28,15 +28,15 @@
             @endif
         </div>
         <div class="col-6 form-group">
-            {{ Form::label('name', __('Name'),['class'=>'form-label']) }}
+            {{ Form::label('name', __('Name'),['class'=>'form-label']) }}<span class="text-danger">*</span>
             {{ Form::text('name', null, array('class' => 'form-control','required'=>'required' , 'placeholder' => __('Enter Name'))) }}
         </div>
         <div class="col-6 form-group">
-            {{ Form::label('email', __('Email'),['class'=>'form-label']) }}
+            {{ Form::label('email', __('Email'),['class'=>'form-label']) }}<span class="text-danger">*</span>
             {{ Form::text('email', null, array('class' => 'form-control','required'=>'required' , 'placeholder' => __('Enter email'))) }}
         </div>
         <div class="col-6 form-group">
-            {{ Form::label('phone', __('Phone'),['class'=>'form-label']) }}
+            {{ Form::label('phone', __('Phone'),['class'=>'form-label']) }}<span class="text-danger">*</span>
             {{ Form::text('phone', null, array('class' => 'form-control','required'=>'required' , 'placeholder' => __('Enter Phone'))) }}
         </div>
     </div>

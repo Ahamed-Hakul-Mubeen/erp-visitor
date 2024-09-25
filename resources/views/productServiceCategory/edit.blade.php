@@ -3,12 +3,12 @@
 
     <div class="row">
         <div class="form-group col-md-12">
-            {{ Form::label('name', __('Category Name'),['class'=>'form-label']) }}
+            {{ Form::label('name', __('Category Name'),['class'=>'form-label']) }}<span class="text-danger">*</span>
             {{ Form::text('name', null, array('class' => 'form-control font-style','required'=>'required')) }}
         </div>
 
         <div class="form-group col-md-12 d-block">
-            {{ Form::label('type', __('Category Type'),['class'=>'form-label']) }}
+            {{ Form::label('type', __('Category Type'),['class'=>'form-label']) }}<span class="text-danger">*</span>
             {{ Form::select('type',$types,null, array('class' => 'form-control select cattype','required'=>'required')) }}
         </div>
 
@@ -22,7 +22,7 @@
 
 
 
-        <div class="form-group col-md-12">
+        <div class="form-group col-md-12"><span class="text-danger">*</span>
             {{ Form::label('color', __('Category Color'),['class'=>'form-label']) }}
             {{ Form::text('color', null, array('class' => 'form-control jscolor','required'=>'required')) }}
             <p class="small">{{__('For chart representation')}}</p>

@@ -3,20 +3,20 @@
 
     <div class="row">
         <div class="form-group col-md-6">
-            {{Form::label('candidate',__('Interview To'),['class'=>'form-label'])}}
+            {{Form::label('candidate',__('Interview To'),['class'=>'form-label'])}}<span class="text-danger">*</span>
             {{ Form::select('candidate', $candidates,null, array('class' => 'form-control select','required'=>'required')) }}
         </div>
         <div class="form-group col-md-6">
-            {{Form::label('employee',__('Interviewer'),['class'=>'form-label'])}}
+            {{Form::label('employee',__('Interviewer'),['class'=>'form-label'])}}<span class="text-danger">*</span>
             {{ Form::select('employee', $employees,null, array('class' => 'form-control select','required'=>'required')) }}
         </div>
         <div class="form-group col-md-6">
-            {{Form::label('date',__('Interview Date'),['class'=>'form-label'])}}
-            {{Form::date('date',null,array('class'=>'form-control '))}}
+            {{Form::label('date',__('Interview Date'),['class'=>'form-label'])}}<span class="text-danger">*</span>
+            {{Form::date('date',null,array('class'=>'form-control ','required' => 'required'))}}
         </div>
-        <div class="form-group col-md-">
-            {{Form::label('time',__('Interview Time'),['class'=>'form-label'])}}
-            {{Form::time('time',null,array('class'=>'form-control timepicker'))}}
+        <div class="form-group col-md-6">
+            {{Form::label('time',__('Interview Time'),['class'=>'form-label'])}}<span class="text-danger">*</span>
+            {{Form::time('time',null,array('class'=>'form-control timepicker','required' => 'required'))}}
         </div>
         <div class="form-group col-md-12">
             {{Form::label('comment',__('Comment'),['class'=>'form-label'])}}

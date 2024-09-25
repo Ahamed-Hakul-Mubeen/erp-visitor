@@ -20,7 +20,7 @@
         <input type="hidden" name="number_of_days" value="0">
         <input type="hidden" name="hours" value="1">
         <div class="form-group col-md-12">
-            {{ Form::label('rate', __('Rate per Hour'),['class'=>'form-label']) }}
+            {{ Form::label('rate', __('Rate per Hour'),['class'=>'form-label']) }}<span class="text-danger">*</span>
             {{ Form::number('rate',null, array('class' => 'form-control ','required'=>'required','step'=>'0.01')) }}
         </div>
 

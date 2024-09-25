@@ -3,7 +3,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="form-group">
-                {{ Form::label('branch', __('Company*'), ['class' => 'col-form-label']) }}
+                {{ Form::label('branch', __('Company'), ['class' => 'col-form-label']) }}<span class="text-danger">*</span>
                 <select name="branch" id="branch" required class="form-control ">
                     @foreach ($brances as $value)
                         <option  value="{{ $value->id   }}" @if ($appraisal->branch == $value->id) selected @endif>{{ $value->name }}</option>
@@ -13,7 +13,7 @@
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                {{ Form::label('employees', __('Employee*'), ['class' => 'col-form-label']) }}
+                {{ Form::label('employees', __('Employee'), ['class' => 'col-form-label']) }}<span class="text-danger">*</span>
                 <div class="employee_div">
                     <select name="employee" id="employee" class="form-control " required>
 
@@ -24,7 +24,7 @@
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                {{ Form::label('appraisal_date', __('Select Month*'), ['class' => 'col-form-label']) }}
+                {{ Form::label('appraisal_date', __('Select Month'), ['class' => 'col-form-label']) }}<span class="text-danger">*</span>
                 {{ Form::text('appraisal_date', null, ['class' => 'form-control d_filter' ,'required' => 'required']) }}
             </div>
         </div>

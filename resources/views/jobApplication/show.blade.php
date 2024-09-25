@@ -179,8 +179,8 @@
                                     <label class="form check-label" for="stage_{{$stage->id}}">{{$stage->title}}</label>
                                 </div>
                             @endforeach
-                           
-                       
+
+
                         </div>
                     </div>
                 </div>
@@ -193,8 +193,8 @@
                         <div class="col-auto">
                             <h6 class="text-muted">{{__('Basic Information')}}</h6>
                         </div>
-                       
-                       
+
+
                         @if($stagejob->title != 'Applied' && $stagejob->title !='Phone Screen' && $stagejob->title !='Rejected' )
                         <div class="col text-end">
                             <div class="col-12 text-end">
@@ -206,7 +206,7 @@
                         @endif
                     </div>
                 </div>
-              
+
                 <div class="card-body">
                     <dl class="row">
                         <dt class="col-sm-3"><span class="mb-0 text-sm h6">{{__('Phone')}}</span></dt>
@@ -314,7 +314,7 @@
             {{Form::open(array('route'=>array('job.application.skill.store',$jobApplication->id),'method'=>'post'))}}
             <div class="form-group">
                 <label class="form-label">{{__('Skills')}}</label>
-                <input type="text" class="form-control" value="{{$jobApplication->skill}}" data-toggle="tags" name="skill" placeholder="{{__('Type here....')}}"/>
+                <input type="text" class="form-control" value="{{$jobApplication->skill}}" data-toggle="tags" name="skill" placeholder="{{__('Type here....')}}" required/>
             </div>
             @can('add job application skill')
                 <div class="form-group">
@@ -327,7 +327,7 @@
             {{Form::open(array('route'=>array('job.application.note.store',$jobApplication->id),'method'=>'post'))}}
             <div class="form-group">
                 <label class="form-label">{{__('Applicant Notes')}}</label>
-                <textarea name="note" class="form-control" id="" rows="3"></textarea>
+                <textarea name="note" class="form-control" id="" rows="3" required></textarea>
             </div>
             @can('add job application note')
                 <div class="form-group">

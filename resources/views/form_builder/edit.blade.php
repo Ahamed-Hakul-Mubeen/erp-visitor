@@ -2,11 +2,11 @@
 <div class="modal-body">
     <div class="row">
         <div class="col-12 form-group">
-            {{ Form::label('name', __('Name'),['class'=>'form-label']) }}
+            {{ Form::label('name', __('Name'),['class'=>'form-label']) }}<span class="text-danger">*</span>
             {{ Form::text('name', null, array('class' => 'form-control','required' => 'required')) }}
         </div>
         <div class="col-12 form-group">
-            <label for="exampleColorInput" class="form-label">{{__('Active')}}</label>
+            <label for="exampleColorInput" class="form-label">{{__('Active')}}<span class="text-danger">*</span></label>
             <div class="d-flex radio-check">
                 <div class="form-check form-check-inline">
                     <input type="radio" id="on" value="1" name="is_active" class="form-check-input" {{($formBuilder->is_active == 1) ? 'checked' : ''}}>

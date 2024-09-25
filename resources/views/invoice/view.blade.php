@@ -549,12 +549,12 @@
                                                     </td> --}}
 
                                                     <td>
+                                                        @php $taxPrice = 0; @endphp
                                                         @if (!empty($iteam->tax))
                                                             <table>
                                                                 @php
                                                                     $itemTaxes = [];
                                                                     $getTaxData = Utility::getTaxData();
-
                                                                     if (!empty($iteam->tax)) {
                                                                         foreach (explode(',', $iteam->tax) as $tax) {
                                                                             $taxPrice = \Utility::taxRate(

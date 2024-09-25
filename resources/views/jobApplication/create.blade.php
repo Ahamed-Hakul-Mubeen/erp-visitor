@@ -2,20 +2,20 @@
 <div class="modal-body">
     <div class="row">
         <div class="form-group col-md-12">
-            {{Form::label('job',__('Job'),['class'=>'form-label'])}}
-            {{Form::select('job',$jobs,null,array('class'=>'form-control select2','id'=>'jobs'))}}
+            {{Form::label('job',__('Job'),['class'=>'form-label'])}}<span class="text-danger">*</span>
+            {{Form::select('job',$jobs,null,array('class'=>'form-control select2','id'=>'jobs','required' => 'required'))}}
         </div>
         <div class="form-group col-md-6">
-            {{Form::label('name',__('Name'),['class'=>'form-label'])}}
-            {{Form::text('name',null,array('class'=>'form-control name' , 'placeholder'=>__('Enter Name')))}}
+            {{Form::label('name',__('Name'),['class'=>'form-label'])}}<span class="text-danger">*</span>
+            {{Form::text('name',null,array('class'=>'form-control name' , 'placeholder'=>__('Enter Name'),'required' => 'required'))}}
         </div>
         <div class="form-group col-md-6">
-            {{Form::label('email',__('Email'),['class'=>'form-label'])}}
-            {{Form::text('email',null,array('class'=>'form-control' , 'placeholder'=>__('Enter email')))}}
+            {{Form::label('email',__('Email'),['class'=>'form-label'])}}<span class="text-danger">*</span>
+            {{Form::text('email',null,array('class'=>'form-control' , 'placeholder'=>__('Enter email'),'required' => 'required'))}}
         </div>
         <div class="form-group col-md-6">
-            {{Form::label('phone',__('Phone'),['class'=>'form-label'])}}
-            {{Form::text('phone',null,array('class'=>'form-control' , 'placeholder'=>__('Enter Phone')))}}
+            {{Form::label('phone',__('Phone'),['class'=>'form-label'])}}<span class="text-danger">*</span>
+            {{Form::text('phone',null,array('class'=>'form-control' , 'placeholder'=>__('Enter Phone'),'required' => 'required'))}}
         </div>
         <div class="form-group col-md-6 dob d-none">
             {!! Form::label('dob', __('Date of Birth'),['class'=>'form-label']) !!}
@@ -80,7 +80,7 @@
         @endforeach
 
     </div>
-  
+
 </div>
 <div class="modal-footer">
     <input type="button" value="{{__('Cancel')}}" class="btn  btn-light" data-bs-dismiss="modal">

@@ -3,7 +3,7 @@
 
     <div class="row">
         <div class="form-group col-12">
-            {{ Form::label('title', __('Bug Status Title'),['class'=>'form-label']) }}
+            {{ Form::label('title', __('Bug Status Title'),['class'=>'form-label']) }}<span class="text-danger">*</span>
             {{ Form::text('title', '', array('class' => 'form-control','required'=>'required')) }}
         </div>
 

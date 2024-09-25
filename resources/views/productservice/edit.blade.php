@@ -30,11 +30,14 @@
         <div class="col-md-6">
             <div class="form-group">
                 {{ Form::label('sale_price', __('Sale Price'),['class'=>'form-label']) }}<span class="text-danger">*</span>
-                {{ Form::number('sale_price', null, array('class' => 'form-control','required'=>'required','step'=>'0.01')) }}
+                <div class="input-group search-form">
+                    {{ Form::number('sale_price', null, array('class' => 'form-control','required'=>'required','step'=>'0.01')) }}
+                    <span class="bg-transparent unit input-group-text">{{\Auth::user()->currencySymbol()}}</span>
+                </div>
             </div>
         </div>
         <div class="form-group col-md-6">
-            {{ Form::label('sale_chartaccount_id', __('Income Account'),['class'=>'form-label']) }}
+            {{ Form::label('sale_chartaccount_id', __('Income Account'),['class'=>'form-label']) }}<span class="text-danger">*</span>
             {{-- {{ Form::select('sale_chartaccount_id',$incomeChartAccounts,null, array('class' => 'form-control select','required'=>'required')) }} --}}
             <select name="sale_chartaccount_id" class="form-control" required="required">
                 @foreach ($incomeChartAccounts as $key => $chartAccount)
@@ -50,11 +53,14 @@
         <div class="col-md-6">
             <div class="form-group">
                 {{ Form::label('purchase_price', __('Purchase Price'),['class'=>'form-label']) }}<span class="text-danger">*</span>
-                {{ Form::number('purchase_price', null, array('class' => 'form-control','required'=>'required','step'=>'0.01')) }}
+                <div class="input-group search-form">
+                    {{ Form::number('purchase_price', null, array('class' => 'form-control','required'=>'required','step'=>'0.01')) }}
+                    <span class="bg-transparent unit input-group-text">{{\Auth::user()->currencySymbol()}}</span>
+                </div>
             </div>
         </div>
         <div class="form-group col-md-6">
-            {{ Form::label('expense_chartaccount_id', __('Expense Account'),['class'=>'form-label']) }}
+            {{ Form::label('expense_chartaccount_id', __('Expense Account'),['class'=>'form-label']) }}<span class="text-danger">*</span>
             {{-- {{ Form::select('expense_chartaccount_id',$expenseChartAccounts,null, array('class' => 'form-control select','required'=>'required')) }} --}}
             <select name="expense_chartaccount_id" class="form-control" required="required">
                 @foreach ($expenseChartAccounts as $key => $chartAccount)

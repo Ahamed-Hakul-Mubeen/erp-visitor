@@ -1887,7 +1887,7 @@ body.theme-1 .account-arrow .account-icon{
     background-color: #0CAF60;
 }
 body.theme-2 .account-arrow .account-icon{
-    background-color: #584ED2;        
+    background-color: #584ED2;
 }
 body.theme-3 .account-arrow .account-icon{
     background-color: #6FD943;
@@ -1940,11 +1940,16 @@ body.theme-10 .account-arrow .account-icon{
 }
 .apexcharts-yaxis
 {
-    transform: translate(0px, 0px) !important;
+    transform: translate(10px, 10px) !important;
+    -webkit-transform: translate(10px, 10px) !important;
+    -moz-transform: translate(10px, 10px) !important;
+    -ms-transform: translate(10px, 10px) !important;
+    -o-transform: translate(10px, 10px) !important;
 }
+
 .apexcharts-pie-area
 {
-    display: none;
+    /* display: none; */
 }
 
 .color-wrp .color-picker-wrp input[type="color"] {

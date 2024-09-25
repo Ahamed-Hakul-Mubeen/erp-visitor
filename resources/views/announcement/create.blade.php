@@ -16,14 +16,14 @@
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">
-                {{Form::label('title',__('Announcement Title'),['class'=>'form-label'])}}
-                {{Form::text('title',null,array('class'=>'form-control','placeholder'=>__('Enter Announcement Title')))}}
+                {{Form::label('title',__('Announcement Title'),['class'=>'form-label'])}}<span class="text-danger">*</span>
+                {{Form::text('title',null,array('class'=>'form-control','placeholder'=>__('Enter Announcement Title'),'required'=>'required'))}}
             </div>
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                {{Form::label('branch_id',__('Branch'),['class'=>'form-label'])}}
-                <select class="form-control select" name="branch_id" id="branch_id" placeholder="Select Branch">
+                {{Form::label('branch_id',__('Branch'),['class'=>'form-label'])}}<span class="text-danger">*</span>
+                <select class="form-control select" name="branch_id" id="branch_id" placeholder="Select Branch" required>
                     <option value="">{{__('Select Branch')}}</option>
                     <option value="0">{{__('All Branch')}}</option>
                     @foreach($branch as $branch)
@@ -35,8 +35,8 @@
 
         <div class="col-md-6">
             <div class="form-group">
-                {{Form::label('department_id',__('Department'),['class'=>'form-label'])}}
-                <select class="form-control select" name="department_id[]" id="department_id" placeholder="Select Department" >
+                {{Form::label('department_id',__('Department'),['class'=>'form-label'])}}<span class="text-danger">*</span>
+                <select class="form-control select" required name="department_id[]" id="department_id" placeholder="Select Department" >
                     <option value="">{{__('Select Department')}}</option>
 
                 </select>
@@ -44,8 +44,8 @@
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                {{Form::label('employee_id',__('Employee'),['class'=>'form-label'])}}
-                <select class="form-control select" name="employee_id[]" id="employee_id" placeholder="Select Employee" >
+                {{Form::label('employee_id',__('Employee'),['class'=>'form-label'])}}<span class="text-danger">*</span>
+                <select class="form-control select" name="employee_id[]" id="employee_id" placeholder="Select Employee" required>
                     <option value="">{{__('Select Employee')}}</option>
 
                 </select>
@@ -53,14 +53,14 @@
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                {{Form::label('start_date',__('Announcement start Date'),['class'=>'form-label'])}}
-                {{Form::date('start_date',null,array('class'=>'form-control '))}}
+                {{Form::label('start_date',__('Announcement start Date'),['class'=>'form-label'])}} <span class="text-danger">*</span>
+                {{Form::date('start_date',null,array('class'=>'form-control ','required'=>'required'))}}
             </div>
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                {{Form::label('end_date',__('Announcement End Date'),['class'=>'form-label'])}}
-                {{Form::date('end_date',null,array('class'=>'form-control '))}}
+                {{Form::label('end_date',__('Announcement End Date'),['class'=>'form-label'])}}<span class="text-danger">*</span>
+                {{Form::date('end_date',null,array('class'=>'form-control ','required'=>'required'))}}
             </div>
         </div>
         <div class="col-md-12">

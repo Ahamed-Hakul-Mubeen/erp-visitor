@@ -5,7 +5,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
-                    {{ Form::label('title', __('Title')) }}
+                    {{ Form::label('title', __('Title')) }}<span class="text-danger">*</span>
                     {{ Form::text('title',null, array('class' => 'form-control ','required'=>'required')) }}
                 </div>
             </div>
@@ -13,14 +13,14 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    {{ Form::label('type', __('Type'), ['class' => 'form-label']) }}
+                    {{ Form::label('type', __('Type'), ['class' => 'form-label']) }}<span class="text-danger">*</span>
                     {{ Form::select('type', $commissions, null, ['class' => 'form-control select amount_type', 'required' => 'required']) }}
                 </div>
             </div>
 
             <div class="col-md-6">
                 <div class="form-group">
-                    {{ Form::label('amount', __('Amount'),['class' => 'form-label amount_label']) }}
+                    {{ Form::label('amount', __('Amount'),['class' => 'form-label amount_label']) }}<span class="text-danger">*</span>
                     {{ Form::number('amount',null, array('class' => 'form-control ','required'=>'required','step'=>'0.01')) }}
                 </div>
             </div>

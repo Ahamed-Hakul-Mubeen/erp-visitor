@@ -3,8 +3,8 @@
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="form-group">
-                {{Form::label('name',__('Name'),['class'=>'form-label'])}}
-                {{Form::text('name',null,array('class'=>'form-control','placeholder'=>__('Enter Role Name')))}}
+                {{Form::label('name',__('Name'),['class'=>'form-label'])}}<span class="text-danger">*</span>
+                {{Form::text('name',null,array('class'=>'form-control','placeholder'=>__('Enter Role Name'),'required'=>'required'))}}
                 @error('name')
                 <small class="invalid-name" role="alert">
                     <strong class="text-danger">{{ $message }}</strong>
@@ -770,7 +770,7 @@
                                                             </div>
                                                         @endif
                                                     @endif
-                                                    
+
                                                     @if(in_array('assign '.$module,(array) $permissions))
                                                         @if($key = array_search('assign '.$module,$permissions))
                                                             <div class="col-md-3 custom-control custom-checkbox">
@@ -952,8 +952,8 @@
                                                             </div>
                                                         @endif
                                                     @endif
-                                                    
-                                                    
+
+
                                                 </div>
                                             </td>
                                         </tr>

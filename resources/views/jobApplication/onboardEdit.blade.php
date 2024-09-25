@@ -2,33 +2,33 @@
 <div class="modal-body">
     <div class="row">
         <div class="form-group col-md-12">
-            {!! Form::label('joining_date', __('Joining Date'), ['class' => 'col-form-label']) !!}
-            {!! Form::date('joining_date', null, ['class' => 'form-control d_week','autocomplete'=>'off']) !!}
+            {!! Form::label('joining_date', __('Joining Date'), ['class' => 'col-form-label']) !!}<span class="text-danger">*</span>
+            {!! Form::date('joining_date', null, ['class' => 'form-control d_week','autocomplete'=>'off','required' => 'required']) !!}
         </div>
 
         <div class="form-group col-md-6">
-            {!! Form::label('days_of_week', __('Days Of Week'), ['class' => 'col-form-label']) !!}
-            {!! Form::text('days_of_week', null, ['class' => 'form-control ','autocomplete'=>'off']) !!}
+            {!! Form::label('days_of_week', __('Days Of Week'), ['class' => 'col-form-label']) !!}<span class="text-danger">*</span>
+            {!! Form::text('days_of_week', null, ['class' => 'form-control ','autocomplete'=>'off','required' => 'required']) !!}
         </div>
         <div class="form-group col-md-6">
-            {!! Form::label('salary', __('Salary'), ['class' => 'col-form-label']) !!}
-            {!! Form::text('salary', null, ['class' => 'form-control ','autocomplete'=>'off']) !!}
+            {!! Form::label('salary', __('Salary'), ['class' => 'col-form-label']) !!}<span class="text-danger">*</span>
+            {!! Form::text('salary', null, ['class' => 'form-control ','autocomplete'=>'off','required' => 'required']) !!}
         </div>
         <div class="form-group col-md-6">
-            {{ Form::label('salary_type', __('Salary Type'), ['class' => 'col-form-label']) }}
-            {{ Form::select('salary_type', $salary_type, null, ['class' => 'form-control select']) }}
+            {{ Form::label('salary_type', __('Salary Type'), ['class' => 'col-form-label']) }}<span class="text-danger">*</span>
+            {{ Form::select('salary_type', $salary_type, null, ['class' => 'form-control select','required' => 'required']) }}
         </div>
         <div class="form-group col-md-6">
-            {{ Form::label('salary_duration', __('Salary Type'), ['class' => 'col-form-label']) }}
-            {{ Form::select('salary_duration', $salary_duration, null, ['class' => 'form-control select']) }}
+            {{ Form::label('salary_duration', __('Salary Duration'), ['class' => 'col-form-label']) }}<span class="text-danger">*</span>
+            {{ Form::select('salary_duration', $salary_duration, null, ['class' => 'form-control select','required' => 'required']) }}
         </div>
         <div class="form-group col-md-6">
-            {{ Form::label('jop_type', __('Job Type'), ['class' => 'col-form-label']) }}
-            {{ Form::select('job_type', $job_type, null, ['class' => 'form-control select']) }}
+            {{ Form::label('jop_type', __('Job Type'), ['class' => 'col-form-label']) }}<span class="text-danger">*</span>
+            {{ Form::select('job_type', $job_type, null, ['class' => 'form-control select','required' => 'required']) }}
         </div>
         <div class="form-group col-md-6">
-            {{ Form::label('status', __('Status'), ['class' => 'col-form-label']) }}
-            {{ Form::select('status', $status, null, ['class' => 'form-control select']) }}
+            {{ Form::label('status', __('Status'), ['class' => 'col-form-label']) }}<span class="text-danger">*</span>
+            {{ Form::select('status', $status, null, ['class' => 'form-control select','required' => 'required']) }}
         </div>
     </div>
 </div>

@@ -186,7 +186,7 @@
 
 @section('content')
 
-    {{ Form::model($journalEntry, array('route' => array('journal-entry.update', $journalEntry->id), 'method' => 'PUT','class'=>'w-100')) }}
+    {{ Form::model($journalEntry, array('route' => array('journal-entry.update', $journalEntry->id), 'method' => 'PUT','class'=>'w-100', 'files' => true)) }}
     <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
     <div class="row mt-4">
         <div class="col-xl-12">
@@ -216,6 +216,18 @@
                             {{ Form::text('reference', null, array('class' => 'form-control')) }}
                         </div>
                     </div>
+                </div>
+                <div class="col-lg-4 col-md-4">
+                    <div class="form-group mb-2">
+                        {{ Form::label('reference', __('Attachment'), ['class' => 'form-label']) }}
+                        <input type="file" class="form-control" name="attachment">
+                    </div>
+                    @php
+                        $journalpath=\App\Models\Utility::get_file('');
+                    @endphp
+                    <a class="ms-2" href="{{ $journalpath . '/' . $journalEntry->attachment }}" data-bs-toggle="tooltip" title="{{__('Download')}}" download="">
+                    <span class="pt-2">{{basename($journalEntry->attachment)}}</span>
+                    </a>
                 </div>
                 <div class="col-lg-8 col-md-8">
                     <div class="form-group">
@@ -280,7 +292,7 @@
                                         @endforeach
                                     </select>
                                 </td>
-                                
+
                                 <td>
                                     <div class="form-group price-input">
                                         {{ Form::text('debit','', array('class' => 'form-control debit','required'=>'required','placeholder'=>__('Debit'),'required'=>'required')) }}

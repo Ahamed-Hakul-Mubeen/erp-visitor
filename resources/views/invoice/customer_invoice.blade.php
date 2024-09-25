@@ -311,11 +311,12 @@
                                                         $unitName = App\Models\ProductServiceUnit::find($iteam->unit);
                                                 @endphp
                                                 <td>{{$iteam->quantity}} {{ ($unitName != null) ?  '('. $unitName->name .')' : ''}}</td>
-                                                        <td>{{ \App\Models\Utility::priceFormat($settings, $iteam->price) }}
+                                                        <td>{{ \App\Models\Utility::priceFormat($settings, $iteam->price, $invoice->currency_symbol) }}
                                                         </td>
-                                                        <td>{{ \App\Models\Utility::priceFormat($settings, $iteam->discount) }}
+                                                        <td>{{ \App\Models\Utility::priceFormat($settings, $iteam->discount, $invoice->currency_symbol) }}
                                                         </td>
                                                         <td>
+                                                            @php $taxPrice = 0; @endphp
                                                             @if (!empty($iteam->tax))
                                                                 <table>
                                                                     @php
@@ -328,7 +329,7 @@
                                                                                 $totalTaxPrice += $taxPrice;
                                                                                 $itemTax['name'] = $getTaxData[$tax]['name'];
                                                                                 $itemTax['rate'] = $getTaxData[$tax]['rate'] . '%';
-                                                                                $itemTax['price'] = \App\Models\Utility::priceFormat($settings, $taxPrice);
+                                                                                $itemTax['price'] = \App\Models\Utility::priceFormat($settings, $taxPrice, $invoice->currency_symbol);
 
                                                                                 $itemTaxes[] = $itemTax;
                                                                                 if (array_key_exists($getTaxData[$tax]['name'], $taxesData)) {
@@ -344,7 +345,7 @@
                                                                     @endphp
                                                                     @foreach ($iteam->itemTax as $tax)
                                                                         <tr>
-                                                                            <td>{{ $tax['name'] . ' (' . $tax['rate'] . '%)' }}
+                                                                            <td>{{ $tax['name'] . ' (' . $tax['rate'] . ')' }}
                                                                             </td>
                                                                             <td>{{ $tax['price'] }}</td>
                                                                         </tr>
@@ -358,7 +359,7 @@
                                                         <td>{{ !empty($iteam->description) ? $iteam->description : '-' }}
                                                         </td>
                                                         <td class="text-end">
-                                                            {{ Utility::priceFormat($settings, $iteam->price * $iteam->quantity - $iteam->discount + $totalTaxPrice) }}
+                                                            {{ Utility::priceFormat($settings, $iteam->price * $iteam->quantity - $iteam->discount + $taxPrice, $invoice->currency_symbol) }}
                                                         </td>
                                                     </tr>
                                                 @endforeach
@@ -368,10 +369,10 @@
 
                                                         <td><b>{{ __('Total') }}</b></td>
                                                         <td><b>{{ $totalQuantity }}</b></td>
-                                                        <td>{{ Utility::priceFormat($settings, $totalRate) }}</td>
-                                                        <td><b>{{ Utility::priceFormat($settings, $totalDiscount) }}</b>
+                                                        <td>{{ Utility::priceFormat($settings, $totalRate, $invoice->currency_symbol) }}</td>
+                                                        <td><b>{{ Utility::priceFormat($settings, $totalDiscount, $invoice->currency_symbol) }}</b>
                                                         </td>
-                                                        <td><b>{{ Utility::priceFormat($settings, $totalTaxPrice) }}</b>
+                                                        <td><b>{{ Utility::priceFormat($settings, $totalTaxPrice, $invoice->currency_symbol) }}</b>
                                                         </td>
                                                         <td></td>
                                                     </tr>
@@ -379,7 +380,7 @@
                                                         <td colspan="6"></td>
                                                         <td class="text-end"><b>{{ __('Sub Total') }}</b></td>
                                                         <td class="text-end">
-                                                            {{ Utility::priceFormat($settings, $invoice->getSubTotal()) }}
+                                                            {{ Utility::priceFormat($settings, $invoice->getSubTotal(), $invoice->currency_symbol) }}
                                                         </td>
                                                     </tr>
 
@@ -387,7 +388,7 @@
                                                         <td colspan="6"></td>
                                                         <td class="text-end"><b>{{ __('Discount') }}</b></td>
                                                         <td class="text-end">
-                                                            {{ Utility::priceFormat($settings, $invoice->getTotalDiscount()) }}
+                                                            {{ Utility::priceFormat($settings, $invoice->getTotalDiscount(), $invoice->currency_symbol) }}
                                                         </td>
                                                     </tr>
 
@@ -397,7 +398,7 @@
                                                                 <td colspan="6"></td>
                                                                 <td class="text-end"><b>{{ $taxName }}</b></td>
                                                                 <td class="text-end">
-                                                                    {{ Utility::priceFormat($settings, $taxPrice) }}
+                                                                    {{ Utility::priceFormat($settings, $taxPrice, $invoice->currency_symbol) }}
                                                                 </td>
                                                             </tr>
                                                         @endforeach
@@ -406,28 +407,28 @@
                                                         <td colspan="6"></td>
                                                         <td class="blue-text text-end"><b>{{ __('Total') }}</b></td>
                                                         <td class="blue-text text-end">
-                                                            {{ Utility::priceFormat($settings, $invoice->getTotal()) }}
+                                                            {{ Utility::priceFormat($settings, $invoice->getTotal(), $invoice->currency_symbol) }}
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td colspan="6"></td>
                                                         <td class="text-end"><b>{{ __('Paid') }}</b></td>
                                                         <td class="text-end">
-                                                            {{ Utility::priceFormat($settings, $invoice->getTotal() - $invoice->getDue() - $invoice->invoiceTotalCreditNote()) }}
+                                                            {{ Utility::priceFormat($settings, $invoice->getTotal() - $invoice->getDue() - $invoice->invoiceTotalCreditNote(), $invoice->currency_symbol) }}
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td colspan="6"></td>
                                                         <td class="text-end"><b>{{ __('Credit Note') }}</b></td>
                                                         <td class="text-end">
-                                                            {{ Utility::priceFormat($settings, $invoice->invoiceTotalCreditNote()) }}
+                                                            {{ Utility::priceFormat($settings, $invoice->invoiceTotalCreditNote(), $invoice->currency_symbol) }}
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td colspan="6"></td>
                                                         <td class="text-end"><b>{{ __('Due') }}</b></td>
                                                         <td class="text-end">
-                                                            {{ Utility::priceFormat($settings, $invoice->getDue()) }}
+                                                            {{ Utility::priceFormat($settings, $invoice->getDue(), $invoice->currency_symbol) }}
                                                         </td>
                                                     </tr>
                                                 </tfoot>
@@ -468,7 +469,7 @@
                                     @foreach ($invoice->payments as $key => $payment)
                                         <tr>
                                             <td>{{ Utility::dateFormat($settings, $payment->date) }}</td>
-                                            <td>{{ Utility::priceFormat($settings, $payment->amount) }}</td>
+                                            <td>{{ Utility::priceFormat($settings, $payment->amount, $invoice->currency_symbol) }}</td>
                                             <td>{{ $payment->payment_type }}</td>
                                             <td>{{ !empty($payment->bankAccount) ? $payment->bankAccount->bank_name . ' ' . $payment->bankAccount->holder_name : '--' }}
                                             </td>
@@ -503,7 +504,7 @@
                                     @foreach ($invoice->bankPayments as $key => $bankPayment)
                                         <tr>
                                             <td>{{ Utility::dateFormat($settings, $bankPayment->date) }}</td>
-                                            <td>{{ Utility::priceFormat($settings, $bankPayment->amount) }}</td>
+                                            <td>{{ Utility::priceFormat($settings, $bankPayment->amount, $invoice->currency_symbol) }}</td>
                                             <td>{{ __('Bank Transfer') }}</td>
                                             <td>-</td>
                                             <td>-</td>

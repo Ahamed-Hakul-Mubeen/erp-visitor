@@ -3,14 +3,14 @@
     <div class="row ">
         <div class="col-12">
             <div class="form-group">
-                {{Form::label('branch_id',__('Company'),['class'=>'form-label'])}}
-                {{Form::select('branch_id',$branch,null,array('class'=>'form-control select','placeholder'=>__('Select Company')))}}
+                {{Form::label('branch_id',__('Company'),['class'=>'form-label'])}}<span class="text-danger">*</span>
+                {{Form::select('branch_id',$branch,null,array('class'=>'form-control select','placeholder'=>__('Select Company'),'required'=>'required'))}}
             </div>
         </div>
         <div class="col-12">
             <div class="form-group">
-                {{Form::label('name',__('Name'),['class'=>'form-label'])}}
-                {{Form::text('name',null,array('class'=>'form-control','placeholder'=>__('Enter Department Name')))}}
+                {{Form::label('name',__('Name'),['class'=>'form-label'])}}<span class="text-danger">*</span>
+                {{Form::text('name',null,array('class'=>'form-control','placeholder'=>__('Enter Department Name'),'required'=>'required'))}}
                 @error('name')
                 <span class="invalid-name" role="alert">
                     <strong class="text-danger">{{ $message }}</strong>

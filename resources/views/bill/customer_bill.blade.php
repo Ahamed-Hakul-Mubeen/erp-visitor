@@ -229,6 +229,7 @@
                                                         $totalQuantity+=$iteam->quantity;
                                                         $totalRate+=$iteam->price;
                                                         $totalDiscount+=$iteam->discount;
+                                                        $taxPrice =0;
                                                         foreach($taxes as $taxe){
                                                             $taxDataPrice=\Utility::taxRate($taxe->rate,$iteam->price,$iteam->quantity);
                                                             if (array_key_exists($taxe->name,$taxesData))

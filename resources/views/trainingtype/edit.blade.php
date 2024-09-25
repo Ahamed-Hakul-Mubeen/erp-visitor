@@ -5,8 +5,8 @@
     <div class="row">
         <div class="col-md-12">
             <div class="form-group">
-                {{Form::label('name',__('Name'),['class'=>'form-label'])}}
-                {{Form::text('name',null,array('class'=>'form-control'))}}
+                {{Form::label('name',__('Name'),['class'=>'form-label'])}}<span class="text-danger">*</span>
+                {{Form::text('name',null,array('class'=>'form-control','required'=>'required'))}}
             </div>
         </div>
 

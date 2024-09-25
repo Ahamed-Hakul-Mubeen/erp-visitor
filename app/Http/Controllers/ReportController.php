@@ -117,7 +117,7 @@ class ReportController extends Controller
             $data['currentYear'] = $year;
 
             // ------------------------------REVENUE INCOME-----------------------------------
-            
+
                 $incomes = Revenue::selectRaw('sum(revenues.amount) as amount,MONTH(date) as month,YEAR(date) as year, product_service_categories.name as category_id')->leftjoin('product_service_categories', 'revenues.category_id', '=', 'product_service_categories.id')->where('product_service_categories.type', '=', 'income');
                 $incomes->where('revenues.created_by', '=', \Auth::user()->creatorId());
             if ($request->period != 'yearly') {
@@ -146,15 +146,15 @@ class ReportController extends Controller
             $array = [];
 
             foreach ($tmpArray as $key => $yearData) {
-                $array[$key] = []; 
-            
+                $array[$key] = [];
+
                 foreach ($yearList as $targetYear) {
                     $array[$key][$targetYear] = [];
-            
+
                     for ($i = 1; $i <= 12; $i++) {
                         $array[$key][$targetYear][$i] = 0;
                     }
-            
+
                     if (isset($yearData[$targetYear])) {
                         foreach ($yearData[$targetYear] as $month => $value) {
                             $array[$key][$targetYear][$month] = (float) $value; // Convert the value to float if needed
@@ -184,38 +184,38 @@ class ReportController extends Controller
             $invoices = $invoices->get();
 
             // ------------------------------------------ invoice ------------------------------------------
-            
+
             $invoiceTmpArray = [];
-            
+
             foreach ($invoices as $invoice) {
                 $invoiceTmpArray[$invoice->category_id][$invoice->year][$invoice->month][] = $invoice->getTotal();
             }
-            
+
             $invoiceArray = [];
 
             foreach ($invoiceTmpArray as $key => $yearData) {
-                $invoiceArray[$key] = []; 
-            
+                $invoiceArray[$key] = [];
+
                 foreach ($yearList as $targetYear) {
-                    $invoiceArray[$key][$targetYear] = []; 
-            
+                    $invoiceArray[$key][$targetYear] = [];
+
                     for ($i = 1; $i <= 12; $i++) {
                         $invoiceArray[$key][$targetYear][$i] = 0;
                     }
-            
+
                     if (isset($yearData[$targetYear])) {
                         foreach ($yearData[$targetYear] as $month => $values) {
                             if (is_array($values)) {
                                 $sum = array_sum($values);
                                 $invoiceArray[$key][$targetYear][$month] = $sum;
                             } else {
-                                $invoiceArray[$key][$targetYear][$month] = (float) $values; 
+                                $invoiceArray[$key][$targetYear][$month] = (float) $values;
                             }
                         }
                     }
                 }
             }
-            
+
             $invoicesum = Utility::billInvoiceData($invoiceArray, $request , $yearList);
 
             $invoiceTotalArray = [];
@@ -231,11 +231,11 @@ class ReportController extends Controller
 
         foreach ($yearList as $year) {
             $invoiceArr[$year] = [];
-        
+
             for ($i = 1; $i <= 12; $i++) {
                 $invoiceArr[$year][$i] = 0;
             }
-        
+
             if (isset($invoiceTotalArray[$year])) {
                 foreach ($invoiceTotalArray[$year] as $month => $values) {
                     $invoiceArr[$year][$month] = array_sum($values);
@@ -258,22 +258,22 @@ class ReportController extends Controller
 
             foreach ($yearList as $year) {
                 $incomeArr[$year] = [];
-            
+
                 for ($i = 1; $i <= 12; $i++) {
                     $incomeArr[$year][$i] = 0;
                 }
-            
+
                 if (isset($revenueTotalArray[$year])) {
                     foreach ($revenueTotalArray[$year] as $month => $values) {
                         $incomeArr[$year][$month] = array_sum($values);
                     }
                 }
             }
-        
+
 
             $chartIncomeArr = Utility::totalData($invoiceArr, $incomeArr, $request ,$yearList);
 
-            
+
             $data['chartIncomeArr'] = $chartIncomeArr;
             $data['incomeArr'] = $incomesum;
             $data['invoiceArray'] = $invoicesum;
@@ -372,15 +372,15 @@ class ReportController extends Controller
             $array = [];
 
             foreach ($tmpArray as $key => $yearData) {
-                $array[$key] = []; 
-            
+                $array[$key] = [];
+
                 foreach ($yearList as $targetYear) {
                     $array[$key][$targetYear] = [];
-            
+
                     for ($i = 1; $i <= 12; $i++) {
                         $array[$key][$targetYear][$i] = 0;
                     }
-            
+
                     if (isset($yearData[$targetYear])) {
                         foreach ($yearData[$targetYear] as $month => $value) {
                             $array[$key][$targetYear][$month] = (float) $value; // Convert the value to float if needed
@@ -417,22 +417,22 @@ class ReportController extends Controller
             $billArray = [];
 
             foreach ($billTmpArray as $key => $yearData) {
-                $billArray[$key] = []; 
-            
+                $billArray[$key] = [];
+
                 foreach ($yearList as $targetYear) {
-                    $billArray[$key][$targetYear] = []; 
-            
+                    $billArray[$key][$targetYear] = [];
+
                     for ($i = 1; $i <= 12; $i++) {
                         $billArray[$key][$targetYear][$i] = 0;
                     }
-            
+
                     if (isset($yearData[$targetYear])) {
                         foreach ($yearData[$targetYear] as $month => $values) {
                             if (is_array($values)) {
                                 $sum = array_sum($values);
                                 $billArray[$key][$targetYear][$month] = $sum;
                             } else {
-                                $billArray[$key][$targetYear][$month] = (float) $values; 
+                                $billArray[$key][$targetYear][$month] = (float) $values;
                             }
                         }
                     }
@@ -452,11 +452,11 @@ class ReportController extends Controller
 
         foreach ($yearList as $year) {
             $billArr[$year] = [];
-        
+
             for ($i = 1; $i <= 12; $i++) {
                 $billArr[$year][$i] = 0;
             }
-        
+
             if (isset($billTotalArray[$year])) {
                 foreach ($billTotalArray[$year] as $month => $values) {
                     $billArr[$year][$month] = array_sum($values);
@@ -478,11 +478,11 @@ class ReportController extends Controller
 
         foreach ($yearList as $year) {
             $expenseArr[$year] = [];
-        
+
             for ($i = 1; $i <= 12; $i++) {
                 $expenseArr[$year][$i] = 0;
             }
-        
+
             if (isset($paymentTotalArray[$year])) {
                 foreach ($paymentTotalArray[$year] as $month => $values) {
                     $expenseArr[$year][$month] = array_sum($values);
@@ -623,11 +623,11 @@ class ReportController extends Controller
 
             foreach ($yearList as $year) {
                 $expenseArr[$year] = [];
-            
+
                 for ($i = 1; $i <= 12; $i++) {
                     $expenseArr[$year][$i] = 0;
                 }
-            
+
                 if (isset($paymentTotalArray[$year])) {
                     foreach ($paymentTotalArray[$year] as $month => $values) {
                         $expenseArr[$year][$month] = array_sum($values);
@@ -645,11 +645,11 @@ class ReportController extends Controller
 
             foreach ($yearList as $year) {
                 $billArr[$year] = [];
-            
+
                 for ($i = 1; $i <= 12; $i++) {
                     $billArr[$year][$i] = 0;
                 }
-            
+
                 if (isset($billTotalArray[$year])) {
                     foreach ($billTotalArray[$year] as $month => $values) {
                         $billArr[$year][$month] = array_sum($values);
@@ -706,11 +706,11 @@ class ReportController extends Controller
 
             foreach ($yearList as $year) {
                 $incomeArr[$year] = [];
-            
+
                 for ($i = 1; $i <= 12; $i++) {
                     $incomeArr[$year][$i] = 0;
                 }
-            
+
                 if (isset($revenueTotalArray[$year])) {
                     foreach ($revenueTotalArray[$year] as $month => $values) {
                         $incomeArr[$year][$month] = array_sum($values);
@@ -728,11 +728,11 @@ class ReportController extends Controller
 
             foreach ($yearList as $year) {
                 $invoiceArr[$year] = [];
-            
+
                 for ($i = 1; $i <= 12; $i++) {
                     $invoiceArr[$year][$i] = 0;
                 }
-            
+
                 if (isset($invoiceTotalArray[$year])) {
                     foreach ($invoiceTotalArray[$year] as $month => $values) {
                         $invoiceArr[$year][$month] = array_sum($values);
@@ -756,7 +756,7 @@ class ReportController extends Controller
                             $profit[$i][$j] = $value1 - $chartExpenseArr[$i][$j];
                         }
                     }
-                } 
+                }
 
 
             $data['paymentExpenseTotal'] = $expensesum;
@@ -1587,7 +1587,7 @@ class ReportController extends Controller
                 $net_income_arr->where('transaction_lines.date', '<=', $end);
                 $net_income_arr->groupBy('account_id');
                 $net_income_arr = $net_income_arr->get()->toArray();
-                
+
                 foreach($net_income_arr as $nia)
                 {
                     $balance = $nia['totalCredit'] - $nia['totalDebit'];
@@ -1604,11 +1604,11 @@ class ReportController extends Controller
                 $earningsTotal['totalCredit'] = 0;
                 $earningsTotal['totalDebit'] = 0;
                 $earningsTotal['netAmount'] = ($net_income);
-                
+
                 $earnings_arr = array(array($earningsTotal));
-    
+
                 $totalAccounts['Equity'][] = array("subType" => "", "account" => $earnings_arr);
-                // dd($totalAccounts);    
+                // dd($totalAccounts);
             }
 
 
@@ -1678,6 +1678,7 @@ class ReportController extends Controller
     public function ledgerSummary(Request $request, $account = '')
     {
 
+
         if (\Auth::user()->can('ledger report')) {
 
             if (!empty($request->start_date) && !empty($request->end_date)) {
@@ -1703,7 +1704,9 @@ class ReportController extends Controller
                     ->where('created_by', \Auth::user()->creatorId())->get()
                     ->toarray();
             }
-
+            if (empty($request->all())) {
+                $chart_accounts = [];
+            }
             $subAccounts = ChartOfAccount::select('chart_of_accounts.id', 'chart_of_accounts.code', 'chart_of_accounts.name', 'chart_of_account_parents.account');
             $subAccounts->leftjoin('chart_of_account_parents', 'chart_of_accounts.parent', 'chart_of_account_parents.id');
             $subAccounts->where('chart_of_accounts.parent', '!=', 0);

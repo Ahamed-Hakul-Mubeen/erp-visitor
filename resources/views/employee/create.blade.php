@@ -107,21 +107,21 @@
                                 </div>
 
                                 <div class="form-group col-md-6">
-                                    {{ Form::label('branch_id', __('Select Company*'), ['class' => 'form-label']) }}
+                                    {{ Form::label('branch_id', __('Select Company'), ['class' => 'form-label']) }}<span class="pl-1 text-danger">*</span>
                                     <div class="form-icon-user">
-                                        {{ Form::select('branch_id', $branches, null, ['class' => 'form-control select2', 'placeholder' => 'Select Company']) }}
+                                        {{ Form::select('branch_id', $branches, null, ['class' => 'form-control select2', 'placeholder' => 'Select Company','required' => 'required',]) }}
                                     </div>
                                 </div>
 
                                 <div class="form-group col-md-6">
-                                    {{ Form::label('department_id', __('Select Department*'), ['class' => 'form-label']) }}
+                                    {{ Form::label('department_id', __('Select Department'), ['class' => 'form-label']) }}<span class="pl-1 text-danger">*</span>
                                     <div class="form-icon-user">
-                                        {{ Form::select('department_id', $departments, null, ['class' => 'form-control select2', 'id' => 'department_id', 'placeholder' => 'Select Department']) }}
+                                        {{ Form::select('department_id', $departments, null, ['class' => 'form-control select2', 'id' => 'department_id', 'placeholder' => 'Select Department','required' => 'required',]) }}
                                     </div>
                                 </div>
 
                                 <div class="form-group ">
-                                    {{ Form::label('designation_id', __('Select Designation'), ['class' => 'form-label']) }}
+                                    {{ Form::label('designation_id', __('Select Designation'), ['class' => 'form-label']) }}<span class="pl-1 text-danger">*</span>
 
                                     <div class="form-icon-user">
                                         {{--  <div class="designation_div">
@@ -129,12 +129,12 @@
                                                 id="choices-multiple" placeholder="Select Designation">
                                             </select>
                                         </div>  --}}
-                                        {{ Form::select('designation_id', $designations, null, ['class' => 'form-control select2', 'id' => 'designation_id', 'placeholder' => 'Select Designation']) }}
+                                        {{ Form::select('designation_id', $designations, null, ['class' => 'form-control select2', 'id' => 'designation_id', 'placeholder' => 'Select Designation','required' => 'required',]) }}
 
                                     </div>
                                 </div>
                                 <div class="form-group ">
-                                    {!! Form::label('company_doj', __('Company Date Of Joining'), ['class' => '  form-label']) !!}
+                                    {!! Form::label('company_doj', __('Company Date Of Joining'), ['class' => '  form-label']) !!} <span class="pl-1 text-danger">*</span>
                                     {{ Form::date('company_doj', null, ['class' => 'form-control ', 'required' => 'required', 'autocomplete' => 'off', 'placeholder' => 'Select company date of joining']) }}
                                 </div>
 

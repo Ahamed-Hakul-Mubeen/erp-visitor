@@ -6,7 +6,7 @@
             {{ Form::select('salary_type',$payslip_type,null, array('class' => 'form-control select','required'=>'required')) }}
         </div>
         <div class="form-group col-md-12">
-            {{ Form::label('salary', __('Salary'),['class'=>'form-label']) }}
+            {{ Form::label('salary', __('Salary'),['class'=>'form-label']) }}<span class="text-danger">*</span>
             {{ Form::number('salary',null, array('class' => 'form-control ','required'=>'required')) }}
         </div>
         <div class="form-group col-md-12">

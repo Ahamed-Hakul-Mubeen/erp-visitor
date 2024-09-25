@@ -16,50 +16,50 @@
     <div class="row">
         <div class="col-md-12">
             <div class="form-group">
-                {{Form::label('branch',__('Company'),['class'=>'form-label'])}}
+                {{Form::label('branch',__('Company'),['class'=>'form-label'])}}<span class="text-danger">*</span>
                 {{Form::select('branch',$branches,null,array('class'=>'form-control select','required'=>'required'))}}
             </div>
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                {{Form::label('trainer_option',__('Trainer Option'),['class'=>'form-label'])}}
+                {{Form::label('trainer_option',__('Trainer Option'),['class'=>'form-label'])}}<span class="text-danger">*</span>
                 {{Form::select('trainer_option',$options,null,array('class'=>'form-control select','required'=>'required'))}}
             </div>
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                {{Form::label('training_type',__('Training Type'),['class'=>'form-label'])}}
+                {{Form::label('training_type',__('Training Type'),['class'=>'form-label'])}}<span class="text-danger">*</span>
                 {{Form::select('training_type',$trainingTypes,null,array('class'=>'form-control select','required'=>'required'))}}
             </div>
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                {{Form::label('trainer',__('Trainer'),['class'=>'form-label'])}}
+                {{Form::label('trainer',__('Trainer'),['class'=>'form-label'])}}<span class="text-danger">*</span>
                 {{Form::select('trainer',$trainers,null,array('class'=>'form-control select','required'=>'required'))}}
             </div>
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                {{Form::label('training_cost',__('Training Cost'),['class'=>'form-label'])}}
+                {{Form::label('training_cost',__('Training Cost'),['class'=>'form-label'])}}<span class="text-danger">*</span>
                 {{Form::number('training_cost',null,array('class'=>'form-control','step'=>'0.01','required'=>'required'))}}
             </div>
         </div>
         <div class="col-md-12">
             <div class="form-group">
-                {{Form::label('employee',__('Employee'),['class'=>'form-label'])}}
+                {{Form::label('employee',__('Employee'),['class'=>'form-label'])}}<span class="text-danger">*</span>
                 {{Form::select('employee',$employees,null,array('class'=>'form-control select','required'=>'required'))}}
             </div>
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                {{Form::label('start_date',__('Start Date'),['class'=>'form-label'])}}
-                {{Form::date('start_date',null,array('class'=>'form-control'))}}
+                {{Form::label('start_date',__('Start Date'),['class'=>'form-label'])}}<span class="text-danger">*</span>
+                {{Form::date('start_date',null,array('class'=>'form-control','required' => 'required'))}}
             </div>
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                {{Form::label('end_date',__('End Date'),['class'=>'form-label'])}}
-                {{Form::date('end_date',null,array('class'=>'form-control '))}}
+                {{Form::label('end_date',__('End Date'),['class'=>'form-label'])}}<span class="text-danger">*</span>
+                {{Form::date('end_date',null,array('class'=>'form-control ','required' => 'required'))}}
             </div>
         </div>
         <div class="form-group col-lg-12">

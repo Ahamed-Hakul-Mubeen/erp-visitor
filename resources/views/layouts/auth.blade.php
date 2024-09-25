@@ -25,14 +25,14 @@
     if ($lang == 'ar' || $lang == 'he') {
         $SITE_RTL = 'on';
     }
-    elseif($SITE_RTL == 'on') 
+    elseif($SITE_RTL == 'on')
     {
-        $SITE_RTL = 'on';        
+        $SITE_RTL = 'on';
     }
     else {
         $SITE_RTL = 'off';
     }
-        
+
     $metatitle = isset($setting['meta_title']) ? $setting['meta_title'] : '';
     $metsdesc = isset($setting['meta_desc']) ? $setting['meta_desc'] : '';
     $meta_image = \App\Models\Utility::get_file('uploads/meta/');
@@ -100,7 +100,7 @@
         <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" id="main-style-link">
     @endif
 
-   
+
     @if ($SITE_RTL == 'on')
         <link rel="stylesheet" href="{{ asset('assets/css/custom-auth-rtl.css') }}" id="main-style-link">
         @else
@@ -113,7 +113,7 @@
 
     <style>
         :root {
-            --color-customColor: <?= $color ?>;    
+            --color-customColor: <?= $color ?>;
         }
     </style>
 
@@ -126,18 +126,27 @@
 </head>
 
 <body class="{{ $themeColor }}">
-    <div class="custom-login">
+    <div class="custom-login" style="background-color:#e9ecef;">
         <div class="login-bg-img">
-            <img src="{{ isset($setting['color_flag']) && $setting['color_flag'] == 'false' ? asset('assets/images/auth/'.$color.'.svg') : asset('assets/images/auth/theme-3.svg') }}" class="login-bg-1">
-            <img src="{{ asset('assets/images/auth/common.svg') }}" class="login-bg-2">
+            {{-- <img src="{{ isset($setting['color_flag']) && $setting['color_flag'] == 'false' ? asset('assets/images/auth/'.$color.'.svg') : asset('assets/images/auth/theme-3.svg') }}" class="login-bg-1"> --}}
+            {{-- <img src="{{ asset('assets/images/auth/common.svg') }}" class="login-bg-2"> --}}
         </div>
-        <div class="bg-login bg-primary"></div>
+        {{-- <div class="bg-login bg-primary"></div> --}}
         <div class="custom-login-inner">
-            <header class="dash-header">
-                <nav class="navbar navbar-expand-md default">
+            <header class="text-center">
+                @if ($setting['cust_darklayout'] == 'on')
+                    <img class="logo"
+                        src="{{ $logo . (isset($company_logo) && !empty($company_logo) ? $company_logo : 'logo-light.png') . '?' . time() }}"
+                        alt="" loading="lazy"/>
+                @else
+                    <img class="logo"
+                        src="{{ $logo . (isset($company_logo) && !empty($company_logo) ? $company_logo : 'logo-dark.png') . '?' . time() }}"
+                        alt="" loading="lazy"/>
+                @endif
+                {{-- <nav class="navbar navbar-expand-md default">
                     <div class="container">
                         <div class="navbar-brand">
-                           
+
                         <a class="navbar-brand" href="#">
                             @if ($setting['cust_darklayout'] == 'on')
                                 <img class="logo"
@@ -163,7 +172,7 @@
                             </ul>
                         </div>
                     </div>
-                </nav>
+                </nav> --}}
             </header>
             <main class="custom-wrapper">
                 <div class="custom-row">

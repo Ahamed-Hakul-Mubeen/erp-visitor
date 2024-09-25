@@ -3,8 +3,8 @@
 
     <div class="row">
         <div class="form-group col-12">
-            {{Form::label('name',__('Name'),['class'=>'form-label'])}}
-            {{Form::text('name',null,array('class'=>'form-control','placeholder'=>__('Enter Document Name')))}}
+            {{Form::label('name',__('Name'),['class'=>'form-label'])}}<span class="text-danger">*</span>
+            {{Form::text('name',null,array('class'=>'form-control','placeholder'=>__('Enter Document Name'),'required'=>'required'))}}
             @error('name')
             <span class="invalid-name" role="alert">
                     <strong class="text-danger">{{ $message }}</strong>
@@ -12,7 +12,7 @@
             @enderror
         </div>
         <div class="form-group col-12">
-            {{ Form::label('is_required', __('Required Field'),['class'=>'form-label']) }}
+            {{ Form::label('is_required', __('Required Field'),['class'=>'form-label']) }}<span class="text-danger">*</span>
             <select class="form-control select2" required name="is_required">
                 <option value="0">{{__('Not Required')}}</option>
                 <option value="1">{{__('Is Required')}}</option>

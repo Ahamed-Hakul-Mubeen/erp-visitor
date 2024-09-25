@@ -282,6 +282,7 @@
                                                         $totalQuantity += $iteam->quantity;
                                                         $totalRate += $iteam->price;
                                                         $totalDiscount += $iteam->discount;
+                                                        $taxPrice =0;
                                                     @endphp
                                                     <td>{{ !empty($productName) ? $productName->name : '' }}</td>
                                                     <td>{{ $iteam->quantity . ' (' . $productName->unit->name . ')' }}</td>

@@ -2,7 +2,7 @@
 <div class="modal-body">
     <div class="row">
         <div class="form-group col-md-12">
-            {{ Form::label('currency_code', __('Currency Code'), ['class' => 'form-label']) }}
+            {{ Form::label('currency_code', __('Currency Code'), ['class' => 'form-label']) }}<span class="text-danger">*</span>
             {{ Form::text('currency_code', null, ['class' => 'form-control', 'required' => 'required', 'placeholder' => __('Enter Currency Code')]) }}
             @error('currency_code')
                 <small class="invalid-currency_code" role="alert">
@@ -11,7 +11,7 @@
             @enderror
         </div>
         <div class="form-group col-md-12">
-            {{ Form::label('currency_symbol', __('Currency Symbol'), ['class' => 'form-label']) }}
+            {{ Form::label('currency_symbol', __('Currency Symbol'), ['class' => 'form-label']) }}<span class="text-danger">*</span>
             {{ Form::text('currency_symbol', null, ['class' => 'form-control', 'required' => 'required', 'placeholder' => __('Enter Currency Symbol')]) }}
             @error('currency_symbol')
                 <small class="invalid-currency_symbol" role="alert">
