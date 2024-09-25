@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('asset_management', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_type_id')->constrained('product_types');
+            $table->foreignId('product_type_id')->constrained('product_types')->onDelete('cascade');
             $table->text('product_description');
             $table->text('product_configuration');
             $table->string('asset_properties_values')->nullable();

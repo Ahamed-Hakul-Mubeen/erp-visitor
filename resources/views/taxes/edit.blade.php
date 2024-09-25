@@ -2,7 +2,7 @@
 <div class="modal-body">
     <div class="row">
         <div class="form-group col-md-6">
-            {{ Form::label('name', __('Tax Rate Name'),['class'=>'form-label']) }}
+            {{ Form::label('name', __('Tax Rate Name'),['class'=>'form-label']) }}<span class="text-danger">*</span>
             {{ Form::text('name', null, array('class' => 'form-control font-style','required'=>'required')) }}
             @error('name')
             <small class="invalid-name" role="alert">
@@ -11,7 +11,7 @@
             @enderror
         </div>
         <div class="form-group col-md-6">
-            {{ Form::label('rate', __('Tax Rate %'),['class'=>'form-label']) }}
+            {{ Form::label('rate', __('Tax Rate %'),['class'=>'form-label']) }}<span class="text-danger">*</span>
             {{ Form::number('rate', null, array('class' => 'form-control','required'=>'required','step'=>'0.01')) }}
             @error('rate')
             <small class="invalid-rate" role="alert">

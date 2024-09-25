@@ -22,6 +22,7 @@
             </div>
             <div class="col-sm-10">
                 <div id="asset_property_list_div">
+                    @if(!empty($productType->asset_properties) && is_array(json_decode($productType->asset_properties, true)))
                     @foreach(json_decode($productType->asset_properties, true) as $key => $property)
                     <div class="row pb-3" id="asset_property_div{{ $key }}">
                         <div class="col-sm-10">
@@ -34,6 +35,7 @@
                         </div>
                     </div>
                     @endforeach
+                    @endif
                 </div>
             </div>
             <div class="col-sm-2">

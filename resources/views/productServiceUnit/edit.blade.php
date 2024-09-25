@@ -2,7 +2,7 @@
 <div class="modal-body">
     <div class="row">
         <div class="form-group col-md-12">
-            {{ Form::label('name', __('Unit Name'),['class'=>'form-label']) }}
+            {{ Form::label('name', __('Unit Name'),['class'=>'form-label']) }}<span class="text-danger">*</span>
             {{ Form::text('name', null, array('class' => 'form-control','required'=>'required')) }}
             @error('name')
             <small class="invalid-name" role="alert">

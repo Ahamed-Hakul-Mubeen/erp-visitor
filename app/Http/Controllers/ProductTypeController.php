@@ -121,20 +121,30 @@ class ProductTypeController extends Controller
 
     public function destroy(ProductType $productType)
     {
-        if(\Auth::user()->can('delete assets type'))
-        {
-            if($productType->created_by == \Auth::user()->creatorId())
-            {
+        if (\Auth::user()->can('delete assets type')) {
+            if ($productType->created_by == \Auth::user()->creatorId()) {
+                
+               
+                $assignedAssets = \DB::table('asset_management')
+                    ->where('product_type_id', $productType->id)
+                    ->where('status', 1) 
+                    ->exists();
+    
+                if ($assignedAssets) {
+                    
+                    return redirect()->back()->with('error', __('This product is assigned to an employee and cannot be deleted.'));
+                }
+    
+               
+                \DB::table('asset_management')->where('product_type_id', $productType->id)->delete();
                 $productType->delete();
+    
                 return redirect()->route('product_type.index')->with('success', __('Assets Type successfully deleted.'));
-            }
-            else
-            {
+            } else {
                 return redirect()->back()->with('error', __('Permission denied.'));
             }
-        }else
-        {
-            return redirect()->back()->with(['error' => __('Permission denied.')], 401);
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'), 401);
         }
        
     }
