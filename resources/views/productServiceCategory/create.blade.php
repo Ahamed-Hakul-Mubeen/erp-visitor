@@ -2,11 +2,11 @@
 <div class="modal-body">
     <div class="row">
         <div class="form-group col-md-12">
-            {{ Form::label('name', __('Category Name'),['class'=>'form-label']) }}
+            {{ Form::label('name', __('Category Name'),['class'=>'form-label']) }}<span class="text-danger">*</span>
             {{ Form::text('name', '', array('class' => 'form-control','required'=>'required' , 'placeholder'=>__('Enter Category Name'))) }}
         </div>
         <div class="form-group col-md-12 d-block">
-            {{ Form::label('type', __('Category Type'),['class'=>'form-label']) }}
+            {{ Form::label('type', __('Category Type'),['class'=>'form-label']) }}<span class="text-danger">*</span>
             {{ Form::select('type',$types,null, array('class' => 'form-control select cattype ','required'=>'required')) }}
         </div>
         <div class="form-group col-md-12 account d-none">
@@ -16,7 +16,7 @@
         </div>
 
         <div class="form-group col-md-12">
-            {{ Form::label('color', __('Category Color'),['class'=>'form-label']) }}
+            {{ Form::label('color', __('Category Color'),['class'=>'form-label']) }}<span class="text-danger">*</span>
             {{ Form::text('color', '', array('class' => 'form-control jscolor','required'=>'required')) }}
             <small>{{__('For chart representation')}}</small>
         </div>
