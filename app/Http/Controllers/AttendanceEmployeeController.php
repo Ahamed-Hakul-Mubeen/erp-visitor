@@ -231,7 +231,8 @@ class AttendanceEmployeeController extends Controller
 
     public function update(Request $request, $id)
     {
-        if (\Auth::user()->type == 'company' || \Auth::user()->type == 'HR') {
+        if ((\Auth::user()->type == 'company' || \Auth::user()->type == 'HR') && isset($request->employee_id)) {
+            
             $employeeId = AttendanceEmployee::where('employee_id', $request->employee_id)->first();
             $check = AttendanceEmployee::where('id',$id)->where('employee_id', '=', $request->employee_id)->where('date', $request->date)->first();
             // dd($check->date);
@@ -336,7 +337,7 @@ class AttendanceEmployeeController extends Controller
         $startTime = Utility::getValByName('company_start_time');
         $endTime = Utility::getValByName('company_end_time');
 
-        if (Auth::user()->type == 'Employee') {
+        if (Auth::user()->type == 'Employee' || !isset($request->employee_id)) {
 
             $startTime = Carbon::parse(Utility::getValByName('company_start_time'));
             $endTime = Carbon::parse(Utility::getValByName('company_end_time'));

@@ -186,11 +186,13 @@ class Employee extends Model
         $end_date = $year."-".$month."-".$no_of_days;
 
         $attendance_days = AttendanceEmployee::where("employee_id", $this->id)->whereBetween('date', [$start_date, $end_date])->groupBy('date')->get()->count();       
+        $start_date = ($start_date < $this->company_doj) ? $this->company_doj : $start_date;
+        $end_date = ($end_date > date('Y-m-d')) ? date('Y-m-d') : $end_date;
         $holidays = Holiday::whereBetween('date', [$start_date, $end_date])->where('created_by', \Auth::user()->creatorId())->get()->count();
         $approved_leave = Leave::where('employee_id', $this->id)->where(function($query) use ($start_date, $end_date) {
                     $query->whereBetween('start_date', [$start_date, $end_date])->orWhereBetween('end_date', [$start_date, $end_date]);
                 })->where('status', 'Approved')->get();
-
+                
         $approved_leave_count = 0;
         foreach($approved_leave as $leave)
         {
