@@ -61,8 +61,8 @@ class CustomerController extends Controller
 
 
     public function store(Request $request)
-    {   
-       
+    {
+
         if(\Auth::user()->can('create customer'))
         {
 
@@ -516,9 +516,9 @@ class CustomerController extends Controller
             {
                 $customerData = new Customer();
                 $customerData->customer_id      = $this->customerNumber();
+                $lastCustomer = Customer::orderBy('customer_id', 'desc')->first();
+                $customerData->customer_id      = $lastCustomer ? $lastCustomer->customer_id + 1 : 1;
             }
-
-            $customerData->customer_id             = $customer[0];
             $customerData->name             = $customer[1];
             $customerData->email            = $customer[2];
             $customerData->contact          = $customer[3];

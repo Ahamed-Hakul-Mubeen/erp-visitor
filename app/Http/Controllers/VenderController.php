@@ -138,7 +138,7 @@ class VenderController extends Controller
             {
                 Utility::send_twilio_msg($request->contact,'new_vendor', $vendorNotificationArr);
             }
-             
+
                 if ($request->has('redirect_to_bill') && $request->redirect_to_bill == 1) {
                     return redirect()->route('bill.create', ['cid' => 0])->with('success', __('Customer successfully created.'));
                 }elseif ($request->has('redirect_to_payment') && $request->redirect_to_payment == 1) {
@@ -509,9 +509,10 @@ class VenderController extends Controller
             {
                 $vendorData            = new Vender();
                 $vendorData->vender_id = $this->venderNumber();
+                $lastVender = Vender::orderBy('vender_id', 'desc')->first();
+                $vendorData->vender_id      = $lastVender ? $lastVender->vender_id + 1 : 1;
             }
 
-            $vendorData->vender_id          =$vendor[0];
             $vendorData->name               = $vendor[1];
             $vendorData->email              = $vendor[2];
             $vendorData->contact            = $vendor[3];
