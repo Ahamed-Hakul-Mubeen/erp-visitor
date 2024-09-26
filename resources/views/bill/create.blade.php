@@ -34,8 +34,8 @@
                         });
                     }
 
-                    // for item SearchBox ( this function is  custom Js )
-                    JsSearchBox();
+                    // // for item SearchBox ( this function is  custom Js )
+                    // JsSearchBox();
 
                     $('.select2').select2();
                 },

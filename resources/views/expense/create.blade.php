@@ -35,7 +35,7 @@
                     }
 
                     // for item SearchBox ( this function is  custom Js )
-                    JsSearchBox();
+                    // JsSearchBox();
 
                     $('.select2').select2();
                 },
