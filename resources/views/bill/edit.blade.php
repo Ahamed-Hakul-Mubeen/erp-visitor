@@ -276,7 +276,7 @@
                                     accountSubTotal += currentInputValue;
                                 }
                             }
-                            
+
                             // var totalItemPrice = 0;
                             // var inputs_quantity = $(".quantity");
                             // var priceInput = $('.price');
@@ -672,16 +672,16 @@
         $('#bill_date').on('change', function() {
             const billDate = new Date($(this).val());
             const dueDateInput = $('#due_date');
-            
-        
+
+
             if ($(this).val()) {
                 dueDateInput.attr('min', billDate.toISOString().split('T')[0]);
             } else {
-            
+
                 dueDateInput.removeAttr('min');
             }
         });
-        
+
         // Event listener for clicking due date
         $(document).on('click', '#due_date', function () {
             const billDate = new Date($('#bill_date').val());
@@ -702,7 +702,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group" id="vender-box">
-                                {{ Form::label('vender_id', __('Vendor'),['class'=>'form-label']) }}
+                                {{ Form::label('vender_id', __('Vendor'),['class'=>'form-label']) }}<span class="text-danger">*</span>
                                 {{ Form::select('vender_id', $venders,null, array('class' => 'form-control select','id'=>'vender','data-url'=>route('bill.vender'),'required'=>'required')) }}
                             </div>
                             <div id="vender_detail" class="d-none">
@@ -712,26 +712,26 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        {{ Form::label('bill_date', __('Bill Date'),['class'=>'form-label']) }}
+                                        {{ Form::label('bill_date', __('Bill Date'),['class'=>'form-label']) }}<span class="text-danger">*</span>
                                         {{Form::date('bill_date',null,array('class'=>'form-control','required'=>'required'))}}
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        {{ Form::label('due_date', __('Due Date'),['class'=>'form-label']) }}
+                                        {{ Form::label('due_date', __('Due Date'),['class'=>'form-label']) }}<span class="text-danger">*</span>
                                         {{Form::date('due_date',null,array('class'=>'form-control','required'=>'required'))}}
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        {{ Form::label('bill_number', __('Bill Number'),['class'=>'form-label']) }}
-                                        <input type="text" name="bill_number" class="form-control" value="{{$bill_number}}">
+                                        {{ Form::label('bill_number', __('Bill Number'),['class'=>'form-label']) }}<span class="text-danger">*</span>
+                                        <input type="text" name="bill_number" class="form-control" value="{{$bill_number}}" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        {{ Form::label('category_id', __('Category'),['class'=>'form-label']) }}
-                                        {{ Form::select('category_id', $category,null, array('class' => 'form-control select')) }}
+                                        {{ Form::label('category_id', __('Category'),['class'=>'form-label']) }}<span class="text-danger">*</span>
+                                        {{ Form::select('category_id', $category,null, array('class' => 'form-control select','required'=>'required')) }}
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -781,7 +781,7 @@
                         <table class="table mb-0" data-repeater-list="items" id="sortable-table">
                             <thead>
                                 <tr>
-                                <th width="20%">{{__('Items')}}</th>
+                                <th width="20%">{{__('Items')}}<span class="text-danger">*</span></th>
                                 <th>{{__('Quantity')}}</th>
                                 <th>{{__('Price')}} </th>
                                 <th>{{__('Discount')}}</th>

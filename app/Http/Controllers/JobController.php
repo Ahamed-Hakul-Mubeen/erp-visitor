@@ -17,16 +17,21 @@ use Illuminate\Support\Facades\App;
 class JobController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
         if (\Auth::user()->can('manage job')) {
-            $jobs = Job::where('created_by', '=', \Auth::user()->creatorId())->with('branches', 'createdBy')->get();
+            $jobs = Job::where('created_by', '=', \Auth::user()->creatorId());
 
             $data['total']     = Job::where('created_by', '=', \Auth::user()->creatorId())->count();
             $data['active']    = Job::where('status', 'active')->where('created_by', '=', \Auth::user()->creatorId())->count();
             $data['in_active'] = Job::where('status', 'in_active')->where('created_by', '=', \Auth::user()->creatorId())->count();
 
-            return view('job.index', compact('jobs', 'data'));
+            $branches = Branch::where('created_by', \Auth::user()->creatorId())->get()->select('name', 'id');;
+            if (!empty($request->company)) {
+                $jobs->where('branch', '=', $request->company);
+            }
+            $jobs= $jobs->with('branches', 'createdBy')->get();
+            return view('job.index', compact('jobs', 'data' ,'branches'));
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
@@ -292,7 +297,7 @@ class JobController extends Controller
 
             return redirect()->back()->with('error', $messages->first());
         }
-        
+
         $job = Job::where('code', $code)->first();
         $creatorId = $job->created_by;
         $existingJobApplication = JobApplication::where('email', $request->email)->where('job', $job->id)->first();

@@ -657,7 +657,11 @@ class Utility extends Model
 
     public static function invoiceNumberFormat($settings, $number)
     {
-        $invoice = Invoice::where("invoice_id", $number)->where('created_by', \Auth::user()->creatorId())->first();
+    if(\Auth::user())
+    $invoice = Invoice::where("invoice_id", $number)->where('created_by', \Auth::user()->creatorId())->first();
+    else
+    $invoice = Invoice::where("invoice_id", $number)->first();
+
         if($invoice && $invoice->actual_invoice_number != null)
         {
             return $invoice->actual_invoice_number;
@@ -691,7 +695,11 @@ class Utility extends Model
 
     public static function customerInvoiceNumberFormat($number)
     {
-        $invoice = Invoice::where("invoice_id", $number)->where('created_by', \Auth::user()->creatorId())->first();
+        if(\Auth::user())
+            $invoice = Invoice::where("invoice_id", $number)->where('created_by', \Auth::user()->creatorId())->first();
+        else
+            $invoice = Invoice::where("invoice_id", $number)->first();
+        
         if($invoice && $invoice->actual_invoice_number != null)
         {
             return $invoice->actual_invoice_number;
@@ -709,7 +717,12 @@ class Utility extends Model
     }
 
     public static function billNumberFormat($settings, $number)
-    {   $bill = Bill::where("bill_id", $number)->where('created_by', \Auth::user()->creatorId())->first();
+    {   
+        if(\Auth::user())
+             $bill = Bill::where("bill_id", $number)->where('created_by', \Auth::user()->creatorId())->first();
+        else
+             $bill = Bill::where("bill_id", $number)->first();
+
         if($bill && $bill->actual_bill_number != null)
         {
             return $bill->actual_bill_number;
@@ -720,7 +733,12 @@ class Utility extends Model
 
     public static function vendorBillNumberFormat($number)
     {
+        
+        if(\Auth::user())
         $bill = Bill::where("bill_id", $number)->where('created_by', \Auth::user()->creatorId())->first();
+        else
+        $bill = Bill::where("bill_id", $number)->first();
+
         if($bill && $bill->actual_bill_number != null)
         {
             return $bill->actual_bill_number;

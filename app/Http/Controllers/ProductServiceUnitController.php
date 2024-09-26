@@ -41,7 +41,7 @@ class ProductServiceUnitController extends Controller
         {
             $validator = \Validator::make(
                 $request->all(), [
-                                   'name' => 'required|max:20',
+                                   'name' => 'required|max:40',
                                ]
             );
             if($validator->fails())
@@ -89,7 +89,7 @@ class ProductServiceUnitController extends Controller
             {
                 $validator = \Validator::make(
                     $request->all(), [
-                                       'name' => 'required|max:20',
+                                       'name' => 'required|max:40',
                                    ]
                 );
                 if($validator->fails())

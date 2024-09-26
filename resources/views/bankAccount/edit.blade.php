@@ -2,7 +2,7 @@
 <div class="modal-body">
     <div class="row">
         <div class="form-group col-md-6">
-            {{ Form::label('chart_account_id', __('Account'),['class'=>'form-label']) }}
+            {{ Form::label('chart_account_id', __('Account'),['class'=>'form-label']) }}<span class="text-danger">*</span>
             {{-- {{ Form::select('chart_account_id', $chart_accounts,null, array('class' => 'form-control select','required'=>'required')) }} --}}
             <select name="chart_account_id" id="chart_account_id" class="form-control" required="required" disabled>
                 @foreach ($chartAccounts as $key => $chartAccount)
@@ -16,19 +16,19 @@
             </select>
         </div>
         <div class="form-group col-md-6">
-            {{ Form::label('code', __('Code'),['class'=>'form-label']) }}
+            {{ Form::label('code', __('Code'),['class'=>'form-label']) }}<span class="text-danger">*</span>
             {{ Form::text('code', null, array('class' => 'form-control','required'=>'required' , 'placeholder'=>__('Enter Code'))) }}
         </div>
         <div class="form-group col-md-6">
-            {{ Form::label('holder_name', __('Bank Holder Name'),['class'=>'form-label']) }}
+            {{ Form::label('holder_name', __('Bank Holder Name'),['class'=>'form-label']) }}<span class="text-danger">*</span>
             {{ Form::text('holder_name',null, array('class' => 'form-control','required'=>'required')) }}
         </div>
         <div class="form-group col-md-6">
-            {{ Form::label('bank_name', __('Bank Name'),['class'=>'form-label']) }}
+            {{ Form::label('bank_name', __('Bank Name'),['class'=>'form-label']) }}<span class="text-danger">*</span>
             {{ Form::text('bank_name',null, array('class' => 'form-control','required'=>'required')) }}
         </div>
         <div class="form-group col-md-6">
-            {{ Form::label('account_number', __('Account Number'),['class'=>'form-label']) }}
+            {{ Form::label('account_number', __('Account Number'),['class'=>'form-label']) }}<span class="text-danger">*</span>
             {{ Form::text('account_number',null, array('class' => 'form-control','required'=>'required')) }}
         </div>
         <div class="form-group col-md-6">

@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Exports\ProposalExport;
 use App\Models\ActivityLog;
+use App\Models\Currency;
 use App\Models\Customer;
 use App\Models\CustomField;
+use App\Models\ExchangeRate;
 use App\Models\Invoice;
 use App\Models\InvoiceProduct;
 use App\Models\Milestone;
@@ -59,9 +61,13 @@ class ProposalController extends Controller
             {
                 $query->where('status', '=', $request->status);
             }
+            if(!empty($request->category))
+            {
+                $query->where('category_id', '=', $request->category);
+            }
             $proposals = $query->with(['category'])->get();
-
-            return view('proposal.index', compact('proposals', 'customer', 'status'));
+            $category = ProductServiceCategory::where('created_by', \Auth::user()->creatorId())->where('type', 'income')->get()->pluck('name', 'id');
+            return view('proposal.index', compact('proposals', 'customer', 'status','category'));
         }
         else
         {
@@ -81,8 +87,8 @@ class ProposalController extends Controller
             $category->prepend('Select Category', '');
             $product_services = ProductService::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             $product_services->prepend('--', '');
-
-            return view('proposal.create', compact('customers', 'proposal_number', 'product_services', 'category', 'customFields', 'customerId'));
+            $currency = Currency::select('currency_code', 'currency_symbol')->where('created_by', \Auth::user()->creatorId())->get();
+            return view('proposal.create', compact('customers', 'proposal_number', 'product_services', 'category', 'customFields', 'customerId', 'currency'));
         }
         else
         {
@@ -99,25 +105,48 @@ class ProposalController extends Controller
 
     public function product(Request $request)
     {
+        $currency_code = $request->currency_code;
 
-        $data['product'] = $product = ProductService::find($request->product_id);
-
-        $data['unit']    = (!empty($product->unit)) ? $product->unit->name : '';
+        if ($currency_code != \Auth::user()->currencyCode()) {
+            $exchange_rate = ExchangeRate::where("from_currency", $currency_code)->where("to_currency", \Auth::user()->currencyCode())->first();
+            if (!$exchange_rate) {
+                return json_encode(array("status" => 0, "message" => __("No conversion rate found")));
+            }
+            $product = ProductService::find($request->product_id);
+            $product->sale_price = number_format($product->sale_price / $exchange_rate->exchange_rate, 2, ".", "");
+            $data['exchange_rate'] = $exchange_rate->exchange_rate;
+            $data['product'] = $product;
+        } else {
+            $data['exchange_rate'] = 1;
+            $data['product'] = $product = ProductService::find($request->product_id);
+        }
+        $data['unit'] = (!empty($product->unit)) ? $product->unit->name : '';
         $data['taxRate'] = $taxRate = !empty($product->tax_id) ? $product->taxRate($product->tax_id) : 0;
-
         $data['taxes'] = !empty($product->tax_id) ? $product->tax($product->tax_id) : 0;
-
-        $salePrice           = $product->sale_price;
-        $quantity            = 1;
-        $taxPrice            = ($taxRate / 100) * ($salePrice * $quantity);
+        $salePrice = $product->sale_price;
+        $quantity = 1;
+        $taxPrice = ($taxRate / 100) * ($salePrice * $quantity);
         $data['totalAmount'] = ($salePrice * $quantity);
 
         return json_encode($data);
+
+        // $data['product'] = $product = ProductService::find($request->product_id);
+
+        // $data['unit']    = (!empty($product->unit)) ? $product->unit->name : '';
+        // $data['taxRate'] = $taxRate = !empty($product->tax_id) ? $product->taxRate($product->tax_id) : 0;
+
+        // $data['taxes'] = !empty($product->tax_id) ? $product->tax($product->tax_id) : 0;
+
+        // $salePrice           = $product->sale_price;
+        // $quantity            = 1;
+        // $taxPrice            = ($taxRate / 100) * ($salePrice * $quantity);
+        // $data['totalAmount'] = ($salePrice * $quantity);
+
+        // return json_encode($data);
     }
 
     public function store(Request $request)
     {
-
         if(\Auth::user()->can('create proposal'))
         {
             $validator = \Validator::make(
@@ -142,6 +171,9 @@ class ProposalController extends Controller
             $proposal->status         = 0;
             $proposal->issue_date     = $request->issue_date;
             $proposal->category_id    = $request->category_id;
+            $proposal->currency_code    = $request->currency_code;
+            $proposal->currency_symbol  = $request->currency_symbol;
+            $proposal->exchange_rate    = $request->exchange_rate;
 //            $proposal->discount_apply = isset($request->discount_apply) ? 1 : 0;
             $proposal->created_by     = \Auth::user()->creatorId();
             $proposal->created_user     = \Auth::user()->id;
@@ -251,6 +283,9 @@ class ProposalController extends Controller
                 $proposal->customer_id    = $request->customer_id;
                 $proposal->issue_date     = $request->issue_date;
                 $proposal->category_id    = $request->category_id;
+                $proposal->currency_code    = $request->currency_code;
+                $proposal->currency_symbol  = $request->currency_symbol;
+                $proposal->exchange_rate    = $request->exchange_rate;
                 $proposal->created_user     = \Auth::user()->id;
 //                $proposal->discount_apply = isset($request->discount_apply) ? 1 : 0;
                 $proposal->save();
@@ -550,6 +585,9 @@ class ProposalController extends Controller
             $duplicateProposal->issue_date  = date('Y-m-d');
             $duplicateProposal->send_date   = null;
             $duplicateProposal->category_id = $proposal['category_id'];
+            $duplicateProposal->currency_code    = $proposal['currency_code'];
+            $duplicateProposal->currency_symbol  = $proposal['currency_symbol'];
+            $duplicateProposal->exchange_rate    = $proposal['exchange_rate'];
             $duplicateProposal->status      = 0;
             $duplicateProposal->created_by  = $proposal['created_by'];
             $duplicateProposal->created_user     = \Auth::user()->id;
@@ -594,6 +632,9 @@ class ProposalController extends Controller
             $convertInvoice->due_date    = date('Y-m-d');
             $convertInvoice->send_date   = null;
             $convertInvoice->category_id = $proposal['category_id'];
+            $convertInvoice->currency_code    = $proposal['currency_code'];
+            $convertInvoice->currency_symbol  = $proposal['currency_symbol'];
+            $convertInvoice->exchange_rate    = $proposal['exchange_rate'];
             $convertInvoice->status      = 0;
             $convertInvoice->created_by  = $proposal['created_by'];
             $convertInvoice->created_user     = \Auth::user()->id;

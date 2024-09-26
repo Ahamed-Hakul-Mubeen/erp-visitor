@@ -7,7 +7,7 @@
                 <select class="form-control select" name="advance_id" id="advance_id">
                     <option value="">Select Advance</option>
                     @foreach ($advance as $adv)
-                        <option data-date="{{ $adv->date }}" data-amount="{{ $adv->balance }}" data-account="{{ $adv->account_id }}" value="{{ $adv->id }}"> {{  Auth::user()->advanceNumberFormat($adv->advance_id)}} ({{  Auth::user()->priceFormat($adv->balance)}}) </option>
+                        <option data-date="{{ $adv->date }}" data-amount="{{ $adv->balance }}" data-account="{{ $adv->account_id }}" value="{{ $adv->id }}"> {{  Auth::user()->advanceNumberFormat($adv->advance_id)}} ({{  Auth::user()->priceFormat($adv->balance, null, $adv->currency_symbol)}}) </option>
                     @endforeach
                 </select>
                 {{-- {{ Form::select('advance_id', $advance, null, ['class' => 'form-control select', 'id' => 'advance_id', 'required' => 'required']) }} --}}
@@ -20,7 +20,7 @@
         <div class="col-md-6">
             {{ Form::label('amount', __('Amount'), ['class' => 'form-label']) }}
             <div class="form-group input-group">
-                {{ Form::number('amount', number_format($invoice->getDue(),2,'.', ''), ['id' => 'amount', 'class' => 'form-control', 'required' => 'required', 'step' => '0.01', 'placeholder' => __('Enter Amount')]) }}
+                {{ Form::number('amount', number_format($invoice->getDue(), 2, '.', ''), ['id' => 'amount', 'class' => 'form-control', 'required' => 'required', 'step' => '0.01', 'placeholder' => __('Enter Amount')]) }}
                 <span class="bg-transparent input-group-text">{{ $invoice->currency_code }}</span>
             </div>
         </div>

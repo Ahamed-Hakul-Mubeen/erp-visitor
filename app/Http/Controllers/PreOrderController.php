@@ -47,8 +47,14 @@ class PreOrderController extends Controller
             if (!empty($request->status)) {
                 $query->where('status', '=', $request->status);
             }
+            if(!empty($request->category))
+            {
+                $query->where('category_id', '=', $request->category);
+            }
             $preOrders = $query->with(['category'])->get();
-            return view('pre_order.index', compact('preOrders', 'vender', 'status'));
+            $category = ProductServiceCategory::where('created_by', \Auth::user()->creatorId())->where('type', 'expense')->get()->pluck('name', 'id');
+
+            return view('pre_order.index', compact('preOrders', 'vender', 'status','category'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }

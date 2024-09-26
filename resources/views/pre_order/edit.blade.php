@@ -527,7 +527,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group" id="vender-box">
-                                    {{ Form::label('vender_id', __('vender'),['class'=>'form-label']) }}
+                                    {{ Form::label('vender_id', __('vender'),['class'=>'form-label']) }}<span class="text-danger">*</span>
                                     {{ Form::select('vender_id', $venders,null, array('class' => 'form-control select ','id'=>'vender','data-url'=>route('pre_order.vender'),'required'=>'required')) }}
                             </div>
                             <div id="vender_detail" class="d-none">
@@ -537,7 +537,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        {{ Form::label('issue_date', __('Issue Date'),['class'=>'form-label']) }}
+                                        {{ Form::label('issue_date', __('Issue Date'),['class'=>'form-label']) }}<span class="text-danger">*</span>
                                         <div class="form-icon-user">
                                             {{Form::date('issue_date',null,array('class'=>'form-control','required'=>'required'))}}
 
@@ -546,7 +546,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                        {{ Form::label('category_id', __('Category'),['class'=>'form-label']) }}
+                                        {{ Form::label('category_id', __('Category'),['class'=>'form-label']) }}<span class="text-danger">*</span>
                                         {{ Form::select('category_id', $category,null, array('class' => 'form-control select','required'=>'required')) }}
                                 </div>
                                 <div class="col-md-6">

@@ -173,7 +173,20 @@ use Illuminate\Support\Facades\Route;
 require __DIR__ . '/auth.php';
 
 
-
+Route::group(
+    [
+        'middleware' => [
+            'XSS',
+            'revalidate',
+        ],
+    ],
+    function () {
+        Route::get('proposal/pdf/{id}', [ProposalController::class, 'proposal'])->name('proposal.pdf');
+        Route::get('pre_order/pdf/{id}', [PreOrderController::class, 'pre_order'])->name('pre_order.pdf');
+        Route::get('invoice/pdf/{id}', [InvoiceController::class, 'invoice'])->name('invoice.pdf');
+        Route::get('bill/pdf/{id}', [BillController::class, 'bill'])->name('bill.pdf');
+    }
+);
 
 Route::group(
     [
@@ -191,8 +204,8 @@ Route::get('/vender/bill/{id}/', [BillController::class, 'invoiceLink'])->name('
 Route::get('/vendor/purchase/{id}/', [PurchaseController::class, 'purchaseLink'])->name('purchase.link.copy');
 Route::get('/customer/proposal/{id}/', [ProposalController::class, 'invoiceLink'])->name('proposal.link.copy');
 Route::get('/customer/pre_order/{id}/', [PreOrderController::class, 'invoiceLink'])->name('pre_order.link.copy');
-Route::get('proposal/pdf/{id}', [ProposalController::class, 'proposal'])->name('proposal.pdf')->middleware(['XSS', 'revalidate']);
-Route::get('pre_order/pdf/{id}', [PreOrderController::class, 'pre_order'])->name('pre_order.pdf')->middleware(['XSS', 'revalidate']);
+// Route::get('proposal/pdf/{id}', [ProposalController::class, 'proposal'])->name('proposal.pdf')->middleware(['XSS', 'revalidate']);
+// Route::get('pre_order/pdf/{id}', [PreOrderController::class, 'pre_order'])->name('pre_order.pdf')->middleware(['XSS', 'revalidate']);
 Route::get('projects/milestone-share/{id}', [ProjectController::class, 'milestoneShare'])->name('project.milestone.share');
 Route::get('projects/milestone/view/{id}', [ProjectController::class, 'milestoneView'])->name('project.milestone.view');
 
@@ -288,7 +301,7 @@ Route::get('timesheet-table-view', [TimesheetController::class, 'filterTimesheet
 
 // Invoice Payment Gateways
 Route::post('customer/{id}/payment', [StripePaymentController::class, 'addpayment'])->name('customer.payment');
-Route::get('invoice/pdf/{id}', [InvoiceController::class, 'invoice'])->name('invoice.pdf')->middleware(['XSS', 'revalidate']);
+//Route::get('invoice/pdf/{id}', [InvoiceController::class, 'invoice'])->name('invoice.pdf')->middleware(['XSS', 'revalidate']);
 
 Route::get('users/{id}/login-with-company', [UserController::class, 'LoginWithCompany'])->name('login.with.company')->middleware(['auth']);
 Route::get('login-with-company/exit', [UserController::class, 'ExitCompany'])->name('exit.company')->middleware(['auth']);
@@ -468,6 +481,7 @@ Route::group(['middleware' => ['verified']], function () {
     Route::resource('taxes', TaxController::class)->middleware(['auth', 'XSS', 'revalidate']);
     Route::resource('currency', CurrencyController::class)->middleware(['auth', 'XSS', 'revalidate']);
     Route::resource('exchange_rate', ExchangeRateController::class)->middleware(['auth', 'XSS', 'revalidate']);
+    Route::get('fetch-exchange-rate', [ExchangeRateController::class, 'fetch_exchange_rate'])->name("fetch.exchange_rate");
     Route::resource('money_exchange', TaxController::class)->middleware(['auth', 'XSS', 'revalidate']);
     Route::resource('exchange_history', TaxController::class)->middleware(['auth', 'XSS', 'revalidate']);
 
@@ -488,7 +502,7 @@ Route::group(['middleware' => ['verified']], function () {
             Route::get('invoice/{id}/duplicate', [InvoiceController::class, 'duplicate'])->name('invoice.duplicate');
             Route::get('invoice/{id}/shipping/print', [InvoiceController::class, 'shippingDisplay'])->name('invoice.shipping.print');
             Route::get('invoice/{id}/payment/reminder', [InvoiceController::class, 'paymentReminder'])->name('invoice.payment.reminder');
-            Route::get('invoice', [InvoiceController::class, 'index'])->name('invoice.index');
+            Route::get('invoice/index', [InvoiceController::class, 'index'])->name('invoice.index');
             Route::post('invoice/product/destroy', [InvoiceController::class, 'productDestroy'])->name('invoice.product.destroy');
             Route::post('invoice/product', [InvoiceController::class, 'product'])->name('invoice.product');
             Route::post('invoice/customer', [InvoiceController::class, 'customer'])->name('invoice.customer');
@@ -555,7 +569,7 @@ Route::group(['middleware' => ['verified']], function () {
 
     Route::resource('revenue', RevenueController::class)->middleware(['auth', 'XSS', 'revalidate']);
 
-    Route::get('bill/pdf/{id}', [BillController::class, 'bill'])->name('bill.pdf')->middleware(['XSS', 'revalidate']);
+    // Route::get('bill/pdf/{id}', [BillController::class, 'bill'])->name('bill.pdf')->middleware(['XSS', 'revalidate']);
 
     Route::group(
         [

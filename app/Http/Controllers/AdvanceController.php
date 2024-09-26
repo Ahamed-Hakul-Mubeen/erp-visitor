@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Advance;
 use App\Models\BankAccount;
 use App\Models\ChartOfAccount;
+use App\Models\Currency;
 use App\Models\Customer;
 use App\Models\Transaction;
 use App\Models\TransactionLines;
@@ -66,8 +67,8 @@ class AdvanceController extends Controller
             $customers = Customer::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             $customers->prepend('--', 0);
             $accounts   = BankAccount::select('*', \DB::raw("CONCAT(bank_name,' ',holder_name) AS name"))->where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
-
-            return view('advance.create', compact('customers', 'accounts'));
+            $currency = Currency::select('currency_code', 'currency_symbol')->where('created_by', \Auth::user()->creatorId())->get();
+            return view('advance.create', compact('customers', 'accounts', 'currency'));
         }
         else
         {
@@ -105,6 +106,9 @@ class AdvanceController extends Controller
             $advance->balance        = $request->amount;
             $advance->account_id     = $request->account_id;
             $advance->customer_id    = $request->customer_id;
+            $advance->currency_code  = $request->currency_code;
+            $advance->currency_symbol = $request->currency_symbol;
+            $advance->exchange_rate  = $request->exchange_rate;
             $advance->payment_method = 0;
             $advance->reference      = $request->reference;
             $advance->description    = $request->description;
@@ -134,15 +138,15 @@ class AdvanceController extends Controller
             $customer         = Customer::where('id', $request->customer_id)->first();
             if(!empty($customer))
             {
-                Utility::userBalance('customer', $customer->id, $advance->amount, 'credit');
+                Utility::userBalance('customer', $customer->id, $advance->amount * $request->exchange_rate, 'credit');
             }
-            Utility::bankAccountBalance($request->account_id, $advance->amount, 'credit');
+            Utility::bankAccountBalance($request->account_id, $advance->amount * $request->exchange_rate, 'credit');
 
             $accountId = BankAccount::find($advance->account_id);
             $data = [
                 'account_id' => $accountId->chart_account_id,
                 'transaction_type' => 'Debit',
-                'transaction_amount' => $advance->amount,
+                'transaction_amount' => $advance->amount * $request->exchange_rate,
                 'reference' => 'Advance',
                 'reference_id' => $advance->id,
                 'reference_sub_id' => 0,
@@ -155,7 +159,7 @@ class AdvanceController extends Controller
             $data = [
                 'account_id' => $unearned->id,
                 'transaction_type' => 'Credit',
-                'transaction_amount' => $advance->amount,
+                'transaction_amount' => $advance->amount * $request->exchange_rate,
                 'reference' => 'Advance',
                 'reference_id' => $advance->id,
                 'reference_sub_id' => 0,
@@ -178,8 +182,8 @@ class AdvanceController extends Controller
             $customers = Customer::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             $customers->prepend('--', 0);
             $accounts   = BankAccount::select('*', \DB::raw("CONCAT(bank_name,' ',holder_name) AS name"))->where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
-
-            return view('advance.edit', compact('customers', 'accounts', 'advance'));
+            $currency = Currency::select('currency_code', 'currency_symbol')->where('created_by', \Auth::user()->creatorId())->get();
+            return view('advance.edit', compact('customers', 'accounts', 'advance', 'currency'));
         }
         else
         {
@@ -210,15 +214,15 @@ class AdvanceController extends Controller
                 Utility::userBalance('customer', $advance->customer_id, $advance->amount, 'debit');
             }
 
-            Utility::bankAccountBalance($advance->account_id, $advance->amount, 'debit');
+            Utility::bankAccountBalance($advance->account_id, $advance->amount * $request->exchange_rate, 'debit');
 
 
             if(!empty($customer))
             {
-                Utility::userBalance('customer', $customer->id, $request->amount, 'credit');
+                Utility::userBalance('customer', $customer->id, $request->amount * $request->exchange_rate, 'credit');
             }
 
-            Utility::bankAccountBalance($request->account_id, $request->amount, 'credit');
+            Utility::bankAccountBalance($request->account_id, $request->amount * $request->exchange_rate, 'credit');
 
             $new_balance = ($request->amount - ($advance->amount - $advance->balance));
 
@@ -227,6 +231,9 @@ class AdvanceController extends Controller
             $advance->balance        = $new_balance;
             $advance->account_id     = $request->account_id;
             $advance->customer_id    = $request->customer_id;
+            $advance->currency_code  = $request->currency_code;
+            $advance->currency_symbol = $request->currency_symbol;
+            $advance->exchange_rate  = $request->exchange_rate;
             $advance->payment_method = 0;
             $advance->reference      = $request->reference;
             $advance->description    = $request->description;
@@ -266,7 +273,7 @@ class AdvanceController extends Controller
             $data = [
                 'account_id' => $accountId->chart_account_id,
                 'transaction_type' => 'Debit',
-                'transaction_amount' => $advance->amount,
+                'transaction_amount' => $advance->amount * $request->exchange_rate,
                 'reference' => 'Advance',
                 'reference_id' => $advance->id,
                 'reference_sub_id' => 0,
@@ -279,7 +286,7 @@ class AdvanceController extends Controller
             $data = [
                 'account_id' => $unearned->id,
                 'transaction_type' => 'Credit',
-                'transaction_amount' => $advance->amount,
+                'transaction_amount' => $advance->amount * $request->exchange_rate,
                 'reference' => 'Advance',
                 'reference_id' => $advance->id,
                 'reference_sub_id' => 0,

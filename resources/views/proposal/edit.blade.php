@@ -173,6 +173,7 @@
 
         function changeItem(element) {
             var iteams_id = element.val();
+            var currency_code = $("#currency_code").val();
 
             var url = element.data('url');
             var el = element;
@@ -183,121 +184,134 @@
                     'X-CSRF-TOKEN': jQuery('#token').val()
                 },
                 data: {
-                    'product_id': iteams_id
+                    'product_id': iteams_id,
+                    'currency_code': currency_code
                 },
                 cache: false,
                 success: function (data) {
                     var item = JSON.parse(data);
 
-                    $.ajax({
-                        url: '{{route('proposal.items')}}',
-                        type: 'GET',
-                        headers: {
-                            'X-CSRF-TOKEN': jQuery('#token').val()
-                        },
-                        data: {
-                            'proposal_id': proposal_id,
-                            'product_id': iteams_id,
-                        },
-                        cache: false,
-                        success: function (data) {
-                            var proposalItems = JSON.parse(data);
-
-                            if (proposalItems != null) {
-                                var amount = (proposalItems.price * proposalItems.quantity);
-
-                                $(el.parent().parent().parent().find('.quantity')).val(proposalItems.quantity);
-                                $(el.parent().parent().parent().find('.price')).val(proposalItems.price);
-                                $(el.parent().parent().parent().find('.discount')).val(proposalItems.discount);
-                                $(el.parent().parent().parent().find('.pro_description')).val(proposalItems.description);
-                                // $('.pro_description').text(proposalItems.description);
-                                $(el.parent().parent().parent().find('.taxes')).val(proposalItems.tax);
-
-                            } else {
-                                $(el.parent().parent().parent().find('.quantity')).val(1);
-                                $(el.parent().parent().parent().find('.price')).val(item.product.sale_price);
-                                $(el.parent().parent().parent().find('.discount')).val(0);
-                                $(el.parent().parent().parent().find('.pro_description')).val(item.product.description);
-                                // $('.pro_description').text(item.product.sale_price);
-                            }
-
-
-                            var taxes = '';
-                            var tax = [];
-
-                            var totalItemTaxRate = 0;
-                            taxes += `<select class='form-control select2 tax-select' required><option value=''>--</option>`;
-                            var selected_tax = $(el.parent().parent().parent().find('.taxes')).val();
-                            for (var i = 0; i < item.taxes.length; i++) {
-
-                                if(selected_tax==item.taxes[i].id) {
-                                    taxes += `<option data-taxrate='${item.taxes[i].rate}' selected value='${item.taxes[i].id}'>${item.taxes[i].name} (${item.taxes[i].rate}%)</option>`;
-                                    totalItemTaxRate += parseFloat(item.taxes[i].rate);
-                                    tax.push(item.taxes[i].id);
-                                } else {
-                                    taxes += `<option data-taxrate='${item.taxes[i].rate}' value='${item.taxes[i].id}'>${item.taxes[i].name} (${item.taxes[i].rate}%)</option>`;
-                                }
-                                // taxes += '<span class="p-2 px-3 mt-1 mr-1 rounded badge bg-primary">' + item.taxes[i].name + ' ' + '(' + item.taxes[i].rate + '%)' + '</span>';
-                            }
-                            taxes += '</select>';
-
-                            var discount=$(el.parent().parent().parent().find('.discount')).val();
-
-
-                            if (proposalItems != null) {
-                                var itemTaxPrice = parseFloat((totalItemTaxRate / 100)) * parseFloat((proposalItems.price * proposalItems.quantity)-discount);
-                            } else {
-                                var itemTaxPrice = parseFloat((totalItemTaxRate / 100)) * parseFloat((item.product.sale_price * 1)-discount);
-                            }
-
-                            $(el.parent().parent().parent().find('.itemTaxPrice')).val(itemTaxPrice.toFixed(2));
-                            $(el.parent().parent().parent().find('.itemTaxRate')).val(totalItemTaxRate.toFixed(2));
-                            $(el.parent().parent().parent().find('.taxes')).html(taxes);
-                            $(el.parent().parent().parent().find('.tax')).val(tax);
-                            $(el.parent().parent().parent().find('.unit')).html(item.unit);
-                            // $(el.parent().parent().parent().find('.discount')).val(item.discount);
-
-                            var inputs = $(".amount");
-                            var subTotal = 0;
-                            for (var i = 0; i < inputs.length; i++) {
-                                subTotal = parseFloat(subTotal) + parseFloat($(inputs[i]).html());
-                            }
-
-                            var totalItemPrice = 0;
-                            var inputs_quantity = $(".quantity");
-                            var priceInput = $('.price');
-                            for (var j = 0; j < priceInput.length; j++) {
-                                totalItemPrice += (parseFloat(priceInput[j].value) * parseFloat(inputs_quantity[j].value));
-                            }
-
-                            var totalItemTaxPrice = 0;
-                            var itemTaxPriceInput = $('.itemTaxPrice');
-                            for (var j = 0; j < itemTaxPriceInput.length; j++) {
-                                totalItemTaxPrice += parseFloat(itemTaxPriceInput[j].value);
-                                if (proposalItems != null) {
-                                    $(el.parent().parent().parent().find('.amount')).html(parseFloat(amount)+parseFloat(itemTaxPrice)-parseFloat(discount));
-                                } else {
-                                    $(el.parent().parent().parent().find('.amount')).html(parseFloat(item.totalAmount)+parseFloat(itemTaxPrice));
-                                }
-
-                            }
-
-                            var totalItemDiscountPrice = 0;
-                            var itemDiscountPriceInput = $('.discount');
-
-                            for (var k = 0; k < itemDiscountPriceInput.length; k++) {
-                                totalItemDiscountPrice += parseFloat(itemDiscountPriceInput[k].value);
-                            }
-
-
-                            $('.subTotal').html(totalItemPrice.toFixed(2));
-                            $('.totalTax').html(totalItemTaxPrice.toFixed(2));
-                            $('.totalAmount').html((parseFloat(totalItemPrice) - parseFloat(totalItemDiscountPrice) + parseFloat(totalItemTaxPrice)).toFixed(2));
-                            $('.totalDiscount').html(totalItemDiscountPrice.toFixed(2));
-
-
+                    if (item.hasOwnProperty('status') && item.status == 0) {
+                        show_toastr('danger', item.message);
+                    } else {
+                        if(item.exchange_rate != 1)
+                        {
+                            $("#conversion_rate_span").html(` (1 ${ $("#currency_code").val() } = ${ item.exchange_rate } {{ \Auth::user()->currencyCode() }}  )`);
+                        } else {
+                            $("#conversion_rate_span").html(``);
                         }
-                    });
+                        $("#exchange_rate").val(item.exchange_rate);
+
+                        $.ajax({
+                            url: '{{route('proposal.items')}}',
+                            type: 'GET',
+                            headers: {
+                                'X-CSRF-TOKEN': jQuery('#token').val()
+                            },
+                            data: {
+                                'proposal_id': proposal_id,
+                                'product_id': iteams_id,
+                            },
+                            cache: false,
+                            success: function (data) {
+                                var proposalItems = JSON.parse(data);
+
+                                if (proposalItems != null) {
+                                    var amount = (proposalItems.price * proposalItems.quantity);
+
+                                    $(el.parent().parent().parent().find('.quantity')).val(proposalItems.quantity);
+                                    $(el.parent().parent().parent().find('.price')).val(proposalItems.price);
+                                    $(el.parent().parent().parent().find('.discount')).val(proposalItems.discount);
+                                    $(el.parent().parent().parent().find('.pro_description')).val(proposalItems.description);
+                                    // $('.pro_description').text(proposalItems.description);
+                                    $(el.parent().parent().parent().find('.taxes')).val(proposalItems.tax);
+
+                                } else {
+                                    $(el.parent().parent().parent().find('.quantity')).val(1);
+                                    $(el.parent().parent().parent().find('.price')).val(item.product.sale_price);
+                                    $(el.parent().parent().parent().find('.discount')).val(0);
+                                    $(el.parent().parent().parent().find('.pro_description')).val(item.product.description);
+                                    // $('.pro_description').text(item.product.sale_price);
+                                }
+
+
+                                var taxes = '';
+                                var tax = [];
+
+                                var totalItemTaxRate = 0;
+                                taxes += `<select class='form-control select2 tax-select' required><option value=''>--</option>`;
+                                var selected_tax = $(el.parent().parent().parent().find('.taxes')).val();
+                                for (var i = 0; i < item.taxes.length; i++) {
+
+                                    if(selected_tax==item.taxes[i].id) {
+                                        taxes += `<option data-taxrate='${item.taxes[i].rate}' selected value='${item.taxes[i].id}'>${item.taxes[i].name} (${item.taxes[i].rate}%)</option>`;
+                                        totalItemTaxRate += parseFloat(item.taxes[i].rate);
+                                        tax.push(item.taxes[i].id);
+                                    } else {
+                                        taxes += `<option data-taxrate='${item.taxes[i].rate}' value='${item.taxes[i].id}'>${item.taxes[i].name} (${item.taxes[i].rate}%)</option>`;
+                                    }
+                                    // taxes += '<span class="p-2 px-3 mt-1 mr-1 rounded badge bg-primary">' + item.taxes[i].name + ' ' + '(' + item.taxes[i].rate + '%)' + '</span>';
+                                }
+                                taxes += '</select>';
+
+                                var discount=$(el.parent().parent().parent().find('.discount')).val();
+
+
+                                if (proposalItems != null) {
+                                    var itemTaxPrice = parseFloat((totalItemTaxRate / 100)) * parseFloat((proposalItems.price * proposalItems.quantity)-discount);
+                                } else {
+                                    var itemTaxPrice = parseFloat((totalItemTaxRate / 100)) * parseFloat((item.product.sale_price * 1)-discount);
+                                }
+
+                                $(el.parent().parent().parent().find('.itemTaxPrice')).val(itemTaxPrice.toFixed(2));
+                                $(el.parent().parent().parent().find('.itemTaxRate')).val(totalItemTaxRate.toFixed(2));
+                                $(el.parent().parent().parent().find('.taxes')).html(taxes);
+                                $(el.parent().parent().parent().find('.tax')).val(tax);
+                                $(el.parent().parent().parent().find('.unit')).html(item.unit);
+                                // $(el.parent().parent().parent().find('.discount')).val(item.discount);
+
+                                var inputs = $(".amount");
+                                var subTotal = 0;
+                                for (var i = 0; i < inputs.length; i++) {
+                                    subTotal = parseFloat(subTotal) + parseFloat($(inputs[i]).html());
+                                }
+
+                                var totalItemPrice = 0;
+                                var inputs_quantity = $(".quantity");
+                                var priceInput = $('.price');
+                                for (var j = 0; j < priceInput.length; j++) {
+                                    totalItemPrice += (parseFloat(priceInput[j].value) * parseFloat(inputs_quantity[j].value));
+                                }
+
+                                var totalItemTaxPrice = 0;
+                                var itemTaxPriceInput = $('.itemTaxPrice');
+                                for (var j = 0; j < itemTaxPriceInput.length; j++) {
+                                    totalItemTaxPrice += parseFloat(itemTaxPriceInput[j].value);
+                                    if (proposalItems != null) {
+                                        $(el.parent().parent().parent().find('.amount')).html(parseFloat(amount)+parseFloat(itemTaxPrice)-parseFloat(discount));
+                                    } else {
+                                        $(el.parent().parent().parent().find('.amount')).html(parseFloat(item.totalAmount)+parseFloat(itemTaxPrice));
+                                    }
+
+                                }
+
+                                var totalItemDiscountPrice = 0;
+                                var itemDiscountPriceInput = $('.discount');
+
+                                for (var k = 0; k < itemDiscountPriceInput.length; k++) {
+                                    totalItemDiscountPrice += parseFloat(itemDiscountPriceInput[k].value);
+                                }
+
+
+                                $('.subTotal').html(totalItemPrice.toFixed(2));
+                                $('.totalTax').html(totalItemTaxPrice.toFixed(2));
+                                $('.totalAmount').html((parseFloat(totalItemPrice) - parseFloat(totalItemDiscountPrice) + parseFloat(totalItemTaxPrice)).toFixed(2));
+                                $('.totalDiscount').html(totalItemDiscountPrice.toFixed(2));
+
+
+                            }
+                        });
+                    }
 
 
                 },
@@ -527,7 +541,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group" id="customer-box">
-                                    {{ Form::label('customer_id', __('Customer'),['class'=>'form-label']) }}
+                                    {{ Form::label('customer_id', __('Customer'),['class'=>'form-label']) }}<span class="text-danger">*</span>
                                     {{ Form::select('customer_id', $customers,null, array('class' => 'form-control select ','id'=>'customer','data-url'=>route('proposal.customer'),'required'=>'required')) }}
                             </div>
                             <div id="customer_detail" class="d-none">
@@ -537,7 +551,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        {{ Form::label('issue_date', __('Issue Date'),['class'=>'form-label']) }}
+                                        {{ Form::label('issue_date', __('Issue Date'),['class'=>'form-label']) }}<span class="text-danger">*</span>
                                         <div class="form-icon-user">
                                             {{Form::date('issue_date',null,array('class'=>'form-control','required'=>'required'))}}
 
@@ -546,7 +560,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                        {{ Form::label('category_id', __('Category'),['class'=>'form-label']) }}
+                                        {{ Form::label('category_id', __('Category'),['class'=>'form-label']) }}<span class="text-danger">*</span>
                                         {{ Form::select('category_id', $category,null, array('class' => 'form-control select','required'=>'required')) }}
                                 </div>
                                 <div class="col-md-6">
@@ -555,6 +569,15 @@
                                         <div class="form-icon-user">
                                             <input type="text" class="form-control" value="{{$proposal_number}}" readonly>
                                         </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ Form::label('currency_code', __('Currency'),['class'=>'form-label']) }} <span id="conversion_rate_span"> (1 {{ \Auth::user()->currencyCode() }} = {{ $proposal->exchange_rate }} {{ $proposal->currency_code }}  ) </span>
+                                        {{ Form::text('currency_code', null, array('class' => 'form-control', 'id' => 'currency_code', 'readonly' => 'readonly')) }}
+                                        <input type="hidden" name="currency_symbol" id="currency_symbol" value="{{ $proposal->currency_symbol }}">
+                                        <input type="hidden" name="exchange_rate" id="exchange_rate" value="{{ $proposal->exchange_rate }}">
+                                        {{-- {{ Form::select('currency', $currency, null, array('class' => 'form-control select','id'=>'currency', 'required'=>'required')) }} --}}
                                     </div>
                                 </div>
 
@@ -606,7 +629,7 @@
 
                             <thead>
                             <tr>
-                                <th>{{__('Items')}}</th>
+                                <th>{{__('Items')}}<span class="text-danger">*</span></th>
                                 <th>{{__('Quantity')}}</th>
                                 <th>{{__('Price')}} </th>
                                 <th>{{__('Discount')}}</th>
@@ -631,13 +654,13 @@
                                 <td>
                                     <div class="form-group price-input input-group search-form">
                                         {{ Form::text('price',null, array('class' => 'form-control price','required'=>'required','placeholder'=>__('Price'),'required'=>'required')) }}
-                                        <span class="bg-transparent input-group-text">{{\Auth::user()->currencySymbol()}}</span>
+                                        <span class="bg-transparent input-group-text"><span class="my_currency_symbol">{{ $proposal->currency_symbol }}</span></span>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="form-group price-input input-group search-form">
                                         {{ Form::text('discount',null, array('class' => 'form-control discount','required'=>'required','placeholder'=>__('Discount'))) }}
-                                        <span class="bg-transparent input-group-text">{{\Auth::user()->currencySymbol()}}</span>
+                                        <span class="bg-transparent input-group-text"><span class="my_currency_symbol">{{ $proposal->currency_symbol }}</span></span>
                                     </div>
                                 </td>
                                 <td>
@@ -674,7 +697,7 @@
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
                                 <td></td>
-                                <td><strong>{{__('Sub Total')}} ({{\Auth::user()->currencySymbol()}})</strong></td>
+                                <td><strong>{{__('Sub Total')}} (<span class="my_currency_symbol">{{ $proposal->currency_symbol }}</span>)</strong></td>
                                 <td class="text-end subTotal">0.00</td>
                                 <td></td>
                             </tr>
@@ -683,7 +706,7 @@
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
                                 <td></td>
-                                <td><strong>{{__('Discount')}} ({{\Auth::user()->currencySymbol()}})</strong></td>
+                                <td><strong>{{__('Discount')}} (<span class="my_currency_symbol">{{ $proposal->currency_symbol }}</span>)</strong></td>
                                 <td class="text-end totalDiscount">0.00</td>
                                 <td></td>
                             </tr>
@@ -692,7 +715,7 @@
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
                                 <td></td>
-                                <td><strong>{{__('Tax')}} ({{\Auth::user()->currencySymbol()}})</strong></td>
+                                <td><strong>{{__('Tax')}} (<span class="my_currency_symbol">{{ $proposal->currency_symbol }}</span>)</strong></td>
                                 <td class="text-end totalTax">0.00</td>
                                 <td></td>
                             </tr>
@@ -701,7 +724,7 @@
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
-                                <td class="border-none blue-text"><strong>{{__('Total Amount')}} ({{\Auth::user()->currencySymbol()}})</strong></td>
+                                <td class="border-none blue-text"><strong>{{__('Total Amount')}} (<span class="my_currency_symbol">{{ $proposal->currency_symbol }}</span>)</strong></td>
                                 <td class="border-none text-end totalAmount blue-text">0.00</td>
                                 <td></td>
                             </tr>

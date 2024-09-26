@@ -5,13 +5,13 @@
     <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-6">
             <div class="form-group">
-                {{Form::label('name',__('Name'),array('class'=>'form-label')) }}
+                {{Form::label('name',__('Name'),array('class'=>'form-label')) }}<span class="text-danger">*</span>
                 {{Form::text('name',null,array('class'=>'form-control','required'=>'required'))}}
             </div>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-6">
             <div class="form-group">
-                {{Form::label('contact',__('Contact'),['class'=>'form-label'])}}
+                {{Form::label('contact',__('Contact'),['class'=>'form-label'])}}<span class="text-danger">*</span>
                 {{Form::number('contact',null,array('class'=>'form-control','required'=>'required'))}}
             </div>
         </div>

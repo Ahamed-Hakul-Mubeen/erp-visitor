@@ -82,7 +82,7 @@ class StageController extends Controller
         {
             $validator = \Validator::make(
                 $request->all(), [
-                                   'name' => 'required|max:20',
+                                   'name' => 'required|max:40',
                                    'pipeline_id' => 'required',
                                ]
             );
@@ -163,7 +163,7 @@ class StageController extends Controller
             {
                 $validator = \Validator::make(
                     $request->all(), [
-                                       'name' => 'required|max:20',
+                                       'name' => 'required|max:40',
                                        'pipeline_id' => 'required',
                                    ]
                 );

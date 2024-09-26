@@ -25,7 +25,7 @@ class BugStatusController extends Controller
     {
         $validator = \Validator::make(
             $request->all(), [
-                               'title' => 'required|max:20',
+                               'title' => 'required|max:40',
                            ]
         );
         if($validator->fails())
@@ -67,7 +67,7 @@ class BugStatusController extends Controller
         {
             $validator = \Validator::make(
                 $request->all(), [
-                                   'title' => 'required|max:20',
+                                   'title' => 'required|max:40',
                                ]
             );
             if($validator->fails())

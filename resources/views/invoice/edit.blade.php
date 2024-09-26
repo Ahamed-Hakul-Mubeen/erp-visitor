@@ -23,9 +23,6 @@
                     'status': 1
                 },
                 show: function () {
-                    var my_currency_symbol = $('#currency_code').find(':selected').data("symbol");
-                    $(".my_currency_symbol").html(my_currency_symbol);
-                    $("#currency_symbol").val(my_currency_symbol);
                     $(this).slideDown();
                     var file_uploads = $(this).find('input.multi');
                     if (file_uploads.length) {
@@ -196,7 +193,7 @@
                     } else {
                         if(item.exchange_rate != 1)
                         {
-                            $("#conversion_rate_span").html(` (1 {{ \Auth::user()->currencyCode() }} = ${ item.exchange_rate } ${ $("#currency_code").val() }  )`);
+                            $("#conversion_rate_span").html(` (1 ${ $("#currency_code").val() } = ${ item.exchange_rate } {{ \Auth::user()->currencyCode() }}  )`);
                         } else {
                             $("#conversion_rate_span").html(``);
                         }
@@ -520,23 +517,6 @@
 
             }
         });
-        $(document).on('change', '#currency_code', function() {
-            var my_currency_symbol = $(this).find(':selected').data("symbol");
-            $(".my_currency_symbol").html(my_currency_symbol);
-            $("#currency_symbol").val(my_currency_symbol);
-
-            var value = $(selector + " .repeater").attr('data-value');
-
-            if (typeof value != 'undefined' && value.length != 0) {
-                value = JSON.parse(value);
-                $repeater.setList(value);
-                for (var i = 0; i < value.length; i++) {
-                    var tr = $('#sortable-table .id[value="' + value[i].id + '"]').parent();
-                    tr.find('.item').val(value[i].product_id);
-                    changeItem(tr.find('.item'));
-                }
-            }
-        });
     </script>
     <script>
         $(document).on('click', '[data-repeater-delete]', function () {
@@ -551,14 +531,14 @@
             $('#issue_date').on('change', function() {
                 const issueDate = new Date($(this).val());
                 const dueDateInput = $('#due_date');
-                
+
                 if ($(this).val()) {
                     dueDateInput.attr('min', issueDate.toISOString().split('T')[0]);
                 } else {
                     dueDateInput.attr('min', new Date().toISOString().split('T')[0]);
                 }
             });
-            
+
             // Event listener for clicking due date
             $(document).on('click', '#due_date', function () {
                 const issueDate = new Date($('#issue_date').val());
@@ -581,7 +561,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group" id="customer-box">
-                                {{ Form::label('customer_id', __('Customer'),['class'=>'form-label']) }}
+                                {{ Form::label('customer_id', __('Customer'),['class'=>'form-label']) }}<span class="text-danger">*</span>
                                 {{ Form::select('customer_id', $customers,null, array('class' => 'form-control select ','id'=>'customer','data-url'=>route('invoice.customer'),'required'=>'required')) }}
                             </div>
                             <div id="customer_detail" class="d-none">
@@ -591,7 +571,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        {{ Form::label('issue_date', __('Issue Date'),['class'=>'form-label']) }}
+                                        {{ Form::label('issue_date', __('Issue Date'),['class'=>'form-label']) }}<span class="text-danger">*</span>
                                         <div class="form-icon-user">
                                             {{Form::date('issue_date',null,array('class'=>'form-control','required'=>'required'))}}
                                         </div>
@@ -599,7 +579,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        {{ Form::label('due_date', __('Due Date'),['class'=>'form-label']) }}
+                                        {{ Form::label('due_date', __('Due Date'),['class'=>'form-label']) }}<span class="text-danger">*</span>
                                         <div class="form-icon-user">
                                             {{Form::date('due_date',null,array('class'=>'form-control','required'=>'required'))}}
                                         </div>
@@ -607,14 +587,14 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        {{ Form::label('invoice_number', __('Invoice Number'),['class'=>'form-label']) }}
+                                        {{ Form::label('invoice_number', __('Invoice Number'),['class'=>'form-label']) }}<span class="text-danger">*</span>
                                         <div class="form-icon-user">
-                                            <input type="text" name="invoice_number" class="form-control" value="{{$invoice_number}}">
+                                            <input type="text" name="invoice_number" class="form-control" value="{{$invoice_number}}" required>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    {{ Form::label('category_id', __('Category'),['class'=>'form-label']) }}
+                                    {{ Form::label('category_id', __('Category'),['class'=>'form-label']) }}<span class="text-danger">*</span>
                                     {{ Form::select('category_id', $category,null, array('class' => 'form-control select','required'=>'required')) }}
                                 </div>
                                 <div class="col-md-6">
@@ -680,7 +660,7 @@
                         <table class="table mb-0 table-custom-style" data-repeater-list="items" id="sortable-table">
                             <thead>
                             <tr>
-                                <th>{{__('Items')}}</th>
+                                <th>{{__('Items')}}<span class="text-danger">*</span></th>
                                 <th>{{__('Quantity')}}</th>
                                 <th>{{__('Price')}} </th>
                                 <th>{{__('Discount')}}</th>

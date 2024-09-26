@@ -26,6 +26,71 @@
 
 @section('content')
 <div class="row">
+    <div class="col-sm-12">
+        <div class=" mt-2 " id="multiCollapseExample1">
+            <div class="card">
+                <div class="card-body">
+                    {{ Form::open(array('route' => array('employee.index'),'method' => 'GET','id'=>'frm_submit')) }}
+                    <div class="d-flex align-items-center justify-content-end">
+                        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12 me-2">
+                            <div class="btn-box form-group">
+                                <label for="department">Department</label>
+                                    <select class="form-control" name="department" id="department">
+                                        <option value="">Select Department</option>
+                                        @if(count($departments) > 0)
+                                        @foreach ($departments as $department )
+                                            <option value="{{$department['id']}}" {{isset($_GET['department'])?($_GET['department'] == $department['id'] ? 'selected'  : ''):''}}>{{$department['name']}}</option>
+                                        @endforeach
+                                        @endif
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12 me-2">
+                            <div class="btn-box form-group">
+                                <label for="company">Company</label>
+                                    <select class="form-control" name="branch" id="company">
+                                        <option value="">Select Company</option>
+                                        @if(count($branches) > 0)
+                                        @foreach ($branches as $branch )
+                                            <option value="{{$branch['id']}}" {{isset($_GET['branch'])?($_GET['branch'] == $branch['id'] ? 'selected'  : ''):''}}>{{$branch['name']}}</option>
+                                        @endforeach
+                                        @endif
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12 me-2">
+                            <div class="btn-box form-group">
+                                <label for="designation">Dsesignation</label>
+                                    <select class="form-control" name="designation" id="designation">
+                                        <option value="">Select Designation</option>
+                                        @if(count($designations) > 0)
+                                        @foreach ($designations as $designation )
+                                            <option value="{{$designation['id']}}" {{isset($_GET['designation'])?($_GET['designation'] == $designation['id'] ? 'selected'  : ''):''}}>{{$designation['name']}}</option>
+                                        @endforeach
+                                        @endif
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-auto float-end ms-2 ">
+
+                            <a href="#" class="btn btn-sm btn-primary" onclick="document.getElementById('frm_submit').submit(); return false;" data-bs-toggle="tooltip" data-original-title="{{__('apply')}}">
+                                <span class="btn-inner--icon"><i class="ti ti-search"></i></span>
+                            </a>
+                            <a href="{{ route('employee.index') }}" class="btn btn-sm btn-danger" data-bs-toggle="tooltip"
+                               title="{{ __('Reset') }}">
+                                <span class="btn-inner--icon"><i class="ti ti-trash-off text-white "></i></span>
+                            </a>
+                        </div>
+
+                    </div>
+                    {{ Form::close() }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
     <div class="col-xl-12">
         <div class="card">
         <div class="card-body table-border-style">

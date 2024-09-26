@@ -223,7 +223,7 @@
                                                     <td>{{$key+1}}</td>
                                                     <td>{{!empty($iteam->product)?$iteam->product->name:''}}</td>
                                                     <td>{{$iteam->quantity}}</td>
-                                                    <td>{{$user->priceFormat($iteam->price)}}</td>
+                                                    <td>{{$user->priceFormat($iteam->price, null, $proposal->currency_symbol)}}</td>
                                                     <td>
                                                         @if(!empty($iteam->tax))
                                                             <table>
@@ -235,7 +235,7 @@
                                                                     @endphp
                                                                     <tr>
                                                                         <td>{{$tax->name .' ('.$tax->rate .'%)'}}</td>
-                                                                        <td>{{$user->priceFormat($taxPrice)}}</td>
+                                                                        <td>{{$user->priceFormat($taxPrice, null, $proposal->currency_symbol)}}</td>
                                                                     </tr>
                                                                 @endforeach
                                                             </table>
@@ -243,9 +243,9 @@
                                                             -
                                                         @endif
                                                     </td>
-                                                    <td>{{$user->priceFormat($iteam->discount)}}</td>
+                                                    <td>{{$user->priceFormat($iteam->discount, null, $proposal->currency_symbol)}}</td>
                                                     <td>{{!empty($iteam->description)?$iteam->description:'-'}}</td>
-                                                    <td class="text-end">{{$user->priceFormat(($iteam->price*$iteam->quantity))}}</td>
+                                                    <td class="text-end">{{$user->priceFormat(($iteam->price*$iteam->quantity, null, $proposal->currency_symbol))}}</td>
                                                 </tr>
                                             @endforeach
                                             <tfoot>
@@ -253,21 +253,21 @@
                                                 <td></td>
                                                 <td><b>{{__('Total')}}</b></td>
                                                 <td><b>{{$totalQuantity}}</b></td>
-                                                <td><b>{{$user->priceFormat($totalRate)}}</b></td>
-                                                <td><b>{{$user->priceFormat($totalTaxPrice)}}</b></td>
-                                                <td><b>{{$user->priceFormat($totalDiscount)}}</b></td>
+                                                <td><b>{{$user->priceFormat($totalRate, null, $proposal->currency_symbol)}}</b></td>
+                                                <td><b>{{$user->priceFormat($totalTaxPrice, null, $proposal->currency_symbol)}}</b></td>
+                                                <td><b>{{$user->priceFormat($totalDiscount, null, $proposal->currency_symbol)}}</b></td>
                                                 <td></td>
                                                 <td></td>
                                             </tr>
                                             <tr>
                                                 <td colspan="6"></td>
                                                 <td class="text-end"><b>{{__('Sub Total')}}</b></td>
-                                                <td class="text-end">{{$user->priceFormat($proposal->getSubTotal())}}</td>
+                                                <td class="text-end">{{$user->priceFormat($proposal->getSubTotal(), null, $proposal->currency_symbol)}}</td>
                                             </tr>
                                             <tr>
                                                     <td colspan="6"></td>
                                                     <td class="text-end"><b>{{__('Discount')}}</b></td>
-                                                    <td class="text-end">{{$user->priceFormat($proposal->getTotalDiscount())}}</td>
+                                                    <td class="text-end">{{$user->priceFormat($proposal->getTotalDiscount(), null, $proposal->currency_symbol)}}</td>
                                                 </tr>
 
                                             @if(!empty($taxesData))
@@ -275,14 +275,14 @@
                                                     <tr>
                                                         <td colspan="6"></td>
                                                         <td class="text-end"><b>{{$taxName}}</b></td>
-                                                        <td class="text-end">{{ $user->priceFormat($taxPrice) }}</td>
+                                                        <td class="text-end">{{ $user->priceFormat($taxPrice, null, $proposal->currency_symbol) }}</td>
                                                     </tr>
                                                 @endforeach
                                             @endif
                                             <tr>
                                                 <td colspan="6"></td>
                                                 <td class="blue-text text-end"><b>{{__('Total')}}</b></td>
-                                                <td class="blue-text text-end">{{$user->priceFormat($proposal->getTotal())}}</td>
+                                                <td class="blue-text text-end">{{$user->priceFormat($proposal->getTotal(), null, $proposal->currency_symbol)}}</td>
                                             </tr>
                                             </tfoot>
                                         </table>

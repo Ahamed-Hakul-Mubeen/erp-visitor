@@ -36,20 +36,34 @@ class EmployeeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         if(\Auth::user()->can('manage employee'))
         {
             if(Auth::user()->type == 'Employee')
             {
-                $employees = Employee::where('user_id', '=', Auth::user()->id)->with(['designation','branch','department'])->get();
+                $employees = Employee::where('user_id', '=', Auth::user()->id);
             }
             else
             {
-                $employees = Employee::where('created_by', \Auth::user()->creatorId())->with(['designation','branch','department'])->get();
+                $employees = Employee::where('created_by', \Auth::user()->creatorId());
             }
+            if (!empty($request->department)) {
+                $employees->where('department_id', '=', $request->department);
+            }
+            if (!empty($request->designation)) {
+                $employees->where('designation_id', '=', $request->designation);
+            }
+            if (!empty($request->branch)) {
+                $employees->where('branch_id', '=', $request->branch);
+            }
+          $employees = $employees->with(['designation','branch','department'])->get();
 
-            return view('employee.index', compact('employees'));
+
+            $branches         = Branch::where('created_by', \Auth::user()->creatorId())->get()->select('name', 'id');
+            $departments      = Department::where('created_by', \Auth::user()->creatorId())->get()->select('name', 'id');
+            $designations     = Designation::where('created_by', \Auth::user()->creatorId())->get()->select('name', 'id');
+            return view('employee.index', compact('employees','branches','departments','designations'));
         }
         else
         {

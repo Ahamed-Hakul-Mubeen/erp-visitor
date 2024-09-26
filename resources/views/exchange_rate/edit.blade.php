@@ -30,7 +30,7 @@
         </div>
         <div class="form-group col-md-6">
             {{ Form::label('exchange_rate', __('Exchange Rate'), ['class' => 'form-label']) }}<span class="text-danger">*</span>
-            {{ Form::number('exchange_rate', null, ['class' => 'form-control', 'required' => 'required', 'step'=>'0.000000001', 'placeholder' => __('Enter Currency Symbol')]) }}
+            {{ Form::text('exchange_rate', null, ['class' => 'form-control', 'required' => 'required', 'placeholder' => __('Enter Currency Symbol')]) }}
             @error('exchange_rate')
                 <small class="invalid-exchange_rate" role="alert">
                     <strong class="text-danger">{{ $message }}</strong>
