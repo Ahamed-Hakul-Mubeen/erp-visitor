@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('from_currency');
             $table->string('to_currency');
-            $table->float('old_rate', 10, 10);
-            $table->float('new_rate', 10, 10);
+            $table->float('old_rate');
+            $table->float('new_rate');
             $table->integer('action_by');
             $table->integer('created_by')->default('0');
             $table->timestamps();

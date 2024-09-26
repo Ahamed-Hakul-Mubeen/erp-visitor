@@ -16,17 +16,20 @@
                     @endforeach
                 </select>
                 <input type="hidden" name="currency_symbol" id="currency_symbol" value="{{ $advance->currency_symbol }}">
-                <input type="hidden" name="exchange_rate" id="exchange_rate" value="1">
+                <input type="hidden" name="exchange_rate" id="exchange_rate" value="{{ $advance->exchange_rate }}">
                 {{-- {{ Form::select('currency', $currency, null, array('class' => 'form-control select','id'=>'currency', 'required'=>'required')) }} --}}
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            {{ Form::label('amount', __('Amount'),['class'=>'form-label']) }}<span class="text-danger">*</span>
+            <div class="form-group input-group">
+                <span class="bg-transparent input-group-text"><span class="my_currency_symbol">{{ $advance->currency_symbol }}</span></span>
+                {{ Form::number('amount', null, array('class' => 'form-control','required'=>'required','step'=>'0.01')) }}
             </div>
         </div>
         <div class="form-group col-md-6">
             {{ Form::label('date', __('Date'),['class'=>'form-label']) }}<span class="text-danger">*</span>
             {{Form::date('date',null,array('class'=>'form-control','required'=>'required'))}}
-        </div>
-        <div class="form-group col-md-6">
-            {{ Form::label('amount', __('Amount'),['class'=>'form-label']) }}<span class="text-danger">*</span>
-            {{ Form::number('amount', null, array('class' => 'form-control','required'=>'required','step'=>'0.01')) }}
         </div>
         <div class="form-group col-md-6">
             {{ Form::label('account_id', __('Account'),['class'=>'form-label']) }}<span class="text-danger">*</span>

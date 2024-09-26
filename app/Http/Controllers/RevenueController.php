@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\BankAccount;
 use App\Models\ChartOfAccount;
+use App\Models\Currency;
 use App\Models\Customer;
 use App\Models\InvoicePayment;
 use App\Models\ProductServiceCategory;
@@ -84,8 +85,8 @@ class RevenueController extends Controller
             $customers->prepend('--', 0);
             $categories = ProductServiceCategory::where('created_by', '=', \Auth::user()->creatorId())->where('type', '=', 'income')->get()->pluck('name', 'id');
             $accounts   = BankAccount::select('*', \DB::raw("CONCAT(bank_name,' ',holder_name) AS name"))->where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
-
-            return view('revenue.create', compact('customers', 'categories', 'accounts'));
+            $currency = Currency::select('currency_code', 'currency_symbol')->where('created_by', \Auth::user()->creatorId())->get();
+            return view('revenue.create', compact('customers', 'categories', 'accounts', 'currency'));
         }
         else
         {
@@ -101,11 +102,11 @@ class RevenueController extends Controller
 
             $validator = \Validator::make(
                 $request->all(), [
-                                   'date' => 'required',
-                                   'amount' => 'required',
-                                   'account_id' => 'required',
-                                   'category_id' => 'required',
-                               ]
+                        'date' => 'required',
+                        'amount' => 'required',
+                        'account_id' => 'required',
+                        'category_id' => 'required',
+                    ]
             );
             if($validator->fails())
             {
@@ -120,6 +121,9 @@ class RevenueController extends Controller
             $revenue->account_id     = $request->account_id;
             $revenue->customer_id    = $request->customer_id;
             $revenue->category_id    = $request->category_id;
+            $revenue->currency_code  = $request->currency_code;
+            $revenue->currency_symbol = $request->currency_symbol;
+            $revenue->exchange_rate  = $request->exchange_rate;
             $revenue->payment_method = 0;
             $revenue->reference      = $request->reference;
             $revenue->description    = $request->description;
@@ -160,21 +164,21 @@ class RevenueController extends Controller
             $payment          = new InvoicePayment();
             $payment->name    = !empty($customer) ? $customer['name'] : '';
             $payment->date    = \Auth::user()->dateFormat($request->date);
-            $payment->amount  = \Auth::user()->priceFormat($request->amount);
+            $payment->amount  = \Auth::user()->priceFormat($request->amount * $request->exchange_rate);
             $payment->invoice = '';
 
             if(!empty($customer))
             {
-                Utility::userBalance('customer', $customer->id, $revenue->amount, 'credit');
+                Utility::userBalance('customer', $customer->id, $revenue->amount * $request->exchange_rate, 'credit');
             }
 
-            Utility::bankAccountBalance($request->account_id, $revenue->amount, 'credit');
+            Utility::bankAccountBalance($request->account_id, $revenue->amount * $request->exchange_rate, 'credit');
 
             $accountId = BankAccount::find($revenue->account_id);
             $data = [
                 'account_id' => $accountId->chart_account_id,
                 'transaction_type' => 'Debit',
-                'transaction_amount' => $revenue->amount,
+                'transaction_amount' => $revenue->amount * $request->exchange_rate,
                 'reference' => 'Revenue',
                 'reference_id' => $revenue->id,
                 'reference_sub_id' => 0,
@@ -185,7 +189,7 @@ class RevenueController extends Controller
             $data = [
                 'account_id' => $category->chart_account_id,
                 'transaction_type' => 'Credit',
-                'transaction_amount' => $revenue->amount,
+                'transaction_amount' => $revenue->amount * $request->exchange_rate,
                 'reference' => 'Revenue',
                 'reference_id' => $revenue->id,
                 'reference_sub_id' => 0,
@@ -196,7 +200,7 @@ class RevenueController extends Controller
             //For Notification
             $setting  = Utility::settings(\Auth::user()->creatorId());
             $revenueNotificationArr = [
-                'revenue_amount' => \Auth::user()->priceFormat($request->amount),
+                'revenue_amount' => \Auth::user()->priceFormat($request->amount * $request->exchange_rate),
                 'customer_name' => !empty($customer)?$customer->name:'-',
                 'user_name' => \Auth::user()->name,
                 'revenue_date' => $request->date,
@@ -257,8 +261,8 @@ class RevenueController extends Controller
             $customers->prepend('--', 0);
             $categories = ProductServiceCategory::where('created_by', '=', \Auth::user()->creatorId())->where('type', '=', 'income')->get()->pluck('name', 'id');
             $accounts   = BankAccount::select('*', \DB::raw("CONCAT(bank_name,' ',holder_name) AS name"))->where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
-
-            return view('revenue.edit', compact('customers', 'categories', 'accounts', 'revenue'));
+            $currency = Currency::select('currency_code', 'currency_symbol')->where('created_by', \Auth::user()->creatorId())->get();
+            return view('revenue.edit', compact('customers', 'categories', 'accounts', 'revenue', 'currency'));
         }
         else
         {
@@ -275,11 +279,11 @@ class RevenueController extends Controller
 
             $validator = \Validator::make(
                 $request->all(), [
-                                   'date' => 'required',
-                                   'amount' => 'required',
-                                   'account_id' => 'required',
-                                   'category_id' => 'required',
-                               ]
+                        'date' => 'required',
+                        'amount' => 'required',
+                        'account_id' => 'required',
+                        'category_id' => 'required',
+                    ]
             );
             if($validator->fails())
             {
@@ -291,18 +295,18 @@ class RevenueController extends Controller
             $customer = Customer::where('id', $request->customer_id)->first();
             if(!empty($customer))
             {
-                Utility::userBalance('customer', $revenue->customer_id, $revenue->amount, 'debit');
+                Utility::userBalance('customer', $revenue->customer_id, $revenue->amount * $request->exchange_rate, 'debit');
             }
 
-            Utility::bankAccountBalance($revenue->account_id, $revenue->amount, 'debit');
+            Utility::bankAccountBalance($revenue->account_id, $revenue->amount * $request->exchange_rate, 'debit');
 
 
             if(!empty($customer))
             {
-                Utility::userBalance('customer', $customer->id, $request->amount, 'credit');
+                Utility::userBalance('customer', $customer->id, $request->amount * $request->exchange_rate, 'credit');
             }
 
-            Utility::bankAccountBalance($request->account_id, $request->amount, 'credit');
+            Utility::bankAccountBalance($request->account_id, $request->amount * $request->exchange_rate, 'credit');
 
             $revenue->date           = $request->date;
             $revenue->amount         = $request->amount;
@@ -354,7 +358,7 @@ class RevenueController extends Controller
             $data = [
                 'account_id' => $accountId->chart_account_id,
                 'transaction_type' => 'Debit',
-                'transaction_amount' => $revenue->amount,
+                'transaction_amount' => $revenue->amount * $request->exchange_rate,
                 'reference' => 'Revenue',
                 'reference_id' => $revenue->id,
                 'reference_sub_id' => 0,
@@ -365,7 +369,7 @@ class RevenueController extends Controller
             $data = [
                 'account_id' => $category->chart_account_id,
                 'transaction_type' => 'Credit',
-                'transaction_amount' => $revenue->amount,
+                'transaction_amount' => $revenue->amount * $request->exchange_rate,
                 'reference' => 'Revenue',
                 'reference_id' => $revenue->id,
                 'reference_sub_id' => 0,

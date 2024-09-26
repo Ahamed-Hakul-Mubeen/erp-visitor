@@ -719,7 +719,7 @@ class InvoiceController extends Controller
     {
         if (\Auth::user()->can('create payment invoice')) {
             $invoice = Invoice::where('id', $invoice_id)->first();
-            $advance = Advance::select("advance_id", "id", "balance", "date", "account_id")->where("customer_id", $invoice->customer_id)->where("status", 0)->where('created_by', \Auth::user()->creatorId())->get();
+            $advance = Advance::select("advance_id", "id", "balance", "date", "account_id", "currency_symbol")->where("customer_id", $invoice->customer_id)->where('currency_code', $invoice->currency_code)->where("status", 0)->where('created_by', \Auth::user()->creatorId())->get();
             $accounts = BankAccount::select('*', \DB::raw("CONCAT(bank_name,' ',holder_name) AS name"))->where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             return view('invoice.payment', compact('accounts', 'invoice', 'advance'));
         } else {
