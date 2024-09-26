@@ -1469,4 +1469,12 @@ class InvoiceController extends Controller
 
         return $data;
     }
+
+        public function checkInvoiceNumber(Request $request)
+    {
+    
+        $exists = Invoice::where('actual_invoice_number', $request->invoice_number)->exists();
+        
+        return response()->json(['exists' => $exists]);
+    }
 }

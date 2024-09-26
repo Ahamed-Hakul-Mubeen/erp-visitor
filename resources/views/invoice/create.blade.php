@@ -475,6 +475,31 @@
 
             $(".item").trigger("change");
         });
+
+        $(document).ready(function() {
+    $('#invoice_number').on('change', function() {
+        var invoiceNumber = $(this).val();
+        
+        $.ajax({
+            url: '{{ route('check.invoice.number') }}',
+            method: 'POST',
+            data: {
+                invoice_number: invoiceNumber,
+                _token: '{{ csrf_token() }}' // Include CSRF token
+            },
+            success: function(response) {
+                if (response.exists) {
+                    // alert('This invoice number has already been generated.');
+                    show_toastr('danger', "This invoice number is already used");
+                    $('#invoice_number').val(''); // Clear the input field
+                }
+            },
+            error: function() {
+                alert('An error occurred. Please try again.');
+            }
+        });
+    });
+});
     </script>
 @endpush
 @section('content')
@@ -528,7 +553,7 @@
                                     <div class="form-group">
                                         {{ Form::label('invoice_number', __('Invoice Number'),['class'=>'form-label']) }}<span class="text-danger">*</span>
                                         <div class="form-icon-user">
-                                            <input type="text" name="invoice_number" required class="form-control" value="{{$invoice_number}}" >
+                                            <input type="text" name="invoice_number" required class="form-control" value="{{$invoice_number}}" id="invoice_number" >
                                         </div>
                                     </div>
                                 </div>
