@@ -14,7 +14,7 @@
             <i class="ti ti-file-export"></i>
         </a>
 
-        @can('create proposal')
+        @can('create preorder')
             <a href="{{ route('pre_order.create',0) }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="{{__('Create')}}">
                 <i class="ti ti-plus"></i>
             </a>
@@ -131,7 +131,7 @@
                                             <span class="status_badge badge bg-danger p-2 px-3 rounded">{{ __(\App\Models\PreOrder::$statues[$preOrder->status]) }}</span>
                                         @endif
                                     </td>
-                                    @if(Gate::check('edit proposal') || Gate::check('delete proposal') || Gate::check('show proposal'))
+                                    @if(Gate::check('edit preorder') || Gate::check('delete preorder') || Gate::check('show preorder'))
                                         <td class="Action">
                                             @if($preOrder->is_convert==0)
                                                 @can('convert invoice')
@@ -155,7 +155,7 @@
                                                     </div>
                                                 @endcan
                                             @endif
-                                            @can('duplicate proposal')
+                                            @can('duplicate preorder')
                                                 <div class="action-btn bg-success ms-2">
                                                     {!! Form::open(['method' => 'get', 'route' => ['pre_order.duplicate', $preOrder->id],'id'=>'duplicate-form-'.$preOrder->id]) !!}
 
@@ -165,7 +165,7 @@
                                                     </a>
                                                 </div>
                                             @endcan
-                                            @can('show proposal')
+                                            @can('show preorder')
 
                                                     <div class="action-btn bg-info ms-2">
                                                         <a href="{{ route('pre_order.show',\Crypt::encrypt($preOrder->id)) }}" class="mx-3 btn btn-sm  align-items-center" data-bs-toggle="tooltip" title="{{__('Show')}}" data-original-title="{{__('Detail')}}">
@@ -173,7 +173,7 @@
                                                         </a>
                                                     </div>
                                             @endcan
-                                            @can('edit proposal')
+                                            @can('edit preorder')
                                                 <div class="action-btn bg-primary ms-2">
                                                     <a href="{{ route('pre_order.edit',\Crypt::encrypt($preOrder->id)) }}" class="mx-3 btn btn-sm  align-items-center" data-bs-toggle="tooltip" title="{{__('Edit')}}" data-original-title="{{__('Edit')}}">
                                                         <i class="ti ti-pencil text-white"></i>
@@ -181,7 +181,7 @@
                                                 </div>
                                             @endcan
 
-                                            @can('delete proposal')
+                                            @can('delete preorder')
                                                 <div class="action-btn bg-danger ms-2">
                                                     {!! Form::open(['method' => 'DELETE', 'route' => ['pre_order.destroy', $preOrder->id],'id'=>'delete-form-'.$preOrder->id]) !!}
 

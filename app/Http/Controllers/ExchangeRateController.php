@@ -11,7 +11,7 @@ class ExchangeRateController extends Controller
 {
     public function index()
     {
-        if (\Auth::user()->can('manage constant tax')) {
+        if (\Auth::user()->can('manage exchange')) {
             $exchange_rate = ExchangeRate::where('created_by', '=', \Auth::user()->creatorId())->get();
             return view('exchange_rate.index')->with('exchange_rate', $exchange_rate);
         } else {
@@ -21,7 +21,7 @@ class ExchangeRateController extends Controller
 
     public function create()
     {
-        if (\Auth::user()->can('create constant tax')) {
+        if (\Auth::user()->can('create exchange')) {
             $currency = Currency::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('currency_code');
             $currency->prepend('Select Currency', '');
             return view('exchange_rate.create', compact('currency'));
@@ -32,7 +32,7 @@ class ExchangeRateController extends Controller
 
     public function store(Request $request)
     {
-        if (\Auth::user()->can('create constant tax')) {
+        if (\Auth::user()->can('create exchange')) {
             $validator = \Validator::make(
                 $request->all(),
                 [
@@ -70,7 +70,7 @@ class ExchangeRateController extends Controller
 
     public function edit(ExchangeRate $exchange_rate)
     {
-        if (\Auth::user()->can('edit constant tax')) {
+        if (\Auth::user()->can('edit exchange')) {
             if ($exchange_rate->created_by == \Auth::user()->creatorId()) {
                 $currency = Currency::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('currency_code');
                 return view('exchange_rate.edit', compact('currency', 'exchange_rate'));
@@ -84,7 +84,7 @@ class ExchangeRateController extends Controller
 
     public function update(Request $request, ExchangeRate $exchange_rate)
     {
-        if (\Auth::user()->can('edit constant tax')) {
+        if (\Auth::user()->can('edit exchange')) {
             if ($exchange_rate->created_by == \Auth::user()->creatorId()) {
                 $validator = \Validator::make(
                     $request->all(),
@@ -133,7 +133,7 @@ class ExchangeRateController extends Controller
 
     public function destroy(ExchangeRate $exchange_rate)
     {
-        if (\Auth::user()->can('delete constant tax')) {
+        if (\Auth::user()->can('delete exchange')) {
             if ($exchange_rate->created_by == \Auth::user()->creatorId()) {
                 // $proposalData = ProposalProduct::whereRaw("find_in_set('$currency->id',tax)")->first();
                 // $billData     = BillProduct::whereRaw("find_in_set('$currency->id',tax)")->first();
