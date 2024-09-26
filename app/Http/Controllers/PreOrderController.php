@@ -27,7 +27,7 @@ class PreOrderController extends Controller
 
     public function index(Request $request)
     {
-        if (\Auth::user()->can('manage proposal')) {
+        if (\Auth::user()->can('manage preorder')) {
 
             $vender = Vender::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             $vender->prepend('All', '');
@@ -62,7 +62,7 @@ class PreOrderController extends Controller
 
     public function create($venderId)
     {
-        if (\Auth::user()->can('create proposal')) {
+        if (\Auth::user()->can('create preorder')) {
             $customFields    = CustomField::where('created_by', '=', \Auth::user()->creatorId())->where('module', '=', 'pre_order')->get();
             $pre_order_number = \Auth::user()->preOrderNumberFormat($this->preOrderNumber());
             $venders       = Vender::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
@@ -74,7 +74,7 @@ class PreOrderController extends Controller
 
             return view('pre_order.create', compact('venders', 'pre_order_number', 'product_services', 'category', 'customFields', 'venderId'));
         } else {
-            return response()->json(['error' => __('Permission denied.')], 401);
+            return redirect()->back()->with('error', __('Permission Denied.'));
         }
     }
 
@@ -105,7 +105,7 @@ class PreOrderController extends Controller
 
     public function store(Request $request)
     {
-        if (\Auth::user()->can('create proposal')) {
+        if (\Auth::user()->can('create preorder')) {
             $validator = \Validator::make(
                 $request->all(),
                 [
@@ -174,7 +174,7 @@ class PreOrderController extends Controller
     public function edit($ids)
     {
 
-        if (\Auth::user()->can('edit proposal')) {
+        if (\Auth::user()->can('edit preorder')) {
             try {
                 $id              = Crypt::decrypt($ids);
             } catch (\Throwable $th) {
@@ -207,7 +207,7 @@ class PreOrderController extends Controller
 
     public function update(Request $request, PreOrder $pre_order)
     {
-        if (\Auth::user()->can('edit proposal')) {
+        if (\Auth::user()->can('edit preorder')) {
             if ($pre_order->created_by == \Auth::user()->creatorId()) {
                 $validator = \Validator::make(
                     $request->all(),
@@ -273,7 +273,7 @@ class PreOrderController extends Controller
 
     public function show($ids)
     {
-        if (\Auth::user()->can('show proposal')) {
+        if (\Auth::user()->can('show preorder')) {
             try {
                 $id       = Crypt::decrypt($ids);
             } catch (\Throwable $th) {
@@ -301,7 +301,7 @@ class PreOrderController extends Controller
 
     public function destroy(PreOrder $pre_order)
     {
-        if (\Auth::user()->can('delete proposal')) {
+        if (\Auth::user()->can('delete preorder')) {
             if ($pre_order->created_by == \Auth::user()->creatorId()) {
                 $pre_order->delete();
                 PreOrderProduct::where('pre_order_id', '=', $pre_order->id)->delete();
@@ -318,7 +318,7 @@ class PreOrderController extends Controller
     public function productDestroy(Request $request)
     {
 
-        if (\Auth::user()->can('delete proposal product')) {
+        if (\Auth::user()->can('delete preorder product')) {
             PreOrderProduct::where('id', '=', $request->id)->delete();
 
             return redirect()->back()->with('success', __('PreOrder product successfully deleted.'));
@@ -353,7 +353,7 @@ class PreOrderController extends Controller
 
     public function venderPreOrderShow($ids)
     {
-        if (\Auth::user()->can('show proposal')) {
+        if (\Auth::user()->can('show preorder')) {
             $pre_order_id = \Crypt::decrypt($ids);
             $pre_order    = PreOrder::where('id', $pre_order_id)->first();
             if ($pre_order->created_by == \Auth::user()->creatorId()) {
@@ -371,7 +371,7 @@ class PreOrderController extends Controller
 
     public function sent($id)
     {
-        if (\Auth::user()->can('send proposal')) {
+        if (\Auth::user()->can('send preorder')) {
             $pre_order            = PreOrder::where('id', $id)->first();
             $pre_order->send_date = date('Y-m-d');
             $pre_order->status    = 1;
@@ -413,7 +413,7 @@ class PreOrderController extends Controller
 
     public function resent($id)
     {
-        if (\Auth::user()->can('send proposal')) {
+        if (\Auth::user()->can('send preorder')) {
             $pre_order = PreOrder::where('id', $id)->first();
 
             $vender           = Vender::where('id', $pre_order->vender_id)->first();
@@ -467,7 +467,7 @@ class PreOrderController extends Controller
 
     public function duplicate($pre_order_id)
     {
-        if (\Auth::user()->can('duplicate proposal')) {
+        if (\Auth::user()->can('duplicate preorder')) {
             $pre_order                       = PreOrder::where('id', $pre_order_id)->first();
             $duplicatePreOrder              = new PreOrder();
             $duplicatePreOrder->pre_order_id = $this->preOrderNumber();

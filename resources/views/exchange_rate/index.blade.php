@@ -8,7 +8,7 @@
 @endsection
 @section('action-btn')
     <div class="float-end">
-        @can('create constant tax')
+        @can('create exchange')
             <a href="#" data-url="{{ route('exchange_rate.create') }}" data-ajax-popup="true"
                 data-title="{{ __('Create Currency') }}" data-bs-toggle="tooltip" title="{{ __('Create') }}"
                 class="btn btn-sm btn-primary">
@@ -45,7 +45,7 @@
                                         <td>{{ $ex_rate->exchange_rate }}</td>
                                         <td class="Action">
                                             <span>
-                                                @can('edit constant tax')
+                                                @can('edit exchange')
                                                     <div class="action-btn bg-primary ms-2">
                                                         <a href="#" class="mx-3 btn btn-sm align-items-center"
                                                             data-url="{{ route('exchange_rate.edit', $ex_rate->id) }}"
@@ -56,7 +56,7 @@
                                                         </a>
                                                     </div>
                                                 @endcan
-                                                @can('delete constant tax')
+                                                @can('delete exchange')
                                                     <div class="action-btn bg-danger ms-2">
                                                         {!! Form::open([
                                                             'method' => 'DELETE',
