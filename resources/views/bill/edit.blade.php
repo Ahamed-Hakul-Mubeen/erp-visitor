@@ -35,11 +35,8 @@
                     }
 
                     // for item SearchBox ( this function is  custom Js )
-                    JsSearchBox();
-
-                    if($('.select2').length) {
-                        $('.select2').select2();
-                    }
+                    // JsSearchBox();
+                    $('.select2').select2();
                 },
                 hide: function (deleteElement) {
 
@@ -227,7 +224,7 @@
                             var tax = [];
 
                             var totalItemTaxRate = 0;
-                            taxes += `<select class='form-control select2 tax-select' required><option value=''>--</option>`;
+                            taxes += `<select class='form-control tax-select' required><option value=''>--</option>`;
                             var selected_tax = $(el.parent().parent().parent().find('.taxes')).val();
                             for (var i = 0; i < item.taxes.length; i++) {
 
