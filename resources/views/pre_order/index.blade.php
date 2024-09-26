@@ -49,6 +49,19 @@
                                     {{ Form::select('status', [ ''=>'Select Status'] + $status,isset($_GET['status'])?$_GET['status']:'', array('class' => 'form-control select')) }}
                                 </div>
                             </div>
+                            <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12 me-2 mt-4">
+                                <div class="btn-box form-group mx-2">
+                                    <label for="category">Category</label>
+                                        <select class="form-control" name="category" id="category">
+                                            <option value="">Select Category</option>
+                                            @if(count($category) > 0)
+                                            @foreach ($category as $k=> $cat )
+                                                <option value="{{$k}}" {{isset($_GET['category'])?($_GET['category'] == $k ? 'selected'  : ''):''}}>{{$cat}}</option>
+                                            @endforeach
+                                            @endif
+                                    </select>
+                                </div>
+                            </div>
                             <div class="col-auto float-end ms-2 mt-4">
 
                                 <a href="#" class="btn btn-sm btn-primary" onclick="document.getElementById('frm_submit').submit(); return false;" data-bs-toggle="tooltip" data-original-title="{{__('apply')}}">

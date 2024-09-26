@@ -219,17 +219,17 @@ class JobApplicationController extends Controller
 
     public function show($ids)
     {
-       
+
         if(\Auth::user()->can('show job application'))
         {
             $id             = Crypt::decrypt($ids);
             $jobApplication = JobApplication::with('stage')->find($id);
             $stagejob = JobStage::find($jobApplication->stage);
             $notes = JobApplicationNote::where('application_id', $id)->get();
-            
+
             $stages = JobStage::where('created_by', \Auth::user()->creatorId())->get();
-            
-            
+
+
 
             return view('jobApplication.show', compact('jobApplication', 'notes', 'stages','stagejob'));
         }
@@ -424,13 +424,17 @@ class JobApplicationController extends Controller
         return view('jobApplication.onboardCreate', compact('id', 'status', 'applications','job_type','salary_type','salary_duration'));
     }
 
-    public function jobOnBoard()
+    public function jobOnBoard(Request $request)
     {
         if(\Auth::user()->can('manage job onBoard'))
         {
-            $jobOnBoards = JobOnBoard::where('created_by', \Auth::user()->creatorId())->with('applications')->get();
-
-            return view('jobApplication.onboard', compact('jobOnBoards'));
+            $jobOnBoards = JobOnBoard::where('created_by', \Auth::user()->creatorId());
+            if (!empty($request->status)) {
+                $jobOnBoards->where('status', '=', $request->status);
+            }
+            $jobOnBoards = $jobOnBoards->with('applications')->get();
+            $status       = JobOnBoard::$status;
+            return view('jobApplication.onboard', compact('jobOnBoards','status'));
         }
         else
         {

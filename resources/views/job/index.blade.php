@@ -108,6 +108,44 @@
         </div>
 </div>
 
+<div class="row">
+    <div class="col-sm-12">
+        <div class=" mt-2 " id="multiCollapseExample1">
+            <div class="card">
+                <div class="card-body">
+                    {{ Form::open(array('route' => array('job.index'),'method' => 'GET','id'=>'frm_submit')) }}
+                    <div class="d-flex align-items-center justify-content-end">
+                        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12 me-2">
+                            <div class="btn-box form-group">
+                                <label for="company">Company</label>
+                                    <select class="form-control" name="company" id="company">
+                                        <option value="">Select Company</option>
+                                        @if(count($branches) > 0)
+                                        @foreach ($branches as $branch )
+                                            <option value="{{$branch['id']}}" {{isset($_GET['company'])?($_GET['company'] == $branch['id'] ? 'selected'  : ''):''}}>{{$branch['name']}}</option>
+                                        @endforeach
+                                        @endif
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-auto float-end ms-2 ">
+
+                            <a href="#" class="btn btn-sm btn-primary" onclick="document.getElementById('frm_submit').submit(); return false;" data-bs-toggle="tooltip" data-original-title="{{__('apply')}}">
+                                <span class="btn-inner--icon"><i class="ti ti-search"></i></span>
+                            </a>
+                            <a href="{{ route('job.index') }}" class="btn btn-sm btn-danger" data-bs-toggle="tooltip"
+                               title="{{ __('Reset') }}">
+                                <span class="btn-inner--icon"><i class="ti ti-trash-off text-white "></i></span>
+                            </a>
+                        </div>
+
+                    </div>
+                    {{ Form::close() }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
     <div class="row">

@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Mail;
 
 class LeaveController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
 
         if(\Auth::user()->can('manage leave'))
@@ -23,7 +23,7 @@ class LeaveController extends Controller
                 $user     = \Auth::user();
                 $employee = Employee::where('user_id', '=', $user->id)->first();
                 $project_id = ProjectUser::where('user_id', $user->id)->pluck('project_id')->toArray();
-                
+
                 $user_id_arr = ProjectUser::whereIn('project_id', $project_id)->pluck('user_id')->toArray();
                 $user_id_arr[] = $user->id;
                 $user_id_arr = array_unique($user_id_arr);
@@ -37,14 +37,24 @@ class LeaveController extends Controller
                     }
                 }
 
-                $leaves   = Leave::whereIn('employee_id', $employee_id_arr)->with(['leaveType','employees'])->get();
+                $leaves   = Leave::whereIn('employee_id', $employee_id_arr);
             }
             else
             {
-                $leaves = Leave::where('created_by', '=', \Auth::user()->creatorId())->with(['leaveType','employees'])->get();
+                $leaves = Leave::where('created_by', '=', \Auth::user()->creatorId());
             }
-
-            return view('leave.index', compact('leaves'));
+            if (!empty($request->leavetype)) {
+                $leaves->where('leave_type_id', '=', $request->leavetype);
+            }
+            if (!empty($request->startDate)) {
+                $leaves->whereDate('start_date', '>=', $request->startDate);
+            }
+            if (!empty($request->endDate)) {
+                $leaves->where('end_date', '<=', $request->endDate);
+            }
+            $leaves = $leaves->with(['leaveType','employees'])->get();
+            $leavetypes      = LeaveType::where('created_by', '=', \Auth::user()->creatorId())->get();
+            return view('leave.index', compact('leaves','leavetypes'));
         }
         else
         {
@@ -113,7 +123,7 @@ class LeaveController extends Controller
             {
                 $leave->employee_id = $request->employee_id;
             }
-            
+
             $leave->leave_type_id    = $request->leave_type_id;
             $leave->applied_on       = date('Y-m-d');
             $leave->start_date       = $request->start_date;
@@ -262,30 +272,30 @@ class LeaveController extends Controller
         } elseif ($request->approval_type == 'HR') {
             $leave->hr_approval = $request->status;
         }
-    
-      
+
+
         if ($leave->pm_approval == 'Approved' && $leave->hr_approval == 'Approved') {
             $leave->status = 'Approved';
         }
-    
-      
+
+
         if ($leave->pm_approval == 'Rejected' || $leave->hr_approval == 'Rejected') {
             $leave->status = 'Rejected';
         }
-    
-        
+
+
         if ($request->approval_type == 'Final') {
             if ($request->status == 'Approved') {
-                $leave->pm_approval = 'Approved'; 
-                $leave->hr_approval = 'Approved'; 
-                $leave->status = 'Approved'; 
+                $leave->pm_approval = 'Approved';
+                $leave->hr_approval = 'Approved';
+                $leave->status = 'Approved';
             } elseif ($request->status == 'Rejected') {
-                $leave->pm_approval = 'Rejected'; 
-                $leave->hr_approval = 'Rejected'; 
-                $leave->status = 'Rejected'; 
+                $leave->pm_approval = 'Rejected';
+                $leave->hr_approval = 'Rejected';
+                $leave->status = 'Rejected';
             }
         }
-    
+
         $leave->save();
 
 

@@ -61,9 +61,13 @@ class ProposalController extends Controller
             {
                 $query->where('status', '=', $request->status);
             }
+            if(!empty($request->category))
+            {
+                $query->where('category_id', '=', $request->category);
+            }
             $proposals = $query->with(['category'])->get();
-
-            return view('proposal.index', compact('proposals', 'customer', 'status'));
+            $category = ProductServiceCategory::where('created_by', \Auth::user()->creatorId())->where('type', 'income')->get()->pluck('name', 'id');
+            return view('proposal.index', compact('proposals', 'customer', 'status','category'));
         }
         else
         {
