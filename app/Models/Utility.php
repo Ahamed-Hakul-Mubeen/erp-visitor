@@ -1127,6 +1127,12 @@ class Utility extends Model
             'sub_type' => 4,
         ],
         [
+            'code' => '2040',
+            'name' => 'Advance Payment',
+            'type' => 2,
+            'sub_type' => 4,
+        ],
+        [
             'code' => '2105',
             'name' => 'Deferred Income',
             'type' => 2,
@@ -1815,7 +1821,7 @@ class Utility extends Model
         ],
         [
             'code' => '2040',
-            'name' => 'Unearned Revenue',
+            'name' => 'Advance Payment',
             'type' => 'Liabilities',
             'sub_type' => 'Current Liabilities',
         ],
