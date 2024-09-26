@@ -332,8 +332,8 @@ class ProjectController extends Controller
                 $last_task      = TaskStage::orderBy('order', 'DESC')->where('created_by', \Auth::user()->creatorId())->first();
 
                 // end chart
-
-                return view('projects.view', compact('project', 'project_data', 'last_task'));
+                $completed_milestone_percentage = $project->milestones()->sum('percentage');
+                return view('projects.view', compact('project', 'project_data', 'last_task', 'completed_milestone_percentage'));
             } else {
                 return redirect()->back()->with('error', __('Permission Denied.'));
             }
@@ -516,9 +516,11 @@ class ProjectController extends Controller
     {
         if (\Auth::user()->can('create milestone')) {
             $project = Project::find($project_id);
+            $total_cost = $project->budget;
+            $available_milestone_percentage = $project->milestones()->sum('percentage') > 0 ? (100 - $project->milestones()->sum('percentage') ) : 100;
             $vender = Vender::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             $vender->prepend('Select Vendor', '');
-            return view('projects.milestone', compact('project', 'vender'));
+            return view('projects.milestone', compact('project', 'vender', 'available_milestone_percentage', 'total_cost'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
@@ -558,7 +560,7 @@ class ProjectController extends Controller
                 [
                     'title' => 'required',
                     'status' => 'required',
-                    'cost' => 'required',
+                    'percentage' => 'required',
                     'start_date' => 'required|date', // Ensure start_date is a valid date
                     'due_date' => 'required|date|after_or_equal:start_date', // Ensure due_date is not before start_date
                 ]
@@ -573,7 +575,8 @@ class ProjectController extends Controller
             $milestone->title       = $request->title;
             $milestone->status      = $request->status;
             $milestone->cost        = $request->cost;
-            $milestone->start_date    = $request->start_date;
+            $milestone->percentage  = $request->percentage;
+            $milestone->start_date  = $request->start_date;
             $milestone->due_date    = $request->due_date;
             $milestone->description = $request->description;
             $milestone->vender_id   = $request->vender_id;
@@ -597,10 +600,21 @@ class ProjectController extends Controller
     public function milestoneEdit($id)
     {
         if (\Auth::user()->can('edit milestone')) {
+            $project_id = Milestone::find($id)->project_id;
             $milestone = Milestone::find($id);
+            $available_milestone_percentage = 0;
+            $total_cost = 0;
+            if($project_id && $milestone)
+            {
+                $project = Project::find($project_id);
+                if($project){
+                    $total_cost = $project->budget;
+                    $available_milestone_percentage = $project->milestones()->sum('percentage') > 0 ? (100 - ($project->milestones()->sum('percentage') - $milestone->percentage ) ) : 100;
+                }
+            }
             $vender = Vender::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             $vender->prepend('Select Vendor', '');
-            return view('projects.milestoneEdit', compact('milestone', 'vender'));
+            return view('projects.milestoneEdit', compact('milestone', 'vender', 'available_milestone_percentage','total_cost'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
@@ -614,7 +628,7 @@ class ProjectController extends Controller
                 [
                     'title' => 'required',
                     'status' => 'required',
-                    'cost' => 'required',
+                    'percentage' => 'required',
                     'due_date' => 'required',
                     'start_date' => 'required'
                 ]
@@ -628,6 +642,7 @@ class ProjectController extends Controller
             $milestone->title       = $request->title;
             $milestone->status      = $request->status;
             $milestone->cost        = $request->cost;
+            $milestone->percentage  = $request->percentage;
             $milestone->progress    = $request->progress;
             $milestone->due_date    = $request->due_date;
             $milestone->start_date  = $request->start_date;

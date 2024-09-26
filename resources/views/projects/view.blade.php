@@ -122,6 +122,15 @@
                     }
                 });
             });
+            $(document).on('keyup change','#percentage', function(){
+                var total_cost = $(this).attr('total_cost');
+                var percentage = $(this).val();
+                var cost = 0;
+                if(total_cost > 0){
+                    cost = (total_cost * percentage) / 100;
+                }
+                $('#cost').val(cost);
+            });
         });
 
         function loadProjectUser() {
@@ -532,11 +541,19 @@
                         <h5>{{ __('Milestones') }} ({{ count($project->milestones) }})</h5>
                         <div class="float-end">
                             @can('create milestone')
-                                <a href="#" data-size="lg" data-url="{{ route('project.milestone', $project->id) }}"
-                                    data-ajax-popup="true" data-bs-toggle="tooltip" title=""
-                                    class="btn btn-sm btn-primary" data-bs-original-title="{{ __('Create Milestone') }}">
-                                    <i class="ti ti-plus"></i>
-                                </a>
+                            <a href="#" data-size="lg" data-url="{{ route('project.milestone', $project->id) }}"
+                                data-ajax-popup="true" data-bs-toggle="tooltip" title="" 
+                                class="btn btn-sm btn-primary" data-bs-original-title="{{ __('Create Milestone') }}">
+                                <i class="ti ti-plus"></i>
+                            </a>
+                            @if($completed_milestone_percentage < 100) 
+                                
+                            @else
+                            {{-- <a href="#" data-size="lg" data-bs-toggle="tooltip" title="" 
+                                class="btn btn-sm btn-primary" data-bs-original-title="{{ __('100% Completed') }}">
+                                <i class="ti ti-plus"></i>
+                            </a> --}}
+                            @endif
                             @endcan
                             @can('share milestone')
                                 <a href="{{ route('project.milestone.share', Crypt::encryptString($project->id)) }}"

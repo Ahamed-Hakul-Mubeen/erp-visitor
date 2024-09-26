@@ -100,22 +100,32 @@
 @endsection
 @php
     // dd(date_default_timezone_get());
+    use Carbon\Carbon;
     $setting = \App\Models\Utility::settings();
 
     if (\Auth::user()->type != 'client' && \Auth::user()->type != 'company') {
         $employeeAttendance_clock_in = '00:00:00';
         $employeeAttendance_clock_out = '00:00:00';
         $employeeAttendance_total_break_duration = '00:00:00';
+        $count = count($employeeAttendance);
+        $totalBreakDurationInSeconds = $employeeAttendance->sum(function ($attendance) {
+            if (is_null($attendance->total_break_duration)) {
+                return 0; 
+            }
 
-        $employeeAttendance_clock_in = isset($employeeAttendance->clock_in)
-            ? $employeeAttendance->clock_in
+            return Carbon::parse($attendance->total_break_duration)->secondsSinceMidnight();
+        });
+
+        $total_break = gmdate('H:i:s', $totalBreakDurationInSeconds);
+        $employeeAttendance_clock_in = count($employeeAttendance) > 0 && !empty($employeeAttendance[0]->clock_in)
+            ? $employeeAttendance[0]->clock_in
             : '00:00:00';
-        $employeeAttendance_total_break_duration = isset($employeeAttendance->total_break_duration)
-            ? $employeeAttendance->total_break_duration
+        $employeeAttendance_total_break_duration = count($employeeAttendance) > 0 && !empty($total_break > 0)
+            ? $total_break
             : '00:00:00';
 
         $break_time = $setting['break_time'];
-
+        //dd($employeeAttendance_total_break_duration, $employeeAttendance_clock_in);
         // Find total hour in Office
         $start_date = new DateTime($officeTime['startTime']);
         $since_start = $start_date->diff(new DateTime($officeTime['endTime']));
@@ -265,6 +275,19 @@
             color: #bc0101;
             font-weight: 700;
         }
+        .in-out-icon {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 100%;
+            background-color: #f9f9f9;
+            margin-right: 20px;
+        }
+        .punch-in-section,.punch-out-section{
+            margin-right: 30px
+        }
 
     </style>
 
@@ -326,6 +349,84 @@
                                     ?>
                                     
                                 <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="d-flex">
+                                            <div class="d-flex align-items-center my-3 punch-in-section">
+                                              <div class="in-out-icon mr-2">
+                                                <svg
+                                                  xmlns="http://www.w3.org/2000/svg"
+                                                  width="24"
+                                                  height="24"
+                                                  viewBox="0 0 24 24"
+                                                  fill="none"
+                                                  stroke="currentColor"
+                                                  stroke-width="2"
+                                                  stroke-linecap="round"
+                                                  stroke-linejoin="round"
+                                                  class="feather feather-log-in text-success"
+                                              
+                                                >
+                                                  <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                                                  <polyline points="10 17 15 12 10 7"></polyline>
+                                                  <line x1="15" y1="12" x2="3" y2="12"></line>
+                                                </svg>
+                                              </div>
+                                              <div>
+                                                <h6 class="mb-1">
+                                                    @php
+                                                    if(count($employeeAttendance) > 0 && $employeeAttendance[0]->clock_in != "00:00:00")
+                                                    {
+                                                        $time = Carbon::createFromFormat('H:i:s', $employeeAttendance[0]->clock_in);
+
+                                                        $formattedTime = $time->format('h:i A');
+                                                    }else{
+                                                        $formattedTime = __('Not yet');
+                                                    }
+                                                    @endphp
+                                                    {{ $formattedTime }}
+                                                </h6>
+                                                <p class="text-secondary mb-1">Punch in time</p>
+                                              </div>
+                                            </div>
+                                            <div class="d-flex align-items-center my-3 punch-out-section">
+                                              <div class="in-out-icon">
+                                                <svg
+                                                  xmlns="http://www.w3.org/2000/svg"
+                                                  width="24"
+                                                  height="24"
+                                                  viewBox="0 0 24 24"
+                                                  fill="none"
+                                                  stroke="currentColor"
+                                                  stroke-width="2"
+                                                  stroke-linecap="round"
+                                                  stroke-linejoin="round"
+                                                  class="feather feather-log-out text-warning"
+                                              
+                                                >
+                                                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                                  <polyline points="16 17 21 12 16 7"></polyline>
+                                                  <line x1="21" y1="12" x2="9" y2="12"></line>
+                                                </svg>
+                                              </div>
+                                              <div>
+                                                <h6 class="mb-1">
+                                                    @php
+                                                    if(count($employeeAttendance) > 0 && $employeeAttendance[$count - 1]->clock_out != "00:00:00")
+                                                    {
+                                                        $time = Carbon::createFromFormat('H:i:s', $employeeAttendance[$count - 1]->clock_out);
+
+                                                        $formattedTime = $time->format('h:i A');
+                                                    }else{
+                                                        $formattedTime = __('Not yet');
+                                                    }
+                                                    @endphp
+                                                    {{ $formattedTime }}    
+                                                </h6>
+                                                <p class="text-secondary mb-1">Punch out time</p>
+                                              </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="col-sm-7">
                                         <div class="row">
                                             <div class="text-center col-sm-3 col-lg-3 col-6">
@@ -342,7 +443,7 @@
                                                 <p class="my-text-bold">Balance</p>
                                                 <p class="time">{{ $balane_work_hour }}</p>
                                             </div>
-                                            <div class="text-center col-sm-3 col-lg-3 col-6">
+                                            <div class="text-center col-sm-3 col-lg-3 col-6 d-none">
                                                 <p class="my-text-bold">Overtime</p>
                                                 <p class="time">
                                                     {{ $over_time }}
@@ -363,15 +464,15 @@
                                             {{-- @endif
                                             {{ Form::close() }} --}}
 
-                                            @if (empty($employeeAttendance) || $employeeAttendance->clock_out != '00:00:00')
+                                            @if (count($employeeAttendance) > 0 && $employeeAttendance[$count - 1]->clock_out != '00:00:00')
                                             <!-- Clock In Button that triggers the modal -->
                                             <button type="button" class="mt-2 btn btn-success" id="clock_in" data-bs-toggle="modal" data-bs-target="#clockInModal">
                                                 {{ __('CLOCK IN') }}
                                             </button>
                                              @endif
 
-                                            @if (!empty($employeeAttendance) && $employeeAttendance->clock_out == '00:00:00')
-                                                {{ Form::model($employeeAttendance, ['route' => ['attendanceemployee.update', $employeeAttendance->id], 'method' => 'PUT']) }}
+                                            @if (count($employeeAttendance) > 0 && $employeeAttendance[$count - 1]->clock_out == '00:00:00')
+                                                {{ Form::model($employeeAttendance, ['route' => ['attendanceemployee.update', $employeeAttendance[$count - 1]->id], 'method' => 'PUT']) }}
                                                 <button type="submit" value="1" name="out" id="clock_out"
                                                     class="mt-2 btn btn-danger">{{ __('CLOCK OUT') }}</button>
                                             @else
@@ -381,7 +482,7 @@
 
                                             <!-- Take a Break Button -->
 
-                                            @if (!empty($employeeAttendance) && $employeeAttendance->clock_out == '00:00:00')
+                                            @if (count($employeeAttendance) && $employeeAttendance[$count - 1]->clock_out == '00:00:00')
                                                 <button id="take_break" class="mt-2 btn btn-warning"
                                                     style="margin-left: 10px;">
                                                     {{ __('TAKE A BREAK') }}

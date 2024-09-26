@@ -309,13 +309,13 @@ class DashboardController extends Controller
 
                     $date = date("Y-m-d");
                     $time = date("H:i:s");
-                    $employeeAttendance = AttendanceEmployee::orderBy('id', 'desc')->where('employee_id', '=', !empty(\Auth::user()->employee)?\Auth::user()->employee->id : 0)->where('date', '=', $date)->first();
+                    $employeeAttendance = AttendanceEmployee::orderBy('id', 'asc')->where('employee_id', '=', !empty(\Auth::user()->employee)?\Auth::user()->employee->id : 0)->where('date', '=', $date)->get();
 
 
                     $officeTime['startTime'] = Utility::getValByName('company_start_time');
                     $officeTime['endTime'] = Utility::getValByName('company_end_time');
                     $officeTime['breakTime'] = Utility::getValByName('break_time');
-
+                    //dd($employeeAttendance);
                     return view('dashboard.dashboard', compact('arrEvents', 'announcements', 'employees', 'meetings', 'employeeAttendance', 'officeTime','emp'));
                 } else if ($user->type == 'super admin') {
                     $user = \Auth::user();
