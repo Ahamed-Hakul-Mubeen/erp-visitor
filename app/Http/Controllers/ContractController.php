@@ -18,15 +18,20 @@ use Illuminate\Support\Facades\Storage;
 class ContractController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
         if(\Auth::user()->can('manage contract'))
         {
+            $contractTypes = ContractType::where('created_by', '=', \Auth::user()->creatorId())->get()->select('name', 'id');
 
             if(\Auth::user()->type=='company')
             {
 
-                $contracts   = Contract::where('created_by', '=', \Auth::user()->creatorId())->with(['clients','projects','types'])->get();
+                $contracts   = Contract::where('created_by', '=', \Auth::user()->creatorId());
+                if (!empty($request->contract_types)) {
+                    $contracts->where('type', '=', $request->contract_types);
+                }
+                $contracts =$contracts->with(['clients','projects','types'])->get();
                 $curr_month  = Contract::where('created_by', '=', \Auth::user()->creatorId())->whereMonth('start_date', '=', date('m'))->get();
                 $curr_week   = Contract::where('created_by', '=', \Auth::user()->creatorId())->whereBetween(
                     'start_date', [
@@ -43,11 +48,15 @@ class ContractController extends Controller
                 $cnt_contract['this_week']   = \App\Models\Contract::getContractSummary($curr_week);
                 $cnt_contract['last_30days'] = \App\Models\Contract::getContractSummary($last_30days);
 
-                return view('contract.index', compact('contracts', 'cnt_contract'));
+                return view('contract.index', compact('contracts', 'cnt_contract' ,'contractTypes'));
             }
             elseif(\Auth::user()->type=='client')
             {
-                $contracts   = Contract::where('client_name', '=', \Auth::user()->id)->with(['types'])->get();
+                $contracts   = Contract::where('client_name', '=', \Auth::user()->id);
+                if (!empty($request->contract_types)) {
+                    $contracts->where('type', '=', $request->contract_types);
+                }
+                $contracts =$contracts->with(['types'])->get();
                 $curr_month  = Contract::where('client_name', '=', \Auth::user()->id)->whereMonth('start_date', '=', date('m'))->get();
                 $curr_week   = Contract::where('client_name', '=', \Auth::user()->id)->whereBetween(
                     'start_date', [
@@ -64,12 +73,12 @@ class ContractController extends Controller
                 $cnt_contract['this_week']   = \App\Models\Contract::getContractSummary($curr_week);
                 $cnt_contract['last_30days'] = \App\Models\Contract::getContractSummary($last_30days);
 
-                return view('contract.index', compact('contracts', 'cnt_contract'));
+                return view('contract.index', compact('contracts', 'cnt_contract','contractTypes'));
             }
 
             $contracts   = Contract::where('created_by', '=', \Auth::user()->creatorId())->with(['clients','projects','types'])->get();
 
-            return view('contract.index', compact('contracts'));
+            return view('contract.index', compact('contracts' ,'contractTypes'));
 
         }
         else
@@ -336,7 +345,7 @@ class ContractController extends Controller
     //         if($result==1)
     //         {
 
-              
+
     //             $files = $id . $request->file->getClientOriginalName();
     //             $file   = Contract_attachment::create(
     //                 [
@@ -346,7 +355,7 @@ class ContractController extends Controller
     //                 ]
     //             );
 
-                
+
     //              $request->file->storeAs('contract_attechment', $files);
 
     //             $dir = 'contract_attechment/';

@@ -38,6 +38,16 @@
                                     {{ Form::select('category', $category, null, ['class' => 'form-control select','id'=>'choices-multiple', 'required' => 'required']) }}
                                 </div>
                             </div>
+                            <div class="col-xl-3 col-lg-3 col-md-6 mx-1 mt-1">
+                                <div class="btn-box">
+                                    <label for="type" class="mb-1">Type</label>
+                                    <select class="form-control" name="type" id="type">
+                                        <option value="">Select Type</option>
+                                        <option value="product"  {{isset($_GET['type'])?($_GET['type'] == 'product' ? 'selected'  : ''):''}}>Product</option>
+                                        <option value="service" {{isset($_GET['type'])?($_GET['type'] == 'service' ? 'selected'  : ''):''}}>Service</option>
+                                    </select>
+                                </div>
+                            </div>
                             <div class="col-auto float-end ms-2 mt-4">
                                 <a href="#" class="btn btn-sm btn-primary"
                                    onclick="document.getElementById('product_service').submit(); return false;"

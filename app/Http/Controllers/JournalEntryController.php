@@ -13,11 +13,18 @@ use Illuminate\Http\Request;
 class JournalEntryController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
         if (\Auth::user()->can('manage journal entry')) {
-            $journalEntries = JournalEntry::with('createdUser')->where('created_by', '=', \Auth::user()->creatorId())->get();
+            $journalEntries = JournalEntry::with('createdUser')->where('created_by', '=', \Auth::user()->creatorId());
 
+            if (!empty($request->date)) {
+                $date_range = explode('to', $request->date);
+                if(count($date_range)>1)
+                $journalEntries->whereBetween('date', $date_range);
+                 else $journalEntries->where('date', $request->date);
+            }
+            $journalEntries = $journalEntries->get();
             return view('journalEntry.index', compact('journalEntries'));
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));

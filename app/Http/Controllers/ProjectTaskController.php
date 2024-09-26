@@ -278,23 +278,41 @@ class ProjectTaskController extends Controller
 
 
     // For Taskboard View
-    public function allBugList($view)
+    public function allBugList($view,Request $request)
     {
         $bugStatus = BugStatus::where('created_by', \Auth::user()->creatorId())->get();
+        $priority =ProjectTask::$priority;
         if (Auth::user()->type == 'company') {
-            $bugs = Bug::where('created_by', \Auth::user()->creatorId())->with(['project','createdBy' , 'projectBUg'])->get();
+            $bugs = Bug::where('created_by', \Auth::user()->creatorId())->with(['project','createdBy' , 'projectBUg']);
+
+
         } elseif (Auth::user()->type != 'company') {
             if (\Auth::user()->type == 'client') {
                 $user_projects = Project::where('client_id', \Auth::user()->id)->pluck('id', 'id')->toArray();
-                $bugs = Bug::whereIn('project_id', $user_projects)->where('created_by', \Auth::user()->creatorId())->with(['project','createdBy'])->get();
+                $bugs = Bug::whereIn('project_id', $user_projects)->where('created_by', \Auth::user()->creatorId())->with(['project','createdBy']);
             } else {
-                $bugs = Bug::where('created_by', \Auth::user()->creatorId())->whereRaw("find_in_set('" . \Auth::user()->id . "',assign_to)")->with(['project','createdBy'])->get();
+                $bugs = Bug::where('created_by', \Auth::user()->creatorId())->whereRaw("find_in_set('" . \Auth::user()->id . "',assign_to)")->with(['project','createdBy']);
             }
         }
+
+        if (!empty($request->name)) {
+            $bugs->where('title', 'like', '%' . $request->name . '%');
+            $bugs->orWhereHas('project', function ($query) use ($request) {
+                $query->where('project_name', 'like', '%' . $request->name . '%');
+            });
+        }
+
+        if (!empty($request->priority)) {
+            $bugs->where('priority', '=', $request->priority);
+        }
+        if (!empty($request->status)) {
+            $bugs->where('status', '=', $request->status);
+        }
+        $bugs = $bugs->get();
         if ($view == 'list') {
-            return view('projects.allBugListView', compact('bugs', 'bugStatus', 'view'));
+            return view('projects.allBugListView', compact('bugs', 'bugStatus', 'view' ,'priority'));
         } else {
-            return view('projects.allBugGridView', compact('bugs', 'bugStatus', 'view'));
+            return view('projects.allBugGridView', compact('bugs', 'bugStatus', 'view' ,'priority'));
         }
         return redirect()->back()->with('error', __('Permission Denied.'));
     }
