@@ -304,15 +304,16 @@
                                 <h4>Hi {{ \Auth::user()->name }}!</h4>
                                     {{-- {{ __('My Office Time: ' . date("h:i A", strtotime($officeTime['startTime'])) . ' to ' . date("h:i A", strtotime($officeTime['endTime']))) }} --}}
                                     <?php
-                                        if(isset($employeeAttendance->clock_in))
+                                    
+                                        if(isset($employeeAttendance[0]->clock_in))
                                         {
-                                            if($officeTime['startTime'].":00" >= $employeeAttendance->clock_in)
+                                            if($officeTime['startTime'].":00" >= $employeeAttendance[0]->clock_in)
                                             {
-                                                echo '<p class="my-text-success pb-0-5">You clocked in at  '.date("h:i A", strtotime($employeeAttendance->clock_in));
-                                                if(isset($employeeAttendance->late))
+                                                echo '<p class="my-text-success pb-0-5">You clocked in at  '.date("h:i A", strtotime($employeeAttendance[0]->clock_in));
+                                                if(isset($employeeAttendance[0]->late))
                                                 {
                                                     echo " and you are ";
-                                                    $late_arr = explode(":", $employeeAttendance->late);
+                                                    $late_arr = explode(":", $employeeAttendance[0]->late);
                                                     if(isset($late_arr[0]) && $late_arr[0] > 0)
                                                     {
                                                         echo $late_arr[0]." hour ";
@@ -327,11 +328,11 @@
                                             }
                                             else
                                             {
-                                                echo '<p class="my-text-danger pb-0-5">You clocked in at  '.date("h:i A", strtotime($employeeAttendance->clock_in));
-                                                if(isset($employeeAttendance->late))
+                                                echo '<p class="my-text-danger pb-0-5">You clocked in at  '.date("h:i A", strtotime($employeeAttendance[0]->clock_in));
+                                                if(isset($employeeAttendance[0]->late))
                                                 {
                                                     echo " and you are ";
-                                                    $late_arr = explode(":", $employeeAttendance->late);
+                                                    $late_arr = explode(":", $employeeAttendance[0]->late);
                                                     if(isset($late_arr[0]) && $late_arr[0] > 0)
                                                     {
                                                         echo $late_arr[0]." hour ";
@@ -463,8 +464,8 @@
                                                 {{-- <button type="submit" value="0" name="in" id="clock_in" class="btn btn-success disabled" disabled>{{__('CLOCK IN')}}</button> --}}
                                             {{-- @endif
                                             {{ Form::close() }} --}}
-
-                                            @if (count($employeeAttendance) > 0 && $employeeAttendance[$count - 1]->clock_out != '00:00:00')
+                                            
+                                            @if ((count($employeeAttendance) > 0 && $employeeAttendance[$count - 1]->clock_out != '00:00:00') || count($employeeAttendance) == 0)
                                             <!-- Clock In Button that triggers the modal -->
                                             <button type="button" class="mt-2 btn btn-success" id="clock_in" data-bs-toggle="modal" data-bs-target="#clockInModal">
                                                 {{ __('CLOCK IN') }}
