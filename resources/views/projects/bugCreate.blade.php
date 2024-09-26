@@ -52,3 +52,13 @@
     <button type="submit" class="btn btn-primary">{{__('Create')}}</button>
 </div>
 {{Form::close()}}
+
+<script>
+    $(document).ready(function(){
+
+        $('#start_date').on('change', function() {
+            var startDate = $(this).val();
+            $('#due_date').attr('min', startDate);
+        });
+    });
+</script>

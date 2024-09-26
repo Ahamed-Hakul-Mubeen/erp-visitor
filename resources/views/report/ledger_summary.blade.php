@@ -34,6 +34,22 @@
             html2pdf().set(opt).from(element).save();
         }
     </script>
+    <script>
+        $(document).ready(function(){
+
+            var startDate = $('#start_date').val();
+            if (startDate) {
+                $('#end_date').attr('min', startDate);
+            } else {
+                $('#end_date').removeAttr('min');
+            }
+
+            $('#start_date').on('change', function() {
+                var startDate = $(this).val();
+                $('#end_date').attr('min', startDate);
+            });
+        });
+    </script>
 @endpush
 
 @section('action-btn')
@@ -217,14 +233,14 @@
                                         $totalCredit = 0;
 
                                         $accountArrays = [];
-                                        foreach ($chart_accounts as $key => $account) {    
+                                        foreach ($chart_accounts as $key => $account) {
                                             $chartDatas = App\Models\Utility::getAccountData($account['id'], $filter['startDateRange'], $filter['endDateRange']);
 
                                             $chartDatas = $chartDatas->toArray();
                                             $accountArrays[] = $chartDatas;
                                         }
                                     @endphp
-        
+
                                     @foreach ($accountArrays as $accounts)
                                         @foreach ($accounts as $account)
                                             @if ($account->reference == 'Invoice')
@@ -365,7 +381,7 @@
                                                     <td class="text-right">{{ \Auth::user()->priceFormat($balance) }}</td>
                                                 </tr>
                                             @endif
-                                            
+
                                             @if ($account->reference == 'Bank Account')
 
                                                 <tr>

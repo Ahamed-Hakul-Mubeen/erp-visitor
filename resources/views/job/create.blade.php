@@ -46,13 +46,8 @@
     });
 
     $('#start_date').on('change', function() {
-        // When the start date changes, revalidate the end date in case it's now valid
-        var startDate = new Date($(this).val());
-        var endDate = new Date($('#end_date').val());
-
-        if (endDate >= startDate) {
-            $('#end_date_error').text(''); // Clear error if end date is valid
-        }
+        var startDate = $(this).val();
+        $('#end_date').attr('min', startDate);
     });
 });
 

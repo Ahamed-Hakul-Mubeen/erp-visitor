@@ -3,6 +3,14 @@
     $profile=\App\Models\Utility::get_file('uploads/avatar/');
 @endphp
 @push('script-page')
+<script>
+    $(document).ready(function(){
+        $('#start_date').on('change', function() {
+            var startDate = $(this).val();
+            $('#end_date').attr('min', startDate);
+        });
+    });
+</script>
 @endpush
 @section('page-title')
     {{__('Project Reports')}}

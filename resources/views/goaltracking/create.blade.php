@@ -90,3 +90,12 @@
     </div>
 
 {{Form::close()}}
+
+<script>
+    $(document).ready(function(){
+        $('#start_date').on('change', function() {
+            var startDate = $(this).val();
+            $('#end_date').attr('min', startDate);
+        });
+    });
+</script>
