@@ -59,6 +59,10 @@ class ProjectReportController extends Controller
                 $projects->where('end_date', '=', $request->end_date);
 
             }
+            if(isset($request->project)&& !empty($request->project)){
+                $projects->where('project_name', 'like', '%' . $request->project . '%');;
+
+            }
 
             $users = User::where('created_by', '=', $user->creatorId())->where('type', '!=', 'client')->get();
             $status = Project::$project_status;
@@ -73,7 +77,6 @@ class ProjectReportController extends Controller
         $status =[];
 
         $projects = $projects->orderby('id','desc')->with(['tasks'])->get();
-        
 
         $last_task      = TaskStage::orderBy('order', 'DESC')->where('created_by',\Auth::user()->creatorId())->first();
 

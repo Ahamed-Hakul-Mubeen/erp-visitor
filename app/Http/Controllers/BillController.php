@@ -68,9 +68,17 @@ class BillController extends Controller
             {
                 $query->where('status', '=', $request->status);
             }
+            if(!empty($request->category))
+            {
+                $query->where('category_id', '=', $request->category);
+            }
             $bills = $query->with('category')->get();
+            $category     = ProductServiceCategory::where('created_by', \Auth::user()->creatorId())
+            ->whereNotIn('type', ['product & service', 'income',])
+            ->get()->pluck('name', 'id');
+            $category->prepend('Select Category', '');
 
-            return view('bill.index', compact('bills', 'vender', 'status'));
+            return view('bill.index', compact('bills', 'vender', 'status','category'));
         }
         else
         {
@@ -437,7 +445,7 @@ class BillController extends Controller
 
                     }
                 }
-                    
+
                 $project_list = Project::where('created_by', \Auth::user()->creatorId())->get()->pluck('project_name', 'id');
                 $project_list->prepend('Not for Project', '');
 
@@ -843,7 +851,7 @@ class BillController extends Controller
                 }
             }
 
-            
+
             if($bill->project_id)
             {
                 $expense = new ProjectExpense();
