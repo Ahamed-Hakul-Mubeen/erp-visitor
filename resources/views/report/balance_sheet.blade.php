@@ -263,9 +263,15 @@
                                                                 $record['account'] == 'subAccount')
                                                             <div
                                                                 class="account-inner d-flex align-items-center justify-content-between ps-5">
-                                                                <p class="mb-2 ms-3"><a
-                                                                        href="{{ route('report.ledger', $record['account_id']) }}?account={{ $record['account_id'] }}"
-                                                                        class="text-primary">{{ $record['account_name'] }}</a>
+                                                                <p class="mb-2 ms-3">
+                                                                    <a href="@if($record['account_name'] != 'Net Income')
+                                                                                {{ route('report.ledger', $record['account_id']) . '?account=' . $record['account_id'] }}
+                                                                             @else
+                                                                                {{ route('report.profit.loss') }}
+                                                                             @endif"
+                                                                       class="text-primary">
+                                                                        {{ $record['account_name'] }}
+                                                                    </a>
                                                                 </p>
                                                                 <p class="mb-2 text-center">{{ $record['account_code'] }}
                                                                 </p>
