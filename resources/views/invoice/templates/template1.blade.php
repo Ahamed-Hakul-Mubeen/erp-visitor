@@ -159,7 +159,7 @@
                             {{ $customer->billing_city ?? 'City' }}, {{ $customer->billing_state ?? 'State' }} -
                             {{ $customer->billing_zip ?? 'Zip Code' }}<br>
                             {{ $customer->billing_country ?? 'Country' }}<br>
-                            TRN: {{ $customer->trn ?? 'N/A' }}
+                            TRN:104073808800003
                         </div>
                     </td>
                     <td style="border-bottom:none !important; line-height: 2.1;">
@@ -170,8 +170,8 @@
                         {{ Utility::dateFormat($settings, $invoice->issue_date) ?? 'Date' }}<br>
                         <span style="padding-left:350px;">{{ __('Due Date') }}:</span>
                         {{ Utility::dateFormat($settings, $invoice->due_date) ?? 'Date' }}<br>
-                        <span style="padding-left:350px;">{{ __('TRN') }}:</span>:
-                        {{ $settings['tax_number'] ?? 'N/A' }}
+                        <span style="padding-left:350px;">{{ __('TRN') }}:</span> 104073808800003
+                       
 
                     </td>
                 </tr>
@@ -279,6 +279,7 @@
                         </th>
                         <th style="text-align: right;" class="my-td"><span style="font-family: DejaVu Sans; sans-serif;">{{Utility::priceFormat($settings,$invoice->getSubTotal()-$invoice->getTotalDiscount()+$invoice->getTotalTax(), $invoice->currency_symbol)}}</span></th>
                     </tr>
+                  
             </table>
         </div>
 
