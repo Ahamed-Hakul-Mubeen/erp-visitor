@@ -238,7 +238,7 @@
                                 var tax = [];
 
                                 var totalItemTaxRate = 0;
-                                taxes += `<select class='form-control select2 tax-select'><option value=''>--</option>`;
+                                taxes += `<select class='form-control select2 tax-select' required><option value=''>--</option>`;
                                 var selected_tax = $(el.parent().parent().find('.taxes')).val();
 
                                 for (var i = 0; i < item.taxes.length; i++) {

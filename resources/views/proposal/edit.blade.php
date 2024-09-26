@@ -6,6 +6,9 @@
     <script src="{{asset('js/jquery-ui.min.js')}}"></script>
     <script src="{{asset('js/jquery.repeater.min.js')}}"></script>
     <script>
+        $(document).ready(function(){
+            $('.item').trigger('change');
+        });
         var selector = "body";
         if ($(selector + " .repeater").length) {
             var $dragAndDrop = $("body .repeaer tbody").sortable({
@@ -26,7 +29,7 @@
                                 max_size: 2048
                             });
                         }
-                        $('.select2').select2();
+                        // $('.select2').select2();
                     },
                     hide: function (deleteElement) {
                         $(this).slideUp(deleteElement);
@@ -55,15 +58,19 @@
 
             if (typeof value != 'undefined' && value.length != 0) {
                 value = JSON.parse(value);
+                console.log(value);
                 $repeater.setList(value);
                 for (var i = 0; i < value.length; i++) {
                     var tr = $('#sortable-table .id[value="' + value[i].id + '"]').parent();
                     tr.find('.item').val(value[i].product_id);
-                    changeItem(tr.find('.item'));
+                    // changeItem(tr.find('.item'));
                 }
             }
 
         }
+
+        </script>
+        <script>
 
 
         $(document).on('change', '#customer', function () {
@@ -112,6 +119,9 @@
             var el = $(this).parent().parent().parent().parent().parent();
             // console.log(el);
             var totalItemTaxRate = $(this).find('option:selected').attr('data-taxrate');
+            if(isNaN(totalItemTaxRate)) {
+                totalItemTaxRate = 0;
+            }
             var taxid = $(this).find('option:selected').attr('value');
 
             $(el.find('.itemTaxRate')).val(parseFloat(totalItemTaxRate).toFixed(2));
@@ -133,6 +143,9 @@
             var amount = (totalItemPrice);
 
             var totalItemTaxRate = $(el.find('.itemTaxRate')).val();
+            if(isNaN(totalItemTaxRate)) {
+                totalItemTaxRate = 0;
+            }
             var itemTaxPrice = parseFloat((totalItemTaxRate / 100) * (totalItemPrice));
             $(el.find('.itemTaxPrice')).val(itemTaxPrice.toFixed(2));
 
@@ -232,11 +245,12 @@
                                 }
 
 
+
                                 var taxes = '';
                                 var tax = [];
 
                                 var totalItemTaxRate = 0;
-                                taxes += `<select class='form-control select2 tax-select' required><option value=''>--</option>`;
+                                taxes += `<select class='form-control tax-select' required><option data-taxrate="0" value=''>--</option>`;
                                 var selected_tax = $(el.parent().parent().parent().find('.taxes')).val();
                                 for (var i = 0; i < item.taxes.length; i++) {
 
@@ -334,6 +348,9 @@
 
 
             var totalItemTaxRate = $(el.find('.itemTaxRate')).val();
+            if(isNaN(totalItemTaxRate)) {
+                totalItemTaxRate = 0;
+            }
             var itemTaxPrice = parseFloat((totalItemTaxRate / 100) * (totalItemPrice));
             $(el.find('.itemTaxPrice')).val(itemTaxPrice.toFixed(2));
 
@@ -385,6 +402,9 @@
             var amount = (totalItemPrice);
 
             var totalItemTaxRate = $(el.find('.itemTaxRate')).val();
+            if(isNaN(totalItemTaxRate)) {
+                totalItemTaxRate = 0;
+            }
             var itemTaxPrice = parseFloat((totalItemTaxRate / 100) * (totalItemPrice));
             $(el.find('.itemTaxPrice')).val(itemTaxPrice.toFixed(2));
 
@@ -436,6 +456,9 @@
 
 
             var totalItemTaxRate = $(el.find('.itemTaxRate')).val();
+            if(isNaN(totalItemTaxRate)) {
+                totalItemTaxRate = 0;
+            }
             var itemTaxPrice = parseFloat((totalItemTaxRate / 100) * (totalItemPrice));
             $(el.find('.itemTaxPrice')).val(itemTaxPrice.toFixed(2));
 

@@ -105,6 +105,7 @@
         })
 
         $(document).on('change', '.tax-select', function () {
+            // alert("tax changed");
             var el = $(this).parent().parent().parent().parent().parent();
             // console.log(el);
             var totalItemTaxRate = $(this).find('option:selected').attr('data-taxrate');
@@ -129,11 +130,14 @@
             var amount = (totalItemPrice);
 
             var totalItemTaxRate = $(el.find('.itemTaxRate')).val();
+            if(isNaN(totalItemTaxRate)) {
+                totalItemTaxRate = 0;
+            }
             var itemTaxPrice = parseFloat((totalItemTaxRate / 100) * (totalItemPrice));
             $(el.find('.itemTaxPrice')).val(itemTaxPrice.toFixed(2));
 
             $(el.find('.amount')).html((parseFloat(itemTaxPrice)+parseFloat(amount)).toFixed(2));
-
+            // alert("1 - "+$(el.find('.amount')).html());
             var totalItemTaxPrice = 0;
             var itemTaxPriceInput = $('.itemTaxPrice');
             for (var j = 0; j < itemTaxPriceInput.length; j++) {
@@ -204,7 +208,7 @@
                         if (item.taxes == 0) {
                             taxes += '-';
                         } else {
-                            taxes += `<select class='form-control select2 tax-select' required><option value='0'>--</option>`;
+                            taxes += `<select class='form-control tax-select' required><option value=''>--</option>`;
                             for (var i = 0; i < item.taxes.length; i++) {
                                 taxes += `<option data-taxrate='${item.taxes[i].rate}' value='${item.taxes[i].id}'>${item.taxes[i].name} (${item.taxes[i].rate}%)</option>`;
                                 // taxes += '<span class="mt-1 mr-2 badge bg-primary">' + item.taxes[i].name + ' ' + '(' + item.taxes[i].rate + '%)' + '</span>';
@@ -223,6 +227,7 @@
                         $(el.parent().parent().find('.unit')).html(item.unit);
                         $(el.parent().parent().find('.discount')).val(0);
                         $(el.parent().parent().find('.amount')).html(parseFloat(item.totalAmount).toFixed(2));
+                        // alert("2 - "+$(el.parent().parent().find('.amount')).html());
 
                         var inputs = $(".amount");
                         var subTotal = 0;
@@ -239,8 +244,13 @@
                         var totalItemTaxPrice = 0;
                         var itemTaxPriceInput = $('.itemTaxPrice');
                         for (var j = 0; j < itemTaxPriceInput.length; j++) {
-                            totalItemTaxPrice += parseFloat(itemTaxPriceInput[j].value);
-                            $(el.parent().parent().find('.amount')).html((parseFloat(item.totalAmount)+parseFloat(itemTaxPriceInput[j].value)).toFixed(2));
+                            if(itemTaxPriceInput[j].value)
+                            {
+                                totalItemTaxPrice += parseFloat(itemTaxPriceInput[j].value);
+                                // alert(itemTaxPriceInput[j].value);
+                                $(el.parent().parent().find('.amount')).html((parseFloat(item.totalAmount)+parseFloat(itemTaxPriceInput[j].value)).toFixed(2));
+                                // alert("3 - "+$(el.parent().parent().find('.amount')).html());
+                            }
                         }
 
                         var totalItemDiscountPrice = 0;
@@ -279,10 +289,14 @@
 
 
             var totalItemTaxRate = $(el.find('.itemTaxRate')).val();
+            if(isNaN(totalItemTaxRate)) {
+                totalItemTaxRate = 0;
+            }
             var itemTaxPrice = parseFloat((totalItemTaxRate / 100) * (totalItemPrice));
             $(el.find('.itemTaxPrice')).val(itemTaxPrice.toFixed(2));
 
             $(el.find('.amount')).html((parseFloat(itemTaxPrice)+parseFloat(amount)).toFixed(2));
+            // alert("4 - "+$(el.find('.amount')).html());
 
             var totalItemTaxPrice = 0;
             var itemTaxPriceInput = $('.itemTaxPrice');
@@ -329,10 +343,14 @@
 
 
             var totalItemTaxRate = $(el.find('.itemTaxRate')).val();
+            if(isNaN(totalItemTaxRate)) {
+                totalItemTaxRate = 0;
+            }
             var itemTaxPrice = parseFloat((totalItemTaxRate / 100) * (totalItemPrice));
             $(el.find('.itemTaxPrice')).val(itemTaxPrice.toFixed(2));
 
             $(el.find('.amount')).html((parseFloat(itemTaxPrice)+parseFloat(amount)).toFixed(2));
+            // alert("5 - "+$(el.find('.amount')).html());
 
             var totalItemTaxPrice = 0;
             var itemTaxPriceInput = $('.itemTaxPrice');
@@ -381,10 +399,14 @@
 
 
             var totalItemTaxRate = $(el.find('.itemTaxRate')).val();
+            if(isNaN(totalItemTaxRate)) {
+                totalItemTaxRate = 0;
+            }
             var itemTaxPrice = parseFloat((totalItemTaxRate / 100) * (totalItemPrice));
             $(el.find('.itemTaxPrice')).val(itemTaxPrice.toFixed(2));
 
             $(el.find('.amount')).html((parseFloat(itemTaxPrice)+parseFloat(amount)).toFixed(2));
+            // alert("6 - "+$(el.find('.amount')).html());
 
             var totalItemTaxPrice = 0;
             var itemTaxPriceInput = $('.itemTaxPrice');
