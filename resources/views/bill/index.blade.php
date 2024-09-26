@@ -47,8 +47,18 @@
                         <div class="row align-items-center justify-content-end">
                             <div class="col-xl-10">
                                 <div class="row">
-                                    <div class="col-3"></div>
-                                    <div class="col-3"></div>
+                                    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12 me-2">
+                                        <div class="btn-box form-group mx-2">
+                                            <label for="category" class="mb-2">Category</label>
+                                                <select class="form-control" name="category" id="category">
+                                                    @if(count($category) > 0)
+                                                    @foreach ($category as $k=> $cat )
+                                                        <option value="{{$k}}" {{isset($_GET['category'])?($_GET['category'] == $k ? 'selected'  : ''):''}}>{{$cat}}</option>
+                                                    @endforeach
+                                                    @endif
+                                            </select>
+                                        </div>
+                                    </div>
                                     <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12 month">
                                         <div class="btn-box">
                                             {{Form::label('bill_date',__('Bill Date'),['class'=>'form-label'])}}
@@ -61,9 +71,10 @@
                                             {{ Form::select('status', [''=>'Select Status'] + $status,isset($_GET['status'])?$_GET['status']:'', array('class' => 'form-control select')) }}
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
-                            <div class="col-auto mt-4">
+                            <div class="col-auto mt-2">
                                 <div class="row">
                                     <div class="col-auto">
                                         <a href="#" class="btn btn-sm btn-primary" onclick="document.getElementById('frm_submit').submit(); return false;" data-bs-toggle="tooltip" title="{{__('Apply')}}" data-original-title="{{__('apply')}}">

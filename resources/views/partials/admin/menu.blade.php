@@ -604,7 +604,7 @@
                                             @can('show career')
                                                 <li class="dash-item {{ request()->is('career*') ? 'active' : '' }}">
                                                     <a class="dash-link"
-                                                        href="{{ route('career', [\Auth::user()->creatorId(), $lang]) }}">{{ __('Career') }}</a>
+                                                        href="{{ route('career', [\Auth::user()->creatorId(), $lang]) }}" target="_blank">{{ __('Career') }}</a>
                                                 </li>
                                             @endcan
                                         </ul>
@@ -727,15 +727,15 @@
                                             href="{{ route('company-policy.index') }}">{{ __('Company policy') }}</a>
                                     </li>
                                 @endcan
-                                 
-                                @if (\Auth::user()->type == 'company' || \Auth::user()->type == 'HR')         
+
+                                @if (\Auth::user()->type == 'company' || \Auth::user()->type == 'HR')
                                     <li class="dash-item {{ request()->is('asset_management*') ? 'active' : '' }}">
                                         <a class="dash-link"
                                             href="{{ route('asset_management.index') }}">{{ __('Assets Management') }}</a>
                                     </li>
-                                @endif   
-                                    
-                                
+                                @endif
+
+
 
                                 @if (\Auth::user()->type == 'company' || \Auth::user()->type == 'HR')
                                     <li
@@ -1246,7 +1246,7 @@
                         </li>
                     @endcan
                     @can('manage role')
-                    
+
                         <li
                             class="dash-item {{ Request::route()->getName() == 'roles.index' || Request::route()->getName() == 'roles.create' || Request::route()->getName() == 'roles.edit' ? ' active' : '' }} ">
                             <a class="dash-link" href="{{ route('roles.index') }}">{{ __('Role') }}</a>

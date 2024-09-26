@@ -39,3 +39,11 @@
 
 {{ Form::close() }}
 
+<script>
+    $(document).ready(function(){
+        $('#from').on('change', function() {
+            var startDate = $(this).val();
+            $('#to').attr('min', startDate);
+        });
+    });
+</script>

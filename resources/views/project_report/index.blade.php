@@ -3,6 +3,14 @@
     $profile=\App\Models\Utility::get_file('uploads/avatar/');
 @endphp
 @push('script-page')
+<script>
+    $(document).ready(function(){
+        $('#start_date').on('change', function() {
+            var startDate = $(this).val();
+            $('#end_date').attr('min', startDate);
+        });
+    });
+</script>
 @endpush
 @section('page-title')
     {{__('Project Reports')}}
@@ -37,8 +45,8 @@
                     <div class="card">
                         <div class="card-body">
                         {{ Form::open(['route' => ['project_report.index'], 'method' => 'GET', 'id' => 'project_report_submit']) }}
-                            <div class="row d-flex align-items-center justify-content-end">
-                                <div class="col-xl-2 col-lg-2 col-md-6 col-sm-12 col-12 mr-2 mb-0">
+                            <div class="row d-flex align-items-center justify-content-start">
+                                <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 mr-2 mb-0">
                                     <div class="btn-box">
                                         {{ Form::label('users', __('Users'),['class'=>'form-label'])}}
                                         <select class="select form-select" name="all_users" id="all_users">
@@ -49,25 +57,31 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-xl-2 col-lg-2 col-md-6 col-sm-12 col-12">
+                                <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 mr-2 mb-0">
+                                    <div class="btn-box form-group mt-4">
+                                        <label for="name" class="mb-2 font-light">Project Name</label>
+                                            <input type="text" placeholder="Enter Project Name" class="form-control" name="project" value="{{isset($_GET['project'])?$_GET['project']:''}}">
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
                                     <div class="btn-box">
                                         {{ Form::label('status', __('Status'),['class'=>'form-label'])}}
                                         {{ Form::select('status', ['' => 'Select Status'] + $status, isset($_GET['status']) ? $_GET['status'] : '', ['class' => 'form-control select']) }}
                                     </div>
                                 </div>
-                                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12 mr-2">
+                                <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 mr-2 mt-3">
                                     <div class="btn-box">
                                         {{ Form::label('start_date', __('Start Date'),['class'=>'form-label'])}}
                                         {{ Form::date('start_date', isset($_GET['start_date'])?$_GET['start_date']:'', array('class' => 'form-control month-btn')) }}
                                     </div>
                                 </div>
-                                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12 mr-2">
+                                <div class="col-xl-4 col-lg-3 col-md-4 col-sm-12 col-12 mr-2 mt-3">
                                     <div class="btn-box">
                                         {{ Form::label('end_date', __('End Date'),['class'=>'form-label'])}}
                                         {{ Form::date('end_date', isset($_GET['end_date'])?$_GET['end_date']:'', array('class' => 'form-control month-btn')) }}
                                     </div>
                                 </div>
-                                <div class="col-auto float-end ms-2 mt-4">
+                                <div class="col-auto float-end ms-2 mt-5">
                                     <a href="#" class="btn btn-sm btn-primary"
                                        onclick="document.getElementById('project_report_submit').submit(); return false;"
                                        data-toggle="tooltip" data-original-title="{{ __('apply') }}">

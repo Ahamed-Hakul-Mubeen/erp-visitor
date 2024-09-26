@@ -9,7 +9,7 @@ class CurrencyController extends Controller
 {
     public function index()
     {
-        if (\Auth::user()->can('manage constant tax')) {
+        if (\Auth::user()->can('manage currency')) {
             $currency = Currency::where('created_by', '=', \Auth::user()->creatorId())->get();
             return view('currency.index')->with('currency', $currency);
         } else {
@@ -19,16 +19,16 @@ class CurrencyController extends Controller
 
     public function create()
     {
-        if (\Auth::user()->can('create constant tax')) {
+        if (\Auth::user()->can('create currency')) {
             return view('currency.create');
         } else {
-            return response()->json(['error' => __('Permission denied.')], 401);
+            return redirect()->back()->with('error', __('Permission denied.'));
         }
     }
 
     public function store(Request $request)
     {
-        if (\Auth::user()->can('create constant tax')) {
+        if (\Auth::user()->can('create currency')) {
             $validator = \Validator::make(
                 $request->all(),
                 [
@@ -56,20 +56,20 @@ class CurrencyController extends Controller
 
     public function edit(Currency $currency)
     {
-        if (\Auth::user()->can('edit constant tax')) {
+        if (\Auth::user()->can('edit currency')) {
             if ($currency->created_by == \Auth::user()->creatorId()) {
                 return view('currency.edit', compact('currency'));
             } else {
                 return response()->json(['error' => __('Permission denied.')], 401);
             }
         } else {
-            return response()->json(['error' => __('Permission denied.')], 401);
+            return redirect()->back()->with('error', __('Permission denied.'));
         }
     }
 
     public function update(Request $request, Currency $currency)
     {
-        if (\Auth::user()->can('edit constant tax')) {
+        if (\Auth::user()->can('edit currency')) {
             if ($currency->created_by == \Auth::user()->creatorId()) {
                 $validator = \Validator::make(
                     $request->all(),
@@ -99,7 +99,7 @@ class CurrencyController extends Controller
 
     public function destroy(Currency $currency)
     {
-        if (\Auth::user()->can('delete constant tax')) {
+        if (\Auth::user()->can('delete currency')) {
             if ($currency->created_by == \Auth::user()->creatorId()) {
                 // $proposalData = ProposalProduct::whereRaw("find_in_set('$currency->id',tax)")->first();
                 // $billData     = BillProduct::whereRaw("find_in_set('$currency->id',tax)")->first();

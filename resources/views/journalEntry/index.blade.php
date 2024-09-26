@@ -19,7 +19,45 @@
 @endsection
 
 @section('content')
+<div class="row">
+    <div class="col-sm-12">
+        <div class=" mt-2 " id="multiCollapseExample1">
+            <div class="card">
+                <div class="card-body">
+                    {{ Form::open(array('route' => array('journal-entry.index'),'method' => 'GET','id'=>'transfer_form')) }}
+                    <div class="row align-items-center justify-content-end">
+                        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12 month">
+                            <div class="btn-box">
+                                {{ Form::label('date', __('Date'),['class'=>'form-label'])}}
+                                {{ Form::text('date', isset($_GET['date'])?$_GET['date']:null, array('class' => 'form-control month-btn','id'=>'pc-daterangepicker-1','readonly')) }}
 
+                            </div>
+                        </div>
+
+                        <div class="col-auto mt-4">
+                            <div class="row">
+                                <div class="col-auto">
+
+                                    <a href="#" class="btn btn-sm btn-primary" onclick="document.getElementById('transfer_form').submit(); return false;" data-bs-toggle="tooltip" title="{{__('Apply')}}" data-original-title="{{__('apply')}}">
+                                        <span class="btn-inner--icon"><i class="ti ti-search"></i></span>
+                                    </a>
+
+                                    <a href="{{route('journal-entry.index')}}" class="btn btn-sm btn-danger " data-bs-toggle="tooltip"  title="{{ __('Reset') }}" data-original-title="{{__('Reset')}}">
+                                        <span class="btn-inner--icon"><i class="ti ti-trash-off text-white-off "></i></span>
+                                    </a>
+
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{ Form::close() }}
+            </div>
+        </div>
+    </div>
+</div>
     <div class="row">
         <div class="col-xl-12">
             <div class="card">

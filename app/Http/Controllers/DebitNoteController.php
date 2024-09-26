@@ -14,12 +14,20 @@ class DebitNoteController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(Request $request)
     {
         if(\Auth::user()->can('manage debit note'))
         {
+
+
             $bills = Bill::where('created_by', \Auth::user()->creatorId())->get();
 
+            // if (!empty($request->date)) {
+            //     $date_range = explode('to', $request->date);
+            //     $bills->whereBetween('issue_date', $date_range);
+            // }
+
+            // dd($bills);
             return view('debitNote.index', compact('bills'));
         }
         else

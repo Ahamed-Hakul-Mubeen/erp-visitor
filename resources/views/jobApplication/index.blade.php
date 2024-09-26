@@ -133,6 +133,22 @@
             }(window.jQuery);
         @endcan
     </script>
+    <script>
+        $(document).ready(function(){
+
+            var startDate = $('#start_date').val();
+            if (startDate) {
+                $('#end_date').attr('min', startDate);
+            } else {
+                $('#end_date').removeAttr('min');
+            }
+
+            $('#start_date').on('change', function() {
+                var startDate = $(this).val();
+                $('#end_date').attr('min', startDate);
+            });
+        });
+    </script>
 @endpush
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{route('dashboard')}}">{{__('Dashboard')}}</a></li>

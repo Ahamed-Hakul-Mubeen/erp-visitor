@@ -37,7 +37,9 @@
                             max_size: 2048
                         });
                     }
-                    // $('.select2').select2();
+                    if($('.select2').length) {
+                        $('.select2').select2();
+                    }
 
                 },
                 hide: function (deleteElement) {
@@ -208,7 +210,7 @@
                     if (item.taxes == 0) {
                         taxes += '-';
                     } else {
-                        taxes += `<select class='form-control tax-select'><option value=''>--</option>`;
+                        taxes += `<select class='form-control select2 tax-select'><option value=''>--</option>`;
                         for (var i = 0; i < item.taxes.length; i++) {
                             taxes += `<option data-taxrate='${item.taxes[i].rate}' value='${item.taxes[i].id}'>${item.taxes[i].name} (${item.taxes[i].rate}%)</option>`;
                             // taxes += '<span class="mt-1 mr-2 badge bg-primary">' + item.taxes[i].name + ' ' + '(' + item.taxes[i].rate + '%)' + '</span>';
@@ -495,7 +497,7 @@
                                         <i class="ti ti-plus"></i>{{__('Add Customer')}}
                                     </a>
                                 </div>
-                                {{ Form::select('customer_id', $customers,$customerId, array('class' => 'form-control','id'=>'customer','data-url'=>route('invoice.customer'),'required'=>'required')) }}
+                                {{ Form::select('customer_id', $customers,$customerId, array('class' => 'form-control select2','id'=>'customer','data-url'=>route('invoice.customer'),'required'=>'required')) }}
 
                             </div>
 
@@ -623,7 +625,7 @@
                             <tr>
 
                                 <td width="25%" class="pt-0 form-group">
-                                    {{ Form::select('item', $product_services,'', array('class' => 'form-control item','data-url'=>route('invoice.product'),'required'=>'required')) }}
+                                    {{ Form::select('item', $product_services,'', array('class' => 'form-control select2 item','data-url'=>route('invoice.product'),'required'=>'required')) }}
                                 </td>
                                 <td>
                                     <div class="form-group price-input input-group search-form">
