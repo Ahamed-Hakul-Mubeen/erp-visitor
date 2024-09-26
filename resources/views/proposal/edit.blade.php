@@ -26,7 +26,10 @@
                                 max_size: 2048
                             });
                         }
-                        // $('.select2').select2();
+                        if($('.select2').length) {
+                            $('.select2').select2();
+                        }
+
                     },
                     hide: function (deleteElement) {
                         $(this).slideUp(deleteElement);

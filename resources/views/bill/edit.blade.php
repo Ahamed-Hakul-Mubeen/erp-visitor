@@ -35,8 +35,11 @@
                     }
 
                     // for item SearchBox ( this function is  custom Js )
-                    // JsSearchBox();
-                    $('.select2').select2();
+                    JsSearchBox();
+
+                    if($('.select2').length) {
+                        $('.select2').select2();
+                    }
                 },
                 hide: function (deleteElement) {
 
