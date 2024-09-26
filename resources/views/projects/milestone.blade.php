@@ -45,11 +45,15 @@
         </div>
 
         <div class="form-group col-md-6">
-            {{ Form::label('cost', __('Cost (% of Budget)'), ['class' => 'col-form-label']) }}
+            {{ Form::label('percentage', __('Percentage (% of Budget)'), ['class' => 'col-form-label']) }}
             <div class="input-group search-form">
-                {{ Form::number('cost','', array('class' => 'form-control', 'required' => 'required', 'max' => '100' ,'placeholder'=>__('Percentage'))) }}
+                {{ Form::number('percentage','', array('class' => 'form-control', 'required' => 'required','min' => '0', 'max' => $available_milestone_percentage, 'total_cost' => $total_cost, 'placeholder'=>__('Percentage'))) }}
                 <span class="bg-transparent input-group-text">%</span>
             </div>
+        </div>
+        <div class="form-group col-md-6">
+            {{ Form::label('cost', __('Cost ('.\Auth::user()->currencySymbol().')'), ['class' => 'col-form-label']) }}
+            {{ Form::text('cost', null, ['class' => 'form-control', 'required' => 'required', 'readonly' => 'readonly']) }}
         </div>
 
         <div class="form-group col-md-6">
