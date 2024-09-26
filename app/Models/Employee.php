@@ -185,7 +185,7 @@ class Employee extends Model
         $no_of_days = date('t', strtotime($start_date));
         $end_date = $year."-".$month."-".$no_of_days;
 
-        $attendance_days = AttendanceEmployee::where("employee_id", $this->id)->whereBetween('date', [$start_date, $end_date])->get()->count();
+        $attendance_days = AttendanceEmployee::where("employee_id", $this->id)->whereBetween('date', [$start_date, $end_date])->groupBy('date')->get()->count();       
         $holidays = Holiday::whereBetween('date', [$start_date, $end_date])->where('created_by', \Auth::user()->creatorId())->get()->count();
         $approved_leave = Leave::where('employee_id', $this->id)->where(function($query) use ($start_date, $end_date) {
                     $query->whereBetween('start_date', [$start_date, $end_date])->orWhereBetween('end_date', [$start_date, $end_date]);
