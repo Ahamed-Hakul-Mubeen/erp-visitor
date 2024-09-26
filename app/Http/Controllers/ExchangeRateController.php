@@ -161,4 +161,17 @@ class ExchangeRateController extends Controller
             return redirect()->back()->with('error', __('Permission denied.'));
         }
     }
+    public function fetch_exchange_rate(Request $request)
+    {
+        $currency_code = $request->currency_code;
+        $exchange_rate = 1;
+        if ($currency_code != \Auth::user()->currencyCode()) {
+            $exchange_rate = ExchangeRate::where("from_currency", $currency_code)->where("to_currency", \Auth::user()->currencyCode())->first();
+            if (!$exchange_rate) {
+                return array("status" => 0, "message" => __("No conversion rate found"));
+            }
+            $exchange_rate = $exchange_rate->exchange_rate;
+        }
+        return array("status" => 1, "exchange_rate" => $exchange_rate);
+    }
 }

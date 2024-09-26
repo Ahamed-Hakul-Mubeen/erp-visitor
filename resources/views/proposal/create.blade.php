@@ -186,7 +186,7 @@
                     } else {
                         if(item.exchange_rate != 1)
                         {
-                            $("#conversion_rate_span").html(` (1 {{ \Auth::user()->currencyCode() }} = ${ item.exchange_rate } ${ $("#currency_code").val() }  )`);
+                            $("#conversion_rate_span").html(` (1 ${ $("#currency_code").val() } = ${ item.exchange_rate } {{ \Auth::user()->currencyCode() }}  )`);
                         } else {
                             $("#conversion_rate_span").html(``);
                         }

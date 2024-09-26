@@ -117,8 +117,8 @@
                                         <a data-url="{{ route('advance.show', $advance->id) }}" data-ajax-popup="true" data-title="{{__('View Advance')}}" href="#" class="btn btn-outline-primary">{{ AUth::user()->advanceNumberFormat($advance->advance_id) }}</a>
                                     </td>
                                     <td>{{  Auth::user()->dateFormat($advance->date)}}</td>
-                                    <td>{{  Auth::user()->priceFormat($advance->amount)}}</td>
-                                    <td>{{  Auth::user()->priceFormat($advance->balance)}}</td>
+                                    <td>{{  Auth::user()->priceFormat($advance->amount, null, $advance->currency_symbol)}}</td>
+                                    <td>{{  Auth::user()->priceFormat($advance->balance, null, $advance->currency_symbol)}}</td>
                                     <td>{{ !empty($advance->bankAccount)?$advance->bankAccount->bank_name.' '.$advance->bankAccount->holder_name:''}}</td>
                                     <td>{{  (!empty($advance->customer)?$advance->customer->name:'-')}}</td>
                                     <td>{{  (!empty($advance->createdUser)?$advance->createdUser->name:'-')}}</td>
