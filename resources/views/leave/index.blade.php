@@ -19,6 +19,58 @@
 @endsection
 
 @section('content')
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class=" mt-2 " id="multiCollapseExample1">
+            <div class="card">
+                <div class="card-body">
+                    {{ Form::open(array('route' => array('leave.index'),'method' => 'GET','id'=>'frm_submit')) }}
+                    <div class="d-flex align-items-center justify-content-end">
+                        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12 me-2">
+                            <div class="btn-box form-group">
+                                <label for="leavetype">Leave Type</label>
+                                    <select class="form-control" name="leavetype" id="leavetype">
+                                        <option value="">Select Leave Type</option>
+                                        @if(count($leavetypes) > 0)
+                                        @foreach ($leavetypes as $leavetype )
+                                            <option value="{{$leavetype->id}}" {{isset($_GET['leavetype'])?($_GET['leavetype'] == $leavetype->id ? 'selected'  : ''):''}}>{{$leavetype->title}}</option>
+                                        @endforeach
+                                        @endif
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12 me-2">
+                            <div class="btn-box form-group">
+                                <label for="startDate">Start Date</label>
+                                 <input type="date" name="startDate" class="form-control" value="{{isset($_GET['startDate'])?$_GET['startDate']:''}}"  />
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12 me-2">
+                            <div class="btn-box form-group">
+                                <label for="endDate">End Date</label>
+                                 <input type="date" name="endDate" class="form-control" value="{{isset($_GET['endDate'])?$_GET['endDate']:''}}"  />
+                            </div>
+                        </div>
+
+                        <div class="col-auto float-end ms-2 ">
+
+                            <a href="#" class="btn btn-sm btn-primary" onclick="document.getElementById('frm_submit').submit(); return false;" data-bs-toggle="tooltip" data-original-title="{{__('apply')}}">
+                                <span class="btn-inner--icon"><i class="ti ti-search"></i></span>
+                            </a>
+                            <a href="{{ route('leave.index') }}" class="btn btn-sm btn-danger" data-bs-toggle="tooltip"
+                               title="{{ __('Reset') }}">
+                                <span class="btn-inner--icon"><i class="ti ti-trash-off text-white "></i></span>
+                            </a>
+                        </div>
+
+                    </div>
+                    {{ Form::close() }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
     <div class="row">
     <div class="col-xl-12">
             <div class="card">
@@ -70,13 +122,13 @@
                                     <td>
                                        @can('edit leave')
                                             <div class="action-btn bg-primary ms-2">
-                                                <a href="#" 
-                                                data-url="{{ URL::to('leave/'.$leave->id.'/edit') }}" 
-                                                data-size="lg" 
-                                                data-ajax-popup="true" 
-                                                data-title="{{__('Edit Leave')}}" 
-                                                class="mx-3 btn btn-sm align-items-center" 
-                                                data-bs-toggle="tooltip" 
+                                                <a href="#"
+                                                data-url="{{ URL::to('leave/'.$leave->id.'/edit') }}"
+                                                data-size="lg"
+                                                data-ajax-popup="true"
+                                                data-title="{{__('Edit Leave')}}"
+                                                class="mx-3 btn btn-sm align-items-center"
+                                                data-bs-toggle="tooltip"
                                                 title="{{__('Edit')}}">
                                                     <i class="text-white ti ti-pencil"></i>
                                                 </a>
@@ -85,13 +137,13 @@
 
                                         {{-- @if($leave->pm_approval == 'Pending' || $leave->hr_approval == 'Pending') --}}
                                             <div class="action-btn bg-warning ms-2">
-                                                <a href="#" 
-                                                data-url="{{ URL::to('leave/'.$leave->id.'/action') }}" 
-                                                data-size="lg" 
-                                                data-ajax-popup="true" 
-                                                data-title="{{__('Leave Action')}}" 
-                                                class="mx-3 btn btn-sm align-items-center" 
-                                                data-bs-toggle="tooltip" 
+                                                <a href="#"
+                                                data-url="{{ URL::to('leave/'.$leave->id.'/action') }}"
+                                                data-size="lg"
+                                                data-ajax-popup="true"
+                                                data-title="{{__('Leave Action')}}"
+                                                class="mx-3 btn btn-sm align-items-center"
+                                                data-bs-toggle="tooltip"
                                                 title="{{__('Leave Action')}}">
                                                     <i class="text-white ti ti-caret-right"></i>
                                                 </a>
@@ -101,11 +153,11 @@
                                         @can('delete leave')
                                             <div class="action-btn bg-danger ms-2">
                                                 {!! Form::open(['method' => 'DELETE', 'route' => ['leave.destroy', $leave->id],'id'=>'delete-form-'.$leave->id]) !!}
-                                                <a href="#" 
-                                                class="mx-3 btn btn-sm align-items-center bs-pass-para" 
-                                                data-bs-toggle="tooltip" 
-                                                title="{{__('Delete')}}" 
-                                                data-confirm="{{__('Are You Sure?').'|'.__('This action can not be undone. Do you want to continue?')}}" 
+                                                <a href="#"
+                                                class="mx-3 btn btn-sm align-items-center bs-pass-para"
+                                                data-bs-toggle="tooltip"
+                                                title="{{__('Delete')}}"
+                                                data-confirm="{{__('Are You Sure?').'|'.__('This action can not be undone. Do you want to continue?')}}"
                                                 data-confirm-yes="document.getElementById('delete-form-{{$leave->id}}').submit();">
                                                     <i class="text-white ti ti-trash"></i>
                                                 </a>
