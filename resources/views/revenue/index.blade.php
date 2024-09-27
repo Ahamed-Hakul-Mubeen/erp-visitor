@@ -120,7 +120,7 @@
 
                                 <tr class="font-style">
                                     <td>{{  Auth::user()->dateFormat($revenue->date)}}</td>
-                                    <td>{{  Auth::user()->priceFormat($revenue->amount)}}</td>
+                                    <td>{{  Auth::user()->priceFormat($revenue->amount, null, $revenue->currency_symbol)}}</td>
                                     <td>{{ !empty($revenue->bankAccount)?$revenue->bankAccount->bank_name.' '.$revenue->bankAccount->holder_name:''}}</td>
                                     <td>{{  (!empty($revenue->customer)?$revenue->customer->name:'-')}}</td>
                                     <td>{{  !empty($revenue->category)?$revenue->category->name:'-'}}</td>

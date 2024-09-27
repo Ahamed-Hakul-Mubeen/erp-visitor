@@ -369,7 +369,7 @@
                                                 <tr>
                                                     <td>{{\Auth::user()->dateFormat($income->date)}}</td>
                                                     <td>{{!empty($income->customer)?$income->customer->name:'-'}}</td>
-                                                    <td>{{\Auth::user()->priceFormat($income->amount)}}</td>
+                                                    <td>{{\Auth::user()->priceFormat($income->amount * $income->exchange_rate)}}</td>
                                                 </tr>
                                             @empty
                                                 <tr>

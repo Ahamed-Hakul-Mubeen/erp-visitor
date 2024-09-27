@@ -124,7 +124,7 @@ class DashboardController extends Controller
                     $data['expenseCatAmount'] = $exAmount;
 
                     $data['incExpBarChartData'] = \Auth::user()->getincExpBarChartData();
-                    //                dd( $data['incExpBarChartData']);
+                                //    dd( $data['incExpBarChartData']);
                     $data['incExpLineChartData'] = \Auth::user()->getIncExpLineChartDate();
 
                     $data['currentYear'] = date('Y');

@@ -467,7 +467,7 @@ class InvoiceController extends Controller
         if (\Auth::user()->can('delete invoice')) {
             if ($invoice->created_by == \Auth::user()->creatorId()) {
                 foreach ($invoice->payments as $invoices) {
-                    Utility::bankAccountBalance($invoices->account_id, $invoices->amount, 'debit');
+                    Utility::bankAccountBalance($invoices->account_id, $invoices->amount * $invoice->exchange_rate, 'debit');
 
                     $invoicepayment = InvoicePayment::find($invoices->id);
                     $invoices->delete();
@@ -475,7 +475,7 @@ class InvoiceController extends Controller
                 }
 
                 if ($invoice->customer_id != 0 && $invoice->status != 0) {
-                    Utility::updateUserBalance('customer', $invoice->customer_id, $invoice->getDue(), 'debit');
+                    Utility::updateUserBalance('customer', $invoice->customer_id, $invoice->getDue() * $invoice->exchange_rate, 'debit');
                 }
 
 
@@ -505,7 +505,7 @@ class InvoiceController extends Controller
                 $invoice = Invoice::find($invoiceProduct->invoice_id);
                 $productService = ProductService::find($invoiceProduct->product_id);
 
-                Utility::updateUserBalance('customer', $invoice->customer_id, $request->amount, 'debit');
+                Utility::updateUserBalance('customer', $invoice->customer_id, $request->amount * $invoice->exchange_rate, 'debit');
 
                 TransactionLines::where('reference_sub_id', $productService->id)->where('reference', 'Invoice')->delete();
 
@@ -805,8 +805,8 @@ class InvoiceController extends Controller
             $payment->dueAmount = \Auth::user()->priceFormat($invoice->getDue());
 
             if (!($request->advance_id)) {
-                Utility::updateUserBalance('customer', $invoice->customer_id, $request->amount, 'debit');
-                Utility::bankAccountBalance($request->account_id, $request->amount, 'credit');
+                Utility::updateUserBalance('customer', $invoice->customer_id, $request->amount * $invoice->exchange_rate, 'debit');
+                Utility::bankAccountBalance($request->account_id, $request->amount * $invoice->exchange_rate, 'credit');
 
                 $accountId = BankAccount::find($request->account_id);
                 $data = [
@@ -931,9 +931,9 @@ class InvoiceController extends Controller
             $user = 'Customer';
             Transaction::destroyTransaction($payment_id, $type, $user);
 
-            Utility::updateUserBalance('customer', $invoice->customer_id, $payment->amount, 'credit');
+            Utility::updateUserBalance('customer', $invoice->customer_id, $payment->amount * $invoice->exchange_rate, 'credit');
 
-            Utility::bankAccountBalance($payment->account_id, $payment->amount, 'debit');
+            Utility::bankAccountBalance($payment->account_id, $payment->amount * $invoice->exchange_rate, 'debit');
 
             return redirect()->back()->with('success', __('Payment successfully deleted.'));
         } else {

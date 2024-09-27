@@ -418,7 +418,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function todayIncome()
     {
-        $revenue = Revenue::where('created_by', '=', $this->creatorId())->whereRaw('Date(date) = CURDATE()')->where('created_by', \Auth::user()->creatorId())->sum('amount');
+        $revenue = Revenue::where('created_by', '=', $this->creatorId())->whereRaw('Date(date) = CURDATE()')->where('created_by', \Auth::user()->creatorId())->sum(\DB::raw('amount * exchange_rate'));
+        // dd($revenue);
         $invoiceTotal = self::getInvoiceProductsData((date('y-m-d')));
 
         // $invoices     = Invoice:: select('*')->where('created_by', \Auth::user()->creatorId())->whereRAW('Date(send_date) = CURDATE()')->get();
@@ -454,7 +455,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function incomeCurrentMonth()
     {
         $currentMonth = date('m');
-        $revenue = Revenue::where('created_by', '=', $this->creatorId())->whereRaw('MONTH(date) = ?', [$currentMonth])->sum('amount');
+        $revenue = Revenue::where('created_by', '=', $this->creatorId())->whereRaw('MONTH(date) = ?', [$currentMonth])->sum(\DB::raw('amount * exchange_rate'));
         $invoiceTotal = self::getInvoiceProductsData('', $currentMonth);
 
         // $invoices = Invoice:: select('*')->where('created_by', \Auth::user()->creatorId())->whereRAW('MONTH(send_date) = ?', [$currentMonth])->get();
@@ -564,7 +565,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         if ($month != '' && $date != '') {
             $InvoiceProducts = \DB::table('invoice_products')
-                ->select('invoice_products.invoice_id as invoice',
+                ->select('invoice_products.invoice_id as invoice', 'invoices.exchange_rate',
                     \DB::raw('SUM(quantity) as total_quantity'),
                     \DB::raw('SUM(discount) as total_discount'),
                     \DB::raw('SUM(price * quantity)  as sub_total'))
@@ -580,7 +581,7 @@ class User extends Authenticatable implements MustVerifyEmail
                 ->keyBy('invoice');
         } elseif ($date != '') {
             $InvoiceProducts = \DB::table('invoice_products')
-                ->select('invoice_products.invoice_id as invoice',
+                ->select('invoice_products.invoice_id as invoice', 'invoices.exchange_rate',
                     \DB::raw('SUM(quantity) as total_quantity'),
                     \DB::raw('SUM(discount) as total_discount'),
                     \DB::raw('SUM(price * quantity)  as sub_total'))
@@ -595,7 +596,7 @@ class User extends Authenticatable implements MustVerifyEmail
                 ->keyBy('invoice');
         } elseif ($month != '') {
             $InvoiceProducts = \DB::table('invoice_products')
-                ->select('invoice_products.invoice_id as invoice',
+                ->select('invoice_products.invoice_id as invoice', 'invoices.exchange_rate',
                     \DB::raw('SUM(quantity) as total_quantity'),
                     \DB::raw('SUM(discount) as total_discount'),
                     \DB::raw('SUM(price * quantity)  as sub_total'))
@@ -611,7 +612,8 @@ class User extends Authenticatable implements MustVerifyEmail
         }
 
         $InvoiceProducts->map(function ($invoice) {
-            $invoice->total = $invoice->sub_total + $invoice->tax_values - $invoice->total_discount;
+            $invoice->total = $invoice->sub_total - $invoice->total_discount;
+            $invoice->total = $invoice->total * $invoice->exchange_rate;
             return $invoice;
         });
 
@@ -709,11 +711,11 @@ class User extends Authenticatable implements MustVerifyEmail
 
         $user_id = \Auth::user()->creatorId();
         for ($i = 1; $i <= 12; $i++) {
-            $monthlyIncome = Revenue::selectRaw('sum(amount) amount')->where('created_by', '=', $user_id)->whereRaw('year(`date`) = ?', array(date('Y')))->whereRaw('month(`date`) = ?', $i)->first();
+            $monthlyIncome = Revenue::selectRaw('sum(amount * exchange_rate) amount')->where('created_by', '=', $user_id)->whereRaw('year(`date`) = ?', array(date('Y')))->whereRaw('month(`date`) = ?', $i)->first();
             $invoiceTotal = self::getInvoiceProductsData((date('Y')), $i);
 
             $totalIncome = (!empty($monthlyIncome) ? $monthlyIncome->amount : 0) + (!empty($invoiceTotal) ? ($invoiceTotal) : 0);
-
+            $totalIncome = (round($totalIncome));
             $incomeArr[] = !empty($totalIncome) ? str_replace(",", "", number_format($totalIncome, 2)) : 0;
 
             $monthlyExpense = Payment::selectRaw('sum(amount) amount')->where('created_by', '=', $this->creatorId())->whereRaw('year(`date`) = ?', array(date('Y')))->whereRaw('month(`date`) = ?', $i)->first();
@@ -801,12 +803,12 @@ class User extends Authenticatable implements MustVerifyEmail
         }
         $dataArr['day'] = $arrDateFormat;
         for ($i = 0; $i < count($arrDate); $i++) {
-            $dayIncome = Revenue::selectRaw('sum(amount) amount')->where('created_by', \Auth::user()->creatorId())->whereRaw('date = ?', $arrDate[$i])->first();
+            $dayIncome = Revenue::selectRaw('sum(amount * exchange_rate) amount')->where('created_by', \Auth::user()->creatorId())->whereRaw('date = ?', $arrDate[$i])->first();
 
             $invoiceTotal = self::getInvoiceProductsData($arrDate[$i]);
 
             $incomeAmount = (!empty($dayIncome->amount) ? $dayIncome->amount : 0) + (!empty($invoiceTotal) ? ($invoiceTotal) : 0);
-            $incomeArr[] = str_replace(",", "", number_format($incomeAmount, 2));
+            $incomeArr[] = str_replace(",", "", number_format($incomeAmount, 0));
 
             $dayExpense = Payment::selectRaw('sum(amount) amount')->where('created_by', \Auth::user()->creatorId())->whereRaw('date = ?', $arrDate[$i])->first();
 
