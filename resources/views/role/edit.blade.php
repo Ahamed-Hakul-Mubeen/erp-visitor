@@ -27,9 +27,9 @@
                 <li class="nav-item">
                     <a class="nav-link" id="pills-account-tab" data-bs-toggle="pill" href="#account" role="tab" aria-controls="pills-contact" aria-selected="false">{{__('Account')}}</a>
                 </li>
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a class="nav-link" id="pills-account-tab" data-bs-toggle="pill" href="#pos" role="tab" aria-controls="pills-contact" aria-selected="false">{{__('POS')}}</a>
-                </li>
+                </li> --}}
 
             </ul>
             <div class="tab-content" id="pills-tabContent">
@@ -1181,7 +1181,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane fade" id="pos" role="tabpanel" aria-labelledby="pills-contact-tab">
+                {{-- <div class="tab-pane fade" id="pos" role="tabpanel" aria-labelledby="pills-contact-tab">
                     @php
                         $modules=['warehouse','quotation','purchase','pos','barcode'];
                     @endphp
@@ -1313,7 +1313,7 @@
                             @endif
                         </div>
                     </div>
-                </div>
+                </div> --}}
             </div>
         </div>
 
