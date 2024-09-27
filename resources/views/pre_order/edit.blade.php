@@ -500,9 +500,9 @@
             }
         });
 
-    </script>
-
-    <script>
+        $(document).ready(function(){
+            $('.item').trigger('change');
+        })
         $(document).on('click', '[data-repeater-delete]', function () {
             $(".price").change();
             $(".discount").change();
