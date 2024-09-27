@@ -264,6 +264,12 @@ class InvoiceController extends Controller
 
                     return redirect()->route('invoice.index')->with('error', $messages->first());
                 }
+                if($invoice->customer_id != 0 && $invoice->status != 0)
+                {
+                    // Log::info($invoice->customer_id." - ".$invoice->getDue()." - ".'credit');
+                    Utility::updateUserBalance('customer', $invoice->customer_id, $invoice->getDue() * $invoice->exchange_rate, 'credit');
+                }
+
                 $invoice->customer_id = $request->customer_id;
                 $invoice->issue_date = $request->issue_date;
                 $invoice->due_date = $request->due_date;
@@ -278,12 +284,6 @@ class InvoiceController extends Controller
                 Utility::starting_number($invoice->invoice_id + 1, 'invoice');
                 CustomField::saveData($invoice, $request->customField);
                 $products = $request->items;
-
-                if($invoice->customer_id != 0 && $invoice->status != 0)
-                {
-                    // Log::info($invoice->customer_id." - ".$invoice->getDue()." - ".'credit');
-                    Utility::updateUserBalance('customer', $invoice->customer_id, $invoice->getDue() * $invoice->exchange_rate, 'credit');
-                }
 
                 for ($i = 0; $i < count($products); $i++) {
                     $invoiceProduct = InvoiceProduct::find($products[$i]['id']);
