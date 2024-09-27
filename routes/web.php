@@ -185,6 +185,7 @@ Route::group(
         Route::get('pre_order/pdf/{id}', [PreOrderController::class, 'pre_order'])->name('pre_order.pdf');
         Route::get('invoice/pdf/{id}', [InvoiceController::class, 'invoice'])->name('invoice.pdf');
         Route::get('bill/pdf/{id}', [BillController::class, 'bill'])->name('bill.pdf');
+        Route::get('set-company-permission', [PermissionController::class, 'setPermission']);
     }
 );
 
