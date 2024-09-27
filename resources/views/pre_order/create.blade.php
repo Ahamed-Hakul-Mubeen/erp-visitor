@@ -426,6 +426,17 @@
             $(".price").change();
             $(".discount").change();
         });
+
+
+        $(document).on('click', '#billing_data', function () {
+            $("[name='shipping_name']").val($("[name='billing_name']").val());
+            $("[name='shipping_country']").val($("[name='billing_country']").val());
+            $("[name='shipping_state']").val($("[name='billing_state']").val());
+            $("[name='shipping_city']").val($("[name='billing_city']").val());
+            $("[name='shipping_phone']").val($("[name='billing_phone']").val());
+            $("[name='shipping_zip']").val($("[name='billing_zip']").val());
+            $("[name='shipping_address']").val($("[name='billing_address']").val());
+        })
     </script>
 @endpush
 @section('content')
@@ -440,7 +451,7 @@
                             <div class="form-group" id="vender-box">
                                 <div class="d-flex justify-content-between">
                                     {{ Form::label('vender_id', __('Vendor'),['class'=>'form-label']) }}<span class="text-danger">*</span>
-                                    <a href="#" data-size="lg" data-url="{{ route('vender.create',['redirect_to_pre_order' => 1]) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create')}}" data-title="{{__('Create Vender')}}">
+                                    <a href="#" data-size="lg" data-url="{{ route('vender.create',['redirect_to_preorder' => 1]) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create')}}" data-title="{{__('Create Vender')}}">
                                         <i class="ti ti-plus"></i>{{__('Add Vendor')}}
                                     </a>
                                 </div>

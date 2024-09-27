@@ -16,6 +16,7 @@
             // document.execCommand('copy');
             show_toastr('success', 'Url copied to clipboard', 'success');
         }
+        
     </script>
 @endpush
 
@@ -234,3 +235,4 @@
         </div>
     </div>
 @endsection
+
