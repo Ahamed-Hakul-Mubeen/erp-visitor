@@ -118,7 +118,7 @@ class ReportController extends Controller
 
             // ------------------------------REVENUE INCOME-----------------------------------
 
-                $incomes = Revenue::selectRaw('sum(revenues.amount) as amount,MONTH(date) as month,YEAR(date) as year, product_service_categories.name as category_id')->leftjoin('product_service_categories', 'revenues.category_id', '=', 'product_service_categories.id')->where('product_service_categories.type', '=', 'income');
+                $incomes = Revenue::selectRaw('sum(revenues.amount * revenues.exchange_rate) as amount,MONTH(date) as month,YEAR(date) as year, product_service_categories.name as category_id')->leftjoin('product_service_categories', 'revenues.category_id', '=', 'product_service_categories.id')->where('product_service_categories.type', '=', 'income');
                 $incomes->where('revenues.created_by', '=', \Auth::user()->creatorId());
             if ($request->period != 'yearly') {
                 $incomes->whereRAW('YEAR(date) =?', [$year]);
@@ -188,7 +188,7 @@ class ReportController extends Controller
             $invoiceTmpArray = [];
 
             foreach ($invoices as $invoice) {
-                $invoiceTmpArray[$invoice->category_id][$invoice->year][$invoice->month][] = $invoice->getTotal();
+                $invoiceTmpArray[$invoice->category_id][$invoice->year][$invoice->month][] = $invoice->getTotal(true);
             }
 
             $invoiceArray = [];
@@ -221,7 +221,7 @@ class ReportController extends Controller
             $invoiceTotalArray = [];
 
             foreach ($invoices as $invoice) {
-                $invoiceTotalArray[$invoice->year][$invoice->month][] = $invoice->getTotal();
+                $invoiceTotalArray[$invoice->year][$invoice->month][] = $invoice->getTotal(true);
             }
             // ------------------------------------------ income ------------------------------------------
 
@@ -666,7 +666,7 @@ class ReportController extends Controller
 
             // ------------------------------TOTAL REVENUE INCOME-----------------------------------------------------------
 
-            $incomesData = Revenue::selectRaw('sum(revenues.amount) as amount,MONTH(date) as month,YEAR(date) as year');
+            $incomesData = Revenue::selectRaw('sum(revenues.amount * revenues.exchange_rate) as amount,MONTH(date) as month,YEAR(date) as year');
             $incomesData->where('revenues.created_by', '=', \Auth::user()->creatorId());
             if ($request->period != 'yearly') {
                 $incomesData->whereRAW('YEAR(date) =?', [$year]);
@@ -720,7 +720,7 @@ class ReportController extends Controller
 
             $invoiceTotalArray = [];
             foreach ($invoices as $invoice) {
-                $invoiceTotalArray[$invoice->year][$invoice->month][] = $invoice->getTotal();
+                $invoiceTotalArray[$invoice->year][$invoice->month][] = $invoice->getTotal(true);
             }
 
             $invoiceArr = [];
@@ -1024,10 +1024,10 @@ class ReportController extends Controller
             $totalDueInvoice = 0;
             $invoiceTotalArray = [];
             foreach ($invoices as $invoice) {
-                $totalInvoice += $invoice->getTotal();
-                $totalDueInvoice += $invoice->getDue();
+                $totalInvoice += $invoice->getTotal(true);
+                $totalDueInvoice += $invoice->getDue(true);
 
-                $invoiceTotalArray[$invoice->month][] = $invoice->getTotal();
+                $invoiceTotalArray[$invoice->month][] = $invoice->getTotal(true);
             }
             $totalPaidInvoice = $totalInvoice - $totalDueInvoice;
 
@@ -4790,7 +4790,7 @@ class ReportController extends Controller
             $start = date('Y-01-01');
             $end = date('Y-m-d', strtotime('+1 day'));
         }
-        $invoiceItems = InvoiceProduct::select('product_services.name', \DB::raw('sum(invoice_products.quantity) as quantity'), \DB::raw('sum(invoice_products.price * invoice_products.quantity) as price'), \DB::raw('sum(invoice_products.price)/sum(invoice_products.quantity) as avg_price'));
+        $invoiceItems = InvoiceProduct::select('product_services.name', \DB::raw('sum(invoice_products.quantity) as quantity'), \DB::raw('sum(invoice_products.price * invoice_products.quantity * invoices.exchange_rate) as price'), \DB::raw('sum(invoice_products.price * invoice_products.quantity * invoices.exchange_rate)/sum(invoice_products.quantity) as avg_price'));
         $invoiceItems->leftjoin('product_services', 'product_services.id', 'invoice_products.product_id');
         $invoiceItems->leftjoin('invoices', 'invoices.id', 'invoice_products.invoice_id');
         $invoiceItems->where('product_services.created_by', \Auth::user()->creatorId());
@@ -4800,7 +4800,7 @@ class ReportController extends Controller
         $invoiceItems = $invoiceItems->get()->toArray();
 
         $invoiceCustomeres = Invoice::select('customers.name', \DB::raw('count(DISTINCT invoices.customer_id, invoice_products.invoice_id) as invoice_count'))
-            ->selectRaw('sum((invoice_products.price * invoice_products.quantity) - invoice_products.discount) as price')
+            ->selectRaw('sum((invoice_products.price * invoice_products.quantity * invoices.exchange_rate) - invoice_products.discount) as price')
             ->selectRaw('(SELECT SUM((price * quantity - discount) * (taxes.rate / 100)) FROM invoice_products
              LEFT JOIN taxes ON FIND_IN_SET(taxes.id, invoice_products.tax) > 0
              WHERE invoice_products.invoice_id = invoices.id) as total_tax')
@@ -4833,7 +4833,7 @@ class ReportController extends Controller
 
         $filter['startDateRange'] = $start;
         $filter['endDateRange'] = $end;
-
+// dd($invoiceItems);
         return view('report.sales_report', compact('filter', 'invoiceItems', 'invoiceCustomers'));
     }
 
@@ -4913,42 +4913,76 @@ class ReportController extends Controller
             $end = date('Y-m-d', strtotime('+1 day'));
         }
 
+        // $receivableCustomers = Invoice::select('customers.name')
+        //     ->selectRaw('sum((invoice_products.price * invoice_products.quantity) - invoice_products.discount) as price')
+        //     ->selectRaw('sum((invoice_payments.amount)) as pay_price')
+        //     ->selectRaw('(SELECT SUM((price * quantity - discount) * (taxes.rate / 100)) FROM invoice_products
+        //      LEFT JOIN taxes ON FIND_IN_SET(taxes.id, invoice_products.tax) > 0
+        //      WHERE invoice_products.invoice_id = invoices.id) as total_tax')
+        //     ->selectRaw('(SELECT SUM(credit_notes.amount) FROM credit_notes
+        //      WHERE credit_notes.invoice = invoices.id) as credit_price')
+        //     ->leftJoin('customers', 'customers.id', 'invoices.customer_id')
+        //     ->leftJoin('invoice_payments', 'invoice_payments.invoice_id', 'invoices.id')
+        //     ->leftJoin('invoice_products', 'invoice_products.invoice_id', 'invoices.id')
+        //     ->where('invoices.created_by', \Auth::user()->creatorId())
+        //     ->where('invoices.issue_date', '>=', $start)
+        //     ->where('invoices.issue_date', '<=', $end)
+        //     ->groupBy('invoices.invoice_id')
+        //     ->get()
+        //     ->toArray();
         $receivableCustomers = Invoice::select('customers.name')
-            ->selectRaw('sum((invoice_products.price * invoice_products.quantity) - invoice_products.discount) as price')
-            ->selectRaw('sum((invoice_payments.amount)) as pay_price')
+            ->selectRaw('sum((invoice_products.price * invoice_products.quantity * invoices.exchange_rate) - invoice_products.discount) as price')
+            ->selectRaw('(SELECT SUM(invoice_payments.amount * invoices.exchange_rate) FROM invoice_payments WHERE invoice_payments.invoice_id = invoices.id) as pay_price')
             ->selectRaw('(SELECT SUM((price * quantity - discount) * (taxes.rate / 100)) FROM invoice_products
-             LEFT JOIN taxes ON FIND_IN_SET(taxes.id, invoice_products.tax) > 0
-             WHERE invoice_products.invoice_id = invoices.id) as total_tax')
+                        LEFT JOIN taxes ON FIND_IN_SET(taxes.id, invoice_products.tax) > 0
+                        WHERE invoice_products.invoice_id = invoices.id) as total_tax')
             ->selectRaw('(SELECT SUM(credit_notes.amount) FROM credit_notes
-             WHERE credit_notes.invoice = invoices.id) as credit_price')
+                        WHERE credit_notes.invoice = invoices.id) as credit_price')
             ->leftJoin('customers', 'customers.id', 'invoices.customer_id')
-            ->leftJoin('invoice_payments', 'invoice_payments.invoice_id', 'invoices.id')
             ->leftJoin('invoice_products', 'invoice_products.invoice_id', 'invoices.id')
             ->where('invoices.created_by', \Auth::user()->creatorId())
             ->where('invoices.issue_date', '>=', $start)
             ->where('invoices.issue_date', '<=', $end)
-            ->groupBy('invoices.invoice_id')
+            ->groupBy('invoices.id')  // Group by invoices.id instead of invoice_id
             ->get()
             ->toArray();
-
+// dd($receivableCustomers);
+        // $receivableSummariesInvoice = Invoice::select('customers.name')
+        //     ->selectRaw('(invoices.invoice_id) as invoice')
+        //     ->selectRaw('sum((invoice_products.price * invoice_products.quantity) - invoice_products.discount) as price')
+        //     ->selectRaw('sum((invoice_payments.amount)) as pay_price')
+        //     ->selectRaw('(SELECT SUM((price * quantity - discount) * (taxes.rate / 100)) FROM invoice_products
+        //      LEFT JOIN taxes ON FIND_IN_SET(taxes.id, invoice_products.tax) > 0
+        //      WHERE invoice_products.invoice_id = invoices.id) as total_tax')
+        //     ->selectRaw('invoices.issue_date as issue_date')
+        //     ->selectRaw('invoices.status as status')
+        //     ->leftJoin('customers', 'customers.id', 'invoices.customer_id')
+        //     ->leftJoin('invoice_payments', 'invoice_payments.invoice_id', 'invoices.id')
+        //     ->leftJoin('invoice_products', 'invoice_products.invoice_id', 'invoices.id')
+        //     ->where('invoices.created_by', \Auth::user()->creatorId())
+        //     ->where('invoices.issue_date', '>=', $start)
+        //     ->where('invoices.issue_date', '<=', $end)
+        //     ->groupBy('invoices.invoice_id')
+        //     ->get()
+        //     ->toArray();
         $receivableSummariesInvoice = Invoice::select('customers.name')
-            ->selectRaw('(invoices.invoice_id) as invoice')
-            ->selectRaw('sum((invoice_products.price * invoice_products.quantity) - invoice_products.discount) as price')
-            ->selectRaw('sum((invoice_payments.amount)) as pay_price')
+            ->selectRaw('invoices.invoice_id as invoice')
+            ->selectRaw('sum((invoice_products.price * invoice_products.quantity * invoices.exchange_rate) - invoice_products.discount) as price')
+            ->selectRaw('(SELECT SUM(invoice_payments.amount  * invoices.exchange_rate) FROM invoice_payments WHERE invoice_payments.invoice_id = invoices.id) as pay_price')
             ->selectRaw('(SELECT SUM((price * quantity - discount) * (taxes.rate / 100)) FROM invoice_products
-             LEFT JOIN taxes ON FIND_IN_SET(taxes.id, invoice_products.tax) > 0
-             WHERE invoice_products.invoice_id = invoices.id) as total_tax')
+                        LEFT JOIN taxes ON FIND_IN_SET(taxes.id, invoice_products.tax) > 0
+                        WHERE invoice_products.invoice_id = invoices.id) as total_tax')
             ->selectRaw('invoices.issue_date as issue_date')
             ->selectRaw('invoices.status as status')
             ->leftJoin('customers', 'customers.id', 'invoices.customer_id')
-            ->leftJoin('invoice_payments', 'invoice_payments.invoice_id', 'invoices.id')
             ->leftJoin('invoice_products', 'invoice_products.invoice_id', 'invoices.id')
             ->where('invoices.created_by', \Auth::user()->creatorId())
             ->where('invoices.issue_date', '>=', $start)
             ->where('invoices.issue_date', '<=', $end)
-            ->groupBy('invoices.invoice_id')
+            ->groupBy('invoices.id')  // Group by invoices.id to avoid issues with multiple joins
             ->get()
             ->toArray();
+
 
         $receivableSummariesCredit = CreditNote::select('customers.name')
             ->selectRaw('null as invoice')
@@ -4971,7 +5005,7 @@ class ReportController extends Controller
 
         $receivableDetailsInvoice = Invoice::select('customers.name')
             ->selectRaw('(invoices.invoice_id) as invoice')
-            ->selectRaw('sum(invoice_products.price) as price')
+            ->selectRaw('sum(invoice_products.price * invoices.exchange_rate) as price')
             ->selectRaw('(invoice_products.quantity) as quantity')
             ->selectRaw('(product_services.name) as product_name')
             ->selectRaw('invoices.issue_date as issue_date')
@@ -5037,22 +5071,22 @@ class ReportController extends Controller
         $receivableDetails = (array_merge($receivableDetailsInvoice, $receivableDetailsCredits));
 
         $agingSummary = Invoice::select('customers.name', 'invoices.due_date as due_date', 'invoices.status as status', 'invoices.invoice_id as invoice_id')
-            ->selectRaw('sum((invoice_products.price * invoice_products.quantity) - invoice_products.discount) as price')
-            ->selectRaw('sum((invoice_payments.amount)) as pay_price')
+            ->selectRaw('sum((invoice_products.price * invoice_products.quantity * invoices.exchange_rate) - invoice_products.discount) as price')
+            ->selectRaw('(SELECT SUM(invoice_payments.amount * invoices.exchange_rate) FROM invoice_payments WHERE invoice_payments.invoice_id = invoices.id) as pay_price')
             ->selectRaw('(SELECT SUM((price * quantity - discount) * (taxes.rate / 100)) FROM invoice_products
-             LEFT JOIN taxes ON FIND_IN_SET(taxes.id, invoice_products.tax) > 0
-             WHERE invoice_products.invoice_id = invoices.id) as total_tax')
+                        LEFT JOIN taxes ON FIND_IN_SET(taxes.id, invoice_products.tax) > 0
+                        WHERE invoice_products.invoice_id = invoices.id) as total_tax')
             ->selectRaw('(SELECT SUM(credit_notes.amount) FROM credit_notes
-             WHERE credit_notes.invoice = invoices.id) as credit_price')
+                        WHERE credit_notes.invoice = invoices.id) as credit_price')
             ->leftJoin('customers', 'customers.id', 'invoices.customer_id')
-            ->leftJoin('invoice_payments', 'invoice_payments.invoice_id', 'invoices.id')
             ->leftJoin('invoice_products', 'invoice_products.invoice_id', 'invoices.id')
             ->where('invoices.created_by', \Auth::user()->creatorId())
             ->where('invoices.issue_date', '>=', $start)
             ->where('invoices.issue_date', '<=', $end)
-            ->groupBy('invoices.invoice_id')
+            ->groupBy('invoices.id')  // Group by invoices.id to avoid issues with multiple rows per invoice
             ->get()
             ->toArray();
+
 
         $agingSummaries = [];
 

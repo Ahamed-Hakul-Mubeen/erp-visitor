@@ -62,24 +62,37 @@ class Invoice extends Model
     //     return self::$getTotal;
     // }
 
-    public function getTotal()
+    public function getTotal($conversion = false)
     {
-
-        return ($this->getSubTotal() -$this->getTotalDiscount()) + $this->getTotalTax();
+        // dd($this->getSubTotal($conversion), $this->getTotalTax($conversion))
+        return ($this->getSubTotal($conversion) -$this->getTotalDiscount()) + $this->getTotalTax($conversion);
     }
 
-    public function getSubTotal()
+
+
+    public function getSubTotal($conversion = false)
     {
         $subTotal = 0;
         foreach($this->items as $product)
         {
-
-            $subTotal += ($product->price * $product->quantity);
+            $exchange_rate = $this->getConversionRate($product->invoice_id);
+            if($conversion)
+            {
+                $subTotal += ($product->price * $product->quantity * $exchange_rate);
+            }else{
+                $subTotal += ($product->price * $product->quantity);
+            }
+            
         }
 
         return $subTotal;
     }
 
+    public function getConversionRate($invoice_id)
+    {
+        $exchange_rate = Invoice::where('id', $invoice_id)->value('exchange_rate');
+        return $exchange_rate ? $exchange_rate : 1;
+    }
 
     // public function getTotalTax()
     // {
@@ -95,7 +108,7 @@ class Invoice extends Model
     //     return $totalTax;
     // }
 
-    public function getTotalTax()
+    public function getTotalTax($conversion = false)
     {
         $taxData = Utility::getTaxData();
         $totalTax = 0;
@@ -109,8 +122,13 @@ class Invoice extends Model
                 // $tax = TaxRate::find($tax);
                 $taxes += !empty($taxData[$tax]['rate']) ? $taxData[$tax]['rate'] : 0;
             }
-
-            $totalTax += ($taxes / 100) * (($product->price * $product->quantity) - $product->discount);
+            $exchange_rate = $this->getConversionRate($product->invoice_id);
+            if($conversion)
+            {
+                $totalTax += ($taxes / 100) * (($product->price * $product->quantity * $exchange_rate) - $product->discount);
+            }else{
+                $totalTax += ($taxes / 100) * (($product->price * $product->quantity) - $product->discount);
+            }
         }
 
         return $totalTax;
@@ -126,15 +144,21 @@ class Invoice extends Model
         return $totalDiscount;
     }
 
-    public function getDue()
+    public function getDue($conversion = false)
     {
         $due = 0;
         foreach($this->payments as $payment)
         {
-            $due += $payment->amount;
+            $exchange_rate = $this->getConversionRate($payment->invoice_id);
+            if($conversion)
+            {
+                $due += $payment->amount * $exchange_rate;
+            }else{
+                $due += $payment->amount;
+            }
         }
 
-        return ($this->getTotal() - $due) - $this->invoiceTotalCreditNote();
+        return ($this->getTotal($conversion) - $due) - $this->invoiceTotalCreditNote();
     }
 
     public static function change_status($invoice_id, $status)

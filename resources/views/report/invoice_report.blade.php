@@ -315,10 +315,10 @@
                                                             <span class="badge status_badge bg-success p-2 px-3 rounded">{{ __(\App\Models\Invoice::$statues[$invoice->status]) }}</span>
                                                         @endif
                                                     </td>
-                                                    <td> {{\Auth::user()->priceFormat($invoice->getTotal()-$invoice->getDue())}}</td>
-                                                    <td> {{\Auth::user()->priceFormat($invoice->getDue())}}</td>
-                                                    <td>{{!empty($invoice->lastPayments)?\Auth::user()->dateFormat($invoice->lastPayments->date):''}}</td>
-                                                    <td> {{\Auth::user()->priceFormat($invoice->getTotal())}}</td>
+                                                    <td> {{ $invoice->currency_code .' '. $invoice->getTotal()-$invoice->getDue() }}</td>
+                                                    <td> {{ $invoice->currency_code .' '. $invoice->getDue() }}</td>
+                                                    <td> {{ !empty($invoice->lastPayments)?\Auth::user()->dateFormat($invoice->lastPayments->date):'' }}</td>
+                                                    <td> {{ $invoice->currency_code .' '. $invoice->getTotal() }}</td>
                                                 </tr>
                                             @endforeach
                                             </tbody>
