@@ -29,12 +29,12 @@
                         </div>
                         <div class="form-group col-md-6">
                             {!! Form::label('phone', __('Phone'), ['class' => 'form-label']) !!}<span class="pl-1 text-danger">*</span>
-                            {!! Form::number('phone', null, ['class' => 'form-control']) !!}
+                            {!! Form::number('phone', null, ['class' => 'form-control', 'required' => 'required']) !!}
                         </div>
                         <div class="form-group col-md-6">
 
                             {!! Form::label('dob', __('Date of Birth'), ['class' => 'form-label']) !!}<span class="pl-1 text-danger">*</span>
-                            {!! Form::date('dob', null, ['class' => 'form-control']) !!}
+                            {!! Form::date('dob', null, ['class' => 'form-control', 'required' => 'required']) !!}
 
                         </div>
                         <div class="form-group col-md-6">

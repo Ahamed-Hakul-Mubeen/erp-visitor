@@ -31,6 +31,9 @@
                                         'class' => 'form-control',
                                         'required' => 'required',
                                         'placeholder' => 'Enter employee name',
+                                        'pattern' => '[A-Za-z]+', // Only allows letters
+                                        'title' => 'Please enter alphabetic characters only.',
+                                        'oninput' => 'this.value = this.value.replace(/[^A-Za-z]/g, \'\');'
                                     ]) !!}
                                 </div>
                                 <div class="form-group col-md-6">
@@ -39,12 +42,16 @@
                                         'class' => 'form-control',
                                         'required' => 'required',
                                         'placeholder' => 'Enter employee phone',
+                                        'maxlength' => 15,
+                                        'pattern' => '\d*',  // Optional: only allows digits
+                                        'oninput' => 'this.value = this.value.replace(/[^0-9]/g, \'\');'
                                     ]) !!}
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         {!! Form::label('dob', __('Date of Birth'), ['class' => 'form-label']) !!}<span class="pl-1 text-danger">*</span>
                                         {{ Form::date('dob', null, ['class' => 'form-control ', 'required' => 'required', 'autocomplete' => 'off', 'placeholder' => 'Select Date of Birth', 'max' => \Carbon\Carbon::now()->toDateString()]) }}
+                                        <span id="dob-error" class="text-danger" style="display:none;"></span>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -300,5 +307,25 @@
                 }
             });
         }
+
+        document.getElementById('dob').addEventListener('change', function() {
+    const dob = new Date(this.value);
+    const today = new Date();
+    const age = today.getFullYear() - dob.getFullYear();
+    const m = today.getMonth() - dob.getMonth();
+
+    // Adjust age if the birthday hasn't occurred yet this year
+    if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+        age--;
+    }
+
+    const errorElement = document.getElementById('dob-error');
+    if (age < 18) {
+        errorElement.textContent = 'You must be at least 18 years old.';
+        errorElement.style.display = 'block';
+    } else {
+        errorElement.style.display = 'none';
+    }
+});
     </script>
 @endpush

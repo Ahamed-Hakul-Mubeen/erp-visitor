@@ -614,6 +614,22 @@ class UserController extends Controller
                     ['name' => 'create advance'],
                     ['name' => 'edit advance'],
                     ['name' => 'delete advance'],
+                    ['name' => 'manage currency'],
+                    ['name' => 'create currency'],
+                    ['name' => 'edit currency'],
+                    ['name' => 'delete currency'],
+                    ['name' => 'manage exchange'],
+                    ['name' => 'create exchange'],
+                    ['name' => 'edit exchange'],
+                    ['name' => 'delete exchange'],
+                    ['name' => 'manage preorder'],
+                    ['name' => 'create preorder'],
+                    ['name' => 'edit preorder'],
+                    ['name' => 'delete preorder'],
+                    ['name' => 'duplicate preorder'],
+                    ['name' => 'show preorder'],
+                    ['name' => 'send preorder'],
+                    ['name' => 'delete preorder product'],
 
                 ];
 

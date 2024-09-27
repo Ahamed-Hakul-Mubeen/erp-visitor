@@ -318,7 +318,7 @@
                                                                 @foreach ($iteam->itemTax as $tax)
 
                                                                         <tr>
-                                                                            <td>{{$tax['name'] .' ('.$tax['rate'] .'%)'}}</td>
+                                                                            <td>{{$tax['name'] .' ('.$tax['rate'] .')'}}</td>
                                                                             <td>{{ $tax['price']}}</td>
                                                                         </tr>
                                                                 @endforeach

@@ -382,8 +382,8 @@
                                 <div class="float-end"><i class="ti ti-chevron-right"></i></div></a>
                             <a href="#cache-settings" class="list-group-item list-group-item-action border-0">{{ __('Cache Settings') }}
                                 <div class="float-end"><i class="ti ti-chevron-right"></i></div></a>
-                            <a href="#chat-gpt-settings" class="list-group-item list-group-item-action border-0">{{ __('Chat GPT Settings') }}
-                                <div class="float-end"><i class="ti ti-chevron-right"></i></div></a>
+                            {{-- <a href="#chat-gpt-settings" class="list-group-item list-group-item-action border-0">{{ __('Chat GPT Settings') }}
+                                <div class="float-end"><i class="ti ti-chevron-right"></i></div></a> --}}
 
                         </div>
                     </div>
