@@ -33,7 +33,7 @@
             width: 100%;
             height: 100%;
             position: relative;
-            background-image: url('{{ public_path('invoice/invoice.jpg') }}');
+            background-image: url('{{ public_path('assets/invoice_logo/invoice.jpg') }}');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
