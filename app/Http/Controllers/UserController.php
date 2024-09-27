@@ -180,6 +180,7 @@ class UserController extends Controller
                     ['name' => 'manage holiday'],
                     ['name' => 'manage announcement'],
                     ['name' => 'manage leave'],
+                    ['name' => 'create leave'],
                 ];
 
 
@@ -192,6 +193,7 @@ class UserController extends Controller
                 $role->save();
 
             $projectPermission =[
+                ['name' => 'show hrm dashboard'],
                 ['name' => 'show project dashboard'],
                 ['name' => 'manage project'],
                 ['name' => 'create project'],
@@ -239,6 +241,7 @@ class UserController extends Controller
                 ['name' => 'edit bug status'],
                 ['name' => 'delete bug status'],
                 ['name' => 'manage leave'],
+                ['name' => 'create leave'],
             ];
                 $role->givePermissionTo($projectPermission);
 
@@ -484,6 +487,7 @@ class UserController extends Controller
                 $role->save();
 
                 $accountantPermission = [
+                    ['name' => 'show hrm dashboard'],
                     ['name' => 'show account dashboard'],
                     ['name' => 'manage expense'],
                     ['name' => 'create expense'],
@@ -630,6 +634,8 @@ class UserController extends Controller
                     ['name' => 'show preorder'],
                     ['name' => 'send preorder'],
                     ['name' => 'delete preorder product'],
+                    ['name' => 'manage leave'],
+                    ['name' => 'create leave'],
 
                 ];
 

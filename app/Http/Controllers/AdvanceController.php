@@ -211,7 +211,7 @@ class AdvanceController extends Controller
             $customer = Customer::where('id', $request->customer_id)->first();
             if(!empty($customer))
             {
-                Utility::userBalance('customer', $advance->customer_id, $advance->amount, 'debit');
+                Utility::userBalance('customer', $advance->customer_id, $advance->amount * $request->exchange_rate, 'debit');
             }
 
             Utility::bankAccountBalance($advance->account_id, $advance->amount * $request->exchange_rate, 'debit');
@@ -320,10 +320,10 @@ class AdvanceController extends Controller
 
                 if($advance->customer_id != 0)
                 {
-                    Utility::userBalance('customer', $advance->customer_id, $advance->amount, 'debit');
+                    Utility::userBalance('customer', $advance->customer_id, $advance->amount * $advance->exchange_rate, 'debit');
                 }
 
-                Utility::bankAccountBalance($advance->account_id, $advance->amount, 'debit');
+                Utility::bankAccountBalance($advance->account_id, $advance->amount * $advance->exchange_rate, 'debit');
 
                 return redirect()->route('advance.index')->with('success', __('Advance successfully deleted.'));
             }

@@ -140,9 +140,11 @@ class VenderController extends Controller
             }
 
                 if ($request->has('redirect_to_bill') && $request->redirect_to_bill == 1) {
-                    return redirect()->route('bill.create', ['cid' => 0])->with('success', __('Customer successfully created.'));
+                    return redirect()->route('bill.create', ['cid' => 0])->with('success', __('Vendor successfully created.'));
                 }elseif ($request->has('redirect_to_payment') && $request->redirect_to_payment == 1) {
-                    return redirect()->route('payment.index',['event' => 'new'])->with('success', __('Customer successfully created.'));
+                    return redirect()->route('payment.index',['event' => 'new'])->with('success', __('Vendor successfully created.'));
+                }elseif ($request->has('redirect_to_preorder') && $request->redirect_to_preorder == 1) {
+                    return redirect()->route('pre_order.create',['cid' => 0])->with('success', __('Vendor successfully created.'));
                 }else{
                     return redirect()->route('vender.index')->with('success', __('Vendor successfully created.'));
                 }

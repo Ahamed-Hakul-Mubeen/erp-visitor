@@ -23,6 +23,21 @@
     </div>
 @endsection
 
+@push('script-page')
+    <script>
+        $(document).on('click', '#billing_data', function () {
+            $("[name='shipping_name']").val($("[name='billing_name']").val());
+            $("[name='shipping_country']").val($("[name='billing_country']").val());
+            $("[name='shipping_state']").val($("[name='billing_state']").val());
+            $("[name='shipping_city']").val($("[name='billing_city']").val());
+            $("[name='shipping_phone']").val($("[name='billing_phone']").val());
+            $("[name='shipping_zip']").val($("[name='billing_zip']").val());
+            $("[name='shipping_address']").val($("[name='billing_address']").val());
+        })
+
+    </script>
+@endpush
+
 @section('content')
     <div class="row">
         <div class="col-sm-12">
@@ -153,24 +168,26 @@
                                                         <i class="text-white ti ti-eye"></i>
                                                     </a>
                                                 </div>
+                                                @if($advance->status == 0)
+                                                    @can('edit advance')
+                                                        <div class="action-btn bg-primary ms-2">
+                                                            <a href="#" class="mx-3 btn btn-sm align-items-center" data-url="{{ route('advance.edit',$advance->id) }}" data-ajax-popup="true" data-size="lg" data-bs-toggle="tooltip" title="{{__('Edit')}}" title="{{__('Edit')}}" data-original-title="{{__('Edit')}}">
+                                                                <i class="text-white ti ti-pencil"></i>
+                                                            </a>
+                                                        </div>
+                                                    @endcan
 
-                                            @can('edit advance')
-                                                    <div class="action-btn bg-primary ms-2">
-                                                        <a href="#" class="mx-3 btn btn-sm align-items-center" data-url="{{ route('advance.edit',$advance->id) }}" data-ajax-popup="true" data-size="lg" data-bs-toggle="tooltip" title="{{__('Edit')}}" title="{{__('Edit')}}" data-original-title="{{__('Edit')}}">
-                                                            <i class="text-white ti ti-pencil"></i>
-                                                        </a>
-                                                    </div>
-                                                @endcan
-                                                @can('delete advance')
-                                                    <div class="action-btn bg-danger ms-2">
-                                                        {!! Form::open(['method' => 'DELETE', 'route' => ['advance.destroy', $advance->id],'class'=>'delete-form-btn','id'=>'delete-form-'.$advance->id]) !!}
+                                                    @can('delete advance')
+                                                        <div class="action-btn bg-danger ms-2">
+                                                            {!! Form::open(['method' => 'DELETE', 'route' => ['advance.destroy', $advance->id],'class'=>'delete-form-btn','id'=>'delete-form-'.$advance->id]) !!}
 
-                                                        <a href="#" class="mx-3 btn btn-sm align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{__('Delete')}}" data-original-title="{{__('Delete')}}" data-confirm="{{__('Are You Sure?').'|'.__('This action can not be undone. Do you want to continue?')}}" data-confirm-yes="document.getElementById('delete-form-{{$advance->id}}').submit();">
-                                                            <i class="text-white ti ti-trash"></i>
-                                                        </a>
-                                                        {!! Form::close() !!}
-                                                    </div>
-                                                @endcan
+                                                            <a href="#" class="mx-3 btn btn-sm align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{__('Delete')}}" data-original-title="{{__('Delete')}}" data-confirm="{{__('Are You Sure?').'|'.__('This action can not be undone. Do you want to continue?')}}" data-confirm-yes="document.getElementById('delete-form-{{$advance->id}}').submit();">
+                                                                <i class="text-white ti ti-trash"></i>
+                                                            </a>
+                                                            {!! Form::close() !!}
+                                                        </div>
+                                                    @endcan
+                                                @endif
                                             </span>
                                         </td>
                                     {{-- @endif --}}

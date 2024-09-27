@@ -482,6 +482,11 @@ class BillController extends Controller
                     $messages = $validator->getMessageBag();
                     return redirect()->route('bill.index')->with('error', $messages->first());
                 }
+                if($bill->vender_id != 0 && $bill->status != 0)
+                {
+                    Log::info($bill->vender_id." - ".$bill->getDue()." - ".'credit');
+                    Utility::updateUserBalance('vendor', $bill->vender_id, $bill->getDue(), 'credit');
+                }
                 $bill->vender_id      = $request->vender_id;
                 $bill->actual_bill_number = $request->bill_number;
                 $bill->bill_date      = $request->bill_date;
@@ -512,10 +517,6 @@ class BillController extends Controller
                         if(isset($products[$i]['items']) ) {
                             Utility::total_quantity('plus', $products[$i]['quantity'], $products[$i]['items']);
                         }
-
-                        $updatePrice= ($products[$i]['price']*$products[$i]['quantity'])+($products[$i]['itemTaxPrice'])-($products[$i]['discount']);
-                        Utility::updateUserBalance('vendor', $request->vender_id, $updatePrice, 'debit');
-
                     }
                     else{
                         Utility::total_quantity('minus',$billProduct->quantity,$billProduct->product_id);
@@ -608,6 +609,12 @@ class BillController extends Controller
                         'date' => $bill->bill_date,
                     ];
                     Utility::addTransactionLines($data, "new");
+
+                    if($bill->vender_id != 0 && $bill->status != 0)
+                    {
+                        Utility::updateUserBalance('vendor', $request->vender_id, $itemAmount, 'debit');
+                        Log::info($request->vender_id." - ".$itemAmount." - ".'debit');
+                    }
 
                     if($bill->project_id)
                     {
@@ -749,8 +756,10 @@ class BillController extends Controller
             $billProduct=BillProduct::find($request->id);
             $bill=Bill::find($billProduct->bill_id);
 
-            Utility::updateUserBalance('vendor', $bill->vender_id, $request->amount, 'credit');
-
+            if($bill->vender_id != 0 && $bill->status != 0)
+            {
+                Utility::updateUserBalance('vendor', $bill->vender_id, $request->amount, 'credit');
+            }
             $productService = ProductService::find($billProduct->product_id);
 
             TransactionLines::where('reference_sub_id',$productService->id)->where('reference','Bill')->delete();

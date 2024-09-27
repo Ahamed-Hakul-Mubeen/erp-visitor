@@ -227,9 +227,9 @@ class PaymentController extends Controller
             $payment->amount = \Auth::user()->priceFormat($request->amount);
             $payment->bill = '';
 
-            if (!empty($vender)) {
-                Utility::userBalance('vendor', $vender->id, $request->amount, 'debit');
-            }
+            // if (!empty($vender)) {
+            //     Utility::userBalance('vendor', $vender->id, $request->amount, 'debit');
+            // }
 
             Utility::bankAccountBalance($request->account_id, $request->amount, 'debit');
 
@@ -301,9 +301,9 @@ class PaymentController extends Controller
                 return redirect()->back()->with('error', $messages->first());
             }
             $vender = Vender::where('id', $request->vender_id)->first();
-            if (!empty($vender)) {
-                Utility::userBalance('vendor', $vender->id, $payment->amount, 'credit');
-            }
+            // if (!empty($vender)) {
+            //     Utility::userBalance('vendor', $vender->id, $payment->amount, 'credit');
+            // }
             Utility::bankAccountBalance($payment->account_id, $payment->amount, 'credit');
             if($payment->project_id)
             {
@@ -397,9 +397,9 @@ class PaymentController extends Controller
                 $expense->save();
             }
 
-            if (!empty($vender)) {
-                Utility::userBalance('vendor', $vender->id, $request->amount, 'debit');
-            }
+            // if (!empty($vender)) {
+            //     Utility::userBalance('vendor', $vender->id, $request->amount, 'debit');
+            // }
 
             Utility::bankAccountBalance($request->account_id, $request->amount, 'debit');
 
@@ -432,9 +432,9 @@ class PaymentController extends Controller
                 $user = 'Vender';
                 Transaction::destroyTransaction($payment->id, $type, $user);
 
-                if ($payment->vender_id != 0) {
-                    Utility::userBalance('vendor', $payment->vender_id, $payment->amount, 'credit');
-                }
+                // if ($payment->vender_id != 0) {
+                //     Utility::userBalance('vendor', $payment->vender_id, $payment->amount, 'credit');
+                // }
                 Utility::bankAccountBalance($payment->account_id, $payment->amount, 'credit');
 
                 return redirect()->route('payment.index')->with('success', __('Payment successfully deleted.'));

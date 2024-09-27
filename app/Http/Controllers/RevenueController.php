@@ -167,10 +167,10 @@ class RevenueController extends Controller
             $payment->amount  = \Auth::user()->priceFormat($request->amount * $request->exchange_rate);
             $payment->invoice = '';
 
-            if(!empty($customer))
-            {
-                Utility::userBalance('customer', $customer->id, $revenue->amount * $request->exchange_rate, 'credit');
-            }
+            // if(!empty($customer))
+            // {
+            //     Utility::userBalance('customer', $customer->id, $revenue->amount * $request->exchange_rate, 'credit');
+            // }
 
             Utility::bankAccountBalance($request->account_id, $revenue->amount * $request->exchange_rate, 'credit');
 
@@ -293,18 +293,18 @@ class RevenueController extends Controller
             }
 
             $customer = Customer::where('id', $request->customer_id)->first();
-            if(!empty($customer))
-            {
-                Utility::userBalance('customer', $revenue->customer_id, $revenue->amount * $request->exchange_rate, 'debit');
-            }
+            // if(!empty($customer))
+            // {
+            //     Utility::userBalance('customer', $revenue->customer_id, $revenue->amount * $request->exchange_rate, 'debit');
+            // }
 
             Utility::bankAccountBalance($revenue->account_id, $revenue->amount * $request->exchange_rate, 'debit');
 
 
-            if(!empty($customer))
-            {
-                Utility::userBalance('customer', $customer->id, $request->amount * $request->exchange_rate, 'credit');
-            }
+            // if(!empty($customer))
+            // {
+            //     Utility::userBalance('customer', $customer->id, $request->amount * $request->exchange_rate, 'credit');
+            // }
 
             Utility::bankAccountBalance($request->account_id, $request->amount * $request->exchange_rate, 'credit');
 
@@ -408,13 +408,12 @@ class RevenueController extends Controller
                 $user = 'Customer';
                 Transaction::destroyTransaction($revenue->id, $type, $user);
 
-                if($revenue->customer_id != 0)
-                {
-                    Utility::userBalance('customer', $revenue->customer_id, $revenue->amount, 'debit');
-                }
+                // if($revenue->customer_id != 0)
+                // {
+                //     Utility::userBalance('customer', $revenue->customer_id, $revenue->amount * $revenue->exchange_rate, 'debit');
+                // }
 
-
-                Utility::bankAccountBalance($revenue->account_id, $revenue->amount, 'debit');
+                Utility::bankAccountBalance($revenue->account_id, $revenue->amount * $revenue->exchange_rate, 'debit');
 
                 return redirect()->route('revenue.index')->with('success', __('Revenue successfully deleted.'));
             }

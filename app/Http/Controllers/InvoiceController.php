@@ -26,6 +26,7 @@ use App\Models\ExchangeRate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
@@ -263,6 +264,12 @@ class InvoiceController extends Controller
 
                     return redirect()->route('invoice.index')->with('error', $messages->first());
                 }
+                if($invoice->customer_id != 0 && $invoice->status != 0)
+                {
+                    // Log::info($invoice->customer_id." - ".$invoice->getDue()." - ".'credit');
+                    Utility::updateUserBalance('customer', $invoice->customer_id, $invoice->getDue() * $invoice->exchange_rate, 'credit');
+                }
+
                 $invoice->customer_id = $request->customer_id;
                 $invoice->issue_date = $request->issue_date;
                 $invoice->due_date = $request->due_date;
@@ -287,8 +294,8 @@ class InvoiceController extends Controller
 
                         Utility::total_quantity('minus', $products[$i]['quantity'], $products[$i]['item']);
 
-                        $updatePrice = ($products[$i]['price'] * $products[$i]['quantity']) + ($products[$i]['itemTaxPrice']) - ($products[$i]['discount']);
-                        Utility::updateUserBalance('customer', $request->customer_id, $updatePrice * $invoice->exchange_rate, 'credit');
+                        // $updatePrice = ($products[$i]['price'] * $products[$i]['quantity']) + ($products[$i]['itemTaxPrice']) - ($products[$i]['discount']);
+                        // Utility::updateUserBalance('customer', $request->customer_id, $updatePrice * $invoice->exchange_rate, 'credit');
                     } else {
                         Utility::total_quantity('plus', $invoiceProduct->quantity, $invoiceProduct->product_id);
                     }
@@ -374,6 +381,13 @@ class InvoiceController extends Controller
                             'date' => $invoice->issue_date,
                         ];
                         Utility::addTransactionLines($data2, "new");
+
+
+                        if($invoice->customer_id != 0 && $invoice->status != 0)
+                        {
+                            // Log::info($invoice->customer_id." - ".$itemAmount." - ".'debit');
+                            Utility::updateUserBalance('customer', $invoice->customer_id, $itemAmount * $invoice->exchange_rate, 'debit');
+                        }
 
 
                         $purchase_price = $product->purchase_price * $invoice_product->quantity;
@@ -475,7 +489,9 @@ class InvoiceController extends Controller
                 }
 
                 if ($invoice->customer_id != 0 && $invoice->status != 0) {
-                    Utility::updateUserBalance('customer', $invoice->customer_id, $invoice->getDue() * $invoice->exchange_rate, 'debit');
+                    
+                    // Log::info($invoice->customer_id." - ".$invoice->getDue()." - ".'credit');
+                    Utility::updateUserBalance('customer', $invoice->customer_id, $invoice->getDue() * $invoice->exchange_rate, 'credit');
                 }
 
 
@@ -505,9 +521,12 @@ class InvoiceController extends Controller
                 $invoice = Invoice::find($invoiceProduct->invoice_id);
                 $productService = ProductService::find($invoiceProduct->product_id);
 
-                Utility::updateUserBalance('customer', $invoice->customer_id, $request->amount * $invoice->exchange_rate, 'debit');
-
-                TransactionLines::where('reference_sub_id', $productService->id)->where('reference', 'Invoice')->delete();
+                if($invoice->customer_id != 0 && $invoice->status != 0)
+                {
+                    // Log::info($invoice->customer_id." - ".$invoice->getDue()." - ".'credit');
+                    Utility::updateUserBalance('customer', $invoice->customer_id, $request->amount * $invoice->exchange_rate, 'credit');
+                    TransactionLines::where('reference_sub_id', $productService->id)->where('reference', 'Invoice')->delete();
+                }
 
                 InvoiceProduct::where('id', '=', $request->id)->delete();
             }
@@ -582,7 +601,8 @@ class InvoiceController extends Controller
                 $invoiceId = Crypt::encrypt($invoice->id);
                 $invoice->url = route('invoice.pdf', $invoiceId);
 
-                Utility::updateUserBalance('customer', $customer->id, $invoice->getTotal() * $invoice->exchange_rate, 'credit');
+                // Log::info($invoice->customer_id." - ".$invoice->getDue()." - ".'debit');
+                Utility::updateUserBalance('customer', $customer->id, $invoice->getTotal() * $invoice->exchange_rate, 'debit');
 
                 $invoice_products = InvoiceProduct::where('invoice_id', $invoice->id)->get();
                 foreach ($invoice_products as $invoice_product) {
@@ -805,7 +825,9 @@ class InvoiceController extends Controller
             $payment->dueAmount = \Auth::user()->priceFormat($invoice->getDue());
 
             if (!($request->advance_id)) {
-                Utility::updateUserBalance('customer', $invoice->customer_id, $request->amount * $invoice->exchange_rate, 'debit');
+                
+                // Log::info($invoice->customer_id." - ".$request->amount." - ".'credit');
+                Utility::updateUserBalance('customer', $invoice->customer_id, $request->amount * $invoice->exchange_rate, 'credit');
                 Utility::bankAccountBalance($request->account_id, $request->amount * $invoice->exchange_rate, 'credit');
 
                 $accountId = BankAccount::find($request->account_id);
@@ -931,7 +953,8 @@ class InvoiceController extends Controller
             $user = 'Customer';
             Transaction::destroyTransaction($payment_id, $type, $user);
 
-            Utility::updateUserBalance('customer', $invoice->customer_id, $payment->amount * $invoice->exchange_rate, 'credit');
+            // Log::info($invoice->customer_id." - ".$request->amount." - ".'debit');
+            Utility::updateUserBalance('customer', $invoice->customer_id, $payment->amount * $invoice->exchange_rate, 'debit');
 
             Utility::bankAccountBalance($payment->account_id, $payment->amount * $invoice->exchange_rate, 'debit');
 

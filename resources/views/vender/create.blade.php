@@ -1,5 +1,5 @@
 {{Form::open(array('url'=>'vender','method'=>'post'))}}
-@foreach(['redirect_to_bill','redirect_to_payment'] as $param)
+@foreach(['redirect_to_bill','redirect_to_payment','redirect_to_preorder'] as $param)
     @if(request()->has($param) && request()->get($param) == 1)
         <input type="hidden" name="{{ $param }}" value="1">
     @endif
