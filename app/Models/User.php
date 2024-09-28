@@ -859,7 +859,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function invoicesData($start, $current)
     {
         $InvoiceProducts = Invoice::select('invoices.invoice_id as invoice')
-            ->selectRaw('sum((invoice_products.price * invoice_products.quantity * invoices.exchange_rate) - invoice_products.discount) as price')
+            ->selectRaw('sum((invoice_products.price * invoice_products.quantity * invoices.exchange_rate) - invoice_products.discount * invoices.exchange_rate) as price')
             ->selectRaw('(SELECT SUM(credit_notes.amount) FROM credit_notes
             WHERE credit_notes.invoice = invoices.id) as credit_price')
             ->selectRaw('(SELECT SUM((price * quantity - discount) * (taxes.rate / 100)) FROM invoice_products
