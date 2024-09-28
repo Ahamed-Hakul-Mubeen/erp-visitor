@@ -1722,6 +1722,7 @@ class ReportController extends Controller
             $filter['debit'] = $debit;
             $filter['startDateRange'] = $start;
             $filter['endDateRange'] = $end;
+            
             return view('report.ledger_summary', compact('filter', 'chart_accounts', 'accounts', 'subAccounts'));
 
         } else {
