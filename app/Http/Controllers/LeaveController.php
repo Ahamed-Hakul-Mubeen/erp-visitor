@@ -96,7 +96,7 @@ class LeaveController extends Controller
                                    'start_date' => 'required',
                                    'end_date' => 'required',
                                    'leave_reason' => 'required',
-                                   'remark' => 'required',
+                                   'remark' => \Auth::user()->type =='Employee'? 'nullable' : 'required',
                                ]
             );
             if($validator->fails())
@@ -186,7 +186,7 @@ class LeaveController extends Controller
                                        'start_date' => 'required',
                                        'end_date' => 'required',
                                        'leave_reason' => 'required',
-                                       'remark' => 'required',
+                                       'remark' => \Auth::user()->type =='Employee'? 'nullable' : 'required',
                                    ]
                 );
                 if($validator->fails())
