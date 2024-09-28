@@ -197,13 +197,13 @@
                                     '{{ __('View') }}' + '</a>';
                             }
 
-                            if (data != 0 && status == "UnPaid") {
-                                edit =
-                                    '<a href="#" data-url="{{ url('payslip/editemployee/') }}/' +
-                                    payslip_id +
-                                    '"  data-ajax-popup="true" class="view-btn blue-bg" data-title="{{ __('Edit Employee salary') }}">' +
-                                    '{{ __('Edit') }}' + '</a>';
-                            }
+                            // if (data != 0 && status == "UnPaid") {
+                            //     edit =
+                            //         '<a href="#" data-url="{{ url('payslip/editemployee/') }}/' +
+                            //         payslip_id +
+                            //         '"  data-ajax-popup="true" class="view-btn blue-bg" data-title="{{ __('Edit Employee salary') }}">' +
+                            //         '{{ __('Edit') }}' + '</a>';
+                            // }
 
                             var url = '{{ route('payslip.delete', ':id') }}';
                             url = url.replace(':id', payslip_id);
@@ -257,11 +257,11 @@
                                 }
 
                                 if (valueOfElement[7] != 0 && valueOfElement[6] == "UnPaid") {
-                                    var edit =
-                                        '<a href="#" data-url="{{ url('payslip/editemployee/') }}/' +
-                                        payslip_id +
-                                        '"  data-ajax-popup="true" class="btn-sm btn btn-info" data-title="{{ __('Edit Employee salary') }}">' +
-                                        '{{ __('Edit') }}' + '</a>';
+                                    var edit ='';
+                                        // '<a href="#" data-url="{{ url('payslip/editemployee/') }}/' +
+                                        // payslip_id +
+                                        // '"  data-ajax-popup="true" class="btn-sm btn btn-info" data-title="{{ __('Edit Employee salary') }}">' +
+                                        // '{{ __('Edit') }}' + '</a>';
                                 } else {
                                     var edit = '';
                                 }
