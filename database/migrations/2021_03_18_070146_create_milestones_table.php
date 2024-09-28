@@ -21,6 +21,7 @@ class CreateMilestonesTable extends Migration
                 $table->string('status');
                 $table->string('progress')->nullable();
                 $table->double('cost', 15, 2)->default('0.00');
+                $table->double('percentage', 15, 2)->default('0.00');
                 $table->date('start_date')->nullable();
                 $table->date('due_date')->nullable();
                 $table->text('description')->nullable();
