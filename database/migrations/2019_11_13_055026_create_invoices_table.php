@@ -31,7 +31,7 @@ class CreateInvoicesTable extends Migration
             $table->unsignedBigInteger('created_user');
             $table->string('currency_code')->nullable()->default(null);
             $table->string('currency_symbol')->nullable()->default(null);
-            $table->float('exchange_rate', 10, 10);
+            $table->double('exchange_rate');
             $table->timestamps();
         }
         );
