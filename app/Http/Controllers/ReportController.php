@@ -5247,7 +5247,7 @@ class ReportController extends Controller
             ->selectRaw('(bills.bill_id) as bill')
             ->selectRaw('(bills.id) as bill_id')
             ->selectRaw('(bills.type) as type')
-            ->selectRaw('sum((bill_products.price * bill_products.quantity) - bill_products.discount) as price')
+            // ->selectRaw('sum((bill_products.price * bill_products.quantity) - bill_products.discount) as price')
             // ->selectRaw('sum((bill_payments.amount)) as pay_price')
             ->selectRaw('(SELECT SUM((price * quantity - discount) * (taxes.rate / 100)) FROM bill_products
          LEFT JOIN taxes ON FIND_IN_SET(taxes.id, bill_products.tax) > 0
@@ -5270,9 +5270,13 @@ class ReportController extends Controller
         foreach($payableSummariesBill as $da)
         {
             $bill_payments = BillPayment::where('bill_id', $da['bill_id'])->sum('amount');
+            $price = BillProduct::where('bill_id', $da['bill_id'])->sum(\DB::raw('(price * quantity) - discount'));
+            $da['price'] = $price;
             $da['pay_price'] = $bill_payments;
             $new_payableSummariesBill[] = $da;
         }
+
+        // dd($payableSummariesBill);
 
         $payableSummariesBill = $new_payableSummariesBill;
 
