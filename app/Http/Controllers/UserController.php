@@ -636,6 +636,7 @@ class UserController extends Controller
                     ['name' => 'delete preorder product'],
                     ['name' => 'manage leave'],
                     ['name' => 'create leave'],
+                    ['name' => 'convert invoice'],
 
                 ];
 

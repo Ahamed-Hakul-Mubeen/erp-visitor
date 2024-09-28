@@ -1141,6 +1141,14 @@
                                                             </div>
                                                         @endif
                                                     @endif
+                                                    @if(in_array('convert '.$module,(array) $permissions))
+                                                        @if($key = array_search('convert '.$module,$permissions))
+                                                            <div class="col-md-3 custom-control custom-checkbox">
+                                                                {{Form::checkbox('permissions[]',$key,false, ['class'=>'form-check-input isscheck account_checkall isscheck_'.str_replace(' ', '', $module),'id' =>'permission'.$key])}}
+                                                                {{Form::label('permission'.$key,'Convert',['class'=>'custom-control-label'])}}<br>
+                                                            </div>
+                                                        @endif
+                                                    @endif
                                                     @if(in_array('balance sheet '.$module,(array) $permissions))
                                                         @if($key = array_search('balance sheet '.$module,$permissions))
                                                             <div class="col-md-3 custom-control custom-checkbox">
