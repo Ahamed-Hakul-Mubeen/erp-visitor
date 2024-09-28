@@ -397,7 +397,7 @@ class InvoiceController extends Controller
                         $data = [
                             'account_id' => $cof_sale->id,
                             'transaction_type' => 'Debit',
-                            'transaction_amount' => $purchase_price * $invoice->exchange_rate,
+                            'transaction_amount' => $purchase_price,
                             'reference' => 'Invoice',
                             'reference_id' => $invoice->id,
                             'reference_sub_id' => $product->id,
@@ -410,7 +410,7 @@ class InvoiceController extends Controller
                         $data = [
                             'account_id' => $inventory->id,
                             'transaction_type' => 'Credit',
-                            'transaction_amount' => $purchase_price * $invoice->exchange_rate,
+                            'transaction_amount' => $purchase_price,
                             'reference' => 'Invoice',
                             'reference_id' => $invoice->id,
                             'reference_sub_id' => $product->id,
@@ -957,12 +957,12 @@ class InvoiceController extends Controller
             $type = 'Partial';
             $user = 'Customer';
             Transaction::destroyTransaction($payment_id, $type, $user);
+            if (!($payment->advance_id) && !($payment->advance_amount)) {
+                // Log::info($invoice->customer_id." - ".$request->amount." - ".'debit');
+                Utility::updateUserBalance('customer', $invoice->customer_id, $payment->amount * $invoice->exchange_rate, 'debit');
 
-            // Log::info($invoice->customer_id." - ".$request->amount." - ".'debit');
-            Utility::updateUserBalance('customer', $invoice->customer_id, $payment->amount * $invoice->exchange_rate, 'debit');
-
-            Utility::bankAccountBalance($payment->account_id, $payment->amount * $invoice->exchange_rate, 'debit');
-
+                Utility::bankAccountBalance($payment->account_id, $payment->amount * $invoice->exchange_rate, 'debit');
+            }
             return redirect()->back()->with('success', __('Payment successfully deleted.'));
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));

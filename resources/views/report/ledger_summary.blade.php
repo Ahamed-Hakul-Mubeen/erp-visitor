@@ -338,7 +338,12 @@
                                                     <td class="text-right">{{ \Auth::user()->priceFormat($account->debit) }}</td>
                                                     @php
                                                         $total = $account->debit + $account->credit;
-                                                        $balance -= $total;
+                                                        if($account->account_name == "Account Payable")
+                                                        {
+                                                            $balance += $total;
+                                                        } else {
+                                                            $balance -= $total;
+                                                        }
                                                     @endphp
                                                     <td class="text-right">{{ \Auth::user()->priceFormat($account->credit) }}</td>
                                                     <td class="text-right">{{ \Auth::user()->priceFormat($balance) }}</td>
