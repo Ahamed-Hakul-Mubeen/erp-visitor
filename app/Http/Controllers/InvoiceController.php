@@ -485,11 +485,16 @@ class InvoiceController extends Controller
 
                     $invoicepayment = InvoicePayment::find($invoices->id);
                     $invoices->delete();
+                    if ($invoicepayment->advance_id && $invoicepayment->advance_amount) {
+                        $advance = Advance::find($invoicepayment->advance_id);
+                        $advance->balance += $invoicepayment->advance_amount;
+                        $advance->status = 0;
+                        $advance->save();
+                    }
                     $invoicepayment->delete();
                 }
 
                 if ($invoice->customer_id != 0 && $invoice->status != 0) {
-                    
                     // Log::info($invoice->customer_id." - ".$invoice->getDue()." - ".'credit');
                     Utility::updateUserBalance('customer', $invoice->customer_id, $invoice->getDue() * $invoice->exchange_rate, 'credit');
                 }
