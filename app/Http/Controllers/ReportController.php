@@ -14,6 +14,7 @@ use App\Exports\TrialBalancExport;
 use App\Models\AttendanceEmployee;
 use App\Models\BankAccount;
 use App\Models\Bill;
+use App\Models\BillPayment;
 use App\Models\BillProduct;
 use App\Models\Branch;
 use App\Models\Budget;
@@ -5244,9 +5245,10 @@ class ReportController extends Controller
 
         $payableSummariesBill = Bill::select('venders.name')
             ->selectRaw('(bills.bill_id) as bill')
+            ->selectRaw('(bills.id) as bill_id')
             ->selectRaw('(bills.type) as type')
             ->selectRaw('sum((bill_products.price * bill_products.quantity) - bill_products.discount) as price')
-            ->selectRaw('sum((bill_payments.amount)) as pay_price')
+            // ->selectRaw('sum((bill_payments.amount)) as pay_price')
             ->selectRaw('(SELECT SUM((price * quantity - discount) * (taxes.rate / 100)) FROM bill_products
          LEFT JOIN taxes ON FIND_IN_SET(taxes.id, bill_products.tax) > 0
          WHERE bill_products.bill_id = bills.id) as total_tax')
@@ -5262,6 +5264,17 @@ class ReportController extends Controller
             ->groupBy('bills.id')
             ->get()
             ->toArray();
+
+        $new_payableSummariesBill = [];
+
+        foreach($payableSummariesBill as $da)
+        {
+            $bill_payments = BillPayment::where('bill_id', $da['bill_id'])->sum('amount');
+            $da['pay_price'] = $bill_payments;
+            $new_payableSummariesBill[] = $da;
+        }
+
+        $payableSummariesBill = $new_payableSummariesBill;
 
         $payableSummariesDebit = DebitNote::select('venders.name')
             ->selectRaw('null as bill')
