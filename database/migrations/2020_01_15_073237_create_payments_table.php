@@ -29,6 +29,7 @@ class CreatePaymentsTable extends Migration
             $table->string('add_receipt')->nullable();
             $table->integer('project_id')->nullable();
             $table->integer('created_by')->default('0');
+            $table->unsignedBigInteger('created_user');
             $table->timestamps();
         }
         );
