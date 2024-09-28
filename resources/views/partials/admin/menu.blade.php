@@ -286,7 +286,7 @@
                                 @endcan
                             @endif
 
-                            @if ($userPlan->pos == 1)
+                            {{-- @if ($userPlan->pos == 1)
                                 @can('show pos dashboard')
                                     <li
                                         class="dash-item dash-hasmenu {{ Request::segment(1) == 'pos-dashboard' || Request::segment(1) == 'reports-warehouse' || Request::segment(1) == 'reports-daily-purchase' || Request::segment(1) == 'reports-monthly-purchase' || Request::segment(1) == 'reports-daily-pos' || Request::segment(1) == 'reports-monthly-pos' || Request::segment(1) == 'reports-pos-vs-purchase' ? ' active dash-trigger' : '' }}">
@@ -329,7 +329,7 @@
                                         </ul>
                                     </li>
                                 @endcan
-                            @endif
+                            @endif --}}
 
                         </ul>
                     </li>
@@ -783,10 +783,10 @@
                         Gate::check('manage bank transfer') ||
                         Gate::check('manage invoice') ||
                         Gate::check('manage revenue') ||
-                        Gate::check('manage credit note') ||
+                        // Gate::check('manage credit note') ||
                         Gate::check('manage bill') ||
                         Gate::check('manage payment') ||
-                        Gate::check('manage debit note') ||
+                        // Gate::check('manage debit note') ||
                         Gate::check('manage chart of account') ||
                         Gate::check('manage journal entry') ||
                         Gate::check('balance sheet report') ||
@@ -878,8 +878,7 @@
                             @if (Gate::check('manage customer') ||
                                     Gate::check('manage proposal') ||
                                     Gate::check('manage invoice') ||
-                                    Gate::check('manage revenue') ||
-                                    Gate::check('manage credit note'))
+                                    Gate::check('manage revenue'))
                                 <li
                                     class="dash-item dash-hasmenu {{ Request::segment(1) == 'customer' || Request::segment(1) == 'proposal' || Request::segment(1) == 'invoice' || Request::segment(1) == 'revenue' || Request::segment(1) == 'credit-note' ? 'active dash-trigger' : '' }}">
                                     <a class="dash-link" href="#">{{ __('Sales') }}<span
@@ -916,18 +915,17 @@
                                             <a class="dash-link"
                                                 href="{{ route('revenue.index') }}">{{ __('Revenue') }}</a>
                                         </li>
-                                        <li
+                                        {{-- <li
                                             class="dash-item {{ Request::route()->getName() == 'credit.note' ? ' active' : '' }}">
                                             <a class="dash-link"
                                                 href="{{ route('credit.note') }}">{{ __('Credit Note') }}</a>
-                                        </li>
+                                        </li> --}}
                                     </ul>
                                 </li>
                             @endif
                             @if (Gate::check('manage vender') ||
                                     Gate::check('manage bill') ||
-                                    Gate::check('manage payment') ||
-                                    Gate::check('manage debit note'))
+                                    Gate::check('manage payment'))
                                 <li
                                     class="dash-item dash-hasmenu {{ Request::segment(1) == 'bill' || Request::segment(1) == 'pre_order' || Request::segment(1) == 'vender' || Request::segment(1) == 'expense' || Request::segment(1) == 'payment' || Request::segment(1) == 'debit-note' ? 'active dash-trigger' : '' }}">
                                     <a class="dash-link" href="#">{{ __('Purchases') }}<span
@@ -960,11 +958,11 @@
                                             <a class="dash-link"
                                                 href="{{ route('payment.index') }}">{{ __('Payment') }}</a>
                                         </li>
-                                        <li
+                                        {{-- <li
                                             class="dash-item  {{ Request::route()->getName() == 'debit.note' ? ' active' : '' }}">
                                             <a class="dash-link"
                                                 href="{{ route('debit.note') }}">{{ __('Debit Note') }}</a>
-                                        </li>
+                                        </li> --}}
                                     </ul>
                                 </li>
                             @endif

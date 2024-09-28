@@ -315,11 +315,11 @@
                                                     <td class="text-end"><b>{{__('Paid')}}</b></td>
                                                     <td class="text-end">{{$user->priceFormat(($bill->getTotal()-$bill->getDue())-($bill->billTotalDebitNote()))}}</td>
                                                 </tr>
-                                                <tr>
+                                                {{-- <tr>
                                                     <td colspan="6"></td>
                                                     <td class="text-end"><b>{{__('Debit Note')}}</b></td>
                                                     <td class="text-end">{{$user->priceFormat(($bill->billTotalDebitNote()))}}</td>
-                                                </tr>
+                                                </tr> --}}
                                                 <tr>
                                                     <td colspan="6"></td>
                                                     <td class="text-end"><b>{{__('Due')}}</b></td>

@@ -966,7 +966,7 @@
                 </div>
                 <div class="tab-pane fade" id="account" role="tabpanel" aria-labelledby="pills-contact-tab">
                     @php                                                
-                        $modules=['account dashboard','proposal','invoice','bill','revenue','payment','proposal product','invoice product','bill product','goal','credit note','debit note','bank account','bank transfer','transaction','customer','vender','constant custom field','assets','chart of account','journal entry','report','advance','currency','exchange','preorder','preorder product'];
+                        $modules=['account dashboard','proposal','invoice','bill','revenue','payment','proposal product','invoice product','bill product','goal','bank account','bank transfer','transaction','customer','vender','constant custom field','assets','chart of account','journal entry','report','advance','currency','exchange','preorder','preorder product'];
                     @endphp
                     <div class="col-md-12">
                         <div class="form-group">

@@ -61,12 +61,14 @@
                 <i class="ti ti-rotate"></i> <span>{{__('Grammar check with AI')}}</span>
             </a>
         </div>
+        @if(\Auth::user()->type !='Employee')
         <div class="col-md-12">
             <div class="form-group">
                 {{Form::label('remark',__('Remark'),['class'=>'form-label'])}}<span class="text-danger">*</span>
                 {{Form::textarea('remark',null,array('class'=>'form-control grammer_textarea','placeholder'=>__('Leave Remark'),'required' => 'required'))}}
             </div>
         </div>
+        @endif
     </div>
     @role('Company')
     <div class="row">

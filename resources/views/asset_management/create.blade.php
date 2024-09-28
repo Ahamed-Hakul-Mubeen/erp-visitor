@@ -4,7 +4,7 @@
         <div class="col-12">
             <div class="form-group">
                 {{ Form::label('product_name', __('Assets Type'), ['class' => 'form-label']) }}
-                {{ Form::select('product_name', $productTypes, null, ['id' => 'product_name', 'class' => 'form-control', 'placeholder' => __('Select Assets Type')]) }}
+                {{ Form::select('product_name', $productTypes, null, ['id' => 'product_name', 'class' => 'form-control', 'required', 'placeholder' => __('Select Assets Type')]) }}
                 @error('product_name')
                 <span class="invalid-product_name" role="alert">
                     <strong class="text-danger">{{ $message }}</strong>
@@ -22,7 +22,7 @@
         <div class="col-12">
             <div class="form-group">
                 {{ Form::label('product_description', __('Product Name'), ['class' => 'form-label']) }}
-                {{ Form::text('product_description', null, ['class' => 'form-control', 'placeholder' => __('Enter Product Name')]) }}
+                {{ Form::text('product_description', null, ['class' => 'form-control','required', 'placeholder' => __('Enter Product Name')]) }}
                 @error('product_description')
                 <span class="invalid-product_description" role="alert">
                     <strong class="text-danger">{{ $message }}</strong>
@@ -34,7 +34,7 @@
         <div class="col-12">
             <div class="form-group">
                 {{ Form::label('product_configuration', __('Product Configuration'), ['class' => 'form-label']) }}
-                {{ Form::textarea('product_configuration', null, ['class' => 'form-control', 'rows' => 3, 'placeholder' => __('Enter Product Configuration')]) }}
+                {{ Form::textarea('product_configuration', null, ['class' => 'form-control', 'rows' => 3, 'required','placeholder' => __('Enter Product Configuration')]) }}
                 @error('product_configuration')
                 <span class="invalid-product_configuration" role="alert">
                     <strong class="text-danger">{{ $message }}</strong>

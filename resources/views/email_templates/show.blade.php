@@ -216,6 +216,17 @@
 
 
                                             </div>
+                                        @elseif($emailTemplate->slug=='pre_order_sent')
+                                        <div class="row">
+                                            <p class="col-4">{{__('App Name')}} : <span class="pull-end text-primary">{app_name}</span></p>
+                                            <p class="col-4">{{__('Company Name')}} : <span class="pull-right text-primary">{company_name}</span></p>
+                                            <p class="col-4">{{__('App Url')}} : <span class="pull-right text-primary">{app_url}</span></p>
+                                            <p class="col-4">{{__('PreOrder Name')}} : <span class="pull-right text-primary">{pre_order_name}</span></p>
+                                            <p class="col-4">{{__('PreOrder Number')}} : <span class="pull-right text-primary">{pre_order_number}</span></p>
+                                            <p class="col-4">{{__('PreOrder Url')}} : <span class="pull-right text-primary">{pre_order_url}</span></p>
+
+
+                                        </div>
                                         @elseif($emailTemplate->slug=='complaint_resent')
                                             <div class="row">
                                                 <p class="col-4">{{__('App Name')}} : <span class="pull-end text-primary">{app_name}</span></p>

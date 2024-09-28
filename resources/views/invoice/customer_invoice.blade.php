@@ -417,13 +417,13 @@
                                                             {{ Utility::priceFormat($settings, $invoice->getTotal() - $invoice->getDue() - $invoice->invoiceTotalCreditNote(), $invoice->currency_symbol) }}
                                                         </td>
                                                     </tr>
-                                                    <tr>
+                                                    {{-- <tr>
                                                         <td colspan="6"></td>
                                                         <td class="text-end"><b>{{ __('Credit Note') }}</b></td>
                                                         <td class="text-end">
                                                             {{ Utility::priceFormat($settings, $invoice->invoiceTotalCreditNote(), $invoice->currency_symbol) }}
                                                         </td>
-                                                    </tr>
+                                                    </tr> --}}
                                                     <tr>
                                                         <td colspan="6"></td>
                                                         <td class="text-end"><b>{{ __('Due') }}</b></td>

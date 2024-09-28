@@ -380,10 +380,10 @@
                             <td>{{__('Paid')}}:</td>
                             <td>{{Utility::priceFormat($settings,($bill->getTotal()-$bill->getDue())-($bill->billTotalDebitNote()))}}</td>
                         </tr>
-                        <tr>
+                        {{-- <tr>
                             <td>{{__('Debit Note')}}:</td>
                             <td>{{Utility::priceFormat($settings,($bill->billTotalDebitNote()))}}</td>
-                        </tr>
+                        </tr> --}}
                         <tr>
                             <td>{{__('Due Amount')}}:</td>
                             <td>{{Utility::priceFormat($settings,$bill->getDue())}}</td>

@@ -382,10 +382,10 @@
                             <td>{{__('Paid')}}:</td>
                             <td>{{Utility::priceFormat($settings,($invoice->getTotal()-$invoice->getDue())-($invoice->invoiceTotalCreditNote()))}}</td>
                         </tr>
-                        <tr style="border-bottom:1px solid {{ $color }};">
+                        {{-- <tr style="border-bottom:1px solid {{ $color }};">
                             <td>{{__('Credit Note')}}:</td>
                             <td>{{Utility::priceFormat($settings,($invoice->invoiceTotalCreditNote()))}}</td>
-                        </tr>
+                        </tr> --}}
                         <tr style="border-bottom:1px solid {{ $color }};">
                             <td>{{__('Due Amount')}}:</td>
                             <td>{{Utility::priceFormat($settings,$invoice->getDue())}}</td>

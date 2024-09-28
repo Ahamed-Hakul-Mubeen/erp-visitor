@@ -390,30 +390,30 @@
                                 class="list-group-item list-group-item-action border-0">{{ __('Email Settings') }}
                                 <div class="float-end"><i class="ti ti-chevron-right"></i></div>
                             </a>
-                            <a href="#tracker-settings"
+                            {{-- <a href="#tracker-settings"
                                 class="list-group-item list-group-item-action border-0">{{ __('Time Tracker Settings') }}
                                 <div class="float-end"><i class="ti ti-chevron-right"></i></div>
-                            </a>
+                            </a> --}}
                             <a href="#payment-settings"
                                 class="list-group-item list-group-item-action border-0">{{ __('Payment Settings') }}
                                 <div class="float-end"><i class="ti ti-chevron-right"></i></div>
                             </a>
-                            <a href="#zoom-settings"
+                            {{-- <a href="#zoom-settings"
                                 class="list-group-item list-group-item-action border-0">{{ __('Zoom Settings') }}
                                 <div class="float-end"><i class="ti ti-chevron-right"></i></div>
-                            </a>
-                            <a href="#slack-settings"
+                            </a> --}}
+                            {{-- <a href="#slack-settings"
                                 class="list-group-item list-group-item-action border-0">{{ __('Slack Settings') }}
                                 <div class="float-end"><i class="ti ti-chevron-right"></i></div>
-                            </a>
-                            <a href="#telegram-settings"
+                            </a> --}}
+                            {{-- <a href="#telegram-settings"
                                 class="list-group-item list-group-item-action border-0">{{ __('Telegram Settings') }}
                                 <div class="float-end"><i class="ti ti-chevron-right"></i></div>
                             </a>
                             <a href="#twilio-settings"
                                 class="list-group-item list-group-item-action border-0">{{ __('Twilio Settings') }}
                                 <div class="float-end"><i class="ti ti-chevron-right"></i></div>
-                            </a>
+                            </a> --}}
                             <a href="#email-notification-settings"
                                 class="list-group-item list-group-item-action border-0">{{ __('Email Notification Settings') }}
                                 <div class="float-end"><i class="ti ti-chevron-right"></i></div>
@@ -579,7 +579,7 @@
                                         </span>
                                     @enderror
                                 </div>
-                                <div class="col-md-3">
+                                {{-- <div class="col-md-3">
                                     <div class="form-group">
                                         {{ Form::label('default_language', __('Default Language'), ['class' => 'form-label']) }}
                                         <div class="changeLanguage">
@@ -598,8 +598,8 @@
                                             </span>
                                         @enderror
                                     </div>
-                                </div>
-                                <div class="form-group col-md-3">
+                                </div> --}}
+                                {{-- <div class="form-group col-md-3">
                                     <div class="custom-control custom-switch">
                                         <label class="mb-1 mt-1" for="SITE_RTL">{{ __('Enable RTL') }}</label>
                                         <div class="">
@@ -609,7 +609,7 @@
                                             <label class="custom-control-label" for="SITE_RTL"></label>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                                 <h5 class="small-title mt-2">{{ __('Theme Customizer') }}</h5>
                                 <div class="setting-card setting-logo-box ">
                                     <div class="row">
@@ -699,7 +699,7 @@
                                                     for="cust-theme-bg">{{ __('Transparent layout') }}</label>
                                             </div>
                                         </div>
-                                        <div class="col-lg-4 col-xl-4 col-md-4">
+                                        {{-- <div class="col-lg-4 col-xl-4 col-md-4">
                                             <h6 class="mt-1">
                                                 <i data-feather="sun" class="me-2"></i>{{ __('Layout settings') }}
                                             </h6>
@@ -711,7 +711,7 @@
                                                 <label class="form-check-label f-w-600 pl-1"
                                                     for="cust-darklayout">{{ __('Dark Layout') }}</label>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                 </div>
                             </div>
@@ -1356,7 +1356,7 @@
                                                     </div>
 
                                                     <!-- Stripe -->
-                                                    <div class="accordion-item">
+                                                    {{-- <div class="accordion-item">
                                                         <h2 class="accordion-header" id="headingOne">
                                                             <button class="accordion-button collapsed" type="button"
                                                                 data-bs-toggle="collapse" data-bs-target="#collapseOne"
@@ -1412,10 +1412,10 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div> --}}
 
                                                     <!-- Paypal -->
-                                                    <div class="accordion-item">
+                                                    {{-- <div class="accordion-item">
                                                         <h2 class="accordion-header" id="headingTwo">
                                                             <button class="accordion-button collapsed" type="button"
                                                                 data-bs-toggle="collapse" data-bs-target="#collapseTwo"
@@ -1503,10 +1503,10 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div> --}}
 
                                                     <!-- Paystack -->
-                                                    <div class="accordion-item">
+                                                    {{-- <div class="accordion-item">
                                                         <h2 class="accordion-header" id="headingThree">
                                                             <button class="accordion-button collapsed" type="button"
                                                                 data-bs-toggle="collapse" data-bs-target="#collapseThree"
@@ -1564,10 +1564,10 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div> --}}
 
                                                     <!-- Flutterwave -->
-                                                    <div class="accordion-item">
+                                                    {{-- <div class="accordion-item">
                                                         <h2 class="accordion-header" id="headingFour">
                                                             <button class="accordion-button collapsed" type="button"
                                                                 data-bs-toggle="collapse" data-bs-target="#collapseFour"
@@ -1625,10 +1625,10 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div> --}}
 
                                                     <!-- Razorpay -->
-                                                    <div class="accordion-item">
+                                                    {{-- <div class="accordion-item">
                                                         <h2 class="accordion-header" id="headingFive">
                                                             <button class="accordion-button collapsed" type="button"
                                                                 data-bs-toggle="collapse" data-bs-target="#collapseFive"
@@ -1687,10 +1687,10 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div> --}}
 
                                                     <!-- Paytm -->
-                                                    <div class="accordion-item">
+                                                    {{-- <div class="accordion-item">
                                                         <h2 class="accordion-header" id="headingSix">
                                                             <button class="accordion-button collapsed" type="button"
                                                                 data-bs-toggle="collapse" data-bs-target="#collapseSix"
@@ -1814,10 +1814,10 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div> --}}
 
                                                     <!-- Mercado Pago -->
-                                                    <div class="accordion-item">
+                                                    {{-- <div class="accordion-item">
                                                         <h2 class="accordion-header" id="headingseven">
                                                             <button class="accordion-button collapsed" type="button"
                                                                 data-bs-toggle="collapse" data-bs-target="#collapseseven"
@@ -1904,10 +1904,10 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div> --}}
 
                                                     <!-- Mollie -->
-                                                    <div class="accordion-item">
+                                                    {{-- <div class="accordion-item">
                                                         <h2 class="accordion-header" id="headingeight">
                                                             <button class="accordion-button collapsed" type="button"
                                                                 data-bs-toggle="collapse"
@@ -1980,10 +1980,10 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div> --}}
 
                                                     <!-- Skrill -->
-                                                    <div class="accordion-item">
+                                                    {{-- <div class="accordion-item">
                                                         <h2 class="accordion-header" id="headingnine">
                                                             <button class="accordion-button collapsed" type="button"
                                                                 data-bs-toggle="collapse" data-bs-target="#collapsenine"
@@ -2033,10 +2033,10 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div> --}}
 
                                                     <!-- CoinGate -->
-                                                    <div class="accordion-item">
+                                                    {{-- <div class="accordion-item">
                                                         <h2 class="accordion-header" id="headingten">
                                                             <button class="accordion-button collapsed" type="button"
                                                                 data-bs-toggle="collapse" data-bs-target="#collapseten"
@@ -2117,10 +2117,10 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div> --}}
 
                                                     <!-- PaymentWall -->
-                                                    <div class="accordion-item">
+                                                    {{-- <div class="accordion-item">
                                                         <h2 class="accordion-header" id="headingeleven">
                                                             <button class="accordion-button collapsed" type="button"
                                                                 data-bs-toggle="collapse"
@@ -2180,10 +2180,10 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div> --}}
 
                                                     <!-- Toyyibpay -->
-                                                    <div class="accordion-item">
+                                                    {{-- <div class="accordion-item">
                                                         <h2 class="accordion-header" id="headingtwelve">
                                                             <button class="accordion-button collapsed" type="button"
                                                                 data-bs-toggle="collapse"
@@ -2242,10 +2242,10 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div> --}}
 
                                                     <!-- Payfast -->
-                                                    <div class="accordion accordion-flush setting-accordion"
+                                                    {{-- <div class="accordion accordion-flush setting-accordion"
                                                         id="accordionExample">
                                                         <div class="accordion-item">
                                                             <h2 class="accordion-header" id="headingOne">
@@ -2354,11 +2354,11 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div> --}}
 
                                                     <!-- Iyzipay -->
                                                     <div class="accordion-item">
-                                                        <h2 class="accordion-header" id="headingFourteen">
+                                                        {{-- <h2 class="accordion-header" id="headingFourteen">
                                                             <button class="accordion-button collapsed" type="button"
                                                                 data-bs-toggle="collapse"
                                                                 data-bs-target="#collapseFourteen" aria-expanded="false"
@@ -2379,7 +2379,7 @@
                                                                     </div>
                                                                 </div>
                                                             </button>
-                                                        </h2>
+                                                        </h2> --}}
                                                         <div id="collapseFourteen" class="accordion-collapse collapse"
                                                             aria-labelledby="headingFourteen"
                                                             data-bs-parent="#accordionExample">
@@ -2456,7 +2456,7 @@
                                                     </div>
 
                                                     <!-- SSPAY -->
-                                                    <div class="accordion accordion-flush setting-accordion"
+                                                    {{-- <div class="accordion accordion-flush setting-accordion"
                                                         id="accordionExample">
                                                         <div class="accordion-item">
                                                             <h2 class="accordion-header" id="headingFourteen">
@@ -2519,10 +2519,10 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div> --}}
 
                                                     <!-- Paytab -->
-                                                    <div class="accordion-item">
+                                                    {{-- <div class="accordion-item">
                                                         <h2 class="accordion-header" id="headingTwenty">
                                                             <button class="accordion-button collapsed" type="button"
                                                                 data-bs-toggle="collapse"
@@ -2605,10 +2605,10 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div> --}}
 
                                                     <!--Benefit----->
-                                                    <div class="accordion-item">
+                                                    {{-- <div class="accordion-item">
                                                         <h2 class="accordion-header" id="headingTwentyOne">
                                                             <button class="accordion-button collapsed" type="button"
                                                                 data-bs-toggle="collapse"
@@ -2668,10 +2668,10 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div> --}}
 
                                                     <!--Cashfree----->
-                                                    <div class="accordion-item">
+                                                    {{-- <div class="accordion-item">
                                                         <h2 class="accordion-header" id="headingTwentyTwo">
                                                             <button class="accordion-button collapsed" type="button"
                                                                 data-bs-toggle="collapse"
@@ -2730,10 +2730,10 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div> --}}
 
                                                     <!--Aamarpay----->
-                                                    <div class="accordion-item">
+                                                    {{-- <div class="accordion-item">
                                                         <h2 class="accordion-header" id="headingTwenty-One">
                                                             <button class="accordion-button" type="button"
                                                                 data-bs-toggle="collapse"
@@ -2799,10 +2799,10 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div> --}}
 
                                                     <!--PayTR----->
-                                                    <div class="accordion-item">
+                                                    {{-- <div class="accordion-item">
                                                         <h2 class="accordion-header" id="headingTwenty-Two">
                                                             <button class="accordion-button" type="button"
                                                                 data-bs-toggle="collapse"
@@ -2867,10 +2867,10 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div> --}}
 
                                                     <!--Yookassa----->
-                                                    <div class="accordion-item">
+                                                    {{-- <div class="accordion-item">
                                                         <h2 class="accordion-header" id="headingTwenty-Three">
                                                             <button class="accordion-button" type="button"
                                                                 data-bs-toggle="collapse"
@@ -2924,10 +2924,10 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div> --}}
 
                                                     <!--Midtrans----->
-                                                    <div class="accordion-item">
+                                                    {{-- <div class="accordion-item">
                                                         <h2 class="accordion-header" id="headingTwenty-four">
                                                             <button class="accordion-button" type="button"
                                                                 data-bs-toggle="collapse"
@@ -3009,10 +3009,10 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div> --}}
 
                                                     <!--Xendit----->
-                                                    <div class="accordion-item">
+                                                    {{-- <div class="accordion-item">
                                                         <h2 class="accordion-header" id="headingTwenty-five">
                                                             <button class="accordion-button" type="button"
                                                                 data-bs-toggle="collapse"
@@ -3068,10 +3068,10 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div> --}}
 
                                                     <!--Nepalste----->
-                                                    <div class="accordion-item">
+                                                    {{-- <div class="accordion-item">
                                                         <h2 class="accordion-header" id="headingTwenty-six">
                                                             <button class="accordion-button" type="button"
                                                                 data-bs-toggle="collapse"
@@ -3125,7 +3125,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div> --}}
 
                                                 </div>
                                             </div>
@@ -3144,7 +3144,7 @@
                     </div>
 
                     <!--Zoom - Metting Settings-->
-                    <div id="zoom-settings" class="card">
+                    {{-- <div id="zoom-settings" class="card">
                         <div class="card-header">
                             <h5>{{ __('Zoom Settings') }}</h5>
                             <small class="text-muted">{{ __('Edit your Zoom settings') }}</small>
@@ -3173,10 +3173,10 @@
                             </div>
                         </div>
                         {{ Form::close() }}
-                    </div>
+                    </div> --}}
 
                     <!--Slack Settings-->
-                    <div id="slack-settings" class="card">
+                    {{-- <div id="slack-settings" class="card">
                         <div class="card-header">
                             <h5>{{ __('Slack Settings') }}</h5>
                             <small class="text-muted">{{ __('Edit your Slack settings') }}</small>
@@ -3408,10 +3408,10 @@
                             </div>
                         </div>
                         {{ Form::close() }}
-                    </div>
+                    </div> --}}
 
                     <!--Telegram Settings-->
-                    <div id="telegram-settings" class="card">
+                    {{-- <div id="telegram-settings" class="card">
                         <div class="card-header">
                             <h5>{{ __('Telegram Settings') }}</h5>
                             <small class="text-muted">{{ __('Edit your Telegram settings') }}</small>
@@ -3673,10 +3673,10 @@
                             </div>
                         </div>
                         {{ Form::close() }}
-                    </div>
+                    </div> --}}
 
                     <!--Twilio Settings-->
-                    <div id="twilio-settings" class="card">
+                    {{-- <div id="twilio-settings" class="card">
                         <div class="card-header">
                             <h5>{{ __('Twilio Settings') }}</h5>
                             <small class="text-muted">{{ __('Edit your Twilio settings') }}</small>
@@ -3813,7 +3813,7 @@
                             </div>
                         </div>
                         {{ Form::close() }}
-                    </div>
+                    </div> --}}
 
                     <!--Email Notification Settings-->
                     <div id="email-notification-settings" class="card">
