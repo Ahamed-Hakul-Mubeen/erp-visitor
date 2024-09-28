@@ -2390,14 +2390,14 @@ class ReportController extends Controller
                     $totalOtherPayment += $otherPayment->amount;
                 }
 
-                $overtimes = json_decode($payslip->overtime);
-                foreach ($overtimes as $overtime) {
-                    $days = $overtime->number_of_days;
-                    $hours = $overtime->hours;
-                    $rate = $overtime->rate;
+                $overtimes = $payslip->overtime;
+                // foreach ($overtimes as $overtime) {
+                //     $days = $overtime->number_of_days;
+                //     $hours = $overtime->hours;
+                //     $rate = $overtime->rate;
 
-                    $totalOverTime += ($rate * $hours) * $days;
-                }
+                //     $totalOverTime += ($rate * $hours) * $days;
+                // }
 
             }
 
