@@ -670,7 +670,7 @@ class InvoiceController extends Controller
                     $data = [
                         'account_id' => $cof_sale->id,
                         'transaction_type' => 'Debit',
-                        'transaction_amount' => $purchase_price * $invoice->exchange_rate,
+                        'transaction_amount' => $purchase_price,
                         'reference' => 'Invoice',
                         'reference_id' => $invoice->id,
                         'reference_sub_id' => $product->id,
@@ -684,7 +684,7 @@ class InvoiceController extends Controller
                     $data = [
                         'account_id' => $inventory->id,
                         'transaction_type' => 'Credit',
-                        'transaction_amount' => $purchase_price * $invoice->exchange_rate,
+                        'transaction_amount' => $purchase_price,
                         'reference' => 'Invoice',
                         'reference_id' => $invoice->id,
                         'reference_sub_id' => $product->id,

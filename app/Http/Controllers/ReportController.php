@@ -5276,8 +5276,6 @@ class ReportController extends Controller
             $new_payableSummariesBill[] = $da;
         }
 
-        // dd($payableSummariesBill);
-
         $payableSummariesBill = $new_payableSummariesBill;
 
         $payableSummariesDebit = DebitNote::select('venders.name')
