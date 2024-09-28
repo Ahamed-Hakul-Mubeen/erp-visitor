@@ -2170,6 +2170,22 @@ class User extends Authenticatable implements MustVerifyEmail
                     <p>{app_url}</p>',
                 ],
             ],
+
+            'pre_order_sent' => [
+                'subject' => 'Pre Order Sent',
+                'lang' => [
+                    'en' => '<p>Hi, {pre_order_name}</p>
+                    <p>Hope this email ﬁnds you well! Please see attached Pre Order number {pre_order_number} for product/service.</p>
+                    <p>simply click on the button below</p>
+                    <p>{pre_order_url}</p>
+                    <p>Feel free to reach out if you have any questions.</p>
+                    <p>Thank you for your business!!</p>
+                    <p>&nbsp;</p>
+                    <p>Regards,</p>
+                    <p>{company_name}</p>
+                    <p>{app_url}</p>',
+                ],
+            ],
             'complaint_resent' => [
                 'subject' => 'Complaint Resent',
                 'lang' => [
