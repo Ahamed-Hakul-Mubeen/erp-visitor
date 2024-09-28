@@ -72,6 +72,7 @@ else {
     <link rel="stylesheet" href="{{ asset('assets/css/customizer.css') }}">
 
     <link rel="stylesheet" href="{{ asset('css/custom.css') }}" id="main-style-link">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 
     <style>
         :root {
@@ -150,7 +151,18 @@ else {
         </div>
     </div>
     @include('partials.admin.footer')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    
+    <script>
+    @if(session()->has('success'))
+        toastr.success("{{ session('success') }}");
+    @endif
 
+    @if(session()->has('error'))
+        toastr.error("{{ session('error') }}");
+    @endif
+</script>
+    
     @if($get_cookie['enable_cookie'] == 'on')
         @include('layouts.cookie_consent')
     @endif
