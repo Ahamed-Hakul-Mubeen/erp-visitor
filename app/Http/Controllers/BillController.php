@@ -599,67 +599,70 @@ class BillController extends Controller
                     $itemAmount = ($bill_product->price * $bill_product->quantity) - ($bill_product->discount) + $totalTaxPrice;
                     $product_price = ($bill_product->price * $bill_product->quantity) - ($bill_product->discount);
 
-                    $data = [
-                        'account_id' => $product->expense_chartaccount_id,
-                        'transaction_type' => 'Credit',
-                        'transaction_amount' => $itemAmount,
-                        'reference' => 'Bill',
-                        'reference_id' => $bill->id,
-                        'reference_sub_id' => $product->id,
-                        'date' => $bill->bill_date,
-                    ];
-                    Utility::addTransactionLines($data, "new");
-
-                    if($bill->vender_id != 0 && $bill->status != 0)
+                    if($bill->status != 0)
                     {
-                        Utility::updateUserBalance('vendor', $request->vender_id, $itemAmount, 'debit');
-                        Log::info($request->vender_id." - ".$itemAmount." - ".'debit');
-                    }
-
-                    if($bill->project_id)
-                    {
-                        $expense = new ProjectExpense();
-                        $expense->name = $bill->actual_bill_number." Bill Generated";
-                        $expense->project_id = $bill->project_id;
-                        $expense->date = date("Y-m-d H:i:s", strtotime($bill->bill_date));
-                        $expense->amount = $itemAmount;
-                        $expense->description = $bill_product->description;
-                        $expense->chart_accounts = $product->expense_chartaccount_id;
-                        $expense->vender_id = $bill->vender_id;
-                        $expense->reference_type = "Bill";
-                        $expense->reference_id = $bill->id;
-                        $expense->created_by = \Auth::user()->creatorId();
-                        $expense->save();
-                    }
-
-                    // Product Amount Store in Inventory
-
-                    $chart_accounts = ChartOfAccount::where('code', 1510)->where('created_by', \Auth::user()->creatorId())->first();
-                    $data = [
-                        'account_id' => $chart_accounts->id,
-                        'transaction_type' => 'Debit',
-                        'transaction_amount' => $product_price,
-                        'reference' => 'Bill',
-                        'reference_id' => $bill->id,
-                        'reference_sub_id' => $product->id,
-                        'date' => $bill->bill_date,
-                    ];
-                    Utility::addTransactionLines($data, "new");
-
-                    // Purchase Tax
-                    if($totalTaxPrice != 0)
-                    {
-                        $chart_accounts = ChartOfAccount::where('code', 2150)->where('created_by', \Auth::user()->creatorId())->first();
                         $data = [
-                            'account_id' => $chart_accounts->id,
-                            'transaction_type' => 'Debit',
-                            'transaction_amount' => $totalTaxPrice,
+                            'account_id' => $product->expense_chartaccount_id,
+                            'transaction_type' => 'Credit',
+                            'transaction_amount' => $itemAmount,
                             'reference' => 'Bill',
                             'reference_id' => $bill->id,
                             'reference_sub_id' => $product->id,
                             'date' => $bill->bill_date,
                         ];
                         Utility::addTransactionLines($data, "new");
+
+                        if($bill->vender_id != 0 && $bill->status != 0)
+                        {
+                            Utility::updateUserBalance('vendor', $request->vender_id, $itemAmount, 'debit');
+                            Log::info($request->vender_id." - ".$itemAmount." - ".'debit');
+                        }
+
+                        if($bill->project_id)
+                        {
+                            $expense = new ProjectExpense();
+                            $expense->name = $bill->actual_bill_number." Bill Generated";
+                            $expense->project_id = $bill->project_id;
+                            $expense->date = date("Y-m-d H:i:s", strtotime($bill->bill_date));
+                            $expense->amount = $itemAmount;
+                            $expense->description = $bill_product->description;
+                            $expense->chart_accounts = $product->expense_chartaccount_id;
+                            $expense->vender_id = $bill->vender_id;
+                            $expense->reference_type = "Bill";
+                            $expense->reference_id = $bill->id;
+                            $expense->created_by = \Auth::user()->creatorId();
+                            $expense->save();
+                        }
+
+                        // Product Amount Store in Inventory
+
+                        $chart_accounts = ChartOfAccount::where('code', 1510)->where('created_by', \Auth::user()->creatorId())->first();
+                        $data = [
+                            'account_id' => $chart_accounts->id,
+                            'transaction_type' => 'Debit',
+                            'transaction_amount' => $product_price,
+                            'reference' => 'Bill',
+                            'reference_id' => $bill->id,
+                            'reference_sub_id' => $product->id,
+                            'date' => $bill->bill_date,
+                        ];
+                        Utility::addTransactionLines($data, "new");
+
+                        // Purchase Tax
+                        if($totalTaxPrice != 0)
+                        {
+                            $chart_accounts = ChartOfAccount::where('code', 2150)->where('created_by', \Auth::user()->creatorId())->first();
+                            $data = [
+                                'account_id' => $chart_accounts->id,
+                                'transaction_type' => 'Debit',
+                                'transaction_amount' => $totalTaxPrice,
+                                'reference' => 'Bill',
+                                'reference_id' => $bill->id,
+                                'reference_sub_id' => $product->id,
+                                'date' => $bill->bill_date,
+                            ];
+                            Utility::addTransactionLines($data, "new");
+                        }
                     }
                 }
 
