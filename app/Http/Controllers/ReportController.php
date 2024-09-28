@@ -3553,7 +3553,7 @@ class ReportController extends Controller
             // -------------------------------REVENUE INCOME-------------------------------------------------
 
             // ------------------------------REVENUE INCOME-----------------------------------
-            $incomes = Revenue::selectRaw('sum(revenues.amount) as amount,MONTH(date) as month,YEAR(date) as year,category_id')
+            $incomes = Revenue::selectRaw('sum(revenues.amount * revenues.exchange_rate) as amount,MONTH(date) as month,YEAR(date) as year,category_id')
                 ->leftjoin('product_service_categories', 'revenues.category_id', '=', 'product_service_categories.id')->where('product_service_categories.type', '=', 1);
             $incomes->where('revenues.created_by', '=', \Auth::user()->creatorId());
             $incomes->whereRAW('YEAR(date) =?', [$year]);
@@ -3587,7 +3587,7 @@ class ReportController extends Controller
                 $array[] = $tmp;
             }
 
-            $incomesData = Revenue::selectRaw('sum(revenues.amount) as amount,MONTH(date) as month,YEAR(date) as year');
+            $incomesData = Revenue::selectRaw('sum(revenues.amount * revenues.exchange_rate) as amount,MONTH(date) as month,YEAR(date) as year');
             $incomesData->where('revenues.created_by', '=', \Auth::user()->creatorId());
             $incomesData->whereRAW('YEAR(date) =?', [$year]);
 
@@ -3626,7 +3626,7 @@ class ReportController extends Controller
             $invoices = $invoices->get();
             $invoiceTmpArray = [];
             foreach ($invoices as $invoice) {
-                $invoiceTmpArray[$invoice->category_id][$invoice->month][] = $invoice->getTotal();
+                $invoiceTmpArray[$invoice->category_id][$invoice->month][] = $invoice->getTotal(true);
             }
 
             $invoiceArray = [];
@@ -3645,7 +3645,7 @@ class ReportController extends Controller
 
             $invoiceTotalArray = [];
             foreach ($invoices as $invoice) {
-                $invoiceTotalArray[$invoice->month][] = $invoice->getTotal();
+                $invoiceTotalArray[$invoice->month][] = $invoice->getTotal(true);
             }
             for ($i = 1; $i <= 12; $i++) {
                 $invoiceTotal[] = array_key_exists($i, $invoiceTotalArray) ? array_sum($invoiceTotalArray[$i]) : 0;
@@ -3805,7 +3805,7 @@ class ReportController extends Controller
 
             // -------------------------------REVENUE INCOME-------------------------------------------------
 
-            $incomes = Revenue::selectRaw('sum(revenues.amount) as amount,MONTH(date) as month,YEAR(date) as year,category_id');
+            $incomes = Revenue::selectRaw('sum(revenues.amount * revenues.exchange_rate) as amount,MONTH(date) as month,YEAR(date) as year,category_id');
             $incomes->where('created_by', '=', \Auth::user()->creatorId());
             $incomes->whereRAW('YEAR(date) =?', [$year]);
             $incomes->groupBy('month', 'year', 'category_id');
@@ -3884,7 +3884,7 @@ class ReportController extends Controller
 
             $invoiceTmpArray = [];
             foreach ($invoices as $invoice) {
-                $invoiceTmpArray[$invoice->category_id][$invoice->month][] = $invoice->getDue();
+                $invoiceTmpArray[$invoice->category_id][$invoice->month][] = $invoice->getTotal(true);
             }
 
             $invoiceCatAmount_1 = $invoiceCatAmount_2 = $invoiceCatAmount_3 = $invoiceCatAmount_4 = 0;

@@ -451,7 +451,7 @@
                                                     <td>{{!empty($invoice->customer_name)? $invoice->customer_name:'' }} </td>
                                                     <td>{{ Auth::user()->dateFormat($invoice->issue_date) }}</td>
                                                     <td>{{ Auth::user()->dateFormat($invoice->due_date) }}</td>
-                                                    <td>{{\Auth::user()->priceFormat($invoice->getTotal())}}</td>
+                                                    <td>{{$invoice->currency_symbol .' '. $invoice->getTotal()}}</td>
                                                     <td>
                                                         @if($invoice->status == 0)
                                                             <span class="p-2 px-3 rounded badge status_badge bg-secondary">{{ __(\App\Models\Invoice::$statues[$invoice->status]) }}</span>
