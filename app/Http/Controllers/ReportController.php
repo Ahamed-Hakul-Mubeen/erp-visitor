@@ -2047,7 +2047,7 @@ class ReportController extends Controller
         if (\Auth::user()->can('manage report')) {
 
             $branch = Branch::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
-            $branch->prepend('Select Branch', '');
+            $branch->prepend('Select Company', '');
 
             $department = Department::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             $department->prepend('Select Department', '');

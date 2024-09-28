@@ -47,9 +47,9 @@
                         </div>
                         <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12 me-2">
                             <div class="btn-box form-group">
-                                <label for="company">Branch</label>
+                                <label for="company">Company</label>
                                     <select class="form-control" name="branch" id="company">
-                                        <option value="">Select Branch</option>
+                                        <option value="">Select Company</option>
                                         @if(count($branches) > 0)
                                         @foreach ($branches as $branch )
                                             <option value="{{$branch['id']}}" {{isset($_GET['branch'])?($_GET['branch'] == $branch['id'] ? 'selected'  : ''):''}}>{{$branch['name']}}</option>
