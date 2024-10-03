@@ -51,8 +51,14 @@
         </div>
         <div class="col-sm-6 col-md-6">
             <div class="form-group">
+                {{ Form::label('projectManager', __('Project Manager'),['class'=>'form-label']) }}<span class="text-danger">*</span>
+                {!! Form::select('projectManager[]', $projectManagers, null,array('class' => 'form-control select2', 'id'=>'choices-multiple2', 'multiple'=>'multiple', 'required'=>'required')) !!}
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-6">
+            <div class="form-group">
                 {{ Form::label('user', __('User'),['class'=>'form-label']) }}<span class="text-danger">*</span>
-                {!! Form::select('user[]', $users, null,array('class' => 'form-control','required'=>'required')) !!}
+                {!! Form::select('user[]', $users, null,array('class' => 'form-control select2', 'id'=>'choices-multiple1', 'multiple'=>'multiple', 'required'=>'required')) !!}
             </div>
         </div>
         <div class="col-sm-6 col-md-6">
@@ -109,5 +115,8 @@
             var startDate = $(this).val();
             $('#end_date').attr('min', startDate);
         });
+        if($('.select2').length) {
+                        $('.select2').select2();
+        }
     });
 </script>

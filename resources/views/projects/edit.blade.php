@@ -40,9 +40,21 @@
         <div class="col-sm-6 col-md-6">
             <div class="form-group">
                 {{ Form::label('client', __('Client'),['class'=>'form-label']) }}<span class="text-danger">*</span>
-                {!! Form::select('client', $clients, $project->client_id,array('class' => 'form-control select2','id'=>'choices-multiple1','required'=>'required')) !!}
+                {!! Form::select('client', $clients, $project->client_id,array('class' => 'form-control')) !!}
             </div>
         </div>
+        {{-- <div class="col-sm-6 col-md-6">
+            <div class="form-group">
+                {{ Form::label('projectManager', __('Project Manager'),['class'=>'form-label']) }}<span class="text-danger">*</span>
+                {!! Form::select( 'projectManager[]', $projectManagers, json_decode($project->project_managers_id, true), array( 'class' => 'form-control select2', 'id' => 'choices-multiple2', 'multiple' => 'multiple', 'required' => 'required' ) ) !!}
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-6">
+            <div class="form-group">
+                {{ Form::label('user', __('User'),['class'=>'form-label']) }}<span class="text-danger">*</span>
+                {!! Form::select('user[]', $users,  json_decode($project->users_id, true),array('class' => 'form-control select2', 'id'=>'choices-multiple1', 'multiple'=>'multiple', 'required'=>'required')) !!}
+            </div>
+        </div> --}}
 
     </div>
     <div class="row">

@@ -53,11 +53,13 @@ class ProjectController extends Controller
     public function create()
     {
         if (\Auth::user()->can('create project')) {
-            $users   = User::where('created_by', '=', \Auth::user()->creatorId())->where('type', '!=', 'client')->where('type', '!=', 'project member')->get()->pluck('name', 'id');
+            $projectManagers = User::where('created_by', '=', \Auth::user()->creatorId())->where('type', '=', 'Project Manager')->get()->pluck('name', 'id');
+            $users   = User::where('created_by', '=', \Auth::user()->creatorId())->where('type', '!=', 'client')->where('type', '!=', 'project member')->where('type', '!=', 'Project Manager')->get()->pluck('name', 'id');
             $clients = User::where('created_by', '=', \Auth::user()->creatorId())->where('type', '=', 'client')->get()->pluck('name', 'id');
             $clients->prepend('Select Client', '');
-            $users->prepend('Select User', '');
-            return view('projects.create', compact('clients', 'users'));
+            // $users->prepend('Select User', '');
+            // $projectManagers->prepend('Select Project Manager', '');
+            return view('projects.create', compact('clients', 'users','projectManagers'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
@@ -102,6 +104,8 @@ class ProjectController extends Controller
             }
 
             $project->client_id = $request->client;
+            // $project->project_managers_id = json_encode($request->projectManager);
+            // $project->users_id = json_encode($request->user);
             $project->budget = !empty($request->budget) ? $request->budget : 0;
             $project->description = $request->description;
             $project->status = $request->status;
@@ -120,9 +124,18 @@ class ProjectController extends Controller
                         'user_id' => Auth::user()->id,
                     ]
                 );
-
                 if ($request->user) {
                     foreach ($request->user as $key => $value) {
+                        ProjectUser::create(
+                            [
+                                'project_id' => $project->id,
+                                'user_id' => $value,
+                            ]
+                        );
+                    }
+                }
+                if ($request->projectManager) {
+                    foreach ($request->projectManager as $key => $value) {
                         ProjectUser::create(
                             [
                                 'project_id' => $project->id,
@@ -151,6 +164,16 @@ class ProjectController extends Controller
                         ProjectUser::create(
                             [
                                 'project_id' => $project->id,
+                                'user_id' => $value,
+                            ]
+                        );
+                    }
+                }
+                if ($request->projectManager) {
+                    foreach ($request->user as $key => $value) {
+                        ProjectUser::create(
+                            [
+                               'project_id' => $project->id,
                                 'user_id' => $value,
                             ]
                         );
@@ -352,6 +375,8 @@ class ProjectController extends Controller
     {
         if (\Auth::user()->can('edit project')) {
             $clients = User::where('created_by', '=', \Auth::user()->creatorId())->where('type', '=', 'client')->get()->pluck('name', 'id');
+            // $projectManagers = User::where('created_by', '=', \Auth::user()->creatorId())->where('type', '=', 'Project Manager')->get()->pluck('name', 'id');
+            // $users   = User::where('created_by', '=', \Auth::user()->creatorId())->where('type', '!=', 'client')->where('type', '!=', 'project member')->where('type', '!=', 'Project Manager')->get()->pluck('name', 'id');
             $project = Project::findOrfail($project->id);
             if ($project->created_by == \Auth::user()->creatorId()) {
                 return view('projects.edit', compact('project', 'clients'));
