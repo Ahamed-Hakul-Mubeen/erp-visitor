@@ -1318,12 +1318,24 @@ class ReportController extends Controller
     public function balanceSheet(Request $request, $view = '', $collapseview = 'expand')
     {
         if (\Auth::user()->can('bill report')) {
+            $view_type = 'with-opening-balance';
+            $start = date('Y-01-01');
+            $end = date('Y-m-d', strtotime('+1 day'));
+            if(!empty($request->type)) {
+                $view_type = $request->type;
+            }
             if (!empty($request->start_date) && !empty($request->end_date)) {
                 $start = $request->start_date;
                 $end = $request->end_date;
-            } else {
-                $start = date('Y-01-01');
-                $end = date('Y-m-d', strtotime('+1 day'));
+            } else if(!empty($request->type) && $request->type == "overall") {
+                $find_start_date = TransactionLines::where('created_by', \Auth::user()->creatorId())->orderBy("date", "ASC")->first();
+                $find_end_date = TransactionLines::where('created_by', \Auth::user()->creatorId())->orderBy("date", "DESC")->first();
+                if($find_start_date) {
+                    $start = $find_start_date->date;
+                }
+                if($find_end_date) {
+                    $end = $find_end_date->date;
+                }
             }
             $types = ChartOfAccountType::where('created_by', \Auth::user()->creatorId())->whereIn('name', ['Assets', 'Liabilities', 'Equity'])->get();
             $totalAccounts = [];
@@ -1352,6 +1364,9 @@ class ReportController extends Controller
                             $parentAccs->where('transaction_lines.created_by', \Auth::user()->creatorId());
                             $parentAccs->where('transaction_lines.date', '>=', $start);
                             $parentAccs->where('transaction_lines.date', '<=', $end);
+                            if($view_type == "without-opening-balance" || $view_type == "overall") {
+                                $parentAccs->where('reference', "!=", "Opening Balance");
+                            }
                             $parentAccs->groupBy('account_id');
                             $parentAccs = $parentAccs->get()->toArray();
 
@@ -1363,6 +1378,9 @@ class ReportController extends Controller
                             $accounts->where('transaction_lines.created_by', \Auth::user()->creatorId());
                             $accounts->where('transaction_lines.date', '>=', $start);
                             $accounts->where('transaction_lines.date', '<=', $end);
+                            if($view_type == "without-opening-balance" || $view_type == "overall") {
+                                $accounts->where('reference', "!=", "Opening Balance");
+                            }
                             $accounts->groupBy('account_id');
                             $accounts = $accounts->get()->toArray();
 
@@ -1463,6 +1481,9 @@ class ReportController extends Controller
                         $accounts->where('transaction_lines.created_by', \Auth::user()->creatorId());
                         $accounts->where('transaction_lines.date', '>=', $start);
                         $accounts->where('transaction_lines.date', '<=', $end);
+                        if($view_type == "without-opening-balance" || $view_type == "overall") {
+                            $accounts->where('reference', "!=", "Opening Balance");
+                        }
                         $accounts->groupBy('account_id');
                         $accounts = $accounts->get()->toArray();
                     } else {
@@ -1474,6 +1495,9 @@ class ReportController extends Controller
                         $accounts->where('transaction_lines.created_by', \Auth::user()->creatorId());
                         $accounts->where('transaction_lines.date', '>=', $start);
                         $accounts->where('transaction_lines.date', '<=', $end);
+                        if($view_type == "without-opening-balance" || $view_type == "overall") {
+                            $accounts->where('reference', "!=", "Opening Balance");
+                        }
                         $accounts->groupBy('account_id');
                         $accounts = $accounts->get()->toArray();
                     }
@@ -1615,9 +1639,9 @@ class ReportController extends Controller
 
             // dd($totalAccounts);
             if ($request->view == 'horizontal' || $view == 'horizontal') {
-                return view('report.balance_sheet_horizontal', compact('filter', 'totalAccounts', 'collapseview'));
+                return view('report.balance_sheet_horizontal', compact('filter', 'totalAccounts', 'collapseview', 'view_type'));
             } elseif ($view == '' || $view == 'vertical') {
-                return view('report.balance_sheet', compact('filter', 'totalAccounts', 'collapseview'));
+                return view('report.balance_sheet', compact('filter', 'totalAccounts', 'collapseview', 'view_type'));
             } else {
                 return redirect()->back();
             }
@@ -1857,12 +1881,24 @@ class ReportController extends Controller
     {
         if (\Auth::user()->can('trial balance report')) {
 
+            $view_type = 'with-opening-balance';
+            $start = date('Y-01-01');
+            $end = date('Y-m-d', strtotime('+1 day'));
+            if(!empty($request->type)) {
+                $view_type = $request->type;
+            }
             if (!empty($request->start_date) && !empty($request->end_date)) {
                 $start = $request->start_date;
                 $end = $request->end_date;
-            } else {
-                $start = date('Y-01-01');
-                $end = date('Y-m-d', strtotime('+1 day'));
+            } else if(!empty($request->type) && $request->type == "overall") {
+                $find_start_date = TransactionLines::where('created_by', \Auth::user()->creatorId())->orderBy("date", "ASC")->first();
+                $find_end_date = TransactionLines::where('created_by', \Auth::user()->creatorId())->orderBy("date", "DESC")->first();
+                if($find_start_date) {
+                    $start = $find_start_date->date;
+                }
+                if($find_end_date) {
+                    $end = $find_end_date->date;
+                }
             }
             $types = ChartOfAccountType::where('created_by', \Auth::user()->creatorId())->get();
             $totalAccounts = [];
@@ -1887,6 +1923,9 @@ class ReportController extends Controller
                         $parentAccs->where('transaction_lines.created_by', \Auth::user()->creatorId());
                         $parentAccs->where('transaction_lines.date', '>=', $start);
                         $parentAccs->where('transaction_lines.date', '<=', $end);
+                        if($view_type == "without-opening-balance" || $view_type == "overall") {
+                            $parentAccs->where('reference', "!=", "Opening Balance");
+                        }
                         $parentAccs->groupBy('account_id');
                         $parentAccs = $parentAccs->get()->toArray();
 
@@ -1897,6 +1936,9 @@ class ReportController extends Controller
                         $accounts->where('transaction_lines.created_by', \Auth::user()->creatorId());
                         $accounts->where('transaction_lines.date', '>=', $start);
                         $accounts->where('transaction_lines.date', '<=', $end);
+                        if($view_type == "without-opening-balance" || $view_type == "overall") {
+                            $accounts->where('reference', "!=", "Opening Balance");
+                        }
                         $accounts->groupBy('account_id');
                         $accounts = $accounts->get()->toArray();
 
@@ -1987,6 +2029,9 @@ class ReportController extends Controller
                     $accounts->where('transaction_lines.created_by', \Auth::user()->creatorId());
                     $accounts->where('transaction_lines.date', '>=', $start);
                     $accounts->where('transaction_lines.date', '<=', $end);
+                    if($view_type == "without-opening-balance" || $view_type == "overall") {
+                        $accounts->where('reference', "!=", "Opening Balance");
+                    }
                     $accounts->groupBy('account_id');
                     $accounts = $accounts->get()->toArray();
                 } else {
@@ -1997,6 +2042,9 @@ class ReportController extends Controller
                     $accounts->where('transaction_lines.created_by', \Auth::user()->creatorId());
                     $accounts->where('transaction_lines.date', '>=', $start);
                     $accounts->where('transaction_lines.date', '<=', $end);
+                    if($view_type == "without-opening-balance" || $view_type == "overall") {
+                        $accounts->where('reference', "!=", "Opening Balance");
+                    }
                     $accounts->groupBy('account_id');
                     $accounts = $accounts->get()->toArray();
                 }
@@ -2038,7 +2086,7 @@ class ReportController extends Controller
 
             $filter['startDateRange'] = $start;
             $filter['endDateRange'] = $end;
-            return view('report.trial_balance', compact('filter', 'totalAccounts', 'view'));
+            return view('report.trial_balance', compact('filter', 'totalAccounts', 'view', 'view_type'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }

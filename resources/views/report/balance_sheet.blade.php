@@ -60,13 +60,29 @@
     </div>
 
     <div class="float-end me-2" id="filter">
-        <button id="filter" class="btn btn-sm btn-primary"><i class="ti ti-filter"></i></button>
+        <button id="filter" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="{{ __('Filter') }}"
+        data-original-title="{{ __('Filter') }}"><i class="ti ti-filter"></i></button>
     </div>
 
     <div class="float-end me-2">
         <a href="{{ route('report.balance.sheet', 'horizontal') }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip"
             title="{{ __('Horizontal View') }}" data-original-title="{{ __('Horizontal View') }}"><i
-                class="ti ti-separator-vertical"></i></a>
+                class="ti ti-separator-vertical"></i> </a>
+    </div>
+    @if($view_type == "with-opening-balance")
+        <div class="float-end me-2">
+            <a href="?type=without-opening-balance" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="{{ __('Without Opening Balance') }}"
+            data-original-title="{{ __('Without Opening Balance') }}"><i class="fas fa-coins"></i></a>
+        </div>
+    @else
+        <div class="float-end me-2">
+            <a href="?type=with-opening-balance" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="{{ __('With Opening Balance') }}"
+            data-original-title="{{ __('With Opening Balance') }}"><i class="fas fa-coins"></i></a>
+        </div>
+    @endif
+    <div class="float-end me-2">
+        <a href="?type=overall" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="{{ __('Over All') }}"
+        data-original-title="{{ __('Over All') }}"><i class="fas fa-globe"></i></a>
     </div>
 @endsection
 
@@ -81,7 +97,7 @@
                             <div class="col-xl-12">
 
                                 <div class="row justify-content-between">
-                                    <div class="mt-4 col-xl-3">
+                                    {{-- <div class="mt-4 col-xl-3">
                                         <div class="btn-group btn-group-toggle" data-toggle="buttons"
                                             aria-label="Basic radio toggle button group">
                                             <label class="btn btn-primary month-label">
@@ -94,8 +110,8 @@
                                                     class="text-white"> {{ __('Expand') }} </a>
                                             </label>
                                         </div>
-                                    </div>
-                                    <div class="col-xl-9">
+                                    </div> --}}
+                                    <div class="col-xl-12">
                                         <div class="row justify-content-end align-items-center">
                                             <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12">
                                                 <div class="btn-box">
@@ -147,8 +163,16 @@
                 <div class="card">
                     <div class="card-body {{ $collapseview == 'expand' ? 'collapse-view' : '' }}">
                         <div class="mb-5 account-main-title">
-                            <h5>{{ 'Balance Sheet of ' . $user->name . ' as of ' . $filter['startDateRange'] . ' to ' . $filter['endDateRange'] }}
-                                </h4>
+                            @if(!empty($view_type) && $view_type == "overall")
+                                <h5>{{ 'Over All Balance Sheet of ' . $user->name }}
+                                </h5>
+                            @elseif(!empty($view_type) && $view_type == "with-opening-balance")
+                                <h5>{{ 'Balance Sheet of ' . $user->name . ' as of ' . $filter['startDateRange'] . ' to ' . $filter['endDateRange'] }} with Opening Balance
+                                </h5>
+                            @else
+                                <h5>{{ 'Balance Sheet of ' . $user->name . ' as of ' . $filter['startDateRange'] . ' to ' . $filter['endDateRange'] }}
+                                </h5>
+                            @endif
                         </div>
                         <div
                             class="py-2 aacount-title d-flex align-items-center justify-content-between border-top border-bottom">

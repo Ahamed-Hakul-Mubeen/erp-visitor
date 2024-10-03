@@ -465,6 +465,25 @@
                                                     <td class="text-right">{{ \Auth::user()->priceFormat($balance) }}</td>
                                                 </tr>
                                             @endif
+                                            @if ($account->reference == 'Opening Balance')
+
+                                                <tr>
+                                                    <td>{{ $account->account_name }}</td>
+                                                    <td>{{ '-' }}
+                                                    </td>
+                                                    <td>Opening Balance
+                                                    </td>
+                                                    <td>{{ $account->date }}</td>
+                                                    <td class="text-right">{{ \Auth::user()->priceFormat($account->debit) }}</td>
+                                                    @php
+                                                        $balance += $account->credit - $account->debit;
+                                                        $totalCredit += $account->credit;
+                                                        $totalDebit +=  $account->debit;
+                                                    @endphp
+                                                    <td class="text-right">{{ \Auth::user()->priceFormat($account->credit) }}</td>
+                                                    <td class="text-right">{{ \Auth::user()->priceFormat($balance) }}</td>
+                                                </tr>
+                                            @endif
                                         @endforeach
                                     @endforeach
                                 </tbody>

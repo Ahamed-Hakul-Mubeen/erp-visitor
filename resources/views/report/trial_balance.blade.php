@@ -47,6 +47,22 @@
     <div class="float-end me-2" id="filter">
         <button id="filter" class="btn btn-sm btn-primary"><i class="ti ti-filter"></i></button>
     </div>
+    
+    @if($view_type == "with-opening-balance")
+        <div class="float-end me-2">
+            <a href="?type=without-opening-balance" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="{{ __('Without Opening Balance') }}"
+            data-original-title="{{ __('Without Opening Balance') }}"><i class="fas fa-coins"></i></a>
+        </div>
+    @else
+        <div class="float-end me-2">
+            <a href="?type=with-opening-balance" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="{{ __('With Opening Balance') }}"
+            data-original-title="{{ __('With Opening Balance') }}"><i class="fas fa-coins"></i></a>
+        </div>
+    @endif
+    <div class="float-end me-2">
+        <a href="?type=overall" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="{{ __('Over All') }}"
+        data-original-title="{{ __('Over All') }}"><i class="fas fa-globe"></i></a>
+    </div>
 @endsection
 
 @section('content')
@@ -126,8 +142,20 @@
             <div class="card">
                 <div class="card-body {{ $view == 'expand' ? 'collapse-view' : '' }}">
                     <div class="mb-5 account-main-title">
-                        <h5>{{ 'Trial Balance of ' . $user->name . ' as of ' . $filter['startDateRange'] . ' to ' . $filter['endDateRange'] }}
-                            </h4>
+
+                        @if(!empty($view_type) && $view_type == "overall")
+                                <h5>{{ 'Over All Trial Balance of ' . $user->name }}
+                                </h5>
+                            @elseif(!empty($view_type) && $view_type == "with-opening-balance")
+                                <h5>{{ 'Trial Balance of ' . $user->name . ' as of ' . $filter['startDateRange'] . ' to ' . $filter['endDateRange'] }} with Opening Balance
+                                </h5>
+                            @else
+                                <h5>{{ 'Trial Balance of ' . $user->name . ' as of ' . $filter['startDateRange'] . ' to ' . $filter['endDateRange'] }}
+                                </h5>
+                            @endif
+
+                        {{-- <h5>{{ 'Trial Balance of ' . $user->name . ' as of ' . $filter['startDateRange'] . ' to ' . $filter['endDateRange'] }}
+                            </h4> --}}
                     </div>
                     <div
                         class="py-2 aacount-title d-flex align-items-center justify-content-between border-top border-bottom">
