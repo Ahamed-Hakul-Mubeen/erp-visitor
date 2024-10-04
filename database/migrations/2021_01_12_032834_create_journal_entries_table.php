@@ -22,6 +22,7 @@ class CreateJournalEntriesTable extends Migration
             $table->string('attachment')->nullable();
             $table->integer('journal_id')->default(0);
             $table->integer('created_by')->default(0);
+            $table->integer('created_user')->default(0);
             $table->timestamps();
         }
         );

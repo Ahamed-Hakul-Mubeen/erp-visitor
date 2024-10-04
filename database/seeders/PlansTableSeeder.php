@@ -27,8 +27,8 @@ class PlansTableSeeder extends Seeder
                 'hrm' => 1,
                 'account' => 1,
                 'project' => 1,
-                'pos' => 1,
-                'chatgpt' => 1,
+                'pos' => 0,
+                'chatgpt' => 0,
                 'image'=>'free_plan.png',
             ]
         );

@@ -30,7 +30,7 @@
                             <tr>
                                 <th>{{__('Chart Of Account')}}</th>
                                 <th>{{__('Name')}}</th>
-                                <th>{{__('Bank')}}</th>
+                                {{-- <th>{{__('Bank')}}</th> --}}
                                 <th>{{__('Account Number')}}</th>
                                 <th>{{__('Current Balance')}}</th>
                                 <th>{{__('Contact Number')}}</th>
@@ -44,7 +44,7 @@
                                 <tr class="font-style">
                                     <td>{{ (!empty($account->chartAccount)?$account->chartAccount->name :'-') }}</td>
                                     <td>{{  $account->holder_name}}</td>
-                                    <td>{{  $account->bank_name}}</td>
+                                    {{-- <td>{{  $account->bank_name}}</td> --}}
                                     <td>{{  $account->account_number}}</td>
                                     <td>{{  \Auth::user()->priceFormat($account->opening_balance)}}</td>
                                     <td>{{  $account->contact_number}}</td>

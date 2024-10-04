@@ -117,10 +117,10 @@ class JournalEntryController extends Controller
                     foreach ($bankAccounts as $bankAccount) {
                         $old_balance = $bankAccount->opening_balance;
                         if ($journalItem->debit > 0) {
-                            $new_balance = $old_balance - $journalItem->debit;
+                            $new_balance = $old_balance + $journalItem->debit;
                         }
                         if ($journalItem->credit > 0) {
-                            $new_balance = $old_balance + $journalItem->credit;
+                            $new_balance = $old_balance - $journalItem->credit;
                         }
                         if (isset($new_balance)) {
                             $bankAccount->opening_balance = $new_balance;
@@ -209,6 +209,7 @@ class JournalEntryController extends Controller
 
                     return redirect()->back()->with('error', $messages->first());
                 }
+                
 
                 $accounts = $request->accounts;
 
@@ -244,6 +245,29 @@ class JournalEntryController extends Controller
                 }
                 $journalEntry->save();
 
+                // Remove Old Bank Transactions
+
+                $journal_item = JournalItem::where("journal", $journalEntry->id)->get();
+                foreach($journal_item as $ji)
+                {
+                    $bankAccounts = BankAccount::where('chart_account_id', '=', $ji->account)->get();
+                    if (!empty($bankAccounts)) {
+                        foreach ($bankAccounts as $bankAccount) {
+                            $old_balance = $bankAccount->opening_balance;
+                            if ($ji->debit > 0) {
+                                $new_balance = $old_balance - $ji->debit;
+                            }
+                            if ($ji->credit > 0) {
+                                $new_balance = $old_balance + $ji->credit;
+                            }
+                            if (isset($new_balance)) {
+                                $bankAccount->opening_balance = $new_balance;
+                                $bankAccount->save();
+                            }
+                        }
+                    }
+                }
+
                 for ($i = 0; $i < count($accounts); $i++) {
                     $journalItem = JournalItem::find($accounts[$i]['id']);
 
@@ -266,10 +290,10 @@ class JournalEntryController extends Controller
                         foreach ($bankAccounts as $bankAccount) {
                             $old_balance = $bankAccount->opening_balance;
                             if ($journalItem->debit > 0) {
-                                $new_balance = $old_balance - $journalItem->debit;
+                                $new_balance = $old_balance + $journalItem->debit;
                             }
                             if ($journalItem->credit > 0) {
-                                $new_balance = $old_balance + $journalItem->credit;
+                                $new_balance = $old_balance - $journalItem->credit;
                             }
                             if (isset($new_balance)) {
                                 $bankAccount->opening_balance = $new_balance;
@@ -318,6 +342,27 @@ class JournalEntryController extends Controller
             if ($journalEntry->created_by == \Auth::user()->creatorId()) {
                 $journalEntry->delete();
 
+                $journal_item = JournalItem::where("journal", $journalEntry->id)->get();
+                foreach($journal_item as $ji)
+                {
+                    $bankAccounts = BankAccount::where('chart_account_id', '=', $ji->account)->get();
+                    if (!empty($bankAccounts)) {
+                        foreach ($bankAccounts as $bankAccount) {
+                            $old_balance = $bankAccount->opening_balance;
+                            if ($ji->debit > 0) {
+                                $new_balance = $old_balance - $ji->debit;
+                            }
+                            if ($ji->credit > 0) {
+                                $new_balance = $old_balance + $ji->credit;
+                            }
+                            if (isset($new_balance)) {
+                                $bankAccount->opening_balance = $new_balance;
+                                $bankAccount->save();
+                            }
+                        }
+                    }
+                }
+
                 JournalItem::where('journal', '=', $journalEntry->id)->delete();
 
                 TransactionLines::where('reference_id', $journalEntry->id)->where('reference', 'Journal')->delete();
@@ -345,7 +390,25 @@ class JournalEntryController extends Controller
     {
 
         if (\Auth::user()->can('delete journal entry')) {
+            $ji = JournalItem::find($request->id);
             JournalItem::where('id', '=', $request->id)->delete();
+
+            $bankAccounts = BankAccount::where('chart_account_id', '=', $ji->account)->get();
+            if (!empty($bankAccounts)) {
+                foreach ($bankAccounts as $bankAccount) {
+                    $old_balance = $bankAccount->opening_balance;
+                    if ($ji->debit > 0) {
+                        $new_balance = $old_balance - $ji->debit;
+                    }
+                    if ($ji->credit > 0) {
+                        $new_balance = $old_balance + $ji->credit;
+                    }
+                    if (isset($new_balance)) {
+                        $bankAccount->opening_balance = $new_balance;
+                        $bankAccount->save();
+                    }
+                }
+            }
 
             return redirect()->back()->with('success', __('Journal entry account successfully deleted.'));
         } else {
@@ -356,8 +419,24 @@ class JournalEntryController extends Controller
     public function journalDestroy($item_id)
     {
         if (\Auth::user()->can('delete journal entry')) {
-            $journal = JournalItem::find($item_id);
-            $journal->delete();
+            $ji = JournalItem::find($item_id);
+            $bankAccounts = BankAccount::where('chart_account_id', '=', $ji->account)->get();
+            if (!empty($bankAccounts)) {
+                foreach ($bankAccounts as $bankAccount) {
+                    $old_balance = $bankAccount->opening_balance;
+                    if ($ji->debit > 0) {
+                        $new_balance = $old_balance - $ji->debit;
+                    }
+                    if ($ji->credit > 0) {
+                        $new_balance = $old_balance + $ji->credit;
+                    }
+                    if (isset($new_balance)) {
+                        $bankAccount->opening_balance = $new_balance;
+                        $bankAccount->save();
+                    }
+                }
+            }
+            $ji->delete();
 
             return redirect()->back()->with('success', __('Journal account successfully deleted.'));
         } else {
