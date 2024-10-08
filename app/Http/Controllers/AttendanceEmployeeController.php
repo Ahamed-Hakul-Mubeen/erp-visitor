@@ -40,7 +40,7 @@ class AttendanceEmployeeController extends Controller
                     $year = date('Y', strtotime($request->month));
 
                     $start_date = date($year . '-' . $month . '-01');
-                    $end_date = date($year . '-' . $month . '-t');
+                    $end_date = date($year . '-' . $month . '-t', strtotime($start_date));
 
                     $attendanceEmployee->whereBetween(
                         'date', [
@@ -85,7 +85,7 @@ class AttendanceEmployeeController extends Controller
                     $year = date('Y', strtotime($request->month));
 
                     $start_date = date($year . '-' . $month . '-01');
-                    $end_date = date($year . '-' . $month . '-t');
+                    $end_date = date($year . '-' . $month . '-t', strtotime($start_date));
 
                     $attendanceEmployee->whereBetween(
                         'date', [
