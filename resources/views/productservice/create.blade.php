@@ -6,7 +6,7 @@
     @endphp
     @if($plan->chatgpt == 1)
     <div class="text-end">
-        <a href="#" data-size="md" class="btn  btn-primary btn-icon btn-sm" data-ajax-popup-over="true" data-url="{{ route('generate',['productservice']) }}"
+        <a href="#" data-size="md" class="btn btn-primary btn-icon btn-sm" data-ajax-popup-over="true" data-url="{{ route('generate',['productservice']) }}"
            data-bs-placement="top" data-title="{{ __('Generate content with AI') }}">
             <i class="fas fa-robot"></i> <span>{{__('Generate with AI')}}</span>
         </a>
@@ -40,7 +40,11 @@
             {{ Form::label('sale_chartaccount_id', __('Income Account'),['class'=>'form-label']) }}<span class="text-danger">*</span>
             <select name="sale_chartaccount_id" class="form-control" required="required">
                 @foreach ($incomeChartAccounts as $key => $chartAccount)
-                    <option value="{{ $key }}" class="subAccount">{{ $chartAccount }}</option>
+                    @if($chartAccount == "4010 - Sales Income")
+                        <option selected value="{{ $key }}" class="subAccount">{{ $chartAccount }}</option>
+                    @else
+                        <option value="{{ $key }}" class="subAccount">{{ $chartAccount }}</option>
+                    @endif
                     @foreach ($incomeSubAccounts as $subAccount)
                         @if ($key == $subAccount['account'])
                             <option value="{{ $subAccount['id'] }}" class="ms-5"> &nbsp; &nbsp;&nbsp; {{ $subAccount['code_name'] }}</option>
@@ -62,7 +66,11 @@
             {{ Form::label('expense_chartaccount_id', __('Expense Account'),['class'=>'form-label']) }}<span class="text-danger">*</span>
             <select name="expense_chartaccount_id" class="form-control" required="required">
                 @foreach ($expenseChartAccounts as $key => $chartAccount)
-                    <option value="{{ $key }}" class="subAccount">{{ $chartAccount }}</option>
+                    @if($chartAccount == "1510 - Inventory")
+                        <option selected value="{{ $key }}" class="subAccount">{{ $chartAccount }}</option>
+                    @else
+                        <option value="{{ $key }}" class="subAccount">{{ $chartAccount }}</option>
+                    @endif
                     @foreach ($expenseSubAccounts as $subAccount)
                         @if ($key == $subAccount['account'])
                             <option value="{{ $subAccount['id'] }}" class="ms-5"> &nbsp; &nbsp;&nbsp; {{ $subAccount['code_name'] }}</option>
@@ -80,7 +88,7 @@
             {{ Form::label('category_id', __('Category'),['class'=>'form-label']) }}<span class="text-danger">*</span>
             {{ Form::select('category_id', $category,null, array('class' => 'form-control select','required'=>'required')) }}
 
-            <div class=" text-xs">
+            <div class="text-xs ">
                 {{__('Please add constant category. ')}}<a href="{{route('product-category.index')}}"><b>{{__('Add Category')}}</b></a>
             </div>
         </div>
@@ -143,7 +151,7 @@
     </div>
 </div>
 <div class="modal-footer">
-    <input type="button" value="{{__('Cancel')}}" class="btn  btn-light" data-bs-dismiss="modal">
+    <input type="button" value="{{__('Cancel')}}" class="btn btn-light" data-bs-dismiss="modal">
     <button type="submit" class="btn btn-primary">{{__('Create')}}</button>
 </div>
 {{Form::close()}}

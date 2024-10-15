@@ -68,40 +68,36 @@ class ProductServiceController extends Controller
             $unit         = ProductServiceUnit::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             $tax          = Tax::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             $incomeChartAccounts = ChartOfAccount::select(\DB::raw('CONCAT(chart_of_accounts.code, " - ", chart_of_accounts.name) AS code_name, chart_of_accounts.id as id'))
-                // ->leftjoin('chart_of_account_types', 'chart_of_account_types.id','chart_of_accounts.type')
-                // ->where('chart_of_account_types.name' ,'income')
-                // ->where('parent', '=', 0)
-                ->whereIn('code', [4010, 4020])
+                ->leftjoin('chart_of_account_types', 'chart_of_account_types.id','chart_of_accounts.type')
+                ->where('chart_of_account_types.name' ,'income')
+                ->where('parent', '=', 0)
+                // ->whereIn('code', [4010, 4020])
                 ->where('chart_of_accounts.created_by', \Auth::user()->creatorId())->get()
                 ->pluck('code_name', 'id');
-            // $incomeChartAccounts->prepend('Select Account', 0);
+            $incomeChartAccounts->prepend('Select Account', 0);
 
-            $incomeSubAccounts = [];
-            // $incomeSubAccounts = ChartOfAccount::select(\DB::raw('CONCAT(chart_of_accounts.code, " - ", chart_of_accounts.name) AS code_name,chart_of_accounts.id, chart_of_accounts.code, chart_of_account_parents.account'));
-            // $incomeSubAccounts->leftjoin('chart_of_account_parents', 'chart_of_accounts.parent', 'chart_of_account_parents.id');
-            // $incomeSubAccounts->leftjoin('chart_of_account_types', 'chart_of_account_types.id','chart_of_accounts.type');
-            // $incomeSubAccounts->where('chart_of_account_types.name' ,'income');
-            // $incomeSubAccounts->where('chart_of_accounts.parent', '!=', 0);
-            // $incomeSubAccounts->where('chart_of_accounts.created_by', \Auth::user()->creatorId());
-            // $incomeSubAccounts = $incomeSubAccounts->get()->toArray();
-
+            $incomeSubAccounts = ChartOfAccount::select(\DB::raw('CONCAT(chart_of_accounts.code, " - ", chart_of_accounts.name) AS code_name,chart_of_accounts.id, chart_of_accounts.code, chart_of_account_parents.account'));
+            $incomeSubAccounts->leftjoin('chart_of_account_parents', 'chart_of_accounts.parent', 'chart_of_account_parents.id');
+            $incomeSubAccounts->leftjoin('chart_of_account_types', 'chart_of_account_types.id','chart_of_accounts.type');
+            $incomeSubAccounts->where('chart_of_account_types.name' ,'income');
+            $incomeSubAccounts->where('chart_of_accounts.parent', '!=', 0);
+            $incomeSubAccounts->where('chart_of_accounts.created_by', \Auth::user()->creatorId());
+            $incomeSubAccounts = $incomeSubAccounts->get()->toArray();
 
             $expenseChartAccounts = ChartOfAccount::select(\DB::raw('CONCAT(chart_of_accounts.code, " - ", chart_of_accounts.name) AS code_name, chart_of_accounts.id as id'))
             ->leftjoin('chart_of_account_types', 'chart_of_account_types.id','chart_of_accounts.type')
-            // ->whereIn('chart_of_account_types.name' ,['Expenses','Costs of Goods Sold', 'Liabilities'])
-            ->where('code', 2100)
+            ->whereIn('chart_of_account_types.name' ,['Assets'])
             ->where('chart_of_accounts.created_by', \Auth::user()->creatorId())->get()
             ->pluck('code_name', 'id');
-            // $expenseChartAccounts->prepend('Select Account', '');
+            $expenseChartAccounts->prepend('Select Account', '');
 
-            $expenseSubAccounts = [];
-            // $expenseSubAccounts = ChartOfAccount::select(\DB::raw('CONCAT(chart_of_accounts.code, " - ", chart_of_accounts.name) AS code_name,chart_of_accounts.id, chart_of_accounts.code, chart_of_account_parents.account'));
-            // $expenseSubAccounts->leftjoin('chart_of_account_parents', 'chart_of_accounts.parent', 'chart_of_account_parents.id');
-            // $expenseSubAccounts->leftjoin('chart_of_account_types', 'chart_of_account_types.id','chart_of_accounts.type');
-            // $expenseSubAccounts->whereIn('chart_of_account_types.name' ,['Expenses','Costs of Goods Sold', 'Liabilities']);
-            // $expenseSubAccounts->where('chart_of_accounts.parent', '!=', 0);
-            // $expenseSubAccounts->where('chart_of_accounts.created_by', \Auth::user()->creatorId());
-            // $expenseSubAccounts = $expenseSubAccounts->get()->toArray();
+            $expenseSubAccounts = ChartOfAccount::select(\DB::raw('CONCAT(chart_of_accounts.code, " - ", chart_of_accounts.name) AS code_name,chart_of_accounts.id, chart_of_accounts.code, chart_of_account_parents.account'));
+            $expenseSubAccounts->leftjoin('chart_of_account_parents', 'chart_of_accounts.parent', 'chart_of_account_parents.id');
+            $expenseSubAccounts->leftjoin('chart_of_account_types', 'chart_of_account_types.id','chart_of_accounts.type');
+            $expenseSubAccounts->whereIn('chart_of_account_types.name' ,['Assets']);
+            $expenseSubAccounts->where('chart_of_accounts.parent', '!=', 0);
+            $expenseSubAccounts->where('chart_of_accounts.created_by', \Auth::user()->creatorId());
+            $expenseSubAccounts = $expenseSubAccounts->get()->toArray();
 
             return view('productservice.create', compact('category', 'unit', 'tax', 'customFields','incomeChartAccounts','incomeSubAccounts','expenseChartAccounts' , 'expenseSubAccounts'));
         }
@@ -210,26 +206,26 @@ class ProductServiceController extends Controller
                 $customFields                = CustomField::where('created_by', '=', \Auth::user()->creatorId())->where('module', '=', 'product')->get();
                 $productService->tax_id      = explode(',', $productService->tax_id);
                 $incomeChartAccounts = ChartOfAccount::select(\DB::raw('CONCAT(chart_of_accounts.code, " - ", chart_of_accounts.name) AS code_name, chart_of_accounts.id as id'))
-                // ->leftjoin('chart_of_account_types', 'chart_of_account_types.id','chart_of_accounts.type')
-                // ->where('chart_of_account_types.name' ,'income')
-                // ->where('parent', '=', 0)
-                ->whereIn('code', [4010, 4020])
+                ->leftjoin('chart_of_account_types', 'chart_of_account_types.id','chart_of_accounts.type')
+                ->where('chart_of_account_types.name' ,'income')
+                ->where('parent', '=', 0)
+                // ->whereIn('code', [4010, 4020])
                 ->where('chart_of_accounts.created_by', \Auth::user()->creatorId())->get()
                 ->pluck('code_name', 'id');
-            // $incomeChartAccounts->prepend('Select Account', 0);
+            $incomeChartAccounts->prepend('Select Account', 0);
 
             $incomeSubAccounts = [];
-            // $incomeSubAccounts = ChartOfAccount::select('chart_of_accounts.id', 'chart_of_accounts.code', 'chart_of_accounts.name' , 'chart_of_account_parents.account');
-            // $incomeSubAccounts->leftjoin('chart_of_account_parents', 'chart_of_accounts.parent', 'chart_of_account_parents.id');
-            // $incomeSubAccounts->leftjoin('chart_of_account_types', 'chart_of_account_types.id','chart_of_accounts.type');
-            // $incomeSubAccounts->where('chart_of_account_types.name' ,'income');
-            // $incomeSubAccounts->where('chart_of_accounts.parent', '!=', 0);
-            // $incomeSubAccounts->where('chart_of_accounts.created_by', \Auth::user()->creatorId());
-            // $incomeSubAccounts = $incomeSubAccounts->get()->toArray();
+            $incomeSubAccounts = ChartOfAccount::select('chart_of_accounts.id', 'chart_of_accounts.code', 'chart_of_accounts.name' , 'chart_of_account_parents.account');
+            $incomeSubAccounts->leftjoin('chart_of_account_parents', 'chart_of_accounts.parent', 'chart_of_account_parents.id');
+            $incomeSubAccounts->leftjoin('chart_of_account_types', 'chart_of_account_types.id','chart_of_accounts.type');
+            $incomeSubAccounts->where('chart_of_account_types.name' ,'income');
+            $incomeSubAccounts->where('chart_of_accounts.parent', '!=', 0);
+            $incomeSubAccounts->where('chart_of_accounts.created_by', \Auth::user()->creatorId());
+            $incomeSubAccounts = $incomeSubAccounts->get()->toArray();
 
             $expenseChartAccounts = ChartOfAccount::select(\DB::raw('CONCAT(chart_of_accounts.code, " - ", chart_of_accounts.name) AS code_name, chart_of_accounts.id as id'))
             ->leftjoin('chart_of_account_types', 'chart_of_account_types.id','chart_of_accounts.type')
-            ->whereIn('chart_of_account_types.name' ,['Expenses','Costs of Goods Sold', 'Liabilities'])
+            ->whereIn('chart_of_account_types.name' ,['Assets'])
             ->where('chart_of_accounts.created_by', \Auth::user()->creatorId())->get()
             ->pluck('code_name', 'id');
             $expenseChartAccounts->prepend('Select Account', '');
@@ -237,7 +233,7 @@ class ProductServiceController extends Controller
             $expenseSubAccounts = ChartOfAccount::select('chart_of_accounts.id', 'chart_of_accounts.code', 'chart_of_accounts.name' , 'chart_of_account_parents.account');
             $expenseSubAccounts->leftjoin('chart_of_account_parents', 'chart_of_accounts.parent', 'chart_of_account_parents.id');
             $expenseSubAccounts->leftjoin('chart_of_account_types', 'chart_of_account_types.id','chart_of_accounts.type');
-            $expenseSubAccounts->whereIn('chart_of_account_types.name' ,['Expenses','Costs of Goods Sold', 'Liabilities']);
+            $expenseSubAccounts->whereIn('chart_of_account_types.name' ,['Assets']);
             $expenseSubAccounts->where('chart_of_accounts.parent', '!=', 0);
             $expenseSubAccounts->where('chart_of_accounts.created_by', \Auth::user()->creatorId());
             $expenseSubAccounts = $expenseSubAccounts->get()->toArray();
@@ -543,13 +539,13 @@ class ProductServiceController extends Controller
                             <div class="col-lg-2 col-md-2 col-sm-3 col-xs-4 col-12">
                                 <div class="tab-pane fade show active toacart w-100" data-url="' . url('add-to-cart/' . $product->id . '/' . $lastsegment) .'">
                                     <div class="position-relative card">
-                                        <img alt="Image placeholder" src="' . asset(Storage::url($image_url)) . '" class="card-image avatar shadow hover-shadow-lg" style=" height: 6rem; width: 100%;">
+                                        <img alt="Image placeholder" src="' . asset(Storage::url($image_url)) . '" class="shadow card-image avatar hover-shadow-lg" style=" height: 6rem; width: 100%;">
                                         <div class="p-0 custom-card-body card-body d-flex ">
-                                            <div class="card-body my-2 p-2 text-left card-bottom-content">
+                                            <div class="p-2 my-2 text-left card-body card-bottom-content">
                                                 <h6 class="mb-2 text-dark product-title-name">' . $product->name . '</h6>
-                                                <small class="badge badge-primary mb-0">' . Auth::user()->priceFormat($productprice) . '</small>
+                                                <small class="mb-0 badge badge-primary">' . Auth::user()->priceFormat($productprice) . '</small>
 
-                                                <small class="top-badge badge badge-danger mb-0">'. $quantity.' '.$unit .'</small>
+                                                <small class="mb-0 top-badge badge badge-danger">'. $quantity.' '.$unit .'</small>
                                             </div>
                                         </div>
                                     </div>
@@ -563,7 +559,7 @@ class ProductServiceController extends Controller
                     return Response($output);
 
             } else {
-                $output='<div class="card card-body col-12 text-center">
+                $output='<div class="text-center card card-body col-12">
                     <h5>'.__("No Product Available").'</h5>
                     </div>';
                 return Response($output);
@@ -637,7 +633,7 @@ class ProductServiceController extends Controller
 
             $carthtml .= '<tr data-product-id="' . $id . '" id="product-id-' . $id . '">
                             <td class="cart-images">
-                                <img alt="Image placeholder" src="' . asset(Storage::url($image_url)) . '" class="card-image avatar shadow hover-shadow-lg">
+                                <img alt="Image placeholder" src="' . asset(Storage::url($image_url)) . '" class="shadow card-image avatar hover-shadow-lg">
                             </td>
 
                             <td class="name">' . $productname . '</td>
@@ -659,7 +655,7 @@ class ProductServiceController extends Controller
 
                             <td class="">
                                  <a href="#" class="action-btn bg-danger bs-pass-para-pos" data-confirm="' . __("Are You Sure?") . '" data-text="' . __("This action can not be undone. Do you want to continue?") . '" data-confirm-yes=' . $model_delete_id . ' title="' . __('Delete') . '}" data-id="' . $id . '" title="' . __('Delete') . '"   >
-                                   <span class=""><i class="ti ti-trash btn btn-sm text-white"></i></span>
+                                   <span class=""><i class="text-white ti ti-trash btn btn-sm"></i></span>
                                  </a>
                                  <form method="post" action="' . url('remove-from-cart') . '"  accept-charset="UTF-8" id="' . $model_delete_id . '">
                                       <input name="_method" type="hidden" value="DELETE">
