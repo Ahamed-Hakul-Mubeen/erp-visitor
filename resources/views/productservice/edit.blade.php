@@ -66,7 +66,7 @@
                 @foreach ($expenseChartAccounts as $key => $chartAccount)
                     <option value="{{ $key }}" class="subAccount" {{ ($productService->expense_chartaccount_id == $key) ? 'selected' : ''}}>{{ $chartAccount }}</option>
                     @foreach ($expenseSubAccounts as $subAccount)
-                        @if ($key == $subAccount['account'])
+                    @if ($key == $subAccount['account'] && isset($subAccount['code_name']))
                             <option value="{{ $subAccount['id'] }}" class="ms-5" {{ ($productService->expense_chartaccount_id == $subAccount['id']) ? 'selected' : ''}}> &nbsp; &nbsp;&nbsp; {{ $subAccount['code_name'] }}</option>
                         @endif
                     @endforeach
