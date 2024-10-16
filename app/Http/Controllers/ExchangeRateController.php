@@ -50,7 +50,7 @@ class ExchangeRateController extends Controller
                 return redirect()->back()->with('error', "Choose different currency");
             }
 
-            $check_exist = ExchangeRate::where("from_currency", $request->from_currency)->where("to_currency", $request->to_currency)->first();
+            $check_exist = ExchangeRate::where("from_currency", $request->from_currency)->where("to_currency", $request->to_currency)->where('created_by', '=', \Auth::user()->creatorId())->first();
             if ($check_exist) {
                 return redirect()->back()->with('error', "Exchange Rate already exists");
             }
@@ -103,7 +103,7 @@ class ExchangeRateController extends Controller
                     return redirect()->back()->with('error', "Choose different currency");
                 }
 
-                $check_exist = ExchangeRate::where("from_currency", $request->from_currency)->where("to_currency", $request->to_currency)->where('id', '!=', $exchange_rate->id)->first();
+                $check_exist = ExchangeRate::where("from_currency", $request->from_currency)->where("to_currency", $request->to_currency)->where('id', '!=', $exchange_rate->id)->where('created_by', '=', \Auth::user()->creatorId())->first();
                 if ($check_exist) {
                     return redirect()->back()->with('error', "Exchange Rate already exists");
                 }

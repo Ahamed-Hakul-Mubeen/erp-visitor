@@ -756,7 +756,7 @@ class InvoiceController extends Controller
     {
         // dd($request->all());
         $invoice = Invoice::find($invoice_id);
-        if ($invoice->getDue() < $request->amount) {
+        if (number_format($invoice->getDue(),2,'.', '') < number_format($request->amount,2,'.','')) {
             return redirect()->back()->with('error', __('Invoice payment amount should not greater than subtotal.'));
         }
 
