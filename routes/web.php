@@ -1026,6 +1026,10 @@ Route::group(['middleware' => ['verified']], function () {
     Route::get('attendanceemployee/bulkattendance', [AttendanceEmployeeController::class, 'bulkAttendance'])->name('attendanceemployee.bulkattendance')->middleware(['auth', 'XSS']);
     Route::post('attendanceemployee/bulkattendance', [AttendanceEmployeeController::class, 'bulkAttendanceData'])->name('attendanceemployee.bulkattendance')->middleware(['auth', 'XSS']);
     Route::post('attendanceemployee/attendance', [AttendanceEmployeeController::class, 'attendance'])->name('attendanceemployee.attendance')->middleware(['auth', 'XSS']);
+    Route::get('attendanceemployee/pending', [AttendanceEmployeeController::class, 'pendingAttendance'])->name('attendanceemployee.pending')->middleware(['auth', 'XSS']);
+    Route::get('attendanceemployee/verify', [AttendanceEmployeeController::class, 'verifyAttendance'])->name('attendanceemployeerequest.verify')->middleware(['auth', 'XSS']);
+    Route::get('attendance/{id}/action', [AttendanceEmployeeController::class, 'action'])->name('leave.action')->middleware(['auth', 'XSS']);
+    Route::post('attendancerequest/changeaction', [AttendanceEmployeeController::class, 'changeaction'])->name('leave.changeaction')->middleware(['auth', 'XSS']);
     Route::post('/break-store', [BreakController::class, 'storeBreak'])->name('breaks.store');
     Route::post('/break-end', [BreakController::class, 'endBreak'])->name('breaks.end');
 

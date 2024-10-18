@@ -470,6 +470,11 @@
                                                             <a class="dash-link"
                                                                 href="{{ route('attendanceemployee.index') }}">{{ __('Mark Attendance') }}</a>
                                                         </li>
+                                                        <li
+                                                            class="dash-item {{ Request::route()->getName() == 'attendanceemployee.pending' ? 'active' : '' }}">
+                                                            <a class="dash-link"
+                                                                href="{{ route('attendanceemployee.pending') }}">{{ __('Pending Attendance') }}</a>
+                                                        </li>
                                                         {{-- @can('create attendance')
                                                             <li
                                                                 class="dash-item {{ Request::route()->getName() == 'attendanceemployee.bulkattendance' ? 'active' : '' }}">

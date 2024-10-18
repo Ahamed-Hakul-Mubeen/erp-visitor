@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Imports\AttendanceImport;
 use App\Models\AttendanceEmployee;
+use App\Models\AttendanceEmployeeRequest;
 use App\Models\Branch;
 use App\Models\Department;
 use App\Models\Employee;
@@ -123,7 +124,13 @@ class AttendanceEmployeeController extends Controller
     public function create()
     {
         if (\Auth::user()->can('create attendance')) {
-            $employees = User::where('created_by', '=', Auth::user()->creatorId())->where('type', '=', "employee")->get()->pluck('name', 'id');
+
+            if(\Auth::user()->type == 'Employee'){
+                $employees = Employee::where('user_id', '=', \Auth::user()->id)->get()->pluck('name', 'id');
+            }
+            else{
+                $employees = Employee::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+            }
 
             return view('attendance.create', compact('employees'));
         } else {
@@ -183,19 +190,41 @@ class AttendanceEmployeeController extends Controller
                     $overtime = '00:00:00';
                 }
 
-                $employeeAttendance = new AttendanceEmployee();
-                $employeeAttendance->employee_id = $request->employee_id;
-                $employeeAttendance->date = $request->date;
-                $employeeAttendance->status = 'Present';
-                $employeeAttendance->clock_in = $request->clock_in . ':00';
-                $employeeAttendance->clock_out = $request->clock_out . ':00';
-                $employeeAttendance->late = $late;
-                $employeeAttendance->early_leaving = $earlyLeaving;
-                $employeeAttendance->overtime = $overtime;
-                $employeeAttendance->total_rest = '00:00:00';
-                $employeeAttendance->created_by = \Auth::user()->creatorId();
-                $employeeAttendance->save();
-
+                if(\Auth::user()->type == 'Employee'){
+                        $attendanceRequest = AttendanceEmployeeRequest::where('employee_id', '=', $request->employee_id)->where('date', '=', $request->date)->where('clock_out', '=', '00:00:00')->get()->toArray();
+                        if ($attendanceRequest) {
+                            return redirect()->route('attendanceemployee.index')->with('error', __('Employee Attendance Already Created.'));
+                        }
+                        else {
+                            $employeeAttendanceRequest = new AttendanceEmployeeRequest();
+                            $employeeAttendanceRequest->employee_id = $request->employee_id;
+                            $employeeAttendanceRequest->date = $request->date;
+                            $employeeAttendanceRequest->status = 'Present';
+                            $employeeAttendanceRequest->clock_in = $request->clock_in . ':00';
+                            $employeeAttendanceRequest->clock_out = $request->clock_out . ':00';
+                            $employeeAttendanceRequest->late = $late;
+                            $employeeAttendanceRequest->early_leaving = $earlyLeaving;
+                            $employeeAttendanceRequest->overtime = $overtime;
+                            $employeeAttendanceRequest->total_rest = '00:00:00';
+                            $employeeAttendanceRequest->created_by = \Auth::user()->creatorId();
+                            $employeeAttendanceRequest->approval_status = 'Pending';
+                            $employeeAttendanceRequest->save();
+                        }
+                    }
+                else{
+                    $employeeAttendance = new AttendanceEmployee();
+                    $employeeAttendance->employee_id = $request->employee_id;
+                    $employeeAttendance->date = $request->date;
+                    $employeeAttendance->status = 'Present';
+                    $employeeAttendance->clock_in = $request->clock_in . ':00';
+                    $employeeAttendance->clock_out = $request->clock_out . ':00';
+                    $employeeAttendance->late = $late;
+                    $employeeAttendance->early_leaving = $earlyLeaving;
+                    $employeeAttendance->overtime = $overtime;
+                    $employeeAttendance->total_rest = '00:00:00';
+                    $employeeAttendance->created_by = \Auth::user()->creatorId();
+                    $employeeAttendance->save();
+                }
                 return redirect()->route('attendanceemployee.index')->with('success', __('Employee attendance successfully created.'));
             }
         } else {
@@ -232,7 +261,7 @@ class AttendanceEmployeeController extends Controller
     public function update(Request $request, $id)
     {
         if ((\Auth::user()->type == 'company' || \Auth::user()->type == 'HR') && isset($request->employee_id)) {
-            
+
             $employeeId = AttendanceEmployee::where('employee_id', $request->employee_id)->first();
             $check = AttendanceEmployee::where('id',$id)->where('employee_id', '=', $request->employee_id)->where('date', $request->date)->first();
             // dd($check->date);
@@ -902,6 +931,48 @@ class AttendanceEmployeeController extends Controller
 
     return view('attendance.print', compact('attendanceEmployee','companyLogo'));
 }
+
+ public function pendingAttendance(){
+    $employee = Employee::select('id')->where('created_by', \Auth::user()->creatorId())->get()->pluck('id');
+    $attendanceEmployee = AttendanceEmployeeRequest::whereIn('employee_id', $employee)->get();
+    return view('attendance.pending', compact('attendanceEmployee'));
+
+
+}
+
+public function action($id)
+{
+   $attendance_request = AttendanceEmployeeRequest::find($id);
+    return view('attendance.action',compact('attendance_request'));
+}
+
+public function changeaction(Request $request)
+    {
+        $attendance_request = AttendanceEmployeeRequest::find($request->attendance_request_id);
+        if ($request->status == 'Approved') {
+            $employeeAttendance = new AttendanceEmployee();
+            $employeeAttendance->employee_id = $attendance_request->employee_id;
+            $employeeAttendance->date = $attendance_request->date;
+            $employeeAttendance->status = $attendance_request->status;
+            $employeeAttendance->clock_in = $attendance_request->clock_in;
+            $employeeAttendance->clock_out = $attendance_request->clock_out;
+            $employeeAttendance->late = $attendance_request->late;
+            $employeeAttendance->early_leaving = $attendance_request->early_leaving;
+            $employeeAttendance->overtime = $attendance_request->overtime;
+            $employeeAttendance->total_rest = $attendance_request->total_rest;
+            $employeeAttendance->created_by = $attendance_request->created_by;
+            $employeeAttendance->save();
+            $attendance_request->approval_status = 'Approved';
+            $attendance_request->save();
+
+        } elseif ($request->status == 'Rejected') {
+            $attendance_request->approval_status = 'Rejected';
+            $attendance_request->save();
+        }
+        return redirect()->route('attendanceemployee.pending')->with('success', __('Attendance successfully updated.'));
+
+    }
+
 
 
 }
