@@ -136,26 +136,7 @@
                                             <span>{{!empty($employee)?$employee->salary:''}}</span>
                                         </div>
                                     </div>
-                                    @if(!empty($employee->social_links))
-                                    @php
-                                        $socialLinks = json_decode($employee->social_links, true);
-                                    @endphp
-                                    @if(!empty($socialLinks))
-                                        <div class="col-md-12">
-                                            <div class="text-sm info">
-                                                <strong class="font-bold">{{ __('Social Links') }} :</strong>
-                                                <ul class="list-unstyled">
-                                                    @foreach($socialLinks as $socialLink)
-                                                        <li>
-                                                            <strong>{{ $socialLink['type'] }}: </strong>
-                                                            <a href="{{ $socialLink['url'] }}" target="_blank">{{ $socialLink['url'] }}</a>
-                                                        </li>
-                                                    @endforeach
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    @endif
-                                @endif
+                                  
                                 </div>
                             </div>
                         </div>
@@ -206,6 +187,7 @@
                     </div>
                 </div>
 
+                
                 <div class="row">
                     <div class="col-sm-12 col-md-6">
 
@@ -286,6 +268,38 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-sm-12 col-md-6">
+
+                        <div class="card ">
+                            <div class="card-body employee-detail-body fulls-card">
+                                <h5>{{__('Social Links Detail')}}</h5>
+                                <hr>
+                                <div class="row">
+                                    @if(!empty($employee->social_links))
+                                    @php
+                                        $socialLinks = json_decode($employee->social_links, true);
+                                    @endphp
+                                    @if(!empty($socialLinks))
+                                        <div class="col-md-12">
+                                            <div class="text-sm info">
+                                                <strong class="font-bold">{{ __('Social Links') }} :</strong>
+                                                <ul class="list-unstyled">
+                                                    @foreach($socialLinks as $socialLink)
+                                                        <li>
+                                                            <strong>{{ $socialLink['type'] }}: </strong>
+                                                            <a href="{{ $socialLink['url'] }}" target="_blank">{{ $socialLink['url'] }}</a>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    @endif
+                                @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
