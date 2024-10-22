@@ -123,6 +123,34 @@
                             </div>
                             
                         </div>
+                       
+                        <div class="row">   
+                            <div class="card">
+                                <div id="social-links-container">
+                                @foreach($employeeSocialLinks as $index => $socialLink)
+                                <div class="row social-link-row">
+                                    <div class="form-group col-md-5">
+                                        {{ Form::label("social_links[$index][type]", __('Social Platform'), ['class' => 'form-label']) }}
+                                        {{ Form::select("social_links[$index][type]", $socialLinks, $socialLink['type'] ?? null, ['class' => 'form-control select2', 'placeholder' => __('Select Social Platform')]) }}
+                                    </div>
+                                    <div class="form-group col-md-5">
+                                        {{ Form::label("social_links[$index][url]", __('URL'), ['class' => 'form-label']) }}
+                                        <div class="input-group">
+                                            {{ Form::text("social_links[$index][url]", $socialLink['url'] ?? null, ['class' => 'form-control', 'placeholder' => __('Enter URL')]) }}
+                                            <div class="input-group-append mt-1 p-1">
+                                                <button type="button" class="btn btn-info btn-sm add-social-link"><i class="ti ti-plus"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{-- <div class="form-group col-md-2 d-flex align-items-end">
+                                        <button type="button" class="btn btn-danger btn-sm remove-social-link"><i class="ti ti-minus"></i></button>
+                                    </div> --}}
+                                </div>
+                            @endforeach
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -423,5 +451,49 @@
             var department_id = $(this).val();
             getDesignation(department_id);
         });
+
+$(document).ready(function() {
+    let socialLinkIndex = 1;
+
+    // Triggered when clicking the plus icon
+    $(document).on('click', '.add-social-link', function() {
+        let newSocialLinkRow = `
+            <div class="row social-link-row mt-3">
+                <div class="form-group col-md-5">
+                    <label for="social_links[` + socialLinkIndex + `][type]" class="form-label">{{ __('Social Platform') }}</label>
+                    <select name="social_links[` + socialLinkIndex + `][type]" class="form-control select2">
+                        <option value="">{{ __('Select Social Platform') }}</option>
+                        @foreach($socialLinks as $key => $value)
+                            <option value="{{ $key }}">{{ $value }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group col-md-5">
+                    <label for="social_links[` + socialLinkIndex + `][url]" class="form-label">{{ __('URL') }}</label>
+                    <div class="input-group">
+                        <input type="text" name="social_links[` + socialLinkIndex + `][url]" class="form-control" placeholder="{{ __('Enter URL') }}">
+                        <div class="input-group-append mt-1 p-1">
+                            <button class="btn btn-info btn-sm add-social-link" type="button"><i class="ti ti-plus"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group p-1 col-md-2 d-flex align-items-end">
+                    <button type="button" class="btn btn-danger btn-sm remove-social-link"><i class="ti ti-minus"></i></button>
+                </div>
+            </div>
+        `;
+        $('#social-links-container').append(newSocialLinkRow);
+        socialLinkIndex++;
+
+        // Re-initialize select2 for the new elements
+        $('.select2').select2();
+    });
+
+    // Remove row when clicking minus icon
+    $(document).on('click', '.remove-social-link', function() {
+        $(this).closest('.social-link-row').remove();
+    });
+});
+
     </script>
 @endpush

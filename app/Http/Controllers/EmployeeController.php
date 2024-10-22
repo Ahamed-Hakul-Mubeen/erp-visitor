@@ -272,7 +272,9 @@ class EmployeeController extends Controller
             $departmentData  = Department::where('created_by', \Auth::user()->creatorId())->where('branch_id',$employee->branch_id)->get()->pluck('name', 'id');
             $employment       = EmploymentStatus::where('created_by',\Auth::user()->creatorId())->get()->pluck('name','id');
             $socialLinks      = SocialLink::pluck('name', 'id');
-            return view('employee.edit', compact('employee', 'employeesId', 'branches', 'departments', 'designations', 'documents','departmentData','employment','socialLinks'));
+            $employeeSocialLinks = !empty($employee->social_links) ? json_decode($employee->social_links, true) : [];
+               
+            return view('employee.edit', compact('employee', 'employeesId', 'branches', 'departments', 'designations', 'documents','departmentData','employment','socialLinks','employeeSocialLinks'));
         }
         else
         {
