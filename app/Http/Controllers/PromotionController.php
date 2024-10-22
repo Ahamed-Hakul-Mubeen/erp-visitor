@@ -206,14 +206,39 @@ class PromotionController extends Controller
         // Get the selected employee ID from the request (if any)
         $selectedEmployeeId = $request->get('employee_id');
     
+        // Fetch the selected employee details, including the joining date and designation
+        $employee = null;
+        if ($selectedEmployeeId) {
+            $employee = Employee::where('created_by', $companyId)
+                                ->where('id', $selectedEmployeeId)
+                                ->first();
+        }
+    
         // Fetch promotions for the selected employee, ordered by date (ascending)
         $timelineEvents = Promotion::where('created_by', $companyId)
-            ->when($selectedEmployeeId, function ($query, $selectedEmployeeId) {
+            ->when($selectedEmployeeId, function ($query) use ($selectedEmployeeId) {
                 return $query->where('employee_id', $selectedEmployeeId);
             })
             ->orderBy('promotion_date', 'ASC') // Ascending order to handle timeline correctly
             ->with('employee') // Assuming this relationship retrieves employee details
             ->get();
+    
+        // If an employee is selected and they have a joining date, add a 'joining' event to the timeline
+        if ($employee && $employee->company_doj) {
+            // Fetch the employee's designation if it exists
+            $initialDesignation = $employee->designation ? $employee->designation->name : __('No Designation');
+    
+            // Create a "virtual" promotion object to represent the joining date
+            $joiningEvent = (object) [
+                'promotion_date' => $employee->company_doj,
+                'promotion_title' => $initialDesignation,
+                'previous_designation_name' => $initialDesignation, // Initial designation at the time of joining
+                'employee' => $employee,
+            ];
+    
+            // Add the joining event at the beginning of the timeline
+            $timelineEvents->prepend($joiningEvent);
+        }
     
         // Loop through timeline events to assign previous designations
         $timelineEvents->each(function ($promotion, $key) use ($timelineEvents) {
@@ -231,8 +256,10 @@ class PromotionController extends Controller
             }
         });
     
-        return view('job-history.index', compact('timelineEvents', 'employees'));
+        return view('job-history.index', compact('timelineEvents', 'employees', 'selectedEmployeeId'));
     }
+    
+
     
 
     
