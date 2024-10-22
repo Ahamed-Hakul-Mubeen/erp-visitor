@@ -32,6 +32,7 @@
                             <tr>
                                 <th>{{__('Department')}}</th>
                                 <th>{{__('Designation')}}</th>
+                                <th>{{__('No of Employee')}}</th>
                                 <th width="200px">{{__('Action')}}</th>
                             </tr>
                             </thead>
@@ -43,6 +44,13 @@
                                 <tr>
                                     <td>{{ !empty($department->name)?$department->name:'' }}</td>
                                     <td>{{ $designation->name }}</td>
+                                    <td>
+                                        @if($designation->employees_count > 0)
+                                        {{ $designation->employees_count }}
+                                        @else
+                                            No Employees
+                                        @endif
+                                    </td>
 
                                     <td class="Action">
                                         <span>

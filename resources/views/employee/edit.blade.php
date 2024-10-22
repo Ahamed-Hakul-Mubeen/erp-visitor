@@ -54,10 +54,23 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="row">
+                    <div class="form-group col-md-6">
                         {!! Form::label('address', __('Address'), ['class' => 'form-label']) !!}<span class="pl-1 text-danger">*</span>
                         {!! Form::textarea('address', null, ['class' => 'form-control', 'rows' => 2]) !!}
                     </div>
+                    <div class="form-group col-md-6">
+                        {!! Form::label('emergency_contact', __('Emergency Contact'), ['class' => 'form-label']) !!}<span class="pl-1 text-danger">*</span>
+                        {!! Form::text('emergency_contact', old('Emergency Contact'), [
+                            'class' => 'form-control',
+                            'required' => 'required',
+                            'placeholder' => 'Enter emergency contact',
+                            'maxlength' => 15,
+                            'pattern' => '\d*',  // Optional: only allows digits
+                            'oninput' => 'this.value = this.value.replace(/[^0-9]/g, \'\');'
+                        ]) !!}
+                    </div>
+                </div>
                     @if (\Auth::user()->type == 'employee')
                         {!! Form::submit('Update', ['class' => 'btn-create btn-xs badge-blue radius-10px float-right']) !!}
                     @endif
@@ -101,6 +114,14 @@
                                 {!! Form::label('company_doj', 'Company Date Of Joining', ['class' => 'form-label']) !!}
                                 {!! Form::date('company_doj', null, ['class' => 'form-control ', 'required' => 'required']) !!}
                             </div>
+
+                            <div class="form-group col-md-6"> 
+                                {{ Form::label('employment_status', __('Select Employment status'), ['class' => 'form-label']) }}<span class="pl-1 text-danger">*</span>
+                                <div class="form-icon-user">
+                                    {{ Form::select('employment_status', $employment, null, ['class' => 'form-control select2', 'id' => 'employment_status', 'placeholder' => 'Select Employment','required' => 'required',]) }}
+                                </div>
+                            </div>
+                            
                         </div>
                     </div>
                 </div>

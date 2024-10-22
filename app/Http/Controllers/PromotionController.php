@@ -195,4 +195,47 @@ class PromotionController extends Controller
             return redirect()->back()->with('error', __('Permission denied.'));
         }
     }
+
+    public function jobhistory(Request $request)
+    {
+        $companyId = \Auth::user()->creatorId();
+    
+        // Get all employees for the filter dropdown
+        $employees = Employee::where('created_by', $companyId)->get();
+    
+        // Get the selected employee ID from the request (if any)
+        $selectedEmployeeId = $request->get('employee_id');
+    
+        // Fetch promotions for the selected employee, ordered by date (ascending)
+        $timelineEvents = Promotion::where('created_by', $companyId)
+            ->when($selectedEmployeeId, function ($query, $selectedEmployeeId) {
+                return $query->where('employee_id', $selectedEmployeeId);
+            })
+            ->orderBy('promotion_date', 'ASC') // Ascending order to handle timeline correctly
+            ->with('employee') // Assuming this relationship retrieves employee details
+            ->get();
+    
+        // Loop through timeline events to assign previous designations
+        $timelineEvents->each(function ($promotion, $key) use ($timelineEvents) {
+            // Look for the previous promotion in the collection
+            $previousPromotion = $timelineEvents->where('promotion_date', '<', $promotion->promotion_date)
+                ->sortByDesc('promotion_date')
+                ->first();
+    
+            if ($previousPromotion) {
+                // Assign the title of the previous promotion as the previous designation
+                $promotion->previous_designation_name = $previousPromotion->promotion_title;
+            } else {
+                // If no previous promotion exists, set a default message
+                $promotion->previous_designation_name = __('No previous designation');
+            }
+        });
+    
+        return view('job-history.index', compact('timelineEvents', 'employees'));
+    }
+    
+
+    
+    
+    
 }

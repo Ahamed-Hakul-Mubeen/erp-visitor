@@ -21,6 +21,7 @@ class CreateEmployeesTable extends Migration
             $table->date('dob')->nullable();
             $table->string('gender')->nullable();
             $table->string('phone')->nullable();
+            $table->string('emergency_contact')->nullable();
             $table->string('address')->nullable();
             $table->string('email')->nullable();
             $table->string('password')->nullable();
@@ -31,6 +32,8 @@ class CreateEmployeesTable extends Migration
             $table->integer('designation_id')->default('0');;
             $table->string('company_doj')->nullable();
             $table->string('documents')->nullable();
+            $table->string('employment_status')->nullable();
+            $table->json('social_links')->nullable();
 
             $table->string('account_holder_name')->nullable();
             $table->string('account_number')->nullable();

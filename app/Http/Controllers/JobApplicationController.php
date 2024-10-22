@@ -21,6 +21,7 @@ use App\Models\JobStage;
 use App\Models\Plan;
 use App\Models\User;
 use App\Models\Utility;
+use App\Models\EmploymentStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
@@ -552,8 +553,9 @@ class JobApplicationController extends Controller
         $designations     = Designation::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
         $employees        = User::where('created_by', \Auth::user()->creatorId())->get();
         $employeesId      = \Auth::user()->employeeIdFormat($this->employeeNumber());
-
-        return view('jobApplication.convert', compact('jobOnBoard', 'employees', 'employeesId', 'departments', 'designations', 'documents', 'branches', 'company_settings'));
+        $employment       = EmploymentStatus::where('created_by',\Auth::user()->creatorId())->get()->pluck('name','id');
+        $employee         = Employee::with('user')->find($jobOnBoard->employee_id);
+        return view('jobApplication.convert', compact('jobOnBoard', 'employees', 'employeesId', 'departments', 'designations', 'documents', 'branches', 'company_settings','employee'));
 
     }
 

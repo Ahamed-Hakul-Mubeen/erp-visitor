@@ -120,6 +120,12 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="text-sm info">
+                                            <strong class="font-bold">{{__('Emergency Contact')}} :</strong>
+                                            <span>{{!empty($employee)?$employee->emergency_contact:''}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="text-sm info">
                                             <strong class="font-bold">{{__('Salary Type')}} :</strong>
                                             <span>{{!empty($employee->salaryType)?$employee->salaryType->name:''}}</span>
                                         </div>
@@ -130,6 +136,26 @@
                                             <span>{{!empty($employee)?$employee->salary:''}}</span>
                                         </div>
                                     </div>
+                                    @if(!empty($employee->social_links))
+                                    @php
+                                        $socialLinks = json_decode($employee->social_links, true);
+                                    @endphp
+                                    @if(!empty($socialLinks))
+                                        <div class="col-md-12">
+                                            <div class="text-sm info">
+                                                <strong class="font-bold">{{ __('Social Links') }} :</strong>
+                                                <ul class="list-unstyled">
+                                                    @foreach($socialLinks as $socialLink)
+                                                        <li>
+                                                            <strong>{{ $socialLink['type'] }}: </strong>
+                                                            <a href="{{ $socialLink['url'] }}" target="_blank">{{ $socialLink['url'] }}</a>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    @endif
+                                @endif
                                 </div>
                             </div>
                         </div>
@@ -160,7 +186,14 @@
                                             <span>{{!empty($employee->designation)?$employee->designation->name:''}}</span>
                                         </div>
                                     </div>
-
+                        
+                                    <div class="col-md-6">
+                                        <div class="text-sm info">
+                                            <strong class="font-bold">{{__('Employment Status')}} :</strong>
+                                            <span>{{ !empty($employee->employmentStatus) ? $employee->employmentStatus->name : '' }}</span>
+                                        </div>
+                                    </div>
+                                    
                                     <div class="col-md-6">
                                         <div class="text-sm info">
                                             <strong class="font-bold">{{__('Date Of Joining')}} :</strong>

@@ -15,6 +15,7 @@ class Employee extends Model
         'dob',
         'gender',
         'phone',
+        'emergency_contact',
         'address',
         'email',
         'password',
@@ -24,6 +25,8 @@ class Employee extends Model
         'designation_id',
         'company_doj',
         'documents',
+        'employment_status',
+        'social_links',
         'account_holder_name',
         'account_number',
         'bank_name',
@@ -74,6 +77,16 @@ class Employee extends Model
     public function overtimes()
     {
         return $this->hasMany(Overtime::class);
+    }
+    
+    public function workShifts()
+    {
+        return $this->belongsToMany(WorkShift::class, 'work_shift_employee');
+    }
+
+    public function promotions()
+    {
+        return $this->hasMany(Promotion::class, 'employee_id');
     }
 
     public function get_net_salary($year = null, $month = null)
@@ -370,6 +383,11 @@ class Employee extends Model
     public function termination()
     {
     return $this->hasOne(Termination::class, 'employee_id', 'id');
+    }
+
+    public function employmentStatus()
+    {
+    return $this->belongsTo(EmploymentStatus::class, 'employment_status', 'id');
     }
 
     public function resignation()

@@ -11,6 +11,7 @@ use App\Models\Designation;
 use App\Models\Document;
 use App\Models\Employee;
 use App\Models\EmployeeDocument;
+use App\Models\EmploymentStatus;
 use App\Models\ExperienceCertificate;
 use App\Models\JoiningLetter;
 use App\Models\NOC;
@@ -18,6 +19,7 @@ use App\Models\Plan;
 use App\Models\Termination;
 use App\Models\User;
 use App\Models\Utility;
+use App\Models\SocialLink;
 use File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -82,8 +84,9 @@ class EmployeeController extends Controller
             $designations     = Designation::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             $employees        = User::where('created_by', \Auth::user()->creatorId())->get();
             $employeesId      = \Auth::user()->employeeIdFormat($this->employeeNumber());
-
-            return view('employee.create', compact('employees', 'employeesId', 'departments', 'designations', 'documents', 'branches', 'company_settings'));
+            $employment       = EmploymentStatus::where('created_by',\Auth::user()->creatorId())->get()->pluck('name','id'); 
+            $socialLinks      = SocialLink::pluck('name', 'id');                                                  
+            return view('employee.create', compact('employees', 'employeesId', 'departments', 'designations', 'documents', 'branches', 'company_settings','employment','socialLinks'));
         }
         else
         {
@@ -93,6 +96,7 @@ class EmployeeController extends Controller
 
     public function store(Request $request)
     {
+       
         if(\Auth::user()->can('create employee'))
         {
             $validator = \Validator::make(
@@ -106,7 +110,10 @@ class EmployeeController extends Controller
                                    'branch_id' => 'required',
                                    'department_id' => 'required',
                                    'designation_id' => 'required',
+                                   'employment_status' => 'required|string',
                                    'document.*' => 'mimes:jpeg,png,jpg,gif,svg,pdf,docx,doc|max:20480',
+                                   'social_links.*.type' => 'required|string', // Social platform validation
+                                   'social_links.*.url' => 'nullable|url', // Social link URL validation
                                ]
             );
             if($validator->fails())
@@ -156,7 +163,11 @@ class EmployeeController extends Controller
                 $document_implode = null;
             }
 
+            $socialLinks = $request->input('social_links', []); // Get social links input
+            $socialLinksJson = json_encode($socialLinks); // Convert array to JSON
+    
 
+           
             $employee = Employee::create(
                 [
                     'user_id' => $user->id,
@@ -164,6 +175,7 @@ class EmployeeController extends Controller
                     'dob' => $request['dob'],
                     'gender' => $request['gender'],
                     'phone' => $request['phone'],
+                    'emergency_contact' => $request['emergency_contact'],
                     'address' => $request['address'],
                     'email' => $request['email'],
                     'password' => Hash::make($request['password']),
@@ -173,6 +185,8 @@ class EmployeeController extends Controller
                     'designation_id' => $request['designation_id'],
                     'company_doj' => $request['company_doj'],
                     'documents' => $document_implode,
+                    'employment_status' => $request['employment_status'],
+                    'social_links' => $socialLinksJson, 
                     'account_holder_name' => $request['account_holder_name'],
                     'account_number' => $request['account_number'],
                     'bank_name' => $request['bank_name'],
@@ -182,7 +196,6 @@ class EmployeeController extends Controller
                     'created_by' => \Auth::user()->creatorId(),
                 ]
             );
-
             if($request->hasFile('document'))
             {
                 foreach($request->document as $key => $document)
@@ -257,9 +270,9 @@ class EmployeeController extends Controller
             $employeesId  = \Auth::user()->employeeIdFormat(!empty($employee) ? $employee->employee_id : '');
 
             $departmentData  = Department::where('created_by', \Auth::user()->creatorId())->where('branch_id',$employee->branch_id)->get()->pluck('name', 'id');
-
-
-            return view('employee.edit', compact('employee', 'employeesId', 'branches', 'departments', 'designations', 'documents','departmentData'));
+            $employment       = EmploymentStatus::where('created_by',\Auth::user()->creatorId())->get()->pluck('name','id');
+            $socialLinks      = SocialLink::pluck('name', 'id');
+            return view('employee.edit', compact('employee', 'employeesId', 'branches', 'departments', 'designations', 'documents','departmentData','employment','socialLinks'));
         }
         else
         {
@@ -279,6 +292,7 @@ class EmployeeController extends Controller
                                    'gender' => 'required',
                                    'phone' => 'required|numeric',
                                    'address' => 'required',
+                                   'employment_status' => 'required|string',
                                    'document.*' => 'mimes:jpeg,png,jpg,gif,svg,pdf,docx,doc|max:20480',
                                ]
             );
@@ -408,7 +422,7 @@ class EmployeeController extends Controller
 
     public function show($id)
     {
-
+       
         if(\Auth::user()->can('view employee'))
         {
             try {
@@ -422,13 +436,13 @@ class EmployeeController extends Controller
             $branches     = Branch::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             $departments  = Department::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             $designations = Designation::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
-
+            $employment   = EmploymentStatus::where('created_by',\Auth::user()->creatorId())->get()->pluck('name','id');
             $employee     = Employee::where('id',$empId)->first();
 
             $employeesId  = \Auth::user()->employeeIdFormat(!empty($employee) ? $employee->employee_id : '');
 
 
-            return view('employee.show', compact('employee', 'employeesId', 'branches', 'departments', 'designations', 'documents'));
+            return view('employee.show', compact('employee', 'employeesId', 'branches', 'departments', 'designations', 'documents','employment'));
         }
         else
         {
@@ -492,7 +506,7 @@ class EmployeeController extends Controller
 
 
     public function profileShow($id)
-    {
+    {   
         if(\Auth::user()->can('show employee profile'))
         {
             $empId        = Crypt::decrypt($id);

@@ -37,6 +37,11 @@
         <a href="{{ route('competencies.index') }}" class="list-group-item list-group-item-action border-0 {{ request()->is('competencies*') ? 'active' : '' }}">{{__('Competencies')}}<div class="float-end"><i class="ti ti-chevron-right"></i></div></a>
        
         <a href="{{ route('product_type.index') }}" class="list-group-item list-group-item-action border-0 {{ request()->is('Assets Type*') ? 'active' : '' }}">{{__('Assets Type')}}<div class="float-end"><i class="ti ti-chevron-right"></i></div></a>
-
+        
+        <a href="{{ route('work_shift.index') }}" class="list-group-item list-group-item-action border-0 {{ request()->is('workshift*') ? 'active' : '' }}">{{__('Work Shifts')}}<div class="float-end"><i class="ti ti-chevron-right"></i></div></a>
+   
+        <a href="{{ route('employment_status.index') }}" class="list-group-item list-group-item-action border-0 {{ request()->is('employmentstatus*') ? 'active' : '' }}">{{__('Employment Status')}}<div class="float-end"><i class="ti ti-chevron-right"></i></div></a>
+    
+        <a href="{{ route('social_link.index') }}" class="list-group-item list-group-item-action border-0 {{ request()->is('sociallink*') ? 'active' : '' }}">{{__('Social Link')}}<div class="float-end"><i class="ti ti-chevron-right"></i></div></a>
     </div>
 </div>

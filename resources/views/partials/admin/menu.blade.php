@@ -740,6 +740,13 @@
                                     </li>
                                 @endif
 
+                                @if (\Auth::user()->type == 'company')
+                                <li class="dash-item {{ request()->is('job_history*') ? 'active' : '' }}">
+                                    <a class="dash-link"
+                                        href="{{ route('job_history') }}">{{ __('Job History') }}</a>
+                                </li>
+                            @endif
+
 
 
                                 @if (\Auth::user()->type == 'company' || \Auth::user()->type == 'HR')

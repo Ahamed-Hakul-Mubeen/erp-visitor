@@ -11,14 +11,16 @@ class DesignationController extends Controller
     public function index()
     {
 
-        if(\Auth::user()->can('manage designation'))
-        {
-            $designations = Designation::where('created_by', '=', \Auth::user()->creatorId())->get();
-
+        if (\Auth::user()->can('manage designation')) {
+            // Fetch designations with employee count
+            $designations = Designation::where('created_by', '=', \Auth::user()->creatorId())
+                ->withCount(['employees' => function ($query) {
+                    $query->where('created_by', \Auth::user()->creatorId());
+                }])
+                ->get();
+    
             return view('designation.index', compact('designations'));
-        }
-        else
-        {
+        } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
     }

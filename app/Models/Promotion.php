@@ -24,4 +24,5 @@ class Promotion extends Model
     {
         return $this->hasOne('App\Models\Employee', 'id', 'employee_id');
     }
+    
 }

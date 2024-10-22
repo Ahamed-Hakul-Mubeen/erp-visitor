@@ -149,6 +149,9 @@ use App\Http\Controllers\AssetManagementController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\ExchangeRateController;
 use App\Http\Controllers\PreOrderController;
+use App\Http\Controllers\WorkShiftController;
+use App\Http\Controllers\EmploymentStatusController;
+use App\Http\Controllers\SocialLinkController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -941,6 +944,9 @@ Route::group(['middleware' => ['verified']], function () {
     Route::get('/get-asset-properties', [AssetManagementController::class,'getAssetProperties'])->name('get.asset.properties');
     Route::get('asset_management/{id}/properties', [AssetManagementController::class, 'showProperties'])->name('asset_management.showProperties');
     Route::get('asset_management/{asset}/edit-asset-properties', [AssetManagementController::class, 'getAssetPropertiesForEdit'])->name('get.asset.properties.edit');
+    Route::resource('work_shift', WorkShiftController::class)->middleware(['auth', 'XSS']);
+    Route::resource('employment_status', EmploymentStatusController::class)->middleware(['auth', 'XSS']);
+    Route::resource('social_link', SocialLinkController::class)->middleware(['auth', 'XSS']);
 
     Route::post('branch/employee/json', [EmployeeController::class, 'employeeJson'])->name('branch.employee.json')->middleware(['auth', 'XSS']);
 
@@ -974,6 +980,7 @@ Route::group(['middleware' => ['verified']], function () {
     Route::resource('promotion', PromotionController::class)->middleware(['auth', 'XSS']);
     Route::resource('complaint', ComplaintController::class)->middleware(['auth', 'XSS']);
     Route::resource('warning', WarningController::class)->middleware(['auth', 'XSS']);
+    Route::get('job_history',[PromotionController::class, 'jobhistory'])->name('job_history');
 
     Route::resource('termination', TerminationController::class)->middleware(['auth', 'XSS']);
     Route::get('termination/{id}/description', [TerminationController::class, 'description'])->name('termination.description');

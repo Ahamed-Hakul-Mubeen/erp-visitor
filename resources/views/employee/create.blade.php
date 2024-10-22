@@ -88,7 +88,8 @@
                                     ]) !!}
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="row">
+                            <div class="form-group col-md-6">
                                 {!! Form::label('address', __('Address'), ['class' => 'form-label']) !!}<span class="pl-1 text-danger">*</span>
                                 {!! Form::textarea('address', old('address'), [
                                     'class' => 'form-control',
@@ -96,6 +97,18 @@
                                     'placeholder' => 'Enter employee address',
                                     'required' => 'required',
                                 ]) !!}
+                            </div>
+                            <div class="form-group col-md-6">
+                                {!! Form::label('emergency_contact', __('Emergency Contact'), ['class' => 'form-label']) !!}<span class="pl-1 text-danger">*</span>
+                                {!! Form::text('emergency_contact', old('Emergency Contact'), [
+                                    'class' => 'form-control',
+                                    'required' => 'required',
+                                    'placeholder' => 'Enter emergency contact',
+                                    'maxlength' => 15,
+                                    'pattern' => '\d*',  // Optional: only allows digits
+                                    'oninput' => 'this.value = this.value.replace(/[^0-9]/g, \'\');'
+                                ]) !!}
+                            </div>
                             </div>
                         </div>
                     </div>
@@ -127,7 +140,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group ">
+                                <div class="form-group col-md-6">
                                     {{ Form::label('designation_id', __('Select Designation'), ['class' => 'form-label']) }}<span class="pl-1 text-danger">*</span>
 
                                     <div class="form-icon-user">
@@ -140,14 +153,49 @@
 
                                     </div>
                                 </div>
-                                <div class="form-group ">
+                                <div class="form-group col-md-6">
                                     {!! Form::label('company_doj', __('Company Date Of Joining'), ['class' => '  form-label']) !!} <span class="pl-1 text-danger">*</span>
                                     {{ Form::date('company_doj', null, ['class' => 'form-control ', 'required' => 'required', 'autocomplete' => 'off', 'placeholder' => 'Select company date of joining']) }}
                                 </div>
 
+                                <div class="form-group col-md-6">
+                                    {{ Form::label('employment_status', __('Select Employment status'), ['class' => 'form-label']) }}<span class="pl-1 text-danger">*</span>
+                                    <div class="form-icon-user">
+                                        {{ Form::select('employment_status', $employment, null, ['class' => 'form-control select2', 'id' => 'employment_status', 'placeholder' => 'Select Employment','required' => 'required',]) }}
+                                    </div>
+                                </div>
+
+                                
+                              
+
                             </div>
+                            <div class="row">   
+                                <div class="card">
+                                    <div id="social-links-container">
+                                        <div class="row social-link-row">
+                                            <div class="form-group col-md-5">
+                                                {{ Form::label('social_links[0][type]', __('Social Platform'), ['class' => 'form-label']) }}
+                                                {{ Form::select('social_links[0][type]', $socialLinks, null, ['class' => 'form-control select2', 'placeholder' => __('Select Social Platform')]) }}
+                                            </div>
+                                            <div class="form-group col-md-5">
+                                                {{ Form::label('social_links[0][url]', __('URL'), ['class' => 'form-label']) }}
+                                                <div class="input-group">
+                                                    {{ Form::text('social_links[0][url]', null, ['class' => 'form-control', 'placeholder' => __('Enter URL')]) }}
+                                                    <div class="input-group-append mt-1 p-1">
+                                                        <button type="button" class="btn btn-info btn-sm add-social-link"><i class="ti ti-plus"></i></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-2 d-flex align-items-end">
+                                                <button type="button" class="btn btn-danger btn-sm remove-social-link" style="display: none;"><i class="ti ti-minus"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
                         </div>
-                    </div>
+                    </div>                                                          
                 </div>
             </div>
             <div class="row">
@@ -327,5 +375,51 @@
         errorElement.style.display = 'none';
     }
 });
+
+$(document).ready(function() {
+    let socialLinkIndex = 1;
+
+    // Triggered when clicking the plus icon
+    $(document).on('click', '.add-social-link', function() {
+        let newSocialLinkRow = `
+            <div class="row social-link-row mt-3">
+                <div class="form-group col-md-5">
+                    <label for="social_links[` + socialLinkIndex + `][type]" class="form-label">{{ __('Social Platform') }}</label>
+                    <select name="social_links[` + socialLinkIndex + `][type]" class="form-control select2">
+                        <option value="">{{ __('Select Social Platform') }}</option>
+                        @foreach($socialLinks as $key => $value)
+                            <option value="{{ $key }}">{{ $value }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group col-md-5">
+                    <label for="social_links[` + socialLinkIndex + `][url]" class="form-label">{{ __('URL') }}</label>
+                    <div class="input-group">
+                        <input type="text" name="social_links[` + socialLinkIndex + `][url]" class="form-control" placeholder="{{ __('Enter URL') }}">
+                        <div class="input-group-append mt-1 p-1">
+                            <button class="btn btn-info btn-sm add-social-link" type="button"><i class="ti ti-plus"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group p-1 col-md-2 d-flex align-items-end">
+                    <button type="button" class="btn btn-danger btn-sm remove-social-link"><i class="ti ti-minus"></i></button>
+                </div>
+            </div>
+        `;
+        $('#social-links-container').append(newSocialLinkRow);
+        socialLinkIndex++;
+
+        // Re-initialize select2 for the new elements
+        $('.select2').select2();
+    });
+
+    // Remove row when clicking minus icon
+    $(document).on('click', '.remove-social-link', function() {
+        $(this).closest('.social-link-row').remove();
+    });
+});
+
+
+
     </script>
 @endpush
