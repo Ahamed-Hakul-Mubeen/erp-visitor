@@ -112,8 +112,8 @@ class EmployeeController extends Controller
                                    'designation_id' => 'required',
                                    'employment_status' => 'required|string',
                                    'document.*' => 'mimes:jpeg,png,jpg,gif,svg,pdf,docx,doc|max:20480',
-                                   'social_links.*.type' => 'required|string', // Social platform validation
-                                   'social_links.*.url' => 'nullable|url', // Social link URL validation
+                                //    'social_links.*.type' => 'required|string', // Social platform validation
+                                //    'social_links.*.url' => 'nullable|url', // Social link URL validation
                                ]
             );
             if($validator->fails())
