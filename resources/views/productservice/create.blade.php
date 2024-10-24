@@ -1,5 +1,5 @@
 {{ Form::open(array('url' => 'productservice','enctype' => "multipart/form-data")) }}
-@foreach(['from_invoice','from_bill',] as $param)
+@foreach(['from_invoice','from_bill','from_proposal','from_preorder'] as $param)
     @if(request()->has($param) && request()->get($param) == 1)
         <input type="hidden" name="{{ $param }}" value="1">
     @endif

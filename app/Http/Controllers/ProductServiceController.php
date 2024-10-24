@@ -172,7 +172,7 @@ class ProductServiceController extends Controller
                     $path = Utility::upload_file($request,'pro_image',$fileName,$dir,[]);
                 }
             }
-
+ 
             $productService->created_by       = \Auth::user()->creatorId();
             $productService->save();
             CustomField::saveData($productService, $request->customField);
@@ -181,6 +181,10 @@ class ProductServiceController extends Controller
                 return redirect()->route('invoice.create', ['cid' => 0])->with('success', __('Product successfully created.'));
             }elseif ($request->has('from_bill') && $request->from_bill == 1) {
                 return redirect()->route('bill.create', ['cid' => 0])->with('success', __('product successfully created.'));
+            }elseif ($request->has('from_proposal') && $request->from_proposal == 1) {
+                return redirect()->route('proposal.create', ['cid' => 0])->with('success', __('product successfully created.'));
+            }elseif ($request->has('from_preorder') && $request->from_preorder == 1) {
+                return redirect()->route('pre_order.create', ['cid' => 0])->with('success', __('product successfully created.'));
             }
                 return redirect()->route('productservice.index')->with('success', __('Product successfully created.'));
         }
