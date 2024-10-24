@@ -177,7 +177,12 @@ class ProductServiceController extends Controller
             $productService->save();
             CustomField::saveData($productService, $request->customField);
 
-            return redirect()->route('productservice.index')->with('success', __('Product successfully created.'));
+            if ($request->has('from_invoice') && $request->from_invoice == 1) {
+                return redirect()->route('invoice.create', ['cid' => 0])->with('success', __('Product successfully created.'));
+            }elseif ($request->has('from_bill') && $request->from_bill == 1) {
+                return redirect()->route('bill.create', ['cid' => 0])->with('success', __('product successfully created.'));
+            }
+                return redirect()->route('productservice.index')->with('success', __('Product successfully created.'));
         }
         else
         {

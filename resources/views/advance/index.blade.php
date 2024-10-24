@@ -112,8 +112,8 @@
                                 <th> {{__('Customer')}}</th>
                                 <th> {{__('Created User')}}</th>
                                 {{-- <th> {{__('Reference')}}</th> --}}
-                                {{-- <th> {{__('Description')}}</th>
-                                <th>{{__('Payment Receipt')}}</th> --}}
+                                {{-- <th> {{__('Description')}}</th> --}}
+                                <th>{{__('Payment Receipt')}}</th>
                                 <th>{{__('Status')}}</th>
 
                                 {{-- @if(Gate::check('edit advance') || Gate::check('delete advance')) --}}
@@ -140,18 +140,18 @@
                                     {{-- <td>{{  !empty($advance->reference)?$advance->reference:'-'}}</td>
                                     <td>{{  !empty($advance->description)?$advance->description:'-'}}</td> --}}
 
-                                    {{-- <td> --}}
+                                    <td>
 
-                                        {{-- @if(!empty($advance->add_receipt))
+                                        @if(!empty($advance->add_receipt))
                                             <a  class="action-btn bg-primary ms-2 btn btn-sm align-items-center" href="{{ $advancepath . '/' . $advance->add_receipt }}" download="">
                                                 <i class="text-white ti ti-download"></i>
                                             </a>
                                             <a href="{{ $advancepath . '/' . $advance->add_receipt }}"  class="mx-3 action-btn bg-secondary ms-2 btn btn-sm align-items-center" data-bs-toggle="tooltip" title="{{__('Download')}}" target="_blank"><span class="btn-inner--icon"><i class="text-white ti ti-crosshair" ></i></span></a>
                                         @else
                                             -
-                                        @endif --}}
+                                        @endif
 
-                                    {{-- </td> --}}
+                                    </td>
                                     <td>
                                         @if($advance->status == 0)
                                             <span class="p-2 px-3 rounded status_badge badge bg-secondary">{{ __("Pending") }}</span>

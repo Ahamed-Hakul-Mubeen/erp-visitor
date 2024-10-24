@@ -1,4 +1,9 @@
 {{ Form::open(array('url' => 'productservice','enctype' => "multipart/form-data")) }}
+@foreach(['from_invoice','from_bill',] as $param)
+    @if(request()->has($param) && request()->get($param) == 1)
+        <input type="hidden" name="{{ $param }}" value="1">
+    @endif
+@endforeach
 <div class="modal-body">
     {{-- start for ai module--}}
     @php
@@ -83,6 +88,9 @@
         <div class="form-group col-md-6">
             {{ Form::label('tax_id', __('Tax'),['class'=>'form-label']) }}
             {{ Form::select('tax_id[]', $tax,null, array('class' => 'form-control select2','id'=>'choices-multiple1','multiple')) }}
+            <div class="text-xs ">
+                {{__('Please add constant Tax. ')}}<a href="{{route('taxes.index')}}"><b>{{__('Add Tax')}}</b></a>
+            </div>
         </div>
         <div class="form-group col-md-6">
             {{ Form::label('category_id', __('Category'),['class'=>'form-label']) }}<span class="text-danger">*</span>
@@ -95,6 +103,9 @@
         <div class="form-group col-md-6">
             {{ Form::label('unit_id', __('Unit'),['class'=>'form-label']) }}<span class="text-danger">*</span>
             {{ Form::select('unit_id', $unit,null, array('class' => 'form-control select','required'=>'required')) }}
+            <div class="text-xs ">
+                {{__('Please add constant Unit. ')}}<a href="{{route('product-unit.index')}}"><b>{{__('Add Unit')}}</b></a>
+            </div>
         </div>
         <div class="col-md-6 form-group">
             {{Form::label('pro_image',__('Product Image'),['class'=>'form-label'])}}
