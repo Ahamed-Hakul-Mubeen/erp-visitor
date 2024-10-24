@@ -318,7 +318,7 @@
         @if ($invoice->status != 0)
             <div class="row justify-content-between align-items-center mb-3">
                 <div class="col-md-12 d-flex align-items-center justify-content-between justify-content-md-end">
-                    {{-- @if (!empty($creditnote))
+                    {{-- @if (!empty($creditnote)) --}}
                         <div class="all-button-box mx-2 mr-2">
                             <a href="#" class="btn btn-sm btn-primary"
                                 data-url="{{ route('invoice.credit.note', $invoice->id) }}" data-ajax-popup="true"
@@ -326,7 +326,7 @@
                                 {{ __('Add Credit Note') }}
                             </a>
                         </div>
-                    @endif --}}
+                    {{-- @endif --}}
                     @if ($invoice->status != 4)
                         <div class="all-button-box mr-2">
                             <a href="{{ route('invoice.payment.reminder', $invoice->id) }}"
@@ -661,13 +661,13 @@
                                                         {{ \Auth::user()->priceFormat($invoice->getTotal() - $invoice->getDue() - $invoice->invoiceTotalCreditNote(), null, $invoice->currency_symbol) }}
                                                     </td>
                                                 </tr>
-                                                {{-- <tr>
+                                                <tr>
                                                     <td colspan="6"></td>
                                                     <td class="text-end"><b>{{ __('Credit Note') }}</b></td>
                                                     <td class="text-end">
                                                         {{ \Auth::user()->priceFormat($invoice->invoiceTotalCreditNote(), null, $invoice->currency_symbol) }}
                                                     </td>
-                                                </tr> --}}
+                                                </tr>
                                                 <tr>
                                                     <td colspan="6"></td>
                                                     <td class="text-end"><b>{{ __('Due') }}</b></td>
@@ -859,7 +859,7 @@
             </div>
         </div>
     </div>
-    {{-- <div class="row">
+    <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-body table-border-style">
@@ -925,7 +925,7 @@
                 </div>
             </div>
         </div>
-    </div> --}}
+    </div>
 
 
 @endsection
