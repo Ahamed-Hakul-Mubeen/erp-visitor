@@ -628,8 +628,14 @@
                 </div>
             </div>
         </div>
+        
         <div class="col-12">
             <h5 class="mb-4 d-inline-block">{{__('Product & Services')}}</h5>
+            <div class="float-end p-1">
+                <a href="#" data-size="lg" data-url="{{ route('productservice.create',['from_invoice' => 1]) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create New Product')}}" class="btn btn-sm btn-primary">
+                    <i class="ti ti-plus">Add Product</i>
+                </a>
+             </div>
             <div class="card repeater">
                 <div class="py-2 item-section">
                     <div class="row justify-content-between align-items-center">
@@ -637,8 +643,10 @@
                             <div class="all-button-box me-2">
                                 <a href="#" data-repeater-create="" class="btn btn-primary" data-bs-toggle="modal" data-target="#add-bank">
                                     <i class="ti ti-plus"></i> {{__('Add item')}}
+                                    
                                 </a>
                             </div>
+                          
                         </div>
                     </div>
                 </div>

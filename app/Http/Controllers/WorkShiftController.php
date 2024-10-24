@@ -98,7 +98,7 @@ class WorkShiftController extends Controller
         $workShift->break_time = $request->break_time;
         $workShift->description = $request->description;
         $workShift->department = $request->department;
-        $workShift->created_by = \Auth::user()->id;
+        $workShift->created_by = \Auth::user()->creatorId();
 
         // Set weekend days (off days) flags
         $workShift->is_sunday_off = $request->has('is_sunday_off');
