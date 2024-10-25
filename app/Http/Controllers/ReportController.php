@@ -942,9 +942,13 @@ class ReportController extends Controller
 
             $data['expenses'] = $expenses;
             $data['incomes'] = $incomes;
-
-            $filter['startDateRange'] = 'Jan-' . $year;
-            $filter['endDateRange'] = 'Dec-' . $year;
+            if (isset($request->start_date) && isset($request->end_date)) {
+                $filter['startDateRange'] = Carbon::createFromFormat('Y-m-d', $request->start_date)->format('m-d-Y');
+                $filter['endDateRange'] = Carbon::createFromFormat('Y-m-d', $request->end_date)->format('m-d-Y');
+            }else{
+                $filter['startDateRange'] = 'Jan-' . $year;
+                $filter['endDateRange'] = 'Dec-' . $year;
+            }
 
             return view('report.tax_summary', compact('filter'), $data);
         } else {

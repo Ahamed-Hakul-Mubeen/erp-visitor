@@ -11,14 +11,10 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <script>
         var year = '{{$currentYear}}';
-        $(document).ready(function() {
-            var today = new Date().toISOString().split('T')[0];
-        $('#start_date').val(today);
-        $('#end_date').val(today);
-        });
 
         var filename = $('#filename').val();
 
@@ -33,6 +29,15 @@
             };
             html2pdf().set(opt).from(element).save();
         }
+        $(document).ready(function() {
+        var today = new Date().toISOString().split('T')[0];
+
+        const urlParams = new URLSearchParams(window.location.search);
+        var startDate = urlParams.get('start_date') || today;
+        var endDate = urlParams.get('end_date') || today;
+        $('#start_date').val(startDate);
+        $('#end_date').val(endDate);
+
         $('#daterange').daterangepicker({
             ranges: {
                 'Today': [moment(), moment()],
@@ -43,10 +48,14 @@
                 'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
                 'This Year': [moment().startOf('year'), moment().endOf('year')]
             },
+            startDate:moment(startDate).format("MM/DD/YYYY"),
+            endDate:moment(endDate).format("MM/DD/YYYY")
         }, function(start, end, label) {
             $('#start_date').val(start.format('YYYY-MM-DD'));
             $('#end_date').val(end.format('YYYY-MM-DD'));
         });
+    });
+
     </script>
 @endpush
 
@@ -96,7 +105,7 @@
                                         </div>
                                     </div>
                                     <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12">
-                                        <div class="btn-box">
+                                        <div class="btn-box mt-2">
                                             <div class="row">
                                                 <div class="col-auto mt-4">
 
@@ -125,7 +134,7 @@
                                     </div>
 
                                     <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12">
-                                        <div class="btn-box">
+                                        <div class="btn-box mt-2">
                                             <div class="row">
                                                 <div class="col-auto mt-4">
 
