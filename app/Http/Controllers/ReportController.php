@@ -795,7 +795,12 @@ class ReportController extends Controller
 
             $data['currentYear'] = $year;
 
-            $invoiceProducts = InvoiceProduct::selectRaw('invoice_products.* ,MONTH(invoice_products.created_at) as month,YEAR(invoice_products.created_at) as year')->leftjoin('product_services', 'invoice_products.product_id', '=', 'product_services.id')->whereRaw('YEAR(invoice_products.created_at) =?', [$year])->where('product_services.created_by', '=', \Auth::user()->creatorId())->get();
+            if (isset($request->start_date) && isset($request->end_date)) {
+                $invoiceProducts = InvoiceProduct::selectRaw('invoice_products.* ,MONTH(invoice_products.created_at) as month,YEAR(invoice_products.created_at) as year')->leftJoin('product_services', 'invoice_products.product_id', '=', 'product_services.id')->whereBetween('invoice_products.created_at', [$request->start_date, $request->end_date])->where('product_services.created_by', '=', \Auth::user()->creatorId())->get();
+            }else{
+
+                $invoiceProducts = InvoiceProduct::selectRaw('invoice_products.* ,MONTH(invoice_products.created_at) as month,YEAR(invoice_products.created_at) as year')->leftjoin('product_services', 'invoice_products.product_id', '=', 'product_services.id')->whereRaw('YEAR(invoice_products.created_at) =?', [$year])->where('product_services.created_by', '=', \Auth::user()->creatorId())->get();
+            }
 
             $incomeTaxesData = [];
 
@@ -862,9 +867,12 @@ class ReportController extends Controller
                     }
                 }
             }
+            if (isset($request->start_date) && isset($request->end_date)) {
+                $billProducts = BillProduct::selectRaw('bill_products.* ,MONTH(bill_products.created_at) as month,YEAR(bill_products.created_at) as year')->leftjoin('product_services', 'bill_products.product_id', '=', 'product_services.id')->whereBetween('bill_products.created_at', [$request->start_date, $request->end_date])->where('product_services.created_by', '=', \Auth::user()->creatorId())->get();
+            }else{
 
-            $billProducts = BillProduct::selectRaw('bill_products.* ,MONTH(bill_products.created_at) as month,YEAR(bill_products.created_at) as year')->leftjoin('product_services', 'bill_products.product_id', '=', 'product_services.id')->whereRaw('YEAR(bill_products.created_at) =?', [$year])->where('product_services.created_by', '=', \Auth::user()->creatorId())->get();
-
+                $billProducts = BillProduct::selectRaw('bill_products.* ,MONTH(bill_products.created_at) as month,YEAR(bill_products.created_at) as year')->leftjoin('product_services', 'bill_products.product_id', '=', 'product_services.id')->whereRaw('YEAR(bill_products.created_at) =?', [$year])->where('product_services.created_by', '=', \Auth::user()->creatorId())->get();
+            }
             $expenseTaxesData = [];
             foreach ($billProducts as $billProduct) {
                 $billTax = [];
@@ -1746,7 +1754,7 @@ class ReportController extends Controller
             $filter['debit'] = $debit;
             $filter['startDateRange'] = $start;
             $filter['endDateRange'] = $end;
-            
+
             return view('report.ledger_summary', compact('filter', 'chart_accounts', 'accounts', 'subAccounts'));
 
         } else {
