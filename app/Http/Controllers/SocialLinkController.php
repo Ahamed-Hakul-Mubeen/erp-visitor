@@ -13,7 +13,7 @@ class SocialLinkController extends Controller
     public function index()
     {
         //
-        $social_links = SocialLink::all();
+        $social_links = SocialLink::where('created_by', \Auth::user()->id);
         return view('sociallink.index',compact('social_links'));
     }
 
