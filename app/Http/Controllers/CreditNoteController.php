@@ -199,13 +199,15 @@ class CreditNoteController extends Controller
             $credit->amount      = $total_credit_amount;
             $credit->save();
 
-            $customer = Customer::find($invoice->customer_id);
-            $balance = $customer->credit_balance + $total_credit_amount;
+            if($invoice->getDue() == 0) {
+                $customer = Customer::find($invoice->customer_id);
+                $balance = $customer->credit_balance + $total_credit_amount;
+                $customer->credit_balance = $balance;
+                $customer->save();
+            } else {
+                Utility::updateUserBalance('customer', $invoice->customer_id, $total_credit_amount, 'credit');
+            }
 
-            $customer->credit_balance = $balance;
-            $customer->save();
-
-            Utility::updateUserBalance('customer', $invoice->customer_id, $total_credit_amount, 'credit');
             return redirect()->back()->with('success', __('Credit Note successfully created.'));
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
