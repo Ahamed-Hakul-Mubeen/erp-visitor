@@ -496,7 +496,7 @@ class InvoiceController extends Controller
 
                 if ($invoice->customer_id != 0 && $invoice->status != 0) {
                     // Log::info($invoice->customer_id." - ".$invoice->getDue()." - ".'credit');
-                    Utility::updateUserBalance('customer', $invoice->customer_id, $invoice->getDue() * $invoice->exchange_rate, 'credit');
+                    Utility::updateUserBalance('customer', $invoice->customer_id, ($invoice->getTotal() - $invoice->getDue()) * $invoice->exchange_rate, 'credit');
                 }
 
 
@@ -958,8 +958,8 @@ class InvoiceController extends Controller
             $type = 'Partial';
             $user = 'Customer';
             Transaction::destroyTransaction($payment_id, $type, $user);
-            if (!($payment->advance_id) && !($payment->advance_amount)) {
-                // Log::info($invoice->customer_id." - ".$request->amount." - ".'debit');
+            if (!($payment->advance_id)) {
+                Log::info($invoice->customer_id." - ".$payment->amount * $invoice->exchange_rate." - ".'debit');
                 Utility::updateUserBalance('customer', $invoice->customer_id, $payment->amount * $invoice->exchange_rate, 'debit');
 
                 Utility::bankAccountBalance($payment->account_id, $payment->amount * $invoice->exchange_rate, 'debit');
