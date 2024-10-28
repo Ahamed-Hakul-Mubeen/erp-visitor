@@ -77,7 +77,7 @@ class WorkShiftController extends Controller
             'saturday_start_time' => 'nullable|date_format:H:i',
             'saturday_end_time' => 'nullable|date_format:H:i|after:saturday_start_time',
             'break_time' => 'nullable|string',
-            'description' => 'nullable|string',
+            //'description' => 'nullable|string',
             'department' => 'required|string',
           
         ]);
