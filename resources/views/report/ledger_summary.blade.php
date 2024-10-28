@@ -263,6 +263,25 @@
                                                 </tr>
                                             @endif
 
+                                            @if ($account->reference == 'Invoice Credit Note')
+
+                                                <tr>
+                                                    <td>{{ $account->account_name }}</td>
+                                                    <td>{{ $account->user_name }}</td>
+                                                    </td>
+                                                    <td>Invoice Credit Note</td>
+                                                    <td>{{ $account->date }}</td>
+                                                    <td class="text-right">{{ \Auth::user()->priceFormat($account->debit) }}</td>
+                                                    @php
+                                                        $balance += $account->credit - $account->debit;
+                                                        $totalCredit += $account->credit;
+                                                        $totalDebit +=  $account->debit;
+                                                    @endphp
+                                                    <td class="text-right">{{ \Auth::user()->priceFormat($account->credit) }}</td>
+                                                    <td class="text-right">{{ \Auth::user()->priceFormat($balance) }}</td>
+                                                </tr>
+                                            @endif
+
                                             @if ($account->reference == 'Invoice Payment')
 
                                                 <tr>

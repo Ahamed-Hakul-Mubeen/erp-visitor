@@ -1,13 +1,28 @@
 {{ Form::open(['route' => ['invoice.payment', $invoice->id], 'method' => 'post', 'id' => 'payment_form', 'enctype' => 'multipart/form-data']) }}
 <div class="modal-body">
     <div class="row">
+        @if ($customer->credit_balance > 0)
+            <div class="form-group col-md-12">
+                {{ Form::label('credit_balance', __('Credit Balance'), ['class' => 'form-label']) }}
+                <select class="form-control select" name="credit_balance" id="credit_balance">
+                    <option value="No">Don't use Credit Balance</option>
+                    <option value="Yes" data-amount="{{ $customer->credit_balance }}">Use
+                        {{ Auth::user()->priceFormat($customer->credit_balance) }} Credit Balance</option>
+                </select>
+                {{-- {{ Form::select('advance_id', $advance, null, ['class' => 'form-control select', 'id' => 'advance_id', 'required' => 'required']) }} --}}
+            </div>
+        @endif
+
         @if (count($advance) != 0)
             <div class="form-group col-md-12">
                 {{ Form::label('advance_id', __('Pending Advance'), ['class' => 'form-label']) }}
                 <select class="form-control select" name="advance_id" id="advance_id">
                     <option value="">Select Advance</option>
                     @foreach ($advance as $adv)
-                        <option data-date="{{ $adv->date }}" data-amount="{{ $adv->balance }}" data-account="{{ $adv->account_id }}" value="{{ $adv->id }}"> {{  Auth::user()->advanceNumberFormat($adv->advance_id)}} ({{  Auth::user()->priceFormat($adv->balance, null, $adv->currency_symbol)}}) </option>
+                        <option data-date="{{ $adv->date }}" data-amount="{{ $adv->balance }}"
+                            data-account="{{ $adv->account_id }}" value="{{ $adv->id }}">
+                            {{ Auth::user()->advanceNumberFormat($adv->advance_id) }}
+                            ({{ Auth::user()->priceFormat($adv->balance, null, $adv->currency_symbol) }}) </option>
                     @endforeach
                 </select>
                 {{-- {{ Form::select('advance_id', $advance, null, ['class' => 'form-control select', 'id' => 'advance_id', 'required' => 'required']) }} --}}
@@ -26,7 +41,7 @@
         </div>
         <div class="form-group col-md-6">
             {{ Form::label('account_id', __('Account'), ['class' => 'form-label']) }}
-            {{ Form::select('account_id', $accounts, null, ['class' => 'form-control select', 'id' => 'account_id', 'required' => 'required', 'readonly' => "readonly"]) }}
+            {{ Form::select('account_id', $accounts, null, ['class' => 'form-control select', 'id' => 'account_id', 'required' => 'required', 'readonly' => 'readonly']) }}
         </div>
 
         <div class="form-group col-md-6">
@@ -57,22 +72,27 @@
 </div>
 {{ Form::close() }}
 <script>
-    $(document).ready(function(){
-        $("#advance_id").change(function(){
-            if(this.value === "")
-            {
+    $(document).ready(function() {
+        $("#advance_id").change(function() {
+            if (this.value === "") {
                 $("#amount").val("");
                 $("#date").val("").attr("disabled", false);
                 $("#account_id").val("").attr("disabled", false);
-            }
-            else
-            {
+            } else {
                 var date = $("#advance_id option:selected").attr('data-date');
                 var amount = $("#advance_id option:selected").attr('data-amount');
                 var account_id = $("#advance_id option:selected").attr('data-account');
                 $("#amount").val(amount);
                 $("#date").val(date).attr("disabled", true);
                 $("#account_id").val(account_id).prop('disabled', true);
+            }
+        });
+        $("#credit_balance").change(function() {
+            var credit_balance = $("#credit_balance").val();
+            var amount = $("#credit_balance option:selected").attr('data-amount');
+            if (credit_balance == "Yes") {
+                $("#amount").val(amount);
+                $('#account_id').prop('disabled', true);
             }
         });
         $('#payment_form').on('submit', function() {
