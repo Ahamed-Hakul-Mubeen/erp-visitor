@@ -196,9 +196,6 @@ class CreditNoteController extends Controller
                 }
             }
 
-            $credit->amount      = $total_credit_amount;
-            $credit->save();
-
             if($invoice->getDue() == 0) {
                 $customer = Customer::find($invoice->customer_id);
                 $balance = $customer->credit_balance + $total_credit_amount;
@@ -207,6 +204,9 @@ class CreditNoteController extends Controller
             } else {
                 Utility::updateUserBalance('customer', $invoice->customer_id, $total_credit_amount, 'credit');
             }
+
+            $credit->amount      = $total_credit_amount;
+            $credit->save();
 
             return redirect()->back()->with('success', __('Credit Note successfully created.'));
         } else {
@@ -276,16 +276,22 @@ class CreditNoteController extends Controller
     {
         if (\Auth::user()->can('delete credit note')) {
 
+            $invoice = Invoice::find($invoice_id);
+
             $creditNote = CreditNote::find($creditNote_id);
             $creditNote->delete();
 
             $customer = Customer::find($creditNote->customer);
-            $balance = $customer->credit_balance - $creditNote->amount;
-            $customer->credit_balance = $balance;
-            $customer->save();
+
+            if($customer->credit_balance == 0) {
+                Utility::updateUserBalance('customer', $creditNote->customer, $creditNote->amount, 'debit');
+            } else {
+                $balance = $customer->credit_balance - $creditNote->amount;
+                $customer->credit_balance = $balance;
+                $customer->save();
+            }
 
             TransactionLines::where('reference', 'Invoice Credit Note')->where('reference_id', $creditNote_id)->delete();
-            Utility::updateUserBalance('customer', $creditNote->customer, $creditNote->amount, 'debit');
 
             return redirect()->back()->with('success', __('Credit Note successfully deleted.'));
         } else {
