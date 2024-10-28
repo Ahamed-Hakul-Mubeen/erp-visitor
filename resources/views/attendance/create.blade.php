@@ -12,12 +12,12 @@
         </div>
         <div class="form-group col-lg-6 col-md-6">
             {{Form::label('clock_in',__('Clock In'))}}
-            {{Form::time('clock_in',null,array('class'=>'form-control', 'max' => \Carbon\Carbon::now()->format('H:i')))}}
+            {{Form::time('clock_in',null,array('class'=>'form-control'))}}
 
         </div>
         <div class="form-group col-lg-6 col-md-6">
             {{Form::label('clock_out',__('Clock Out'))}}
-            {{Form::time('clock_out',null,array('class'=>'form-control ', 'max' => \Carbon\Carbon::now()->format('H:i')))}}
+            {{Form::time('clock_out',null,array('class'=>'form-control '))}}
         </div>
     </div>
 </div>

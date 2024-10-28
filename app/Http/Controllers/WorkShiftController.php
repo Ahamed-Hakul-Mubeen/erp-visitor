@@ -14,7 +14,8 @@ class WorkShiftController extends Controller
     public function index()
     {
         // if (\Auth::user()->can('manage assets management')) {
-            $workshifts = WorkShift::all();
+            //$workshifts = WorkShift::all();
+            $workshifts = WorkShift::where('created_by', \Auth::user()->id);
             return view('workshift.index',compact('workshifts'));
         // } else {
         //     return redirect()->back()->with('error', __('Permission denied.'));

@@ -12,7 +12,7 @@ class EmploymentStatusController extends Controller
     public function index()
     {
         //
-        $statuses = EmploymentStatus::all();
+        $statuses = EmploymentStatus::where('created_by', \Auth::user()->id);
         return view('employmentstatus.index', compact('statuses'));
     }
 

@@ -8,6 +8,11 @@
 @endsection
 @push('script-page')
     <script type="text/javascript" src="{{ asset('js/html2pdf.bundle.min.js') }}"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <script>
         var year = '{{$currentYear}}';
 
@@ -24,6 +29,33 @@
             };
             html2pdf().set(opt).from(element).save();
         }
+        $(document).ready(function() {
+        var today = new Date().toISOString().split('T')[0];
+
+        const urlParams = new URLSearchParams(window.location.search);
+        var startDate = urlParams.get('start_date') || today;
+        var endDate = urlParams.get('end_date') || today;
+        $('#start_date').val(startDate);
+        $('#end_date').val(endDate);
+
+        $('#daterange').daterangepicker({
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+                'This Year': [moment().startOf('year'), moment().endOf('year')]
+            },
+            startDate:moment(startDate).format("MM/DD/YYYY"),
+            endDate:moment(endDate).format("MM/DD/YYYY")
+        }, function(start, end, label) {
+            $('#start_date').val(start.format('YYYY-MM-DD'));
+            $('#end_date').val(end.format('YYYY-MM-DD'));
+        });
+    });
+
     </script>
 @endpush
 
@@ -47,38 +79,84 @@
             <div class=" mt-2 " id="multiCollapseExample1">
                 <div class="card">
                     <div class="card-body">
-                        {{ Form::open(array('route' => array('report.tax.summary'),'method' => 'GET','id'=>'report_tax_summary')) }}
                         <div class="row align-items-center justify-content-end">
                             <div class="col-xl-10">
                                 <div class="row">
 
 
-                                    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12">
+                                    {{-- <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12">
                                         <div class="btn-box">
+                                        </div>
+                                    </div> --}}
+                                    {{-- <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12">
+                                        <div class="btn-box">
+                                        </div>
+                                    </div> --}}
+                                    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12">
+                                        {{ Form::open(array('route' => array('report.tax.summary'),'method' => 'GET','id'=>'report_tax_summary_date')) }}
+                                        <div class="btn-box">
+                                            {{ Form::label('daterange', __('Date'),['class'=>'form-label'])}}
+                                            <input type="text" name="" id="daterange" class = "form-control"/>
+
+                                            <input type="text" name="start_date" id="start_date" hidden>
+                                            <input type="text" name="end_date" id="end_date" hidden>
+                                            {{-- {{ Form::text('daterange', ['class' => 'form-control', 'placeholder' => __('Enter Description'),'id' => 'daterange']) }} --}}
+
                                         </div>
                                     </div>
                                     <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12">
-                                        <div class="btn-box">
+                                        <div class="btn-box mt-2">
+                                            <div class="row">
+                                                <div class="col-auto mt-4">
+
+                                                    <a href="#" class="btn btn-sm btn-primary" onclick="document.getElementById('report_tax_summary_date').submit(); return false;" data-bs-toggle="tooltip" title="{{__('Apply')}}" data-original-title="{{__('apply')}}">
+                                                        <span class="btn-inner--icon"><i class="ti ti-search"></i></span>
+                                                    </a>
+
+                                                    <a href="{{route('report.tax.summary')}}" class="btn btn-sm btn-danger " data-bs-toggle="tooltip"  title="{{ __('Reset') }}" data-original-title="{{__('Reset')}}">
+                                                        <span class="btn-inner--icon"><i class="ti ti-trash-off text-white-off "></i></span>
+                                                    </a>
+
+
+                                                </div>
+
+                                            </div>
                                         </div>
+                                        {{ Form::close() }}
                                     </div>
 
                                     <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12">
-                                        <div class="btn-box">
-                                        </div>
-                                    </div>
-
-                                    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12">
+                                        {{ Form::open(array('route' => array('report.tax.summary'),'method' => 'GET','id'=>'report_tax_summary_year')) }}
                                         <div class="btn-box">
                                             {{ Form::label('year', __('Year'),['class'=>'form-label'])}}
                                             {{ Form::select('year',$yearList,isset($_GET['year'])?$_GET['year']:'', array('class' => 'form-control select')) }}
                                         </div>
                                     </div>
 
+                                    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12">
+                                        <div class="btn-box mt-2">
+                                            <div class="row">
+                                                <div class="col-auto mt-4">
 
+                                                    <a href="#" class="btn btn-sm btn-primary" onclick="document.getElementById('report_tax_summary_year').submit(); return false;" data-bs-toggle="tooltip" title="{{__('Apply')}}" data-original-title="{{__('apply')}}">
+                                                        <span class="btn-inner--icon"><i class="ti ti-search"></i></span>
+                                                    </a>
+
+                                                    <a href="{{route('report.tax.summary')}}" class="btn btn-sm btn-danger " data-bs-toggle="tooltip"  title="{{ __('Reset') }}" data-original-title="{{__('Reset')}}">
+                                                        <span class="btn-inner--icon"><i class="ti ti-trash-off text-white-off "></i></span>
+                                                    </a>
+
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        {{ Form::close() }}
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-auto">
-                                <div class="row">
+                                {{-- <div class="row">
                                     <div class="col-auto mt-4">
 
                                         <a href="#" class="btn btn-sm btn-primary" onclick="document.getElementById('report_tax_summary').submit(); return false;" data-bs-toggle="tooltip" title="{{__('Apply')}}" data-original-title="{{__('apply')}}">
@@ -92,11 +170,10 @@
 
                                     </div>
 
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
                     </div>
-                    {{ Form::close() }}
                 </div>
             </div>
         </div>
