@@ -744,9 +744,10 @@ class InvoiceController extends Controller
     {
         if (\Auth::user()->can('create payment invoice')) {
             $invoice = Invoice::where('id', $invoice_id)->first();
+            $customer = Customer::find($invoice->customer_id);
             $advance = Advance::select("advance_id", "id", "balance", "date", "account_id", "currency_symbol")->where("customer_id", $invoice->customer_id)->where('currency_code', $invoice->currency_code)->where("status", 0)->where('created_by', \Auth::user()->creatorId())->get();
             $accounts = BankAccount::select('*', \DB::raw("CONCAT(bank_name,' ',holder_name) AS name"))->where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
-            return view('invoice.payment', compact('accounts', 'invoice', 'advance'));
+            return view('invoice.payment', compact('accounts', 'invoice', 'advance', 'customer'));
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
@@ -829,8 +830,7 @@ class InvoiceController extends Controller
             $payment->invoice = 'invoice ' . \Auth::user()->invoiceNumberFormat($invoice->invoice_id);
             $payment->dueAmount = \Auth::user()->priceFormat($invoice->getDue());
 
-            if (!($request->advance_id)) {
-                
+            if (!($request->advance_id) && $request->credit_balance != "Yes") {
                 // Log::info($invoice->customer_id." - ".$request->amount." - ".'credit');
                 Utility::updateUserBalance('customer', $invoice->customer_id, $request->amount * $invoice->exchange_rate, 'credit');
                 Utility::bankAccountBalance($request->account_id, $request->amount * $invoice->exchange_rate, 'credit');
@@ -847,19 +847,20 @@ class InvoiceController extends Controller
                 ];
                 Utility::addTransactionLines($data, "new");
             }
-            // account_recivable
-
-            $account_recivable = ChartOfAccount::where('code', 1200)->where('created_by', \Auth::user()->creatorId())->first();
-            $data = [
-                'account_id' => $account_recivable->id,
-                'transaction_type' => 'Credit',
-                'transaction_amount' => $request->amount * $invoice->exchange_rate,
-                'reference' => 'Invoice Payment',
-                'reference_id' => $invoice_id,
-                'reference_sub_id' => $invoicePayment->id,
-                'date' => $request->date,
-            ];
-            Utility::addTransactionLines($data, "new");
+            if($request->credit_balance != "Yes") {
+                // account_recivable
+                $account_recivable = ChartOfAccount::where('code', 1200)->where('created_by', \Auth::user()->creatorId())->first();
+                $data = [
+                    'account_id' => $account_recivable->id,
+                    'transaction_type' => 'Credit',
+                    'transaction_amount' => $request->amount * $invoice->exchange_rate,
+                    'reference' => 'Invoice Payment',
+                    'reference_id' => $invoice_id,
+                    'reference_sub_id' => $invoicePayment->id,
+                    'date' => $request->date,
+                ];
+                Utility::addTransactionLines($data, "new");
+            }
 
             if ($request->advance_id) {
                 $unearned_revenue = ChartOfAccount::where('code', 2040)->where('created_by', \Auth::user()->creatorId())->first();

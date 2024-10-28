@@ -55,6 +55,7 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                                 <th> {{__('Contact')}}</th>
                                 <th> {{__('Email')}}</th>
                                 <th> {{__('Balance')}}</th>
+                                <th> {{__('Credit Balance')}}</th>
                                 <th>{{__('Action')}}</th>
                             </tr>
                             </thead>
@@ -76,6 +77,7 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                                     <td>{{$customer['contact']}}</td>
                                     <td>{{$customer['email']}}</td>
                                     <td>{{\Auth::user()->priceFormat($customer['balance'])}}</td>
+                                    <td>{{\Auth::user()->priceFormat($customer['credit_balance'])}}</td>
                                     <td class="Action">
                                         <span>
                                         @if($customer['is_active']==0)
@@ -85,21 +87,21 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                                                 <div class="action-btn bg-info ms-2">
                                                     <a href="{{ route('customer.show',\Crypt::encrypt($customer['id'])) }}" class="mx-3 btn btn-sm align-items-center"
                                                        data-bs-toggle="tooltip" title="{{__('View')}}">
-                                                        <i class="ti ti-eye text-white text-white"></i>
+                                                        <i class="text-white ti ti-eye"></i>
                                                     </a>
                                                 </div>
                                                 @endcan
                                                 @can('edit customer')
                                                         <div class="action-btn bg-primary ms-2">
-                                                        <a href="#" class="mx-3 btn btn-sm  align-items-center" data-url="{{ route('customer.edit',$customer['id']) }}" data-ajax-popup="true"  data-size="lg" data-bs-toggle="tooltip" title="{{__('Edit')}}"  data-title="{{__('Edit Customer')}}">
-                                                            <i class="ti ti-pencil text-white"></i>
+                                                        <a href="#" class="mx-3 btn btn-sm align-items-center" data-url="{{ route('customer.edit',$customer['id']) }}" data-ajax-popup="true"  data-size="lg" data-bs-toggle="tooltip" title="{{__('Edit')}}"  data-title="{{__('Edit Customer')}}">
+                                                            <i class="text-white ti ti-pencil"></i>
                                                         </a>
                                                     </div>
                                                 @endcan
                                                 @can('delete customer')
                                                     <div class="action-btn bg-danger ms-2">
                                                         {!! Form::open(['method' => 'DELETE', 'route' => ['customer.destroy', $customer['id']],'id'=>'delete-form-'.$customer['id']]) !!}
-                                                        <a href="#" class="mx-3 btn btn-sm  align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{__('Delete')}}" ><i class="ti ti-trash text-white text-white"></i></a>
+                                                        <a href="#" class="mx-3 btn btn-sm align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{__('Delete')}}" ><i class="text-white ti ti-trash"></i></a>
                                                         {!! Form::close() !!}
                                                     </div>
                                                 @endcan

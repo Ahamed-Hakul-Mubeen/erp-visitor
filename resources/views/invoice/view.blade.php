@@ -255,25 +255,25 @@
                                     <div class="timeline-icons"><span class="timeline-dots"></span>
                                         <i class="ti ti-plus text-primary"></i>
                                     </div>
-                                    <h6 class="text-primary my-3">{{ __('Create Invoice') }}</h6>
-                                    <p class="text-muted text-sm mb-3"><i
-                                            class="ti ti-clock mr-2"></i>{{ __('Created on ') }}{{ \Auth::user()->dateFormat($invoice->issue_date) }}
+                                    <h6 class="my-3 text-primary">{{ __('Create Invoice') }}</h6>
+                                    <p class="mb-3 text-sm text-muted"><i
+                                            class="mr-2 ti ti-clock"></i>{{ __('Created on ') }}{{ \Auth::user()->dateFormat($invoice->issue_date) }}
                                     </p>
                                     @can('edit invoice')
                                         <a href="{{ route('invoice.edit', \Crypt::encrypt($invoice->id)) }}"
                                             class="btn btn-sm btn-primary" data-bs-toggle="tooltip"
                                             data-original-title="{{ __('Edit') }}"><i
-                                                class="ti ti-pencil mr-2"></i>{{ __('Edit') }}</a>
+                                                class="mr-2 ti ti-pencil"></i>{{ __('Edit') }}</a>
                                     @endcan
                                 </div>
                                 <div class="col-md-6 col-lg-4 col-xl-4 send_invoice">
                                     <div class="timeline-icons"><span class="timeline-dots"></span>
                                         <i class="ti ti-mail text-warning"></i>
                                     </div>
-                                    <h6 class="text-warning my-3">{{ __('Send Invoice') }}</h6>
-                                    <p class="text-muted text-sm mb-3">
+                                    <h6 class="my-3 text-warning">{{ __('Send Invoice') }}</h6>
+                                    <p class="mb-3 text-sm text-muted">
                                         @if ($invoice->status != 0 && $invoice->send_date)
-                                            <i class="ti ti-clock mr-2"></i>{{ __('Sent on') }}
+                                            <i class="mr-2 ti ti-clock"></i>{{ __('Sent on') }}
                                             {{ \Auth::user()->dateFormat($invoice->send_date) }}
                                         @else
                                             @can('send invoice')
@@ -286,7 +286,7 @@
                                         @can('send bill')
                                             <a id="send_btn" href="#" data-href="{{ route('invoice.sent', $invoice->id) }}" class="btn btn-sm btn-warning"
                                                 data-bs-toggle="tooltip" data-original-title="{{ __('Mark Sent') }}"><i
-                                                    class="ti ti-send mr-2"></i>{{ __('Send') }}</a>
+                                                    class="mr-2 ti ti-send"></i>{{ __('Send') }}</a>
                                         @endcan
                                     @endif
                                 </div>
@@ -294,14 +294,14 @@
                                     <div class="timeline-icons"><span class="timeline-dots"></span>
                                         <i class="ti ti-report-money text-info"></i>
                                     </div>
-                                    <h6 class="text-info my-3">{{ __('Get Paid') }}</h6>
-                                    <p class="text-muted text-sm mb-3">{{ __('Status') }} : {{ __('Awaiting payment') }} </p>
+                                    <h6 class="my-3 text-info">{{ __('Get Paid') }}</h6>
+                                    <p class="mb-3 text-sm text-muted">{{ __('Status') }} : {{ __('Awaiting payment') }} </p>
                                     @if ($invoice->status != 0)
                                         @can('create payment invoice')
                                             <a href="#" data-url="{{ route('invoice.payment', $invoice->id) }}"
                                                 data-ajax-popup="true" data-title="{{ __('Add Payment') }}"
                                                 class="btn btn-sm btn-info" data-original-title="{{ __('Add Payment') }}"><i
-                                                    class="ti ti-report-money mr-2"></i>{{ __('Receive Payment') }}</a> <br>
+                                                    class="mr-2 ti ti-report-money"></i>{{ __('Receive Payment') }}</a> <br>
                                         @endcan
                                     @endif
 
@@ -316,24 +316,24 @@
 
     @if (Gate::check('show invoice'))
         @if ($invoice->status != 0)
-            <div class="row justify-content-between align-items-center mb-3">
+            <div class="mb-3 row justify-content-between align-items-center">
                 <div class="col-md-12 d-flex align-items-center justify-content-between justify-content-md-end">
-                    {{-- @if (!empty($creditnote)) --}}
-                        <div class="all-button-box mx-2 mr-2">
+                    {{-- @if (!$creditnote) --}}
+                        <div class="mx-2 mr-2 all-button-box">
                             <a href="#" class="btn btn-sm btn-primary"
                                 data-url="{{ route('invoice.credit.note', $invoice->id) }}" data-ajax-popup="true"
-                                data-title="{{ __('Add Credit Note') }}">
+                                data-title="{{ __('Add Credit Note or Returns') }}">
                                 {{ __('Add Credit Note') }}
                             </a>
                         </div>
                     {{-- @endif --}}
                     @if ($invoice->status != 4)
-                        <div class="all-button-box mr-2">
+                        <div class="mr-2 all-button-box">
                             <a href="{{ route('invoice.payment.reminder', $invoice->id) }}"
                                 class="btn btn-sm btn-primary me-2">{{ __('Receipt Reminder') }}</a>
                         </div>
                     @endif
-                    <div class="all-button-box mr-2">
+                    <div class="mr-2 all-button-box">
                         <a href="{{ route('invoice.resent', $invoice->id) }}"
                             class="btn btn-sm btn-primary me-2">{{ __('Resend Invoice') }}</a>
                     </div>
@@ -352,7 +352,7 @@
                 <div class="card-body">
                     <div class="invoice">
                         <div class="invoice-print">
-                            <div class="row invoice-title mt-2">
+                            <div class="mt-2 row invoice-title">
                                 <div class="col-xs-12 col-sm-12 col-nd-6 col-lg-6 col-12">
                                     <h4>{{ __('Invoice') }}</h4>
                                 </div>
@@ -425,7 +425,7 @@
                                     </div>
                                 @endif
                                 <div class="col">
-                                    <div class="float-end mt-3">
+                                    <div class="mt-3 float-end">
                                         {!! DNS2D::getBarcodeHTML(
                                             route('invoice.link.copy', \Illuminate\Support\Facades\Crypt::encrypt($invoice->id)),
                                             'QRCODE',
@@ -435,7 +435,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row mt-3">
+                            <div class="mt-3 row">
                                 <div class="col">
                                     <small>
                                         <strong>{{ __('Status') }} :</strong><br>
@@ -470,11 +470,11 @@
                                     @endforeach
                                 @endif
                             </div>
-                            <div class="row mt-4">
+                            <div class="mt-4 row">
                                 <div class="col-md-12">
                                     <div class="font-weight-bold">{{ __('Product Summary') }}</div>
                                     <small>{{ __('All items here cannot be deleted.') }}</small>
-                                    <div class="table-responsive mt-2">
+                                    <div class="mt-2 table-responsive">
                                         <table class="table mb-0 table-striped">
                                             <tr>
                                                 <th data-width="40" class="text-dark">#</th>
@@ -692,10 +692,10 @@
                     <h5 class=" d-inline-block">{{ __('Receipt Summary') }}</h5><br>
                     @if ($user_plan->storage_limit <= $invoice_user->storage_limit)
                         <small
-                            class="text-danger font-bold">{{ __('Your plan storage limit is over , so you can not see customer uploaded payment receipt') }}</small><br>
+                            class="font-bold text-danger">{{ __('Your plan storage limit is over , so you can not see customer uploaded payment receipt') }}</small><br>
                     @endif
 
-                    <div class="table-responsive mt-3">
+                    <div class="mt-3 table-responsive">
                         <table class="table ">
                             <thead>
                                 <tr>
@@ -775,7 +775,7 @@
                                                         data-original-title="{{ __('Delete') }}"
                                                         data-confirm="{{ __('Are You Sure?') . '|' . __('This action can not be undone. Do you want to continue?') }}"
                                                         data-confirm-yes="document.getElementById('delete-form-{{ $payment->id }}').submit();">
-                                                        <i class="ti ti-trash text-white"></i>
+                                                        <i class="text-white ti ti-trash"></i>
                                                     </a>
                                                     {!! Form::close() !!}
                                             </td>
@@ -821,7 +821,7 @@
                                                             class="mx-3 btn btn-sm align-items-center"
                                                             data-bs-toggle="tooltip" title="{{ __('Payment Status') }}"
                                                             data-original-title="{{ __('Payment Status') }}">
-                                                            <i class="ti ti-caret-right text-white"></i>
+                                                            <i class="text-white ti ti-caret-right"></i>
                                                         </a>
                                                     </div>
                                                 @endif
@@ -837,7 +837,7 @@
                                                         data-original-title="{{ __('Delete') }}"
                                                         data-confirm="{{ __('Are You Sure?') . '|' . __('This action can not be undone. Do you want to continue?') }}"
                                                         data-confirm-yes="document.getElementById('delete-form-{{ $bankPayment->id }}').submit();">
-                                                        <i class="ti ti-trash text-white"></i>
+                                                        <i class="text-white ti ti-trash"></i>
                                                     </a>
                                                     {!! Form::close() !!}
                                             </td>
@@ -863,7 +863,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body table-border-style">
-                    <h5 class="d-inline-block mb-5">{{ __('Credit Note Summary') }}</h5>
+                    <h5 class="mb-5 d-inline-block">{{ __('Credit Note or Returns Summary') }}</h5>
 
                     <div class="table-responsive">
                         <table class="table">
@@ -883,17 +883,17 @@
                                     <td class="">{{ \Auth::user()->priceFormat($creditNote->amount, null, $invoice->currency_symbol) }}</td>
                                     <td class="">{{ $creditNote->description }}</td>
                                     <td>
-                                        @can('edit credit note')
+                                        {{-- @can('edit credit note')
                                             <div class="action-btn bg-primary ms-2">
                                                 <a data-url="{{ route('invoice.edit.credit.note', [$creditNote->invoice, $creditNote->id]) }}"
                                                     data-ajax-popup="true" title="{{ __('Edit') }}"
-                                                    data-original-title="{{ __('Credit Note') }}" href="#"
+                                                    data-original-title="{{ __('Credit Note or Returns') }}" href="#"
                                                     class="mx-3 btn btn-sm align-items-center" data-bs-toggle="tooltip"
                                                     data-original-title="{{ __('Edit') }}">
-                                                    <i class="ti ti-pencil text-white"></i>
+                                                    <i class="text-white ti ti-pencil"></i>
                                                 </a>
                                             </div>
-                                        @endcan
+                                        @endcan --}}
                                         @can('delete credit note')
                                             <div class="action-btn bg-danger ms-2">
                                                 {!! Form::open([
@@ -906,7 +906,7 @@
                                                     data-original-title="{{ __('Delete') }}"
                                                     data-confirm="{{ __('Are You Sure?') . '|' . __('This action can not be undone. Do you want to continue?') }}"
                                                     data-confirm-yes="document.getElementById('delete-form-{{ $creditNote->id }}').submit();">
-                                                    <i class="ti ti-trash text-white"></i>
+                                                    <i class="text-white ti ti-trash"></i>
                                                 </a>
                                                 {!! Form::close() !!}
                                             </div>
