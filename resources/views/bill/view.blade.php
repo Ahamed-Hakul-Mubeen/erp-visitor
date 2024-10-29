@@ -98,14 +98,11 @@
         @if($bill->status!=0)
             <div class="mb-3 row justify-content-between align-items-center">
                 <div class="col-md-12 d-flex align-items-center justify-content-between justify-content-md-end">
-                    {{-- @if(!empty($billPayment))
-                        <div class="mx-2 all-button-box">
-                            <a href="#" data-url="{{ route('bill.debit.note',$bill->id) }}" data-ajax-popup="true" data-title="{{__('Add Debit Note')}}" class="btn btn-sm btn-primary">
-                                {{__('Add Debit Note')}}
-                            </a>
-                        </div>
-
-                    @endif --}}
+                    <div class="mx-2 all-button-box">
+                        <a href="#" data-url="{{ route('bill.debit.note',$bill->id) }}" data-ajax-popup="true" data-title="{{__('Add Debit Note')}}" class="btn btn-sm btn-primary">
+                            {{__('Add Debit Note')}}
+                        </a>
+                    </div>
                     <div class="mx-2 all-button-box">
                         <a href="{{ route('bill.resent',$bill->id) }}" class="btn btn-sm btn-primary">
                             {{__('Resend Bill')}}
@@ -450,7 +447,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body table-border-style">
-                    <h5 class="mb-5  d-inline-block">{{__('Payment Summary')}}</h5>
+                    <h5 class="mb-5 d-inline-block">{{__('Payment Summary')}}</h5>
 
                     <div class="table-responsive">
                         <table class="table">

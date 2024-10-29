@@ -6,14 +6,26 @@
             {{Form::date('date',null,array('class'=>'form-control','required'=>'required'))}}
         </div>
         <div class="form-group col-md-6">
-            {{ Form::label('amount', __('Amount'),['class'=>'form-label']) }}<span class="text-danger">*</span>
-            {{ Form::number('amount', !empty($billDue)?$billDue->getDue():0, array('class' => 'form-control','required'=>'required','step'=>'0.01' , 'placeholder'=>__('Enter Amount'))) }}
+            {{ Form::label('return_type', __('Return Type'),['class'=>'form-label']) }}
+            {{ Form::select('return_type',['' => 'Select Type', 'Reusable' => 'Reusable', 'Expired' => 'Expired'],null, array('class' => 'form-control','required'=>'required')) }}
         </div>
-        <div class="form-group col-md-12">
-            {{ Form::label('description', __('Description'),['class'=>'form-label']) }}
-            {!! Form::textarea('description', null, ['class'=>'form-control','rows'=>'2' , 'placeholder' => __('Enter Description')]) !!}
-        </div>
+    </div>
 
+    @foreach($billDue->items as $key => $iteam)
+        <div class="row">
+            <div class="form-group col-md-6">
+                {{ Form::text('productName', $iteam->product->name, array('class' => 'form-control','required'=>'required', 'readonly' => true)) }}
+                <input type="hidden" name="product_id[]" value="{{ $iteam->product->id }}">
+            </div>
+            <div class="form-group col-md-6">
+                {{ Form::number('qty[]', 0, array('class' => 'form-control', 'step'=>'1', 'min' => 0, 'required'=>'required')) }}
+            </div>
+        </div>
+    @endforeach
+
+    <div class="form-group">
+        {{ Form::label('description', __('Description'),['class'=>'form-label']) }}
+        {!! Form::textarea('description', null, ['class'=>'form-control','rows'=>'2' , 'placeholder' => __('Enter Description')]) !!}
     </div>
 </div>
 <div class="modal-footer">

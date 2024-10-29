@@ -41,6 +41,7 @@ class CreateVendersTable extends Migration
             $table->text('shipping_address')->nullable();
             $table->string('lang')->default('en');
             $table->float('balance')->default('0.00');
+            $table->float('debit_balance')->default('0.00');
             $table->rememberToken();
             $table->timestamps();
         });

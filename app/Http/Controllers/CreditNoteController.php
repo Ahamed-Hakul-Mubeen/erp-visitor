@@ -116,8 +116,8 @@ class CreditNoteController extends Controller
                             'transaction_type' => 'Debit',
                             'transaction_amount' => $product_price * $invoice->exchange_rate,
                             'reference' => 'Invoice Credit Note',
-                            'reference_id' => $credit->id,
-                            'reference_sub_id' => $product->id,
+                            'reference_id' => $invoice->id,
+                            'reference_sub_id' => $credit->id,
                             'date' => $request->date,
                         ];
                         Utility::addTransactionLines($data, "new");
@@ -128,8 +128,8 @@ class CreditNoteController extends Controller
                             'transaction_type' => 'Debit',
                             'transaction_amount' => $totalTaxPrice * $invoice->exchange_rate,
                             'reference' => 'Invoice Credit Note',
-                            'reference_id' => $credit->id,
-                            'reference_sub_id' => $product->id,
+                            'reference_id' => $invoice->id,
+                            'reference_sub_id' => $credit->id,
                             'date' => $request->date,
                         ];
                         Utility::addTransactionLines($data, "new");
@@ -141,8 +141,8 @@ class CreditNoteController extends Controller
                             'transaction_type' => 'Credit',
                             'transaction_amount' => $itemAmount * $invoice->exchange_rate,
                             'reference' => 'Invoice Credit Note',
-                            'reference_id' => $credit->id,
-                            'reference_sub_id' => $product->id,
+                            'reference_id' => $invoice->id,
+                            'reference_sub_id' => $credit->id,
                             'date' => $request->date,
                         ];
 
@@ -158,8 +158,8 @@ class CreditNoteController extends Controller
                             'transaction_type' => 'Credit',
                             'transaction_amount' => $purchase_price,
                             'reference' => 'Invoice Credit Note',
-                            'reference_id' => $credit->id,
-                            'reference_sub_id' => $product->id,
+                            'reference_id' => $invoice->id,
+                            'reference_sub_id' => $credit->id,
                             'date' => $request->date,
                         ];
 
@@ -173,8 +173,8 @@ class CreditNoteController extends Controller
                                 'transaction_type' => 'Debit',
                                 'transaction_amount' => $purchase_price,
                                 'reference' => 'Invoice Credit Note',
-                                'reference_id' => $credit->id,
-                                'reference_sub_id' => $product->id,
+                                'reference_id' => $invoice->id,
+                                'reference_sub_id' => $credit->id,
                                 'date' => $request->date,
                             ];
                             Utility::addTransactionLines($data, "new");
@@ -186,8 +186,8 @@ class CreditNoteController extends Controller
                                 'transaction_type' => 'Debit',
                                 'transaction_amount' => $purchase_price,
                                 'reference' => 'Invoice Credit Note',
-                                'reference_id' => $credit->id,
-                                'reference_sub_id' => $product->id,
+                                'reference_id' => $invoice->id,
+                                'reference_sub_id' => $credit->id,
                                 'date' => $request->date,
                             ];
                             Utility::addTransactionLines($data, "new");
@@ -291,7 +291,7 @@ class CreditNoteController extends Controller
                 $customer->save();
             }
 
-            TransactionLines::where('reference', 'Invoice Credit Note')->where('reference_id', $creditNote_id)->delete();
+            TransactionLines::where('reference', 'Invoice Credit Note')->where('reference_sub_id', $creditNote_id)->delete();
 
             return redirect()->back()->with('success', __('Credit Note successfully deleted.'));
         } else {
