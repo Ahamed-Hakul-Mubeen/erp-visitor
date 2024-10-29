@@ -1084,10 +1084,14 @@ class BillController extends Controller
             $payment->bill   = 'bill ' . \Auth::user()->billNumberFormat($billPayment->bill_id);
 
 //            Utility::userBalance('vendor', $bill->vender_id, $request->amount, 'debit');
-            Utility::updateUserBalance('vendor', $bill->vender_id, $request->amount, 'credit');
-
-            Utility::bankAccountBalance($request->account_id, $request->amount, 'debit');
-
+            if($request->credit_balance != "Yes") {
+                Utility::updateUserBalance('vendor', $bill->vender_id, $request->amount, 'credit');
+                Utility::bankAccountBalance($request->account_id, $request->amount, 'debit');
+            } else {
+                Utility::updateUserBalance('vendor', $bill->vender_id, $request->amount, 'credit');
+                $vender->debit_balance = $vender->debit_balance - $request->amount;
+                $vender->save();
+            }
             // Send Email
             $setings = Utility::settings();
             if($setings['new_bill_payment'] == 1)

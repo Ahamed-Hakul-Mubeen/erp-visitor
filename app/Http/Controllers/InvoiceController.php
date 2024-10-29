@@ -830,6 +830,12 @@ class InvoiceController extends Controller
             $payment->invoice = 'invoice ' . \Auth::user()->invoiceNumberFormat($invoice->invoice_id);
             $payment->dueAmount = \Auth::user()->priceFormat($invoice->getDue());
 
+            if($request->credit_balance == "Yes") {
+                Utility::updateUserBalance('customer', $invoice->customer_id, $request->amount * $invoice->exchange_rate, 'credit');
+                $customer->credit_balance = $customer->credit_balance - $request->amount * $invoice->exchange_rate;
+                $customer->save();
+            }
+
             if (!($request->advance_id) && $request->credit_balance != "Yes") {
                 // Log::info($invoice->customer_id." - ".$request->amount." - ".'credit');
                 Utility::updateUserBalance('customer', $invoice->customer_id, $request->amount * $invoice->exchange_rate, 'credit');
