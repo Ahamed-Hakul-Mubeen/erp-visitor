@@ -712,6 +712,7 @@ class BillController extends Controller
                 TransactionLines::where('reference_id',$bill->id)->where('reference','Bill')->delete();
                 TransactionLines::where('reference_id',$bill->id)->where('reference','Bill Account')->delete();
                 TransactionLines::where('reference_id',$bill->id)->where('reference','Bill Payment')->delete();
+                TransactionLines::where('reference_id',$bill->id)->where('reference','Bill Debit Note')->delete();
 
                 return redirect()->route('bill.index')->with('success', __('Bill successfully deleted.'));
             }

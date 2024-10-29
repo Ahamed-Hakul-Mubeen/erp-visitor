@@ -160,7 +160,7 @@ class DebitNoteController extends Controller
             }
 
             if ($bill->getDue() == 0) {
-                $customer = Vender::find($bill->customer_id);
+                $customer = Vender::find($bill->vender_id);
                 $balance = $customer->debit_balance + $total_debit_amount;
                 $customer->debit_balance = $balance;
                 $customer->save();

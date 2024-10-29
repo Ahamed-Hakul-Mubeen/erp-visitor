@@ -502,6 +502,7 @@ class InvoiceController extends Controller
 
                 TransactionLines::where('reference_id', $invoice->id)->where('reference', 'Invoice')->delete();
                 TransactionLines::where('reference_id', $invoice->id)->Where('reference', 'Invoice Payment')->delete();
+                TransactionLines::where('reference_id',$invoice->id)->where('reference','Invoice Credit Note')->delete();
 
                 CreditNote::where('invoice', '=', $invoice->id)->delete();
 
