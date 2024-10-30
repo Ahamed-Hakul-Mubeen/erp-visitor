@@ -948,12 +948,12 @@ class BillController extends Controller
         if(\Auth::user()->can('create payment bill'))
         {
             $bill    = Bill::where('id', $bill_id)->first();
-            $venders = Vender::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+            // $venders = Vender::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
 
             $categories = ProductServiceCategory::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             $accounts   = BankAccount::select('*', \DB::raw("CONCAT(bank_name,' ',holder_name) AS name"))->where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
-
-            return view('bill.payment', compact('venders', 'categories', 'accounts', 'bill'));
+            $vender = Vender::find($bill->vender_id);
+            return view('bill.payment', compact('vender', 'categories', 'accounts', 'bill'));
         }
         else
         {
@@ -972,7 +972,6 @@ class BillController extends Controller
                 $request->all(), [
                     'date' => 'required',
                     'amount' => 'required',
-                    'account_id' => 'required',
                 ]
             );
             if($validator->fails())
@@ -986,7 +985,7 @@ class BillController extends Controller
             $billPayment->bill_id        = $bill_id;
             $billPayment->date           = $request->date;
             $billPayment->amount         = $request->amount;
-            $billPayment->account_id     = $request->account_id;
+            $billPayment->account_id     = 0;
             $billPayment->payment_method = 0;
             $billPayment->reference      = $request->reference;
             $billPayment->description    = $request->description;
@@ -1045,23 +1044,23 @@ class BillController extends Controller
             $billPayment->created_by = \Auth::user()->id;
             $billPayment->payment_id = $billPayment->id;
             $billPayment->category   = 'Bill';
-            $billPayment->account    = $request->account_id;
+            $billPayment->account    = 0;
             Transaction::addTransaction($billPayment);
 
             /* Account payable less  */
-
-            $accountId = BankAccount::find($request->account_id);
-            $data= [
-                'account_id' => $accountId->chart_account_id,
-                'transaction_type' => 'Credit',
-                'transaction_amount' => $request->amount,
-                'reference' => 'Bill Payment',
-                'reference_id' => $bill_id,
-                'reference_sub_id' => $billPayment->id,
-                'date' => $request->date,
-            ];
-            Utility::addTransactionLines($data, "new");
-
+            if($request->account_id) {
+                $accountId = BankAccount::find($request->account_id);
+                $data= [
+                    'account_id' => $accountId->chart_account_id,
+                    'transaction_type' => 'Credit',
+                    'transaction_amount' => $request->amount,
+                    'reference' => 'Bill Payment',
+                    'reference_id' => $bill_id,
+                    'reference_sub_id' => $billPayment->id,
+                    'date' => $request->date,
+                ];
+                Utility::addTransactionLines($data, "new");
+            }
             $account_payable = ChartOfAccount::where('code', 2100)->where('created_by', \Auth::user()->creatorId())->first();
             $data = [
                 'account_id' => $account_payable->id,
@@ -1085,7 +1084,7 @@ class BillController extends Controller
             $payment->bill   = 'bill ' . \Auth::user()->billNumberFormat($billPayment->bill_id);
 
 //            Utility::userBalance('vendor', $bill->vender_id, $request->amount, 'debit');
-            if($request->credit_balance != "Yes") {
+            if($request->debit_balance != "Yes") {
                 Utility::updateUserBalance('vendor', $bill->vender_id, $request->amount, 'credit');
                 Utility::bankAccountBalance($request->account_id, $request->amount, 'debit');
             } else {

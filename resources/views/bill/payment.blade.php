@@ -1,6 +1,17 @@
 {{ Form::open(array('route' => array('bill.payment', $bill->id),'method'=>'post','enctype' => 'multipart/form-data')) }}
     <div class="modal-body">
         <div class="row">
+            @if ($vender->debit_balance > 0)
+                <div class="form-group col-md-12">
+                    {{ Form::label('debit_balance', __('Debit Balance'), ['class' => 'form-label']) }}
+                    <select class="form-control select" name="debit_balance" id="debit_balance">
+                        <option value="No">Don't use Debit Balance</option>
+                        <option value="Yes" data-amount="{{ $vender->debit_balance }}">Use
+                            {{ Auth::user()->priceFormat($vender->debit_balance) }} Debit Balance</option>
+                    </select>
+                </div>
+            @endif
+
             <div class="form-group col-md-6">
                 {{ Form::label('date', __('Date'),['class'=>'form-label']) }}
                 {{ Form::date('date', '', array('class' => 'form-control ','required'=>'required')) }}
@@ -46,3 +57,16 @@
     </div>
 {{ Form::close() }}
 
+<script>
+    
+    $(document).ready(function() {
+        $("#debit_balance").change(function() {
+            var debit_balance = $("#debit_balance").val();
+            var amount = $("#debit_balance option:selected").attr('data-amount');
+            if (debit_balance == "Yes") {
+                $("#amount").val(amount);
+                $('#account_id').prop('disabled', true);
+            }
+        });
+    });
+</script>
