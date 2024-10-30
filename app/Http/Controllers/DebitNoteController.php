@@ -245,14 +245,15 @@ class DebitNoteController extends Controller
             $debitNote = DebitNote::find($debitNote_id);
             $debitNote->delete();
 
-            $vendor = Vender::find($debitNote->vendor);
+            $bill  = Bill::where('id', $bill_id)->first();
 
-            if ($vendor->debit_balance == 0) {
-                Utility::updateUserBalance('vendor', $debitNote->vendor, $debitNote->amount, 'debit');
-            } else {
+            if ($bill->getDue() == 0) {
+                $vendor = Vender::find($debitNote->vendor);
                 $balance = $vendor->debit_balance - $debitNote->amount;
                 $vendor->debit_balance = $balance;
                 $vendor->save();
+            } else {
+                Utility::updateUserBalance('vendor', $debitNote->vendor, $debitNote->amount, 'debit');
             }
 
             TransactionLines::where('reference', 'Bill Debit Note')->where('reference_sub_id', $debitNote_id)->delete();

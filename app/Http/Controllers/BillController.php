@@ -985,7 +985,11 @@ class BillController extends Controller
             $billPayment->bill_id        = $bill_id;
             $billPayment->date           = $request->date;
             $billPayment->amount         = $request->amount;
-            $billPayment->account_id     = 0;
+            if($request->account_id) {
+                $billPayment->account_id     = $request->account_id;
+            } else {
+                $billPayment->account_id = 0;
+            }
             $billPayment->payment_method = 0;
             $billPayment->reference      = $request->reference;
             $billPayment->description    = $request->description;
@@ -1060,19 +1064,20 @@ class BillController extends Controller
                     'date' => $request->date,
                 ];
                 Utility::addTransactionLines($data, "new");
-            }
-            $account_payable = ChartOfAccount::where('code', 2100)->where('created_by', \Auth::user()->creatorId())->first();
-            $data = [
-                'account_id' => $account_payable->id,
-                'transaction_type' => 'Debit',
-                'transaction_amount' => $request->amount,
-                'reference' => 'Bill Payment',
-                'reference_id' => $bill_id,
-                'reference_sub_id' => $billPayment->id,
-                'date' => $request->date,
-            ];
 
-            Utility::addTransactionLines($data, "new");
+                $account_payable = ChartOfAccount::where('code', 2100)->where('created_by', \Auth::user()->creatorId())->first();
+                $data = [
+                    'account_id' => $account_payable->id,
+                    'transaction_type' => 'Debit',
+                    'transaction_amount' => $request->amount,
+                    'reference' => 'Bill Payment',
+                    'reference_id' => $bill_id,
+                    'reference_sub_id' => $billPayment->id,
+                    'date' => $request->date,
+                ];
+
+                Utility::addTransactionLines($data, "new");
+            }
 
             $vender = Vender::where('id', $bill->vender_id)->first();
 
