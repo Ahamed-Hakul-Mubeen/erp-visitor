@@ -1136,16 +1136,19 @@ class BillController extends Controller
 
             $bill = Bill::where('id', $bill_id)->first();
 
+            if($payment->account_id == 0) {
+                $vender = Vender::find($bill->vender_id);
+                $vender->debit_balance = $vender->debit_balance + $payment->amount;
+                $vender->save();
+            } else {
+                Utility::bankAccountBalance($payment->account_id, $payment->amount, 'credit');
+            }
             $due   = $bill->getDue();
             $total = $bill->getTotal();
 
-            if($due > 0 && $total != $due)
-            {
+            if($due > 0 && $total != $due) {
                 $bill->status = 3;
-
-            }
-            else
-            {
+            } else {
                 $bill->status = 2;
             }
             TransactionLines::where('reference_sub_id',$payment_id)->where('reference','Bill Payment')->delete();
@@ -1153,14 +1156,10 @@ class BillController extends Controller
 //            Utility::userBalance('vendor', $bill->vender_id, $payment->amount, 'credit');
             Utility::updateUserBalance('vendor', $bill->vender_id, $payment->amount, 'debit');
 
-            Utility::bankAccountBalance($payment->account_id, $payment->amount, 'credit');
-
-            if(!empty($payment->add_receipt))
-            {
+            if(!empty($payment->add_receipt)) {
                 //storage limit
                 $file_path = '/uploads/payment/'.$payment->add_receipt;
                 $result = Utility::changeStorageLimit(\Auth::user()->creatorId(), $file_path);
-
             }
 
             $bill->save();
