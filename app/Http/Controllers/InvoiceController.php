@@ -780,8 +780,12 @@ class InvoiceController extends Controller
             $invoicePayment = new InvoicePayment();
             $invoicePayment->invoice_id = $invoice_id;
             $invoicePayment->date = $request->date;
+            if($request->credit_balance == "Yes") {
+                $invoicePayment->account_id = 0;
+            } else {
+                $invoicePayment->account_id = $request->account_id;
+            }
             $invoicePayment->amount = $request->amount;
-            $invoicePayment->account_id = $request->account_id;
             $invoicePayment->payment_method = 0;
             $invoicePayment->reference = $request->reference;
             $invoicePayment->description = $request->description;
@@ -946,6 +950,12 @@ class InvoiceController extends Controller
             TransactionLines::where('reference_sub_id', $payment_id)->where('reference', 'Invoice Payment')->delete();
 
             $invoice = Invoice::where('id', $invoice_id)->first();
+
+            if($payment->account_id == 0) {
+                $customer = Customer::find($invoice->customer_id);
+                $customer->credit_balance = $customer->credit_balance + ($payment->amount * $invoice->exchange_rate);
+                $customer->save();
+            }
             $due = $invoice->getDue();
             $total = $invoice->getTotal();
 
