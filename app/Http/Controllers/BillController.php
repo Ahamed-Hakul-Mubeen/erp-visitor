@@ -692,22 +692,34 @@ class BillController extends Controller
 
                     $billpayment = BillPayment::find($value->id)->first();
                     $billpayment->delete();
+
+                    if($bill->vender_id != 0 && $bill->status !=0) {
+                        Utility::updateUserBalance('vendor', $bill->vender_id, $value->amount, 'debit');
+                    }
                 }
+
+                $debit_note = DebitNote::where('bill', '=', $bill->id)->get();
+                foreach($debit_note as $dn)
+                {
+                    if($bill->vender_id != 0 && $bill->status !=0) {
+                        Utility::updateUserBalance('vendor', $bill->vender_id, $dn->amount, 'debit');
+                    }
+                    $dn->delete();
+                }
+
                 if($bill->project_id)
                 {
                     ProjectExpense::where("reference_type", "Bill")->where("reference_id", $bill->id)->where("created_by", \Auth::user()->creatorId())->delete();
                 }
-                $bill->delete();
 
                 if($bill->vender_id != 0 && $bill->status!=0)
                 {
-                    Utility::updateUserBalance('vendor', $bill->vender_id, $bill->getDue(), 'credit');
+                    Utility::updateUserBalance('vendor', $bill->vender_id, $bill->getTotal(), 'credit');
                 }
+                $bill->delete();
                 BillProduct::where('bill_id', '=', $bill->id)->delete();
 
                 BillAccount::where('ref_id', '=', $bill->id)->delete();
-
-                DebitNote::where('bill', '=', $bill->id)->delete();
 
                 TransactionLines::where('reference_id',$bill->id)->where('reference','Bill')->delete();
                 TransactionLines::where('reference_id',$bill->id)->where('reference','Bill Account')->delete();

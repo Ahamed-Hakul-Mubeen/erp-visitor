@@ -290,7 +290,7 @@
                                                 @if(!empty($item->product_id))
                                                         <tr>
                                                             <td>{{$key+1}}</td>
-                                                            
+
                                                             @php
                                                                 $productName = $item->product;
                                                                 $totalQuantity += $item->quantity;
@@ -309,7 +309,7 @@
                                                                         @php
                                                                             $itemTaxes = [];
                                                                             $getTaxData = Utility::getTaxData();
-        
+
                                                                             if (!empty($item->tax)) {
                                                                                 foreach (explode(',', $item->tax) as $tax) {
                                                                                     $taxPrice = \Utility::taxRate($getTaxData[$tax]['rate'], $item->price, $item->quantity, $item->discount);
@@ -317,7 +317,7 @@
                                                                                     $itemTax['name'] = $getTaxData[$tax]['name'];
                                                                                     $itemTax['rate'] = $getTaxData[$tax]['rate'] . '%';
                                                                                     $itemTax['price'] = \Auth::user()->priceFormat($taxPrice);
-        
+
                                                                                     $itemTaxes[] = $itemTax;
                                                                                     if (array_key_exists($getTaxData[$tax]['name'], $taxesData)) {
                                                                                         $taxesData[$getTaxData[$tax]['name']] = $taxesData[$getTaxData[$tax]['name']] + $taxPrice;
@@ -331,7 +331,7 @@
                                                                             }
                                                                         @endphp
                                                                         @foreach ($item->itemTax as $tax)
-        
+
                                                                                 <tr>
                                                                                     <td>{{$tax['name'] .' ('.$tax['rate'] .')'}}</td>
                                                                                     <td>{{ $tax['price']}}</td>

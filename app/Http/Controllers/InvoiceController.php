@@ -491,20 +491,27 @@ class InvoiceController extends Controller
                         $advance->status = 0;
                         $advance->save();
                     }
+                    if ($invoice->customer_id != 0 && $invoice->status != 0) {
+                        Utility::updateUserBalance('customer', $invoice->customer_id, ($invoices->amount * $invoice->exchange_rate), 'debit');
+                    }
                     $invoicepayment->delete();
                 }
 
-                if ($invoice->customer_id != 0 && $invoice->status != 0) {
-                    // Log::info($invoice->customer_id." - ".$invoice->getDue()." - ".'credit');
-                    Utility::updateUserBalance('customer', $invoice->customer_id, ($invoice->getTotal() - $invoice->getDue()) * $invoice->exchange_rate, 'credit');
+                $credit_note = CreditNote::where('invoice', '=', $invoice->id)->get();
+                foreach($credit_note as $cn)
+                {
+                    Utility::updateUserBalance('customer', $invoice->customer_id, $cn->amount * $invoice->exchange_rate, 'debit');
+                    $cn->delete();
                 }
 
+                if ($invoice->customer_id != 0 && $invoice->status != 0) {
+                    Utility::updateUserBalance('customer', $invoice->customer_id, $invoice->getTotal() * $invoice->exchange_rate, 'credit');
+                }
 
                 TransactionLines::where('reference_id', $invoice->id)->where('reference', 'Invoice')->delete();
                 TransactionLines::where('reference_id', $invoice->id)->Where('reference', 'Invoice Payment')->delete();
                 TransactionLines::where('reference_id',$invoice->id)->where('reference','Invoice Credit Note')->delete();
 
-                CreditNote::where('invoice', '=', $invoice->id)->delete();
 
                 InvoiceProduct::where('invoice_id', '=', $invoice->id)->delete();
                 $invoice->delete();
@@ -1518,9 +1525,9 @@ class InvoiceController extends Controller
 
         public function checkInvoiceNumber(Request $request)
     {
-    
+
         $exists = Invoice::where('actual_invoice_number', $request->invoice_number)->exists();
-        
+
         return response()->json(['exists' => $exists]);
     }
 }
